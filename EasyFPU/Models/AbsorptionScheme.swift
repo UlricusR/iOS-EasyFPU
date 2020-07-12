@@ -8,7 +8,7 @@
 
 import Foundation
 
-class AbsorptionScheme: Equatable {
+class AbsorptionScheme: Equatable, Codable {
     var absorptionBlocks: [AbsorptionBlock]
     
     init(absorptionBlocks: [AbsorptionBlock]) {

@@ -22,6 +22,7 @@
 		1B004A5124BA4F65001E362A /* TypicalAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B004A5024BA4F65001E362A /* TypicalAmount.swift */; };
 		1B004A5424BA532E001E362A /* absorptionscheme_default.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B004A5324BA532E001E362A /* absorptionscheme_default.json */; };
 		1B004A5624BA726B001E362A /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B004A5524BA726B001E362A /* UserData.swift */; };
+		1B68C5FA24BBA77A00C1367B /* FoodVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B68C5F924BBA77A00C1367B /* FoodVM.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		1B004A5024BA4F65001E362A /* TypicalAmount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmount.swift; sourceTree = "<group>"; };
 		1B004A5324BA532E001E362A /* absorptionscheme_default.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = absorptionscheme_default.json; sourceTree = "<group>"; };
 		1B004A5524BA726B001E362A /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		1B68C5F924BBA77A00C1367B /* FoodVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodVM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 			children = (
 				1B004A5224BA52E9001E362A /* Resources */,
 				1B004A4724BA3419001E362A /* Models */,
+				1B68C5F824BBA75D00C1367B /* ViewModels */,
 				1B004A4324BA3383001E362A /* EasyFPU.entitlements */,
 				1B004A2C24BA3035001E362A /* AppDelegate.swift */,
 				1B004A2E24BA3035001E362A /* SceneDelegate.swift */,
@@ -127,6 +130,14 @@
 				1B004A5524BA726B001E362A /* UserData.swift */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		1B68C5F824BBA75D00C1367B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				1B68C5F924BBA77A00C1367B /* FoodVM.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,6 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B004A2D24BA3035001E362A /* AppDelegate.swift in Sources */,
+				1B68C5FA24BBA77A00C1367B /* FoodVM.swift in Sources */,
 				1B004A4D24BA3E7F001E362A /* AbsorptionScheme.swift in Sources */,
 				1B004A3224BA3035001E362A /* EasyFPU.xcdatamodeld in Sources */,
 				1B004A5124BA4F65001E362A /* TypicalAmount.swift in Sources */,

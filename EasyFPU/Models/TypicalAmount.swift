@@ -8,14 +8,12 @@
 
 import Foundation
 
-class TypicalAmount {
+class TypicalAmount: Codable {
     var amount: Int
     var comment: String
-    var defaultComment: String
     
     init(amount: Int, comment: String, defaultComment: String) {
         self.amount = amount
         self.comment = comment
-        self.defaultComment = defaultComment
     }
 }

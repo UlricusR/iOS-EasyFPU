@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Food {
+class Food: Identifiable, Codable {
     var id: UUID = UUID()
     var amount: Int = 0
     var selected: Bool = false
@@ -16,12 +16,7 @@ class Food {
     var favorite: Bool = false
     var caloriesPer100g: Double
     var carbsPer100g: Double
-    var amountSmall: Int?
-    var amountMedium: Int?
-    var amountLarge: Int?
-    var commentSmall: String?
-    var commendMedium: String?
-    var commentLarge: String?
+    var typicalAmounts: [TypicalAmount]?
     
     init(name: String, caloriesPer100g: Double, carbsPer100g: Double) {
         self.name = name
