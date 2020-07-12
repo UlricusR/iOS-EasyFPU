@@ -20,12 +20,24 @@ final class UserData: ObservableObject {
         }
         do {
             let data = try Data(contentsOf: file)
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            let absorptionBlocks = try decoder.decode([AbsorptionBlock].self, from: data)
+            let absorptionBlocks = UserData.decode(json: data, strategy: .convertFromSnakeCase) as [AbsorptionBlock]
             absorptionScheme = AbsorptionScheme(absorptionBlocks: absorptionBlocks)
         } catch {
-            fatalError("Could not decode data of \(absorptionSchemeDefaultFile)")
+            fatalError("Could not decode data of \(absorptionSchemeDefaultFile):\n\(error.localizedDescription)")
+        }
+    }
+    
+    //
+    // Data helpers
+    //
+    
+    static private func decode<T: Decodable>(json data: Data, strategy: JSONDecoder.KeyDecodingStrategy) -> T {
+        do {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = strategy
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            fatalError("Couldn't parse data as \(T.self):\n\(error.localizedDescription)")
         }
     }
 }
