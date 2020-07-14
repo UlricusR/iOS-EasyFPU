@@ -1,0 +1,28 @@
+/* 
+  Localizable.strings
+  EasyFPU
+
+  Created by Ulrich Rüth on 13.07.20.
+  Copyright © 2020 Ulrich Rüth. All rights reserved.
+*/
+
+"Done" = "Fertig";
+"Cancel" = "Abbrechen";
+
+"Food List" = "Essensliste";
+"Name" = "Name";
+"Favorite" = "Lieblingsessen";
+"Carbs per 100g" = "Kohlendydrate pro 100g";
+"Calories per 100g" = "Kalorien pro 100g";
+"g" = "g";
+"g Carbs" = "g Kohlenhydrate";
+"kcal" = "kcal";
+"Nutritional values per 100g: " = "Nährwerte pro 100g: ";
+
+"Data alert" = "Eingabefehler";
+"Name must not be empty" = "Name darf nicht leer sein";
+"Calories not a valid number" = "Kalorien sind keine gültige Zahl";
+"Calories per 100g must not be negative" = "Kalorien dürfen nicht negativ sein";
+"Carbs not a valid number" = "Kohlenhydrate sind keine gültige Zahl";
+"Carbs per 100g must not be negative" = "Kohlenhydrate dürfen nicht negativ sein";
+"Calories from carbs (4 kcal per gram) exceed total calories" = "Kalorien aus Kohlenhydraten (ca. 4 kcal pro Gramm) übersteigen Gesamtkalorien";

@@ -1,0 +1,28 @@
+/* 
+  Localizable.strings
+  EasyFPU
+
+  Created by Ulrich Rüth on 13.07.20.
+  Copyright © 2020 Ulrich Rüth. All rights reserved.
+*/
+
+"Done" = "Done";
+"Cancel" = "Cancel";
+
+"Food List" = "Food List";
+"Name" = "Name";
+"Favorite" = "Favorite";
+"Carbs per 100g" = "Carbs per 100g";
+"Calories per 100g" = "Calories per 100g";
+"g" = "g";
+"g Carbs" = "g Carbs";
+"kcal" = "kcal";
+"Nutritional values per 100g: " = "Nutritional values per 100g: ";
+
+"Data alert" = "Data alert";
+"Name must not be empty" = "Name must not be empty";
+"Calories not a valid number" = "Calories not a valid number";
+"Calories per 100g must not be negative" = "Calories per 100g must not be negative";
+"Carbs not a valid number" = "Carbs not a valid number";
+"Carbs per 100g must not be negative" = "Carbs per 100g must not be negative";
+"Calories from carbs (4 kcal per gram) exceed total calories" = "Calories from carbs (4 kcal per gram) exceed total calories";

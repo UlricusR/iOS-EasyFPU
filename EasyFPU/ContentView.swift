@@ -8,16 +8,38 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    @EnvironmentObject var userData: UserData
+struct FoodList: View {
+    //@Environment(\.managedObjectContext) var managedObjectContext
+    @FetchRequest(fetchRequest: FoodItem.getAllFoodItems()) var foodItems: FetchedResults<FoodItem>
+    
+    @State var showingSheet = false
     
     var body: some View {
-        Text("Hello, World!")
+        NavigationView {
+            List {
+                ForEach(foodItems, id: \.self) { foodItem in
+                    FoodItemView(name: foodItem.name)
+                }
+            }
+            .navigationBarTitle("Food List")
+            .navigationBarItems(leading: EditButton(), trailing: Button(action: {
+                self.showingSheet = true
+            }) {
+                Image(systemName: "plus.circle")
+                    .imageScale(.large)
+                    .foregroundColor(.green)
+            })
+        }
+        .sheet(isPresented: $showingSheet) {
+            FoodItemEditor(isPresented: self.$showingSheet, draftFoodItem: FoodItem())
+        }
     }
 }
 
+#if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        FoodList()
     }
 }
+#endif
