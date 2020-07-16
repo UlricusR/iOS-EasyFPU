@@ -13,15 +13,14 @@ enum ActiveFoodListSheet {
 }
 
 struct FoodListSheets: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
     var activeSheet: ActiveFoodListSheet
     @Binding var isPresented: Bool
+    @Binding var foodItem: FoodItem
     
     var body: some View {
         if activeSheet == .editFoodItem {
             return AnyView(
-                FoodItemEditor(isPresented: self.$isPresented, draftFoodItem: FoodItemViewModel(name: "", favorite: false, caloriesPer100g: "", carbsPer100g: ""))
-                .environment(\.managedObjectContext, self.managedObjectContext)
+                FoodItemEditor(isPresented: self.$isPresented, draftFoodItem: self.$foodItem)
             )
         } else if activeSheet == .selectFoodItem {
             return AnyView(Text("Select Food Item"))

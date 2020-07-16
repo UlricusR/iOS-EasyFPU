@@ -14,7 +14,7 @@ struct FoodItemView: View {
     var body: some View {
         VStack {
             HStack {
-                Text(foodItem.name).font(.headline)
+                Text(foodItem.wrappedName).font(.headline)
                 if foodItem.favorite { Image(systemName: "star.fill").foregroundColor(.yellow).imageScale(.small) }
                 Spacer()
             }
