@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct FoodList: View {
+    @EnvironmentObject var userData: UserData
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(
         entity: FoodItem.entity(),
@@ -27,11 +28,20 @@ struct FoodList: View {
     )
     @State var editedFoodItem: FoodItem?
     
+    var meal: Meal {
+        var meal = Meal(name: "Meal")
+        for foodItem in foodItems {
+            meal.add(foodItem: foodItem)
+        }
+        return meal
+    }
+    
     var body: some View {
         NavigationView {
             List {
                 ForEach(foodItems, id: \.self) { foodItem in
                     FoodItemView(foodItem: foodItem)
+                    .environmentObject(self.userData)
                     .onTapGesture {
                         // Select food item for meal
                         self.editedFoodItem = foodItem
@@ -53,7 +63,46 @@ struct FoodList: View {
                     }
                 }
                 .onDelete(perform: deleteFoodItem)
+                
+                VStack {
+                    Text("Total meal").font(.headline)
+                    
+                    HStack(alignment: .top) {
+                        HStack {
+                            Text("Total nutritional values").font(.caption)
+                            Text(":").font(.caption)
+                        }
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.calories))!).font(.caption)
+                            Text("kcal").font(.caption)
+                        }
+                        
+                        HStack {
+                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!).font(.caption)
+                            Text("g Carbs").font(.caption)
+                        }
+                        
+                        HStack {
+                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.fpu))!).font(.caption)
+                            Text("FPU").font(.caption)
+                        }
+                        
+                        HStack {
+                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!).font(.caption)
+                            Text("g Extended Carbs").font(.caption)
+                        }
+                        
+                        HStack {
+                            Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.userData.absorptionScheme)))!).font(.caption)
+                            Text("h Absorption Time").font(.caption)
+                        }
+                    }
+                }
             }
+            
             .navigationBarTitle("Food List")
             .navigationBarItems(trailing: Button(action: {
                 // Add new food item

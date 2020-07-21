@@ -11,20 +11,24 @@
 
 "Food List" = "Essensliste";
 "Name" = "Name";
-"Unnamed" = "Namenlos";
+"- Unnamed -" = "- Namenlos -";
 "Favorite" = "Lieblingsessen";
 "Carbs per 100g" = "Kohlendydrate pro 100g";
 "Calories per 100g" = "Kalorien pro 100g";
 "g" = "g";
 "g Carbs" = "g Kohlenhydrate";
+"g Extended Carbs" = "g verlängerte Kohlenhydrate";
 "kcal" = "kcal";
-"Nutritional values per 100g: " = "Nährwerte pro 100g: ";
+"Nutritional values per 100g:" = "Nährwerte pro 100g:";
+"Nutritional values for" = "Nährwerte für";
+"Amount consumed" = "Gegessene Menge";
+"h Absorption Time" = "h Absorptionszeit";
+"Total nutritional values" = "Gesamt-Nährwerte";
+"Total meal" = "Gesamtmahlzeit";
 
 "Data alert" = "Eingabefehler";
 "Name must not be empty" = "Name darf nicht leer sein";
-"Calories not a valid number" = "Kalorien sind keine gültige Zahl";
-"Calories per 100g must not be negative" = "Kalorien dürfen nicht negativ sein";
-"Carbs not a valid number" = "Kohlenhydrate sind keine gültige Zahl";
-"Carbs per 100g must not be negative" = "Kohlenhydrate dürfen nicht negativ sein";
+"Calories not a valid number or negative" = "Kalorien sind keine gültige Zahl oder negativ";
+"Carbs not a valid number or negative" = "Kohlenhydrate sind keine gültige Zahl oder negativ";
 "Calories from carbs (4 kcal per gram) exceed total calories" = "Kalorien aus Kohlenhydraten (ca. 4 kcal pro Gramm) übersteigen Gesamtkalorien";
-"Amount not a valid number" = "Menge keine gültige Zahl";
+"Amount not a valid number or negative" = "Menge keine gültige Zahl oder negativ";

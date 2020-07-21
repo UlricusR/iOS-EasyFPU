@@ -9,28 +9,73 @@
 import SwiftUI
 
 struct FoodItemView: View {
+    @EnvironmentObject var userData: UserData
     @ObservedObject var foodItem: FoodItem
     
     var body: some View {
         VStack {
             HStack {
-                Text(foodItem.name ?? "Shit").font(.headline)
+                if foodItem.amount > 0 {
+                    Text(String(foodItem.amount)).font(.headline).foregroundColor(.accentColor)
+                    Text("g").font(.headline).foregroundColor(.accentColor)
+                }
+                Text(foodItem.name ?? "- Unnamed -").font(.headline).foregroundColor(foodItem.amount > 0 ? .accentColor : .none)
                 if foodItem.favorite { Image(systemName: "star.fill").foregroundColor(.yellow).imageScale(.small) }
                 Spacer()
             }
             
             HStack {
-                Text("Nutritional values per 100g: ").font(.caption)
+                Text("Nutritional values per 100g:").font(.caption).foregroundColor(.gray)
                 
                 Spacer()
                 
-                Text(FoodItemViewModel.doubleNumberFormatter.string(from: NSNumber(value: foodItem.caloriesPer100g))!).font(.caption)
-                Text("kcal").font(.caption)
+                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.caloriesPer100g))!).font(.caption).foregroundColor(.gray)
+                Text("kcal").font(.caption).foregroundColor(.gray)
                 
-                Text("|")
+                Text("|").foregroundColor(.gray)
                 
-                Text(FoodItemViewModel.doubleNumberFormatter.string(from: NSNumber(value: foodItem.carbsPer100g))!).font(.caption)
-                Text("g Carbs").font(.caption)
+                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.carbsPer100g))!).font(.caption).foregroundColor(.gray)
+                Text("g Carbs").font(.caption).foregroundColor(.gray)
+            }
+            
+            if foodItem.amount > 0 {
+                HStack(alignment: .top) {
+                    HStack {
+                        Text("Nutritional values for").font(.caption)
+                        Text(String(foodItem.amount)).font(.caption)
+                        Text("g").font(.caption)
+                        Text(":").font(.caption)
+                    }
+                    
+                    Spacer()
+                        
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getCalories()))!).font(.caption)
+                            Text("kcal").font(.caption)
+                        }
+                        
+                        HStack {
+                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getCarbs()))!).font(.caption)
+                            Text("g Carbs").font(.caption)
+                        }
+                
+                        HStack {
+                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().fpu))!).font(.caption)
+                            Text("FPU").font(.caption)
+                        }
+                        
+                        HStack {
+                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().getExtendedCarbs()))!).font(.caption)
+                            Text("g Extended Carbs").font(.caption)
+                        }
+                        
+                        HStack {
+                            Text(NumberFormatter().string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: userData.absorptionScheme)))!).font(.caption)
+                            Text("h Absorption Time").font(.caption)
+                        }
+                    }
+                }
             }
         }
     }

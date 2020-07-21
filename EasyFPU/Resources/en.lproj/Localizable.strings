@@ -11,20 +11,24 @@
 
 "Food List" = "Food List";
 "Name" = "Name";
-"Unnamed" = "Unnamed";
+"- Unnamed -" = "- Unnamed -";
 "Favorite" = "Favorite";
 "Carbs per 100g" = "Carbs per 100g";
 "Calories per 100g" = "Calories per 100g";
 "g" = "g";
 "g Carbs" = "g Carbs";
+"g Extended Carbs" = "g Extended Carbs";
 "kcal" = "kcal";
-"Nutritional values per 100g: " = "Nutritional values per 100g: ";
+"Nutritional values per 100g:" = "Nutritional values per 100g:";
+"Nutritional values for" = "Nutritional values for";
+"Amount consumed" = "Amount consumed";
+"h Absorption Time" = "h Absorption Time";
+"Total nutritional values" = "Total nutritional values";
+"Total meal" = "Total meal";
 
 "Data alert" = "Data alert";
 "Name must not be empty" = "Name must not be empty";
-"Calories not a valid number" = "Calories not a valid number";
-"Calories per 100g must not be negative" = "Calories per 100g must not be negative";
-"Carbs not a valid number" = "Carbs not a valid number";
-"Carbs per 100g must not be negative" = "Carbs per 100g must not be negative";
+"Calories not a valid number or negative" = "Calories not a valid number or negative";
+"Carbs not a valid number or negative" = "Carbs not a valid number or negative";
 "Calories from carbs (4 kcal per gram) exceed total calories" = "Calories from carbs (4 kcal per gram) exceed total calories";
-"Amount not a valid number" = "Amount not a valid number";
+"Amount not a valid number or negative" = "Amount not a valid number or negative";

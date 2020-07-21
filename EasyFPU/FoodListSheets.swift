@@ -29,7 +29,9 @@ struct FoodListSheets: View {
                 ).environment(\.managedObjectContext, managedObjectContext)
             )
         } else if activeSheet == .selectFoodItem {
-            return AnyView(Text("Select Food Item"))
+            return AnyView(
+                FoodItemSelector(isPresented: self.$isPresented, amountAsString: String(editedFoodItem!.amount), editedFoodItem: editedFoodItem!)
+            )
         } else {
             return AnyView(EmptyView()) // Should never happen
         }
