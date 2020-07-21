@@ -2,7 +2,7 @@
 //  FoodItem+CoreDataProperties.swift
 //  EasyFPU
 //
-//  Created by Ulrich Rüth on 16.07.20.
+//  Created by Ulrich Rüth on 17.07.20.
 //  Copyright © 2020 Ulrich Rüth. All rights reserved.
 //
 //
@@ -17,37 +17,13 @@ extension FoodItem {
         return NSFetchRequest<FoodItem>(entityName: "FoodItem")
     }
 
+    @NSManaged public var amount: Int64
     @NSManaged public var caloriesPer100g: Double
     @NSManaged public var carbsPer100g: Double
     @NSManaged public var favorite: Bool
     @NSManaged public var id: UUID?
     @NSManaged public var name: String?
-    @NSManaged public var amount: Int64
     @NSManaged public var typicalAmounts: NSSet?
-    
-    var wrappedName: String {
-        name ?? NSLocalizedString("Unnamed", comment: "")
-    }
-
-    func isValid() -> Bool {
-        if name == nil {
-            errorMessage = NSLocalizedString("Name must not be empty", comment: "")
-            return false
-        }
-        
-        if caloriesPer100g < 0.0 {
-            errorMessage = NSLocalizedString("Calories per 100g must not be negative", comment: "")
-            return false
-        } else if carbsPer100g < 0.0 {
-            errorMessage = NSLocalizedString("Carbs per 100g must not be negative", comment: "")
-            return false
-        } else if carbsPer100g * 4 > caloriesPer100g {
-            errorMessage = NSLocalizedString("Calories from carbs (4 kcal per gram) exceed total calories", comment: "")
-            return false
-        } else {
-            return true
-        }
-    }
 }
 
 // MARK: Generated accessors for typicalAmounts

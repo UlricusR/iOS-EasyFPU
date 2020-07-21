@@ -8,11 +8,6 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="typicalAmounts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TypicalAmount" inverseName="foodItem" inverseEntity="TypicalAmount"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="name"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="TypicalAmount" representedClassName=".TypicalAmount" syncable="YES">
         <attribute name="amount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>

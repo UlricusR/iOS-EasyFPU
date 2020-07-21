@@ -27,3 +27,4 @@
 "Carbs not a valid number" = "Kohlenhydrate sind keine gültige Zahl";
 "Carbs per 100g must not be negative" = "Kohlenhydrate dürfen nicht negativ sein";
 "Calories from carbs (4 kcal per gram) exceed total calories" = "Kalorien aus Kohlenhydraten (ca. 4 kcal pro Gramm) übersteigen Gesamtkalorien";
+"Amount not a valid number" = "Menge keine gültige Zahl";

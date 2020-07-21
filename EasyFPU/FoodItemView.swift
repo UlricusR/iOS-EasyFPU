@@ -9,12 +9,12 @@
 import SwiftUI
 
 struct FoodItemView: View {
-    var foodItem: FoodItem
+    @ObservedObject var foodItem: FoodItem
     
     var body: some View {
         VStack {
             HStack {
-                Text(foodItem.wrappedName).font(.headline)
+                Text(foodItem.name ?? "Shit").font(.headline)
                 if foodItem.favorite { Image(systemName: "star.fill").foregroundColor(.yellow).imageScale(.small) }
                 Spacer()
             }
@@ -24,12 +24,12 @@ struct FoodItemView: View {
                 
                 Spacer()
                 
-                Text(String(foodItem.caloriesPer100g)).font(.caption)
+                Text(FoodItemViewModel.doubleNumberFormatter.string(from: NSNumber(value: foodItem.caloriesPer100g))!).font(.caption)
                 Text("kcal").font(.caption)
                 
                 Text("|")
                 
-                Text(String(foodItem.carbsPer100g)).font(.caption)
+                Text(FoodItemViewModel.doubleNumberFormatter.string(from: NSNumber(value: foodItem.carbsPer100g))!).font(.caption)
                 Text("g Carbs").font(.caption)
             }
         }

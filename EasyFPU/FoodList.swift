@@ -18,7 +18,14 @@ struct FoodList: View {
     ) var foodItems: FetchedResults<FoodItem>
     @State var showingSheet = false
     @State var activeSheet = ActiveFoodListSheet.selectFoodItem
-    @State var activeFoodItem: FoodItem
+    @State var draftFoodItem = FoodItemViewModel(
+        name: "",
+        favorite: false,
+        caloriesPer100g: 0.0,
+        carbsPer100g: 0.0,
+        amount: 0
+    )
+    @State var editedFoodItem: FoodItem?
     
     var body: some View {
         NavigationView {
@@ -26,12 +33,21 @@ struct FoodList: View {
                 ForEach(foodItems, id: \.self) { foodItem in
                     FoodItemView(foodItem: foodItem)
                     .onTapGesture {
-                        self.activeFoodItem = foodItem
+                        // Select food item for meal
+                        self.editedFoodItem = foodItem
                         self.activeSheet = .selectFoodItem
                         self.showingSheet = true
                     }
                     .onLongPressGesture {
-                        self.activeFoodItem = foodItem
+                        // Edit food item
+                        self.draftFoodItem = FoodItemViewModel(
+                            name: foodItem.name ?? "",
+                            favorite: foodItem.favorite,
+                            caloriesPer100g: foodItem.caloriesPer100g,
+                            carbsPer100g: foodItem.carbsPer100g,
+                            amount: Int(foodItem.amount)
+                        )
+                        self.editedFoodItem = foodItem
                         self.activeSheet = .editFoodItem
                         self.showingSheet = true
                     }
@@ -40,7 +56,15 @@ struct FoodList: View {
             }
             .navigationBarTitle("Food List")
             .navigationBarItems(trailing: Button(action: {
-                self.activeFoodItem = FoodItem(context: self.managedObjectContext)
+                // Add new food item
+                self.draftFoodItem = FoodItemViewModel(
+                    name: "",
+                    favorite: false,
+                    caloriesPer100g: 0.0,
+                    carbsPer100g: 0.0,
+                    amount: 0
+                )
+                self.editedFoodItem = nil
                 self.activeSheet = .editFoodItem
                 self.showingSheet = true
             }) {
@@ -50,7 +74,12 @@ struct FoodList: View {
             })
         }
         .sheet(isPresented: $showingSheet) {
-            FoodListSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, foodItem: self.$activeFoodItem)
+            FoodListSheets(
+                activeSheet: self.activeSheet,
+                isPresented: self.$showingSheet,
+                draftFoodItem: self.$draftFoodItem,
+                editedFoodItem: self.$editedFoodItem
+            ).environment(\.managedObjectContext, self.managedObjectContext)
         }
     }
     
@@ -64,12 +93,10 @@ struct FoodList: View {
     }
     
     func saveContext() {
-        if self.managedObjectContext.hasChanges {
-            do {
-                try managedObjectContext.save()
-            } catch {
-                print("Error saving managed object context: \(error)")
-            }
+        do {
+            try managedObjectContext.save()
+        } catch {
+            print("Error saving managed object context: \(error)")
         }
     }
 }

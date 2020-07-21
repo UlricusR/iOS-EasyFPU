@@ -27,3 +27,4 @@
 "Carbs not a valid number" = "Carbs not a valid number";
 "Carbs per 100g must not be negative" = "Carbs per 100g must not be negative";
 "Calories from carbs (4 kcal per gram) exceed total calories" = "Calories from carbs (4 kcal per gram) exceed total calories";
+"Amount not a valid number" = "Amount not a valid number";
