@@ -27,15 +27,15 @@ class AbsorptionScheme: Equatable, Codable {
         }
         
         // Seems to be beyond the last block, so return time of the last block
-        return absorptionBlocks[absorptionBlocks.endIndex].maxFpu
+        return absorptionBlocks[absorptionBlocks.count - 1].maxFpu
     }
     
     func getMaximumAbsorptionTime() -> Int {
-        absorptionBlocks[absorptionBlocks.endIndex].absorptionTime
+        absorptionBlocks[absorptionBlocks.count - 1].absorptionTime
     }
     
     func getMaximumFPUs() -> Int {
-        absorptionBlocks[absorptionBlocks.endIndex].maxFpu
+        absorptionBlocks[absorptionBlocks.count - 1].maxFpu
     }
     
     static func == (lhs: AbsorptionScheme, rhs: AbsorptionScheme) -> Bool {
