@@ -29,7 +29,7 @@ struct FoodList: View {
     @State var editedFoodItem: FoodItem?
     
     var meal: Meal {
-        var meal = Meal(name: "Meal")
+        var meal = Meal(name: "Total meal")
         for foodItem in foodItems {
             meal.add(foodItem: foodItem)
         }
@@ -37,98 +37,101 @@ struct FoodList: View {
     }
     
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(foodItems, id: \.self) { foodItem in
-                    FoodItemView(foodItem: foodItem)
-                    .environmentObject(self.userData)
-                    .onTapGesture {
-                        // Select food item for meal
-                        self.editedFoodItem = foodItem
-                        self.activeSheet = .selectFoodItem
-                        self.showingSheet = true
+        VStack {
+            NavigationView {
+                List {
+                    ForEach(foodItems, id: \.self) { foodItem in
+                        FoodItemView(foodItem: foodItem)
+                        .environmentObject(self.userData)
+                        .onTapGesture {
+                            // Select food item for meal
+                            self.editedFoodItem = foodItem
+                            self.activeSheet = .selectFoodItem
+                            self.showingSheet = true
+                        }
+                        .onLongPressGesture {
+                            // Edit food item
+                            self.draftFoodItem = FoodItemViewModel(
+                                name: foodItem.name ?? "",
+                                favorite: foodItem.favorite,
+                                caloriesPer100g: foodItem.caloriesPer100g,
+                                carbsPer100g: foodItem.carbsPer100g,
+                                amount: Int(foodItem.amount)
+                            )
+                            self.editedFoodItem = foodItem
+                            self.activeSheet = .editFoodItem
+                            self.showingSheet = true
+                        }
                     }
-                    .onLongPressGesture {
-                        // Edit food item
-                        self.draftFoodItem = FoodItemViewModel(
-                            name: foodItem.name ?? "",
-                            favorite: foodItem.favorite,
-                            caloriesPer100g: foodItem.caloriesPer100g,
-                            carbsPer100g: foodItem.carbsPer100g,
-                            amount: Int(foodItem.amount)
-                        )
-                        self.editedFoodItem = foodItem
-                        self.activeSheet = .editFoodItem
-                        self.showingSheet = true
-                    }
+                    .onDelete(perform: deleteFoodItem)
                 }
-                .onDelete(perform: deleteFoodItem)
+                .navigationBarTitle("Food List")
+                .navigationBarItems(trailing: Button(action: {
+                    // Add new food item
+                    self.draftFoodItem = FoodItemViewModel(
+                        name: "",
+                        favorite: false,
+                        caloriesPer100g: 0.0,
+                        carbsPer100g: 0.0,
+                        amount: 0
+                    )
+                    self.editedFoodItem = nil
+                    self.activeSheet = .editFoodItem
+                    self.showingSheet = true
+                }) {
+                    Image(systemName: "plus.circle")
+                        .imageScale(.large)
+                        .foregroundColor(.green)
+                })
+            }
                 
+            if meal.amount > 0 {
                 VStack {
                     Text("Total meal").font(.headline)
                     
-                    HStack(alignment: .top) {
-                        HStack {
-                            Text("Total nutritional values").font(.caption)
-                            Text(":").font(.caption)
-                        }
-                    }
-                    
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.calories))!).font(.caption)
-                            Text("kcal").font(.caption)
+                    HStack {
+                        VStack {
+                            HStack {
+                                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
+                                Text("g")
+                            }
+                            Text("Carbs").font(.caption)
                         }
                         
-                        HStack {
-                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!).font(.caption)
-                            Text("g Carbs").font(.caption)
+                        VStack {
+                            HStack {
+                                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
+                                Text("g")
+                            }
+                            Text("Extended Carbs").font(.caption)
                         }
                         
-                        HStack {
-                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.fpu))!).font(.caption)
-                            Text("FPU").font(.caption)
-                        }
-                        
-                        HStack {
-                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!).font(.caption)
-                            Text("g Extended Carbs").font(.caption)
-                        }
-                        
-                        HStack {
-                            Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.userData.absorptionScheme)))!).font(.caption)
-                            Text("h Absorption Time").font(.caption)
+                        VStack {
+                            HStack {
+                                Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.userData.absorptionScheme)))!)
+                                Text("h")
+                            }
+                            Text("Absorption Time").font(.caption)
                         }
                     }
                 }
+                .onTapGesture {
+                    self.activeSheet = .showMealDetails
+                    self.showingSheet = true
+                }
+                .foregroundColor(.red)
             }
-            
-            .navigationBarTitle("Food List")
-            .navigationBarItems(trailing: Button(action: {
-                // Add new food item
-                self.draftFoodItem = FoodItemViewModel(
-                    name: "",
-                    favorite: false,
-                    caloriesPer100g: 0.0,
-                    carbsPer100g: 0.0,
-                    amount: 0
-                )
-                self.editedFoodItem = nil
-                self.activeSheet = .editFoodItem
-                self.showingSheet = true
-            }) {
-                Image(systemName: "plus.circle")
-                    .imageScale(.large)
-                    .foregroundColor(.green)
-            })
         }
         .sheet(isPresented: $showingSheet) {
             FoodListSheets(
                 activeSheet: self.activeSheet,
                 isPresented: self.$showingSheet,
                 draftFoodItem: self.$draftFoodItem,
+                meal: self.meal,
                 editedFoodItem: self.$editedFoodItem
-            ).environment(\.managedObjectContext, self.managedObjectContext)
+            )
+                .environment(\.managedObjectContext, self.managedObjectContext)
+                .environmentObject(self.userData)
         }
     }
     

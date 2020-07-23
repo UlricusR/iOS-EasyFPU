@@ -11,18 +11,47 @@ import SwiftUI
 struct FoodItemView: View {
     @EnvironmentObject var userData: UserData
     @ObservedObject var foodItem: FoodItem
+    @State private var showingSheet = false
+    @State var draftFoodItem = FoodItemViewModel(
+        name: "",
+        favorite: false,
+        caloriesPer100g: 0.0,
+        carbsPer100g: 0.0,
+        amount: 0
+    )
+    //@State var activeSheet = ActiveFoodItemViewSheet.selectFoodItem
     
     var body: some View {
         VStack {
             HStack {
                 if foodItem.amount > 0 {
+                    Button(action: {
+                        self.foodItem.amount = 0
+                    }) { Image(systemName: "xmark.circle").foregroundColor(.red) }
                     Text(String(foodItem.amount)).font(.headline).foregroundColor(.accentColor)
                     Text("g").font(.headline).foregroundColor(.accentColor)
-                }
+                } /*else {
+                    Button(action: {
+                        self.activeSheet = .selectFoodItem
+                        self.showingSheet = true
+                    }) { Image(systemName: "plus.circle").foregroundColor(.green) }
+                }*/
                 Text(foodItem.name ?? "- Unnamed -").font(.headline).foregroundColor(foodItem.amount > 0 ? .accentColor : .none)
                 if foodItem.favorite { Image(systemName: "star.fill").foregroundColor(.yellow).imageScale(.small) }
                 Spacer()
-            }
+            }/*
+            .onLongPressGesture {
+                // Edit food item
+                self.draftFoodItem = FoodItemViewModel(
+                    name: self.foodItem.name ?? "",
+                    favorite: self.foodItem.favorite,
+                    caloriesPer100g: self.foodItem.caloriesPer100g,
+                    carbsPer100g: self.foodItem.carbsPer100g,
+                    amount: Int(self.foodItem.amount)
+                )
+                self.activeSheet = .editFoodItem
+                self.showingSheet = true
+            }*/
             
             HStack {
                 Text("Nutritional values per 100g:").font(.caption).foregroundColor(.gray)
@@ -77,6 +106,10 @@ struct FoodItemView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showingSheet) {
+            //FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.draftFoodItem, editedFoodItem: foodItem)
+            FoodItemSelector(isPresented: self.$showingSheet, amountAsString: String(self.foodItem.amount), editedFoodItem: self.foodItem)
         }
     }
 }

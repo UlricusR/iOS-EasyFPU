@@ -9,18 +9,21 @@
 import SwiftUI
 
 enum ActiveFoodListSheet {
-    case editFoodItem, selectFoodItem
+    case editFoodItem, selectFoodItem, showMealDetails
 }
 
 struct FoodListSheets: View {
+    @EnvironmentObject var userData: UserData
     @Environment(\.managedObjectContext) var managedObjectContext
     var activeSheet: ActiveFoodListSheet
     @Binding var isPresented: Bool
     @Binding var draftFoodItem: FoodItemViewModel
+    var meal: Meal
     @Binding var editedFoodItem: FoodItem?
     
     var body: some View {
-        if activeSheet == .editFoodItem {
+        switch activeSheet {
+        case .editFoodItem:
             return AnyView(
                 FoodItemEditor(
                     isPresented: self.$isPresented,
@@ -28,12 +31,14 @@ struct FoodListSheets: View {
                     editedFoodItem: self.$editedFoodItem
                 ).environment(\.managedObjectContext, managedObjectContext)
             )
-        } else if activeSheet == .selectFoodItem {
+        case .selectFoodItem:
             return AnyView(
                 FoodItemSelector(isPresented: self.$isPresented, amountAsString: String(editedFoodItem!.amount), editedFoodItem: editedFoodItem!)
             )
-        } else {
-            return AnyView(EmptyView()) // Should never happen
+        case .showMealDetails:
+            return AnyView(
+                MealDetail(isPresented: self.$isPresented, meal: self.meal).environmentObject(self.userData)
+            )
         }
     }
 }

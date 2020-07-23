@@ -17,12 +17,15 @@
 "Calories per 100g" = "Calories per 100g";
 "g" = "g";
 "g Carbs" = "g Carbs";
+"Carbs" = "Carbs";
 "g Extended Carbs" = "g Extended Carbs";
+"Extended Carbs" = "Extended Carbs";
 "kcal" = "kcal";
 "Nutritional values per 100g:" = "Nutritional values per 100g:";
 "Nutritional values for" = "Nutritional values for";
 "Amount consumed" = "Amount consumed";
 "h Absorption Time" = "h Absorption Time";
+"Absorption Time" = "Absorption Time";
 "Total nutritional values" = "Total nutritional values";
 "Total meal" = "Total meal";
 
