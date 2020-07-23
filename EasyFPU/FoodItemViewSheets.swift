@@ -8,30 +8,31 @@
 
 import SwiftUI
 
-enum ActiveFoodListSheet {
-    case addFoodItem, showMealDetails
+enum ActiveFoodItemViewSheet {
+    case editFoodItem, selectFoodItem
 }
 
-struct FoodListSheets: View {
+struct FoodItemViewSheets: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.managedObjectContext) var managedObjectContext
-    var activeSheet: ActiveFoodListSheet
+    var activeSheet: ActiveFoodItemViewSheet
     @Binding var isPresented: Bool
     @Binding var draftFoodItem: FoodItemViewModel
-    var meal: Meal
+    var editedFoodItem: FoodItem?
     
     var body: some View {
         switch activeSheet {
-        case .addFoodItem:
+        case .editFoodItem:
             return AnyView(
                 FoodItemEditor(
                     isPresented: self.$isPresented,
-                    draftFoodItem: self.$draftFoodItem
+                    draftFoodItem: self.$draftFoodItem,
+                    editedFoodItem: self.editedFoodItem
                 ).environment(\.managedObjectContext, managedObjectContext)
             )
-        case .showMealDetails:
+        case .selectFoodItem:
             return AnyView(
-                MealDetail(isPresented: self.$isPresented, meal: self.meal).environmentObject(self.userData)
+                FoodItemSelector(isPresented: self.$isPresented, amountAsString: String(editedFoodItem!.amount), editedFoodItem: editedFoodItem!)
             )
         }
     }

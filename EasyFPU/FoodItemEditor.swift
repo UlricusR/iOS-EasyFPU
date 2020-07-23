@@ -97,7 +97,7 @@ struct FoodItemEditor: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Binding var isPresented: Bool
     @Binding var draftFoodItem: FoodItemViewModel
-    @Binding var editedFoodItem: FoodItem? // Working copy of the food item
+    var editedFoodItem: FoodItem? // Working copy of the food item
     @State var errorMessage: String = ""
     
     @State var showingAlert = false

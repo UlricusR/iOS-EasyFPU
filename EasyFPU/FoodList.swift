@@ -18,7 +18,7 @@ struct FoodList: View {
         ]
     ) var foodItems: FetchedResults<FoodItem>
     @State var showingSheet = false
-    @State var activeSheet = ActiveFoodListSheet.selectFoodItem
+    @State var activeSheet = ActiveFoodListSheet.addFoodItem
     @State var draftFoodItem = FoodItemViewModel(
         name: "",
         favorite: false,
@@ -26,7 +26,6 @@ struct FoodList: View {
         carbsPer100g: 0.0,
         amount: 0
     )
-    @State var editedFoodItem: FoodItem?
     
     var meal: Meal {
         var meal = Meal(name: "Total meal")
@@ -43,25 +42,6 @@ struct FoodList: View {
                     ForEach(foodItems, id: \.self) { foodItem in
                         FoodItemView(foodItem: foodItem)
                         .environmentObject(self.userData)
-                        .onTapGesture {
-                            // Select food item for meal
-                            self.editedFoodItem = foodItem
-                            self.activeSheet = .selectFoodItem
-                            self.showingSheet = true
-                        }
-                        .onLongPressGesture {
-                            // Edit food item
-                            self.draftFoodItem = FoodItemViewModel(
-                                name: foodItem.name ?? "",
-                                favorite: foodItem.favorite,
-                                caloriesPer100g: foodItem.caloriesPer100g,
-                                carbsPer100g: foodItem.carbsPer100g,
-                                amount: Int(foodItem.amount)
-                            )
-                            self.editedFoodItem = foodItem
-                            self.activeSheet = .editFoodItem
-                            self.showingSheet = true
-                        }
                     }
                     .onDelete(perform: deleteFoodItem)
                 }
@@ -75,8 +55,7 @@ struct FoodList: View {
                         carbsPer100g: 0.0,
                         amount: 0
                     )
-                    self.editedFoodItem = nil
-                    self.activeSheet = .editFoodItem
+                    self.activeSheet = .addFoodItem
                     self.showingSheet = true
                 }) {
                     Image(systemName: "plus.circle")
@@ -127,8 +106,7 @@ struct FoodList: View {
                 activeSheet: self.activeSheet,
                 isPresented: self.$showingSheet,
                 draftFoodItem: self.$draftFoodItem,
-                meal: self.meal,
-                editedFoodItem: self.$editedFoodItem
+                meal: self.meal
             )
                 .environment(\.managedObjectContext, self.managedObjectContext)
                 .environmentObject(self.userData)
