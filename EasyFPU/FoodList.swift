@@ -41,6 +41,7 @@ struct FoodList: View {
                 List {
                     ForEach(foodItems, id: \.self) { foodItem in
                         FoodItemView(foodItem: foodItem)
+                        .environment(\.managedObjectContext, self.managedObjectContext)
                         .environmentObject(self.userData)
                     }
                     .onDelete(perform: deleteFoodItem)
@@ -105,7 +106,7 @@ struct FoodList: View {
             FoodListSheets(
                 activeSheet: self.activeSheet,
                 isPresented: self.$showingSheet,
-                draftFoodItem: self.$draftFoodItem,
+                draftFoodItem: self.draftFoodItem,
                 meal: self.meal
             )
                 .environment(\.managedObjectContext, self.managedObjectContext)

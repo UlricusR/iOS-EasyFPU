@@ -17,7 +17,7 @@ struct FoodListSheets: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var activeSheet: ActiveFoodListSheet
     @Binding var isPresented: Bool
-    @Binding var draftFoodItem: FoodItemViewModel
+    var draftFoodItem: FoodItemViewModel
     var meal: Meal
     
     var body: some View {
@@ -26,7 +26,8 @@ struct FoodListSheets: View {
             return AnyView(
                 FoodItemEditor(
                     isPresented: self.$isPresented,
-                    draftFoodItem: self.$draftFoodItem
+                    navigationBarTitle: NSLocalizedString("New food item", comment: ""),
+                    draftFoodItem: self.draftFoodItem
                 ).environment(\.managedObjectContext, managedObjectContext)
             )
         case .showMealDetails:

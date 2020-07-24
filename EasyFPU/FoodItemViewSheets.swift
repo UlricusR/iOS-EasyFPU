@@ -17,7 +17,7 @@ struct FoodItemViewSheets: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var activeSheet: ActiveFoodItemViewSheet
     @Binding var isPresented: Bool
-    @Binding var draftFoodItem: FoodItemViewModel
+    var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem?
     
     var body: some View {
@@ -26,7 +26,8 @@ struct FoodItemViewSheets: View {
             return AnyView(
                 FoodItemEditor(
                     isPresented: self.$isPresented,
-                    draftFoodItem: self.$draftFoodItem,
+                    navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
+                    draftFoodItem: self.draftFoodItem,
                     editedFoodItem: self.editedFoodItem
                 ).environment(\.managedObjectContext, managedObjectContext)
             )

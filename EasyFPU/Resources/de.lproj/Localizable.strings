@@ -8,6 +8,9 @@
 
 "Done" = "Fertig";
 "Cancel" = "Abbrechen";
+"Add" = "Hinzufügen";
+"Update" = "Aktualisieren";
+"Tap to edit" = "Zum Bearbeiten antippen";
 
 "Food List" = "Essensliste";
 "Name" = "Name";
@@ -21,13 +24,19 @@
 "g Extended Carbs" = "g verlängerte Kohlenhydrate";
 "Extended Carbs" = "Verlängerte Kohlenhydrate";
 "kcal" = "kcal";
+"New food item" = "Neues Essen";
+"Edit food item" = "Essen bearbeiten";
 "Nutritional values per 100g:" = "Nährwerte pro 100g:";
 "Nutritional values for" = "Nährwerte für";
 "Amount consumed" = "Gegessene Menge";
+"Amount" = "Menge";
 "h Absorption Time" = "h Absorptionszeit";
 "Absorption Time" = "Absorptionszeit";
 "Total nutritional values" = "Gesamt-Nährwerte";
 "Total meal" = "Gesamtmahlzeit";
+"Typical amount" = "Typische Menge";
+"Typical amounts:" = "Typische Mengen:";
+"Comment" = "Kommentar";
 
 "Data alert" = "Eingabefehler";
 "Name must not be empty" = "Name darf nicht leer sein";

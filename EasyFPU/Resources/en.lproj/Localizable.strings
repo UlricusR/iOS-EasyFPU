@@ -8,6 +8,9 @@
 
 "Done" = "Done";
 "Cancel" = "Cancel";
+"Add" = "Add";
+"Update" = "Update";
+"Tap to edit" = "Tap to edit";
 
 "Food List" = "Food List";
 "Name" = "Name";
@@ -21,13 +24,19 @@
 "g Extended Carbs" = "g Extended Carbs";
 "Extended Carbs" = "Extended Carbs";
 "kcal" = "kcal";
+"New food item" = "New food item";
+"Edit food item" = "Edit food item";
 "Nutritional values per 100g:" = "Nutritional values per 100g:";
 "Nutritional values for" = "Nutritional values for";
+"Amount" = "Amount";
 "Amount consumed" = "Amount consumed";
 "h Absorption Time" = "h Absorption Time";
 "Absorption Time" = "Absorption Time";
 "Total nutritional values" = "Total nutritional values";
 "Total meal" = "Total meal";
+"Typical amount" = "Typical amount";
+"Typical amounts:" = "Typical amounts:";
+"Comment" = "Comment";
 
 "Data alert" = "Data alert";
 "Name must not be empty" = "Name must not be empty";

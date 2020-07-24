@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct FoodItemView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var userData: UserData
     @ObservedObject var foodItem: FoodItem
     @State private var showingSheet = false
@@ -107,11 +108,18 @@ struct FoodItemView: View {
                 carbsPer100g: self.foodItem.carbsPer100g,
                 amount: Int(self.foodItem.amount)
             )
+            if self.foodItem.typicalAmounts != nil {
+                for typicalAmount in self.foodItem.typicalAmounts!.allObjects {
+                    let castedTypicalAmount = typicalAmount as! TypicalAmount
+                    self.draftFoodItem.typicalAmounts.append(TypicalAmountViewModel(from: castedTypicalAmount))
+                }
+            }
             self.activeSheet = .editFoodItem
             self.showingSheet = true
         }
         .sheet(isPresented: $showingSheet) {
-            FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.$draftFoodItem, editedFoodItem: self.foodItem)
+            FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.draftFoodItem, editedFoodItem: self.foodItem)
+                .environment(\.managedObjectContext, self.managedObjectContext)
         }
     }
 }
