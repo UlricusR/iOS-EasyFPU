@@ -37,6 +37,9 @@
 "Typical amount" = "Typical amount";
 "Typical amounts:" = "Typical amounts:";
 "Comment" = "Comment";
+"Enter amount consumed or select typical amount" = "Enter amount consumed or select typical amount";
+"Enter amount consumed" = "Enter amount consumed";
+"Select amount" = "Select amount";
 
 "Data alert" = "Data alert";
 "Name must not be empty" = "Name must not be empty";

@@ -37,6 +37,9 @@
 "Typical amount" = "Typische Menge";
 "Typical amounts:" = "Typische Mengen:";
 "Comment" = "Kommentar";
+"Enter amount consumed or select typical amount" = "Gegessene Menge eingeben oder typische Menge auswählen";
+"Enter amount consumed" = "Gegessene Menge eingeben";
+"Select amount" = "Menge auswählen";
 
 "Data alert" = "Eingabefehler";
 "Name must not be empty" = "Name darf nicht leer sein";

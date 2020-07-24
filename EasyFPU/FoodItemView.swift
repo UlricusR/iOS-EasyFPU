@@ -94,32 +94,47 @@ struct FoodItemView: View {
         .onTapGesture {
             if self.foodItem.amount > 0 {
                 self.foodItem.amount = 0
+                self.saveContext()
             } else {
+                self.draftFoodItem = self.getFoodItemViewModel()
                 self.activeSheet = .selectFoodItem
                 self.showingSheet = true
             }
         }
         .onLongPressGesture {
             // Edit food item
-            self.draftFoodItem = FoodItemViewModel(
-                name: self.foodItem.name ?? "",
-                favorite: self.foodItem.favorite,
-                caloriesPer100g: self.foodItem.caloriesPer100g,
-                carbsPer100g: self.foodItem.carbsPer100g,
-                amount: Int(self.foodItem.amount)
-            )
-            if self.foodItem.typicalAmounts != nil {
-                for typicalAmount in self.foodItem.typicalAmounts!.allObjects {
-                    let castedTypicalAmount = typicalAmount as! TypicalAmount
-                    self.draftFoodItem.typicalAmounts.append(TypicalAmountViewModel(from: castedTypicalAmount))
-                }
-            }
+            self.draftFoodItem = self.getFoodItemViewModel()
             self.activeSheet = .editFoodItem
             self.showingSheet = true
         }
         .sheet(isPresented: $showingSheet) {
             FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.draftFoodItem, editedFoodItem: self.foodItem)
                 .environment(\.managedObjectContext, self.managedObjectContext)
+        }
+    }
+    
+    func getFoodItemViewModel() -> FoodItemViewModel {
+        let foodItemVM = FoodItemViewModel(
+            name: self.foodItem.name ?? "",
+            favorite: self.foodItem.favorite,
+            caloriesPer100g: self.foodItem.caloriesPer100g,
+            carbsPer100g: self.foodItem.carbsPer100g,
+            amount: Int(self.foodItem.amount)
+        )
+        if self.foodItem.typicalAmounts != nil {
+            for typicalAmount in self.foodItem.typicalAmounts!.allObjects {
+                let castedTypicalAmount = typicalAmount as! TypicalAmount
+                foodItemVM.typicalAmounts.append(TypicalAmountViewModel(from: castedTypicalAmount))
+            }
+        }
+        return foodItemVM
+    }
+    
+    func saveContext() {
+        do {
+            try managedObjectContext.save()
+        } catch {
+            print("Error saving managed object context: \(error)")
         }
     }
 }

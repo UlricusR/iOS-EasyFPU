@@ -25,15 +25,15 @@ struct FoodItemViewSheets: View {
         case .editFoodItem:
             return AnyView(
                 FoodItemEditor(
-                    isPresented: self.$isPresented,
+                    isPresented: $isPresented,
                     navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
-                    draftFoodItem: self.draftFoodItem,
-                    editedFoodItem: self.editedFoodItem
+                    draftFoodItem: draftFoodItem,
+                    editedFoodItem: editedFoodItem
                 ).environment(\.managedObjectContext, managedObjectContext)
             )
         case .selectFoodItem:
             return AnyView(
-                FoodItemSelector(isPresented: self.$isPresented, amountAsString: String(editedFoodItem!.amount), editedFoodItem: editedFoodItem!)
+                FoodItemSelector(isPresented: $isPresented, draftFoodItem: draftFoodItem, editedFoodItem: editedFoodItem!)
             )
         }
     }
