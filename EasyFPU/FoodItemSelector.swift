@@ -15,6 +15,8 @@ struct FoodItemSelector: View {
     var editedFoodItem: FoodItem
     @State var showingAlert = false
     @State var errorMessage = ""
+    @State var newTypicalAmountComment = ""
+    @State var addToTypicalAmounts = false
     
     var body: some View {
         NavigationView {
@@ -27,11 +29,49 @@ struct FoodItemSelector: View {
                             .multilineTextAlignment(.trailing)
                         Text("g")
                     }
+                    
+                    // Add to typical amounts
+                    if addToTypicalAmounts {
+                        // User wants to add amount to typical amounts, so comment is required
+                        HStack {
+                            TextField("Comment", text: $newTypicalAmountComment)
+                            Button(action: {
+                                if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.draftFoodItem.amountAsString, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
+                                    // Add new typical amount to typical amounts of food item
+                                    self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
+                                    
+                                    // Reset text fields
+                                    self.newTypicalAmountComment = ""
+                                    
+                                    // Update food item in core data, save and broadcast changed object
+                                    let newCoreDataTypicalAmount = TypicalAmount(context: self.managedObjectContext)
+                                    newTypicalAmount.cdTypicalAmount = newCoreDataTypicalAmount
+                                    let _ = newTypicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem)
+                                    self.editedFoodItem.addToTypicalAmounts(newCoreDataTypicalAmount)
+                                    self.saveContext()
+                                    self.draftFoodItem.objectWillChange.send()
+                                    
+                                    self.addToTypicalAmounts = false
+                                } else {
+                                    self.showingAlert = true
+                                }
+                            }) {
+                                Image(systemName: "checkmark.circle").foregroundColor(.yellow)
+                            }
+                        }
+                    } else {
+                        // Give user possibility to add the entered amount to typical amounts
+                        Button(action: {
+                            self.addToTypicalAmounts = true
+                        }) {
+                            Text("Add to typical amounts")
+                        }
+                    }
                 }
                 
                 if !draftFoodItem.typicalAmounts.isEmpty {
                     Section(header: Text("Typical amounts:")) {
-                        ForEach(draftFoodItem.typicalAmounts, id: \.self) { typicalAmount in
+                        ForEach(draftFoodItem.typicalAmounts.sorted(), id: \.self) { typicalAmount in
                             HStack {
                                 Text(typicalAmount.amountAsString)
                                 Text("g")
