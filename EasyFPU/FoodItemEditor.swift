@@ -103,7 +103,7 @@ struct FoodItemEditor: View {
                     }
                     
                     Section(footer: Text("Tap to edit")) {
-                        ForEach(self.draftFoodItem.typicalAmounts, id: \.self) { typicalAmount in
+                        ForEach(self.draftFoodItem.typicalAmounts.sorted(), id: \.self) { typicalAmount in
                             HStack {
                                 Text(typicalAmount.amountAsString)
                                 Text("g")

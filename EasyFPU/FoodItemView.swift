@@ -122,7 +122,7 @@ struct FoodItemView: View {
             amount: Int(self.foodItem.amount)
         )
         if self.foodItem.typicalAmounts != nil {
-            for typicalAmount in self.foodItem.typicalAmounts!.allObjects {
+            for typicalAmount in self.foodItem.typicalAmounts!.sortedArray(using: [NSSortDescriptor(key: "amount", ascending: true)]) {
                 let castedTypicalAmount = typicalAmount as! TypicalAmount
                 foodItemVM.typicalAmounts.append(TypicalAmountViewModel(from: castedTypicalAmount))
             }

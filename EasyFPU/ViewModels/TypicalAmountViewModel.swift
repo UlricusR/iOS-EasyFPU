@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TypicalAmountViewModel: ObservableObject, Hashable {
+class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
     var id = UUID()
     @Published var amountAsString: String
     @Published var comment: String
@@ -53,6 +53,10 @@ class TypicalAmountViewModel: ObservableObject, Hashable {
     }
     
     static func == (lhs: TypicalAmountViewModel, rhs: TypicalAmountViewModel) -> Bool {
-        lhs.id == rhs.id
+        lhs.getAmount() == rhs.getAmount()
+    }
+    
+    static func < (lhs: TypicalAmountViewModel, rhs: TypicalAmountViewModel) -> Bool {
+        lhs.getAmount() < rhs.getAmount()
     }
 }
