@@ -49,3 +49,4 @@
 "Calories from carbs (4 kcal per gram) exceed total calories" = "Calories from carbs (4 kcal per gram) exceed total calories";
 "Amount not a valid number or negative" = "Amount not a valid number or negative";
 "Value not a number or negative: " = "Value not a number or negative: ";
+"Cannot delete typical amount " = "Cannot delete typical amount ";

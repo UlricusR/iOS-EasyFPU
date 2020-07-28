@@ -49,3 +49,4 @@
 "Calories from carbs (4 kcal per gram) exceed total calories" = "Kalorien aus Kohlenhydraten (ca. 4 kcal pro Gramm) übersteigen Gesamtkalorien";
 "Amount not a valid number or negative" = "Menge keine gültige Zahl oder negativ";
 "Value not a number or negative: " = "Ungültiger oder negativer Wert: ";
+"Cannot delete typical amount " = "Kann typische Menge nicht löschen: ";

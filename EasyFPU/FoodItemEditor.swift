@@ -25,6 +25,8 @@ struct FoodItemEditor: View {
         ]
     ) var foodItems: FetchedResults<FoodItem>
     
+    var typicalAmounts: [TypicalAmountViewModel] { draftFoodItem.typicalAmounts.sorted() }
+    
     @State var newTypicalAmount = ""
     @State var newTypicalAmountComment = ""
     @State var newTypicalAmountId: UUID?
@@ -81,11 +83,11 @@ struct FoodItemEditor: View {
                                         self.showingAlert = true
                                     }
                                 } else { // This is an existing typical amount
-                                    guard let updatedTypicalAmount = self.draftFoodItem.typicalAmounts.first(where: { $0.id == self.newTypicalAmountId! }) else {
+                                    guard let index = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
                                         fatalError("Fatal error: Could not identify typical amount")
                                     }
-                                    updatedTypicalAmount.amountAsString = self.newTypicalAmount
-                                    updatedTypicalAmount.comment = self.newTypicalAmountComment
+                                    self.draftFoodItem.typicalAmounts[index].amountAsString = self.newTypicalAmount
+                                    self.draftFoodItem.typicalAmounts[index].comment = self.newTypicalAmountComment
                                     
                                     // Reset text fields and typical amount id
                                     self.newTypicalAmount = ""
@@ -103,7 +105,7 @@ struct FoodItemEditor: View {
                     }
                     
                     Section(footer: Text("Tap to edit")) {
-                        ForEach(self.draftFoodItem.typicalAmounts.sorted(), id: \.self) { typicalAmount in
+                        ForEach(self.typicalAmounts, id: \.self) { typicalAmount in
                             HStack {
                                 Text(typicalAmount.amountAsString)
                                 Text("g")
@@ -175,7 +177,7 @@ struct FoodItemEditor: View {
                             newFoodItem.caloriesPer100g = updatedFoodItem.caloriesPer100g
                             newFoodItem.amount = Int64(updatedFoodItem.amount)
                             
-                            for typicalAmount in self.draftFoodItem.typicalAmounts {
+                            for typicalAmount in self.typicalAmounts {
                                 let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
                                 typicalAmount.cdTypicalAmount = newTypicalAmount
                                 let _ = typicalAmount.updateCDTypicalAmount(foodItem: newFoodItem)
@@ -208,8 +210,13 @@ struct FoodItemEditor: View {
     
     func deleteTypicalAmount(at offsets: IndexSet) {
         offsets.forEach { index in
-            typicalAmountsToBeDeleted.append(self.draftFoodItem.typicalAmounts[index])
-            self.draftFoodItem.typicalAmounts.remove(at: index)
+            let typicalAmountToBeDeleted = self.typicalAmounts[index]
+            typicalAmountsToBeDeleted.append(typicalAmountToBeDeleted)
+            guard let originalIndex = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
+                self.errorMessage = NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment
+                return
+            }
+            self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
         }
         self.draftFoodItem.objectWillChange.send()
     }

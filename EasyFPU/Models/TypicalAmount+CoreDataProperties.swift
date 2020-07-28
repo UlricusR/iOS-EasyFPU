@@ -20,9 +20,4 @@ extension TypicalAmount {
     @NSManaged public var amount: Int64
     @NSManaged public var comment: String?
     @NSManaged public var foodItem: FoodItem?
-    
-    var wrappedComment: String {
-        comment ?? ""
-    }
-
 }
