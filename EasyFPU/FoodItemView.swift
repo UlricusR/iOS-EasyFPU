@@ -13,13 +13,6 @@ struct FoodItemView: View {
     @EnvironmentObject var userData: UserData
     @ObservedObject var foodItem: FoodItem
     @State private var showingSheet = false
-    @State var draftFoodItem = FoodItemViewModel(
-        name: "",
-        favorite: false,
-        caloriesPer100g: 0.0,
-        carbsPer100g: 0.0,
-        amount: 0
-    )
     @State var activeSheet = ActiveFoodItemViewSheet.selectFoodItem
     
     var body: some View {
@@ -96,24 +89,22 @@ struct FoodItemView: View {
                 self.foodItem.amount = 0
                 self.saveContext()
             } else {
-                self.draftFoodItem = self.getFoodItemViewModel()
                 self.activeSheet = .selectFoodItem
                 self.showingSheet = true
             }
         }
         .onLongPressGesture {
             // Edit food item
-            self.draftFoodItem = self.getFoodItemViewModel()
             self.activeSheet = .editFoodItem
             self.showingSheet = true
         }
         .sheet(isPresented: $showingSheet) {
-            FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.draftFoodItem, editedFoodItem: self.foodItem)
+            FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.getFoodItemViewModel(), editedFoodItem: self.foodItem)
                 .environment(\.managedObjectContext, self.managedObjectContext)
         }
     }
     
-    func getFoodItemViewModel() -> FoodItemViewModel {
+    private func getFoodItemViewModel() -> FoodItemViewModel {
         let foodItemVM = FoodItemViewModel(
             name: self.foodItem.name ?? "",
             favorite: self.foodItem.favorite,

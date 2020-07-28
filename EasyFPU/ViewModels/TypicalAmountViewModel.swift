@@ -29,6 +29,7 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
     init(from cdTypicalAmount: TypicalAmount) {
         self.cdTypicalAmount = cdTypicalAmount
         self.amountAsString = String(cdTypicalAmount.amount)
+        self.amount = Int(cdTypicalAmount.amount)
         self.comment = cdTypicalAmount.comment ?? ""
     }
     
