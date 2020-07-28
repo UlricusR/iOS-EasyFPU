@@ -12,7 +12,12 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
     var id = UUID()
     @Published var amountAsString: String {
         willSet {
-            guard FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, valueAsInt: &amount) else {
+            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue)
+            switch result {
+            case .success(let amount):
+                self.amount = amount
+            case .failure(let err):
+                debugPrint(err.localizedDescription)
                 return
             }
         }
@@ -31,9 +36,12 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
         self.comment = comment
         
         // Check for valid amount
-        var amount = 0
-        guard FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString, valueAsInt: &amount) else {
-            errorMessage = NSLocalizedString("Amount not a valid number or negative", comment: "")
+        let result = FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString)
+        switch result {
+        case .success(let amount):
+            self.amount = amount
+        case .failure(let err):
+            errorMessage = err.localizedDescription
             return nil
         }
         self.amountAsString = amountAsString

@@ -105,18 +105,19 @@ struct FoodItemSelector: View {
                     Text("Cancel")
                 },
                 trailing: Button(action: {
-                    var amount: Int = 0
-                    if FoodItemViewModel.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, valueAsInt: &amount) { // We have a valid amount
-                        self.editedFoodItem.amount = Int64(amount)
+                    let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString)
+                    switch amountResult {
+                    case .success(let amountAsInt):
+                        self.editedFoodItem.amount = Int64(amountAsInt)
                         
                         // Save new food item
                         self.saveContext()
                         
                         // Quit edit mode
                         self.isPresented = false
-                    } else { // Invalid data, display alert
+                    case .failure(let err):
                         // Display alert and stay in edit mode
-                        self.errorMessage = NSLocalizedString("Amount not a valid number or negative", comment: "")
+                        self.errorMessage = err.localizedDescription
                         self.showingAlert = true
                     }
                 }) {

@@ -8,26 +8,45 @@
 
 import Foundation
 
+enum DataError: Error {
+    case inputError(String)
+}
+
 class FoodItemViewModel: ObservableObject {
     @Published var name: String
     @Published var favorite: Bool
     @Published var caloriesAsString: String = "" {
         willSet {
-            guard FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue, valueAsDouble: &caloriesPer100g) else {
+            let result = FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue)
+            switch result {
+            case .success(let caloriesAsDouble):
+                caloriesPer100g = caloriesAsDouble
+            case .failure(let err):
+                debugPrint(err.localizedDescription)
                 return
             }
         }
     }
     @Published var carbsAsString: String = "" {
         willSet {
-            guard FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue, valueAsDouble: &carbsPer100g) else {
+            let result = FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue)
+            switch result {
+            case .success(let carbsAsDouble):
+                carbsPer100g = carbsAsDouble
+            case .failure(let err):
+                debugPrint(err.localizedDescription)
                 return
             }
         }
     }
     @Published var amountAsString: String = "" {
         willSet {
-            guard FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, valueAsInt: &amount) else {
+            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue)
+            switch result {
+            case .success(let amountAsInt):
+                amount = amountAsInt
+            case .failure(let err):
+                debugPrint(err.localizedDescription)
                 return
             }
         }
@@ -54,15 +73,23 @@ class FoodItemViewModel: ObservableObject {
         self.favorite = favorite
         
         // Check for valid calories
-        guard FoodItemViewModel.checkForPositiveDouble(valueAsString: caloriesAsString, valueAsDouble: &self.caloriesPer100g) else {
-            errorMessage = NSLocalizedString("Calories not a valid number or negative", comment: "")
+        let caloriesResult = FoodItemViewModel.checkForPositiveDouble(valueAsString: caloriesAsString)
+        switch caloriesResult {
+        case .success(let caloriesAsDouble):
+            caloriesPer100g = caloriesAsDouble
+        case .failure(let err):
+            errorMessage = err.localizedDescription
             return nil
         }
         self.caloriesAsString = caloriesAsString
         
         // Check for valid carbs
-        guard FoodItemViewModel.checkForPositiveDouble(valueAsString: carbsAsString, valueAsDouble: &self.carbsPer100g) else {
-            errorMessage = NSLocalizedString("Carbs not a valid number or negative", comment: "")
+        let carbsResult = FoodItemViewModel.checkForPositiveDouble(valueAsString: carbsAsString)
+        switch carbsResult {
+        case .success(let carbsAsDouble):
+            carbsPer100g = carbsAsDouble
+        case .failure(let err):
+            errorMessage = err.localizedDescription
             return nil
         }
         self.carbsAsString = carbsAsString
@@ -74,8 +101,12 @@ class FoodItemViewModel: ObservableObject {
         }
         
         // Check for valid amount
-        guard FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString, valueAsInt: &self.amount) else {
-            errorMessage = NSLocalizedString("Amount not a valid number or negative", comment: "")
+        let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString)
+        switch amountResult {
+        case .success(let amountAsInt):
+            amount = amountAsInt
+        case .failure(let err):
+            errorMessage = err.localizedDescription
             return nil
         }
         self.amountAsString = amountAsString
@@ -88,25 +119,23 @@ class FoodItemViewModel: ObservableObject {
         return numberFormatter
     }
     
-    static func checkForPositiveDouble(valueAsString: String, valueAsDouble: inout Double) -> Bool {
-        guard let valueAsNumber = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).number(from: valueAsString) else {
-            return false
+    static func checkForPositiveDouble(valueAsString: String) -> Result<Double, DataError> {
+        guard
+            let valueAsNumber = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).number(from: valueAsString),
+            valueAsNumber.doubleValue >= 0.0
+        else {
+            return .failure(.inputError(NSLocalizedString("Value not a number or negative: ", comment: "") + valueAsString))
         }
-        guard valueAsNumber.doubleValue >= 0.0 else {
-            return false
-        }
-        valueAsDouble = valueAsNumber.doubleValue
-        return true
+        return .success(valueAsNumber.doubleValue)
     }
     
-    static func checkForPositiveInt(valueAsString: String, valueAsInt: inout Int) -> Bool {
-        guard let valueAsNumber = NumberFormatter().number(from: valueAsString) else {
-            return false
+    static func checkForPositiveInt(valueAsString: String) -> Result<Int, DataError> {
+        guard
+            let valueAsNumber = NumberFormatter().number(from: valueAsString),
+            valueAsNumber.intValue >= 0
+        else {
+            return .failure(.inputError(NSLocalizedString("Value not a number or negative: ", comment: "") + valueAsString))
         }
-        guard valueAsNumber.intValue >= 0 else {
-            return false
-        }
-        valueAsInt = valueAsNumber.intValue
-        return true
+        return .success(valueAsNumber.intValue)
     }
 }
