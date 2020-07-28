@@ -30,6 +30,17 @@ struct FoodItemSelector: View {
                         Text("g")
                     }
                     
+                    // Buttons to ease input
+                    HStack {
+                        Spacer()
+                        NumberButton(number: 100, draftFoodItem: self.draftFoodItem)
+                        NumberButton(number: 50, draftFoodItem: self.draftFoodItem)
+                        NumberButton(number: 10, draftFoodItem: self.draftFoodItem)
+                        NumberButton(number: 5, draftFoodItem: self.draftFoodItem)
+                        NumberButton(number: 1, draftFoodItem: self.draftFoodItem)
+                        Spacer()
+                    }
+                    
                     // Add to typical amounts
                     if addToTypicalAmounts {
                         // User wants to add amount to typical amounts, so comment is required
@@ -132,3 +143,23 @@ struct FoodItemSelector: View {
         }
     }
 }
+
+struct NumberButton: View {
+    var number: Int
+    var draftFoodItem: FoodItemViewModel
+    
+    var body: some View {
+        Button(action: {
+            let newValue = self.draftFoodItem.amount + self.number
+            self.draftFoodItem.amountAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
+        }) {
+            Text("+\(number)")
+        }
+        .padding()
+        .buttonStyle(BorderlessButtonStyle())
+        .background(Color.green)
+        .foregroundColor(.white)
+        .cornerRadius(10)
+    }
+}
+

@@ -10,8 +10,15 @@ import Foundation
 
 class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
     var id = UUID()
-    @Published var amountAsString: String
+    @Published var amountAsString: String {
+        willSet {
+            guard FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, valueAsInt: &amount) else {
+                return
+            }
+        }
+    }
     @Published var comment: String
+    private(set) var amount: Int = 0
     var cdTypicalAmount: TypicalAmount?
     
     init(from cdTypicalAmount: TypicalAmount) {
@@ -32,17 +39,9 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
         self.amountAsString = amountAsString
     }
     
-    func getAmount() -> Int {
-        var value = 0
-        if !FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString, valueAsInt: &value) {
-            return 0
-        }
-        return value
-    }
-    
     func updateCDTypicalAmount(foodItem: FoodItem?) -> Bool {
         if cdTypicalAmount == nil { return false }
-        cdTypicalAmount!.amount = Int64(getAmount())
+        cdTypicalAmount!.amount = Int64(amount)
         cdTypicalAmount!.comment = comment
         cdTypicalAmount!.foodItem = foodItem
         return true
@@ -53,10 +52,10 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
     }
     
     static func == (lhs: TypicalAmountViewModel, rhs: TypicalAmountViewModel) -> Bool {
-        lhs.getAmount() == rhs.getAmount()
+        lhs.amount == rhs.amount
     }
     
     static func < (lhs: TypicalAmountViewModel, rhs: TypicalAmountViewModel) -> Bool {
-        lhs.getAmount() < rhs.getAmount()
+        lhs.amount < rhs.amount
     }
 }

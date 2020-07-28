@@ -11,20 +11,31 @@ import Foundation
 class FoodItemViewModel: ObservableObject {
     @Published var name: String
     @Published var favorite: Bool
-    @Published var caloriesAsString: String = ""
-    @Published var carbsAsString: String = ""
-    @Published var amountAsString: String = ""
-    var caloriesPer100g: Double = 0.0
-    var carbsPer100g: Double = 0.0
-    var amount: Int = 0
-    var typicalAmounts = [TypicalAmountViewModel]()
-    
-    static func doubleFormatter(numberOfDigits: Int) -> NumberFormatter {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        numberFormatter.maximumFractionDigits = numberOfDigits
-        return numberFormatter
+    @Published var caloriesAsString: String = "" {
+        willSet {
+            guard FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue, valueAsDouble: &caloriesPer100g) else {
+                return
+            }
+        }
     }
+    @Published var carbsAsString: String = "" {
+        willSet {
+            guard FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue, valueAsDouble: &carbsPer100g) else {
+                return
+            }
+        }
+    }
+    @Published var amountAsString: String = "" {
+        willSet {
+            guard FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, valueAsInt: &amount) else {
+                return
+            }
+        }
+    }
+    private(set) var caloriesPer100g: Double = 0.0
+    private(set) var carbsPer100g: Double = 0.0
+    private(set) var amount: Int = 0
+    var typicalAmounts = [TypicalAmountViewModel]()
     
     init(name: String, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, amount: Int) {
         self.name = name
@@ -68,6 +79,13 @@ class FoodItemViewModel: ObservableObject {
             return nil
         }
         self.amountAsString = amountAsString
+    }
+    
+    static func doubleFormatter(numberOfDigits: Int) -> NumberFormatter {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = numberOfDigits
+        return numberFormatter
     }
     
     static func checkForPositiveDouble(valueAsString: String, valueAsDouble: inout Double) -> Bool {
