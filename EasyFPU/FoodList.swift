@@ -39,6 +39,7 @@ struct FoodList: View {
         VStack {
             NavigationView {
                 List {
+                    Text("Tap to select, long press to edit").font(.caption)
                     ForEach(foodItems, id: \.self) { foodItem in
                         FoodItemView(foodItem: foodItem)
                         .environment(\.managedObjectContext, self.managedObjectContext)
