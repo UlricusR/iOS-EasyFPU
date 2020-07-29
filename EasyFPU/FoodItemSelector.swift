@@ -105,7 +105,7 @@ struct FoodItemSelector: View {
                     Text("Cancel")
                 },
                 trailing: Button(action: {
-                    let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString)
+                    let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
                     switch amountResult {
                     case .success(let amountAsInt):
                         self.editedFoodItem.amount = Int64(amountAsInt)

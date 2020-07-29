@@ -17,7 +17,7 @@ class FoodItemViewModel: ObservableObject {
     @Published var favorite: Bool
     @Published var caloriesAsString: String = "" {
         willSet {
-            let result = FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue)
+            let result = FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue, allowZero: true)
             switch result {
             case .success(let caloriesAsDouble):
                 caloriesPer100g = caloriesAsDouble
@@ -29,7 +29,7 @@ class FoodItemViewModel: ObservableObject {
     }
     @Published var carbsAsString: String = "" {
         willSet {
-            let result = FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue)
+            let result = FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue, allowZero: true)
             switch result {
             case .success(let carbsAsDouble):
                 carbsPer100g = carbsAsDouble
@@ -41,7 +41,7 @@ class FoodItemViewModel: ObservableObject {
     }
     @Published var amountAsString: String = "" {
         willSet {
-            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue)
+            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, allowZero: true)
             switch result {
             case .success(let amountAsInt):
                 amount = amountAsInt
@@ -73,7 +73,7 @@ class FoodItemViewModel: ObservableObject {
         self.favorite = favorite
         
         // Check for valid calories
-        let caloriesResult = FoodItemViewModel.checkForPositiveDouble(valueAsString: caloriesAsString)
+        let caloriesResult = FoodItemViewModel.checkForPositiveDouble(valueAsString: caloriesAsString, allowZero: true)
         switch caloriesResult {
         case .success(let caloriesAsDouble):
             caloriesPer100g = caloriesAsDouble
@@ -84,7 +84,7 @@ class FoodItemViewModel: ObservableObject {
         self.caloriesAsString = caloriesAsString
         
         // Check for valid carbs
-        let carbsResult = FoodItemViewModel.checkForPositiveDouble(valueAsString: carbsAsString)
+        let carbsResult = FoodItemViewModel.checkForPositiveDouble(valueAsString: carbsAsString, allowZero: true)
         switch carbsResult {
         case .success(let carbsAsDouble):
             carbsPer100g = carbsAsDouble
@@ -101,7 +101,7 @@ class FoodItemViewModel: ObservableObject {
         }
         
         // Check for valid amount
-        let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString)
+        let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString, allowZero: true)
         switch amountResult {
         case .success(let amountAsInt):
             amount = amountAsInt
@@ -119,22 +119,22 @@ class FoodItemViewModel: ObservableObject {
         return numberFormatter
     }
     
-    static func checkForPositiveDouble(valueAsString: String) -> Result<Double, DataError> {
-        guard
-            let valueAsNumber = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).number(from: valueAsString),
-            valueAsNumber.doubleValue >= 0.0
-        else {
-            return .failure(.inputError(NSLocalizedString("Value not a number or negative: ", comment: "") + valueAsString))
+    static func checkForPositiveDouble(valueAsString: String, allowZero: Bool) -> Result<Double, DataError> {
+        guard let valueAsNumber = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).number(from: valueAsString) else {
+            return .failure(.inputError(NSLocalizedString("Value not a number: ", comment: "") + valueAsString))
+        }
+        guard allowZero ? valueAsNumber.doubleValue >= 0.0 : valueAsNumber.doubleValue > 0.0 else {
+            return .failure(.inputError(NSLocalizedString("Value must not be zero or negative", comment: "")))
         }
         return .success(valueAsNumber.doubleValue)
     }
     
-    static func checkForPositiveInt(valueAsString: String) -> Result<Int, DataError> {
-        guard
-            let valueAsNumber = NumberFormatter().number(from: valueAsString),
-            valueAsNumber.intValue >= 0
-        else {
-            return .failure(.inputError(NSLocalizedString("Value not a number or negative: ", comment: "") + valueAsString))
+    static func checkForPositiveInt(valueAsString: String, allowZero: Bool) -> Result<Int, DataError> {
+        guard let valueAsNumber = NumberFormatter().number(from: valueAsString) else {
+            return .failure(.inputError(NSLocalizedString("Value not a number: ", comment: "") + valueAsString))
+        }
+        guard allowZero ? valueAsNumber.intValue >= 0 : valueAsNumber.intValue > 0 else {
+            return .failure(.inputError(NSLocalizedString("Value must not be zero or negative", comment: "")))
         }
         return .success(valueAsNumber.intValue)
     }

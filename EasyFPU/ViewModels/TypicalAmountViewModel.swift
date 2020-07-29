@@ -12,7 +12,7 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
     var id = UUID()
     @Published var amountAsString: String {
         willSet {
-            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue)
+            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, allowZero: false)
             switch result {
             case .success(let amount):
                 self.amount = amount
@@ -37,7 +37,7 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
         self.comment = comment
         
         // Check for valid amount
-        let result = FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString)
+        let result = FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString, allowZero: false)
         switch result {
         case .success(let amount):
             self.amount = amount
@@ -61,7 +61,7 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
     }
     
     static func == (lhs: TypicalAmountViewModel, rhs: TypicalAmountViewModel) -> Bool {
-        lhs.amount == rhs.amount
+        lhs.id == rhs.id
     }
     
     static func < (lhs: TypicalAmountViewModel, rhs: TypicalAmountViewModel) -> Bool {
