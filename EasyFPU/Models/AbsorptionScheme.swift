@@ -6,13 +6,37 @@
 //  Copyright © 2020 Ulrich Rüth. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
-class AbsorptionScheme: Equatable, Codable {
+class AbsorptionScheme: Equatable {
     var absorptionBlocks: [AbsorptionBlock]
+    @Environment(\.managedObjectContext) var managedObjectContext
     
     init(absorptionBlocks: [AbsorptionBlock]) {
         self.absorptionBlocks = absorptionBlocks
+    }
+    
+    init(absorptionBlocksFromJson: [AbsorptionBlockFromJson]) {
+        self.absorptionBlocks = [AbsorptionBlock]()
+        for absorptionBlock in absorptionBlocksFromJson {
+            let newAbsorptionBlock = AbsorptionBlock(context: managedObjectContext)
+            newAbsorptionBlock.maxFpu = Int64(absorptionBlock.maxFpu)
+            newAbsorptionBlock.absorptionTime = Int64(absorptionBlock.absorptionTime)
+            self.absorptionBlocks.append(newAbsorptionBlock)
+        }
+    }
+    
+    func addToAbsorptionBlocks(newAbsorptionBlock: AbsorptionBlock) {
+        absorptionBlocks.append(newAbsorptionBlock)
+        absorptionBlocks = absorptionBlocks.sorted()
+    }
+    
+    func removeFromAbsorptionBlocks(absorptionBlockToBeDeleted: AbsorptionBlock) {
+        guard let index = absorptionBlocks.firstIndex(where: { $0 == absorptionBlockToBeDeleted }) else {
+            return
+        }
+        absorptionBlocks.remove(at: index)
+        managedObjectContext.delete(absorptionBlockToBeDeleted)
     }
     
     func getAbsorptionTime(fpus: Double) -> Int {
@@ -22,20 +46,20 @@ class AbsorptionScheme: Equatable, Codable {
         // Find associated absorption time
         for absorptionBlock in absorptionBlocks {
             if roundedFPUs <= absorptionBlock.maxFpu {
-                return absorptionBlock.absorptionTime
+                return Int(absorptionBlock.absorptionTime)
             }
         }
         
         // Seems to be beyond the last block, so return time of the last block
-        return absorptionBlocks[absorptionBlocks.count - 1].maxFpu
+        return Int(absorptionBlocks[absorptionBlocks.count - 1].maxFpu)
     }
     
     func getMaximumAbsorptionTime() -> Int {
-        absorptionBlocks[absorptionBlocks.count - 1].absorptionTime
+        Int(absorptionBlocks[absorptionBlocks.count - 1].absorptionTime)
     }
     
     func getMaximumFPUs() -> Int {
-        absorptionBlocks[absorptionBlocks.count - 1].maxFpu
+        Int(absorptionBlocks[absorptionBlocks.count - 1].maxFpu)
     }
     
     static func == (lhs: AbsorptionScheme, rhs: AbsorptionScheme) -> Bool {

@@ -52,3 +52,9 @@
 "Value not a number: " = "Value not a number: ";
 "Value must not be zero or negative" = "Value must not be zero or negative";
 "Cannot delete typical amount " = "Cannot delete typical amount ";
+
+"Edit Absorption Scheme" = "Edit Absorption Scheme";
+"Absorption blocks:" = "Absorption blocks:";
+"FPU -" = "FPU -";
+"h" = "h";
+"Cannot find absorption block: " = "Cannot find absorption block: ";

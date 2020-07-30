@@ -10,15 +10,39 @@ import Foundation
 
 class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
     var id = UUID()
-    var maxFpuAsString: String
-    var absorptionTimeAsString: String
+    @Published var maxFpuAsString: String {
+        willSet {
+            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, allowZero: false)
+            switch result {
+            case .success(let maxFpu):
+                self.maxFpu = maxFpu
+            case .failure(let err):
+                debugPrint(err.localizedDescription)
+                return
+            }
+        }
+    }
+    var absorptionTimeAsString: String {
+        willSet {
+            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, allowZero: false)
+            switch result {
+            case .success(let absorptionTime):
+                self.absorptionTime = absorptionTime
+            case .failure(let err):
+                debugPrint(err.localizedDescription)
+                return
+            }
+        }
+    }
     private(set) var maxFpu: Int
     private(set) var absorptionTime: Int
+    var cdAbsorptionBlock: AbsorptionBlock?
     
     init(from absorptionBlock: AbsorptionBlock) {
-        self.maxFpu = absorptionBlock.maxFpu
+        self.cdAbsorptionBlock = absorptionBlock
+        self.maxFpu = Int(absorptionBlock.maxFpu)
         self.maxFpuAsString = String(absorptionBlock.maxFpu)
-        self.absorptionTime = absorptionBlock.absorptionTime
+        self.absorptionTime = Int(absorptionBlock.absorptionTime)
         self.absorptionTimeAsString = String(absorptionBlock.absorptionTime)
     }
     
@@ -44,6 +68,16 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
             return nil
         }
         self.absorptionTimeAsString = absorptionTimeAsString
+    }
+    
+    func updateCdAbsorptionBlock() -> Bool {
+        if cdAbsorptionBlock == nil {
+            return false
+        } else {
+            cdAbsorptionBlock!.maxFpu = Int64(maxFpu)
+            cdAbsorptionBlock!.absorptionTime = Int64(absorptionTime)
+            return true
+        }
     }
     
     func hash(into hasher: inout Hasher) {

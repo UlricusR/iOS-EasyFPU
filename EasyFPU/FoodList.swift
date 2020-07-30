@@ -42,30 +42,39 @@ struct FoodList: View {
                     Text("Tap to select, long press to edit").font(.caption)
                     ForEach(foodItems, id: \.self) { foodItem in
                         FoodItemView(foodItem: foodItem)
-                        .environment(\.managedObjectContext, self.managedObjectContext)
-                        .environmentObject(self.userData)
+                            .environment(\.managedObjectContext, self.managedObjectContext)
+                            .environmentObject(self.userData)
                     }
                     .onDelete(perform: deleteFoodItem)
                 }
                 .navigationBarTitle("Food List")
-                .navigationBarItems(trailing: Button(action: {
-                    // Add new food item
-                    self.draftFoodItem = FoodItemViewModel(
-                        name: "",
-                        favorite: false,
-                        caloriesPer100g: 0.0,
-                        carbsPer100g: 0.0,
-                        amount: 0
-                    )
-                    self.activeSheet = .addFoodItem
-                    self.showingSheet = true
-                }) {
-                    Image(systemName: "plus.circle")
-                        .imageScale(.large)
-                        .foregroundColor(.green)
-                })
+                .navigationBarItems(
+                    leading: Button(action: {
+                        self.activeSheet = .editAbsorptionScheme
+                        self.showingSheet = true
+                    }) {
+                        Image(systemName: "slider.horizontal.3")
+                            .imageScale(.large)
+                    },
+                    trailing: Button(action: {
+                        // Add new food item
+                        self.draftFoodItem = FoodItemViewModel(
+                            name: "",
+                            favorite: false,
+                            caloriesPer100g: 0.0,
+                            carbsPer100g: 0.0,
+                            amount: 0
+                        )
+                        self.activeSheet = .addFoodItem
+                        self.showingSheet = true
+                    }) {
+                        Image(systemName: "plus.circle")
+                            .imageScale(.large)
+                            .foregroundColor(.green)
+                    }
+                )
             }
-                
+            
             if meal.amount > 0 {
                 VStack {
                     Text("Total meal").font(.headline)
@@ -108,6 +117,7 @@ struct FoodList: View {
                 activeSheet: self.activeSheet,
                 isPresented: self.$showingSheet,
                 draftFoodItem: self.draftFoodItem,
+                draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.userData.absorptionScheme),
                 meal: self.meal
             )
                 .environment(\.managedObjectContext, self.managedObjectContext)

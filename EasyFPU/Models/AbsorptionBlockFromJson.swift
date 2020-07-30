@@ -8,7 +8,8 @@
 
 import Foundation
 
-class AbsorptionBlock: Codable {
+class AbsorptionBlockFromJson: Codable {
+    var id = UUID()
     var maxFpu: Int
     var absorptionTime: Int
     

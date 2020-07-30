@@ -9,7 +9,7 @@
 import SwiftUI
 
 enum ActiveFoodListSheet {
-    case addFoodItem, showMealDetails
+    case addFoodItem, showMealDetails, editAbsorptionScheme
 }
 
 struct FoodListSheets: View {
@@ -18,6 +18,7 @@ struct FoodListSheets: View {
     var activeSheet: ActiveFoodListSheet
     @Binding var isPresented: Bool
     var draftFoodItem: FoodItemViewModel
+    var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var meal: Meal
     
     var body: some View {
@@ -33,6 +34,12 @@ struct FoodListSheets: View {
         case .showMealDetails:
             return AnyView(
                 MealDetail(isPresented: self.$isPresented, meal: self.meal).environmentObject(self.userData)
+            )
+        case .editAbsorptionScheme:
+            return AnyView(
+                AbsorptionSchemeEditor(isPresented: self.$isPresented, draftAbsorptionScheme: self.draftAbsorptionScheme)
+                    .environmentObject(self.userData)
+                    .environment(\.managedObjectContext, managedObjectContext)
             )
         }
     }

@@ -20,8 +20,8 @@ final class UserData: ObservableObject {
         }
         do {
             let data = try Data(contentsOf: file)
-            let absorptionBlocks = UserData.decode(json: data, strategy: .convertFromSnakeCase) as [AbsorptionBlock]
-            absorptionScheme = AbsorptionScheme(absorptionBlocks: absorptionBlocks)
+            let absorptionBlocks = UserData.decode(json: data, strategy: .convertFromSnakeCase) as [AbsorptionBlockFromJson]
+            absorptionScheme = AbsorptionScheme(absorptionBlocksFromJson: absorptionBlocks)
         } catch {
             fatalError("Could not decode data of \(absorptionSchemeDefaultFile):\n\(error.localizedDescription)")
         }
