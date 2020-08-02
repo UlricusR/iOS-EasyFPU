@@ -21,6 +21,6 @@
     <elements>
         <element name="FoodItem" positionX="-63" positionY="-18" width="128" height="148"/>
         <element name="TypicalAmount" positionX="-54" positionY="18" width="128" height="88"/>
-        <element name="AbsorptionBlock" positionX="-54" positionY="45" width="128" height="73"/>
+        <element name="AbsorptionBlock" positionX="-54" positionY="45" width="128" height="28"/>
     </elements>
 </model>
