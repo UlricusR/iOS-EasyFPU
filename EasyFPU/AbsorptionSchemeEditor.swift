@@ -11,9 +11,10 @@ import SwiftUI
 struct AbsorptionSchemeEditor: View {
     @Binding var isPresented: Bool
     @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
+    var absorptionSchemeLoader: AbsorptionSchemeLoader
     var absorptionBlocks: [AbsorptionBlockViewModel] {
         var absorptionBlocks = [AbsorptionBlockViewModel]()
-        for absorptionBlock in self.userData.absorptionScheme.absorptionBlocks {
+        for absorptionBlock in self.absorptionSchemeLoader.getAbsorptionScheme().absorptionBlocks {
             absorptionBlocks.append(AbsorptionBlockViewModel(from: absorptionBlock))
         }
         return absorptionBlocks.sorted()
@@ -25,7 +26,6 @@ struct AbsorptionSchemeEditor: View {
     @State var updateButton: Bool = false
     @State var showingAlert: Bool = false
     @State var absorptionBlocksToBeDeleted = [AbsorptionBlockViewModel]()
-    @EnvironmentObject var userData: UserData
     @Environment(\.managedObjectContext) var managedObjectContext
     
     var body: some View {
@@ -98,7 +98,7 @@ struct AbsorptionSchemeEditor: View {
                                 let newCdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
                                 absorptionBlock.cdAbsorptionBlock = newCdAbsorptionBlock
                                 let _ = absorptionBlock.updateCdAbsorptionBlock()
-                                self.userData.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
+                                self.absorptionSchemeLoader.getAbsorptionScheme().addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
                             } else { // This is an existing typical amount, so just update values
                                 let _ = absorptionBlock.updateCdAbsorptionBlock()
                             }
@@ -107,7 +107,7 @@ struct AbsorptionSchemeEditor: View {
                         // Remove deleted typical amounts
                         for absorptionBlockToBeDeleted in self.absorptionBlocksToBeDeleted {
                             if absorptionBlockToBeDeleted.cdAbsorptionBlock != nil {
-                                self.userData.absorptionScheme.removeFromAbsorptionBlocks(absorptionBlockToBeDeleted: absorptionBlockToBeDeleted.cdAbsorptionBlock!)
+                                self.absorptionSchemeLoader.getAbsorptionScheme().removeFromAbsorptionBlocks(absorptionBlockToBeDeleted: absorptionBlockToBeDeleted.cdAbsorptionBlock!)
                                 self.managedObjectContext.delete(absorptionBlockToBeDeleted.cdAbsorptionBlock!)
                             }
                         }

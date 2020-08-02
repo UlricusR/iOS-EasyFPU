@@ -9,6 +9,10 @@
 import Foundation
 
 class AbsorptionBlockFromJson: Codable {
+    enum CodingKeys: String, CodingKey {
+        case maxFpu, absorptionTime
+    }
+    
     var id = UUID()
     var maxFpu: Int
     var absorptionTime: Int

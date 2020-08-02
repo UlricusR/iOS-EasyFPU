@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct MealDetail: View {
-    @EnvironmentObject var userData: UserData
     @Binding var isPresented: Bool
+    var absorptionSchemeLoader: AbsorptionSchemeLoader
     var meal: Meal
     
     var body: some View {
@@ -45,7 +45,7 @@ struct MealDetail: View {
                 }
                 
                 HStack {
-                    Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.userData.absorptionScheme)))!)
+                    Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionSchemeLoader.getAbsorptionScheme())))!)
                     Text("h Absorption Time")
                 }
                 

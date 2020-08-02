@@ -13,12 +13,12 @@ enum ActiveFoodListSheet {
 }
 
 struct FoodListSheets: View {
-    @EnvironmentObject var userData: UserData
     @Environment(\.managedObjectContext) var managedObjectContext
     var activeSheet: ActiveFoodListSheet
     @Binding var isPresented: Bool
     var draftFoodItem: FoodItemViewModel
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
+    var absorptionSchemeLoader: AbsorptionSchemeLoader
     var meal: Meal
     
     var body: some View {
@@ -33,12 +33,11 @@ struct FoodListSheets: View {
             )
         case .showMealDetails:
             return AnyView(
-                MealDetail(isPresented: self.$isPresented, meal: self.meal).environmentObject(self.userData)
+                MealDetail(isPresented: self.$isPresented, absorptionSchemeLoader: absorptionSchemeLoader, meal: self.meal)
             )
         case .editAbsorptionScheme:
             return AnyView(
-                AbsorptionSchemeEditor(isPresented: self.$isPresented, draftAbsorptionScheme: self.draftAbsorptionScheme)
-                    .environmentObject(self.userData)
+                AbsorptionSchemeEditor(isPresented: self.$isPresented, draftAbsorptionScheme: self.draftAbsorptionScheme, absorptionSchemeLoader: self.absorptionSchemeLoader)
                     .environment(\.managedObjectContext, managedObjectContext)
             )
         }

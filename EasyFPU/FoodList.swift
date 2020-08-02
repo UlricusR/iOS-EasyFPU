@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct FoodList: View {
-    @EnvironmentObject var userData: UserData
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(
         entity: FoodItem.entity(),
@@ -35,15 +34,16 @@ struct FoodList: View {
         return meal
     }
     
+    var absorptionSchemeLoader = AbsorptionSchemeLoader()
+    
     var body: some View {
         VStack {
             NavigationView {
                 List {
                     Text("Tap to select, long press to edit").font(.caption)
                     ForEach(foodItems, id: \.self) { foodItem in
-                        FoodItemView(foodItem: foodItem)
+                        FoodItemView(absorptionSchemeLoader: self.absorptionSchemeLoader, foodItem: foodItem)
                             .environment(\.managedObjectContext, self.managedObjectContext)
-                            .environmentObject(self.userData)
                     }
                     .onDelete(perform: deleteFoodItem)
                 }
@@ -98,7 +98,7 @@ struct FoodList: View {
                         
                         VStack {
                             HStack {
-                                Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.userData.absorptionScheme)))!)
+                                Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionSchemeLoader.getAbsorptionScheme())))!)
                                 Text("h")
                             }
                             Text("Absorption Time").font(.caption)
@@ -117,11 +117,11 @@ struct FoodList: View {
                 activeSheet: self.activeSheet,
                 isPresented: self.$showingSheet,
                 draftFoodItem: self.draftFoodItem,
-                draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.userData.absorptionScheme),
+                draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionSchemeLoader.getAbsorptionScheme()),
+                absorptionSchemeLoader: self.absorptionSchemeLoader,
                 meal: self.meal
             )
                 .environment(\.managedObjectContext, self.managedObjectContext)
-                .environmentObject(self.userData)
         }
     }
     

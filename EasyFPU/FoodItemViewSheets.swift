@@ -13,7 +13,6 @@ enum ActiveFoodItemViewSheet {
 }
 
 struct FoodItemViewSheets: View {
-    @EnvironmentObject var userData: UserData
     @Environment(\.managedObjectContext) var managedObjectContext
     var activeSheet: ActiveFoodItemViewSheet
     @Binding var isPresented: Bool
