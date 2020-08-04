@@ -55,6 +55,12 @@
 
 "Edit Absorption Scheme" = "Edit Absorption Scheme";
 "Absorption blocks:" = "Absorption blocks:";
+"Max. FPUs" = "Max. FPUs";
+"Absorption time" = "Absorption time";
 "FPU -" = "FPU -";
 "h" = "h";
 "Cannot find absorption block: " = "Cannot find absorption block: ";
+"Maximum FPU value already exists" = "Maximum FPU value already exists";
+"Absorption time is equals or larger than the one of the following absorption block" = "Absorption time is equals or larger than the one of the following absorption block";
+"Absorption time is equals or less than the one of the block before" = "Absorption time is equals or less than the one of the block before";
+"Absorption time must be between previous and following block" = "Absorption time must be between previous and following block";

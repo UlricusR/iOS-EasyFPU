@@ -10,7 +10,7 @@ import SwiftUI
 
 struct FoodItemView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    var absorptionSchemeLoader: AbsorptionSchemeLoader
+    var absorptionScheme: AbsorptionScheme
     @ObservedObject var foodItem: FoodItem
     @State private var showingSheet = false
     @State var activeSheet = ActiveFoodItemViewSheet.selectFoodItem
@@ -77,7 +77,7 @@ struct FoodItemView: View {
                         }
                         
                         HStack {
-                            Text(NumberFormatter().string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionSchemeLoader.getAbsorptionScheme())))!).font(.caption)
+                            Text(NumberFormatter().string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme)))!).font(.caption)
                             Text("h Absorption Time").font(.caption)
                         }
                     }

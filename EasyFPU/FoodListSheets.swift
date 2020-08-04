@@ -18,7 +18,7 @@ struct FoodListSheets: View {
     @Binding var isPresented: Bool
     var draftFoodItem: FoodItemViewModel
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
-    var absorptionSchemeLoader: AbsorptionSchemeLoader
+    var absorptionScheme: AbsorptionScheme
     var meal: Meal
     
     var body: some View {
@@ -33,11 +33,11 @@ struct FoodListSheets: View {
             )
         case .showMealDetails:
             return AnyView(
-                MealDetail(isPresented: self.$isPresented, absorptionSchemeLoader: absorptionSchemeLoader, meal: self.meal)
+                MealDetail(isPresented: self.$isPresented, absorptionScheme: absorptionScheme, meal: self.meal)
             )
         case .editAbsorptionScheme:
             return AnyView(
-                AbsorptionSchemeEditor(isPresented: self.$isPresented, draftAbsorptionScheme: self.draftAbsorptionScheme, absorptionSchemeLoader: self.absorptionSchemeLoader)
+                AbsorptionSchemeEditor(isPresented: self.$isPresented, draftAbsorptionScheme: self.draftAbsorptionScheme, editedAbsorptionScheme: absorptionScheme)
                     .environment(\.managedObjectContext, managedObjectContext)
             )
         }

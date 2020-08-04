@@ -9,22 +9,7 @@
 import SwiftUI
 
 class AbsorptionScheme: Equatable {
-    var absorptionBlocks: [AbsorptionBlock]
-    @Environment(\.managedObjectContext) var managedObjectContext
-    
-    init(absorptionBlocks: [AbsorptionBlock]) {
-        self.absorptionBlocks = absorptionBlocks
-    }
-    
-    init(absorptionBlocksFromJson: [AbsorptionBlockFromJson]) {
-        self.absorptionBlocks = [AbsorptionBlock]()
-        for absorptionBlock in absorptionBlocksFromJson {
-            let newAbsorptionBlock = AbsorptionBlock(context: managedObjectContext)
-            newAbsorptionBlock.maxFpu = Int64(absorptionBlock.maxFpu)
-            newAbsorptionBlock.absorptionTime = Int64(absorptionBlock.absorptionTime)
-            self.absorptionBlocks.append(newAbsorptionBlock)
-        }
-    }
+    var absorptionBlocks = [AbsorptionBlock]()
     
     func addToAbsorptionBlocks(newAbsorptionBlock: AbsorptionBlock) {
         absorptionBlocks.append(newAbsorptionBlock)
@@ -36,7 +21,6 @@ class AbsorptionScheme: Equatable {
             return
         }
         absorptionBlocks.remove(at: index)
-        managedObjectContext.delete(absorptionBlockToBeDeleted)
     }
     
     func getAbsorptionTime(fpus: Double) -> Int {

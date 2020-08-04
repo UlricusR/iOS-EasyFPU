@@ -16,6 +16,13 @@ struct FoodList: View {
             NSSortDescriptor(keyPath: \FoodItem.name, ascending: true)
         ]
     ) var foodItems: FetchedResults<FoodItem>
+    @FetchRequest(
+        entity: AbsorptionBlock.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \AbsorptionBlock.absorptionTime, ascending: true)
+        ]
+    ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
+    var absorptionScheme = AbsorptionScheme()
     @State var showingSheet = false
     @State var activeSheet = ActiveFoodListSheet.addFoodItem
     @State var draftFoodItem = FoodItemViewModel(
@@ -34,15 +41,13 @@ struct FoodList: View {
         return meal
     }
     
-    var absorptionSchemeLoader = AbsorptionSchemeLoader()
-    
     var body: some View {
         VStack {
             NavigationView {
                 List {
                     Text("Tap to select, long press to edit").font(.caption)
                     ForEach(foodItems, id: \.self) { foodItem in
-                        FoodItemView(absorptionSchemeLoader: self.absorptionSchemeLoader, foodItem: foodItem)
+                        FoodItemView(absorptionScheme: self.absorptionScheme, foodItem: foodItem)
                             .environment(\.managedObjectContext, self.managedObjectContext)
                     }
                     .onDelete(perform: deleteFoodItem)
@@ -98,7 +103,7 @@ struct FoodList: View {
                         
                         VStack {
                             HStack {
-                                Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionSchemeLoader.getAbsorptionScheme())))!)
+                                Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionScheme)))!)
                                 Text("h")
                             }
                             Text("Absorption Time").font(.caption)
@@ -117,11 +122,32 @@ struct FoodList: View {
                 activeSheet: self.activeSheet,
                 isPresented: self.$showingSheet,
                 draftFoodItem: self.draftFoodItem,
-                draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionSchemeLoader.getAbsorptionScheme()),
-                absorptionSchemeLoader: self.absorptionSchemeLoader,
+                draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme),
+                absorptionScheme: self.absorptionScheme,
                 meal: self.meal
             )
                 .environment(\.managedObjectContext, self.managedObjectContext)
+        }
+        .onAppear {
+            if self.absorptionScheme.absorptionBlocks.isEmpty {
+                // Absorption scheme hasn't been loaded yet
+                if self.absorptionBlocks.isEmpty {
+                    // Absorption blocks are empty, so initialize with default absorption scheme
+                    // and store default blocks back to core data
+                    let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks()
+                    
+                    for absorptionBlock in defaultAbsorptionBlocks {
+                        let cdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
+                        cdAbsorptionBlock.absorptionTime = Int64(absorptionBlock.absorptionTime)
+                        cdAbsorptionBlock.maxFpu = Int64(absorptionBlock.maxFpu)
+                        self.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
+                    }
+                    self.saveContext()
+                } else {
+                    // Store absorption blocks loaded from core data
+                    self.absorptionScheme.absorptionBlocks = self.absorptionBlocks.sorted()
+                }
+            }
         }
     }
     
