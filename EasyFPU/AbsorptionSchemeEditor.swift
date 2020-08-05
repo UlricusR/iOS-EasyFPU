@@ -147,12 +147,18 @@ struct AbsorptionSchemeEditor: View {
     }
     
     func deleteAbsorptionBlock(at offsets: IndexSet) {
-        offsets.forEach { index in
-            let absorptionBlockToBeDeleted = self.draftAbsorptionScheme.absorptionBlocks[index]
-            absorptionBlocksToBeDeleted.append(absorptionBlockToBeDeleted)
-            self.draftAbsorptionScheme.absorptionBlocks.remove(at: index)
+        if draftAbsorptionScheme.absorptionBlocks.count > 1 {
+            offsets.forEach { index in
+                let absorptionBlockToBeDeleted = self.draftAbsorptionScheme.absorptionBlocks[index]
+                absorptionBlocksToBeDeleted.append(absorptionBlockToBeDeleted)
+                self.draftAbsorptionScheme.absorptionBlocks.remove(at: index)
+            }
+            self.draftAbsorptionScheme.objectWillChange.send()
+        } else {
+            // We need to have at least one block left
+            errorMessage = NSLocalizedString("At least one absorption block required", comment: "")
+            showingAlert = true
         }
-        self.draftAbsorptionScheme.objectWillChange.send()
     }
     
     func saveContext() {

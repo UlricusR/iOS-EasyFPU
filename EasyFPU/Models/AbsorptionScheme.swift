@@ -24,6 +24,10 @@ class AbsorptionScheme: Equatable {
     }
     
     func getAbsorptionTime(fpus: Double) -> Int {
+        if absorptionBlocks.count == 0 {
+            // This is to make sure we have no index error and app crash - default will be loaded later
+            return 100
+        }
         // Round up the fpus - it's more secure to get a longer insulin interval
         let roundedFPUs = Int(fpus.rounded(.up))
         
