@@ -65,3 +65,4 @@
 "Absorption time is equals or less than the one of the block before" = "Absorptionszeit ist gleich oder kleiner als die des vorherigen Blocks";
 "Absorption time must be between previous and following block" = "Absorptionszeit muss zwischen vorherigem und nachfolgendem Block liegen";
 "At least one absorption block required" = "Mindestens ein Absorptionsblock benötigt";
+"Reset to default" = "Auf Voreinstellungen zurücksetzen";

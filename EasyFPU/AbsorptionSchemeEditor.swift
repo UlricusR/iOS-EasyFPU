@@ -56,6 +56,9 @@ struct AbsorptionSchemeEditor: View {
                                     self.draftAbsorptionScheme.absorptionBlocks.remove(at: index)
                                     if let updatedAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, errorMessage: &self.errorMessage) {
                                         if self.draftAbsorptionScheme.add(newAbsorptionBlock: updatedAbsorptionBlock, errorMessage: &self.errorMessage) {
+                                            // Add old absorption block to the list of blocks to be deleted
+                                            self.absorptionBlocksToBeDeleted.append(existingAbsorptionBlock)
+                                            
                                             // Reset text fields
                                             self.newMaxFpu = ""
                                             self.newAbsorptionTime = ""
@@ -93,6 +96,11 @@ struct AbsorptionSchemeEditor: View {
                     }
                     .onDelete(perform: deleteAbsorptionBlock)
                 }
+                Button(action: {
+                    self.resetToDefaults()
+                }) {
+                    Text("Reset to default")
+                }
                 .navigationBarTitle(Text("Edit Absorption Scheme"))
                 .navigationBarItems(
                     leading: Button(action: {
@@ -101,7 +109,7 @@ struct AbsorptionSchemeEditor: View {
                         Text("Cancel")
                     },
                     trailing: Button(action: {
-                        // Update typical amounts
+                        // Update absorption block
                         for absorptionBlock in self.draftAbsorptionScheme.absorptionBlocks {
                             // Check if it's an existing core data entry
                             if absorptionBlock.cdAbsorptionBlock == nil { // This is a new absorption block
@@ -114,7 +122,7 @@ struct AbsorptionSchemeEditor: View {
                             }
                         }
                         
-                        // Remove deleted typical amounts
+                        // Remove deleted absorption blocks
                         for absorptionBlockToBeDeleted in self.absorptionBlocksToBeDeleted {
                             if absorptionBlockToBeDeleted.cdAbsorptionBlock != nil {
                                 self.editedAbsorptionScheme.removeFromAbsorptionBlocks(absorptionBlockToBeDeleted: absorptionBlockToBeDeleted.cdAbsorptionBlock!)
@@ -159,6 +167,18 @@ struct AbsorptionSchemeEditor: View {
             errorMessage = NSLocalizedString("At least one absorption block required", comment: "")
             showingAlert = true
         }
+    }
+    
+    func resetToDefaults() {
+        let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks()
+        absorptionBlocksToBeDeleted = draftAbsorptionScheme.absorptionBlocks
+        draftAbsorptionScheme.absorptionBlocks.removeAll()
+        
+        for absorptionBlock in defaultAbsorptionBlocks {
+            let _ = draftAbsorptionScheme.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock), errorMessage: &errorMessage)
+        }
+        
+        draftAbsorptionScheme.objectWillChange.send()
     }
     
     func saveContext() {

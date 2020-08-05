@@ -46,6 +46,13 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
         self.absorptionTimeAsString = String(absorptionBlock.absorptionTime)
     }
     
+    init(from absorptionBlock: AbsorptionBlockFromJson) {
+        self.maxFpu = absorptionBlock.maxFpu
+        self.maxFpuAsString = String(absorptionBlock.maxFpu)
+        self.absorptionTime = absorptionBlock.absorptionTime
+        self.absorptionTimeAsString = String(absorptionBlock.absorptionTime)
+    }
+    
     init?(maxFpuAsString: String, absorptionTimeAsString: String, errorMessage: inout String) {
         // Check for valid max fpu
         let resultMaxFpu = FoodItemViewModel.checkForPositiveInt(valueAsString: maxFpuAsString, allowZero: false)
