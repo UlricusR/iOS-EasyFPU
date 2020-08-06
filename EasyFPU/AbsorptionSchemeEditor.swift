@@ -125,7 +125,7 @@ struct AbsorptionSchemeEditor: View {
                                 absorptionBlock.cdAbsorptionBlock = newCdAbsorptionBlock
                                 let _ = absorptionBlock.updateCdAbsorptionBlock()
                                 self.editedAbsorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
-                            } else { // This is an existing typical amount, so just update values
+                            } else { // This is an existing absorption block, so just update values
                                 let _ = absorptionBlock.updateCdAbsorptionBlock()
                             }
                         }

@@ -96,7 +96,7 @@ struct FoodItemSelector: View {
                     }
                 }
             }
-            .navigationBarTitle("Select amount")
+            .navigationBarTitle(draftFoodItem.name)
             .navigationBarItems(
                 leading: Button(action: {
                     // Do nothing, just quit edit mode, as food item hasn't been modified
