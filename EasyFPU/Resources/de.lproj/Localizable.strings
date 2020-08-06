@@ -53,7 +53,7 @@
 "Value must not be zero or negative" = "Wert darf nicht negative oder null sein";
 "Cannot delete typical amount " = "Kann typische Menge nicht löschen: ";
 
-"Edit Absorption Scheme" = "Absorptionsschema bearbeiten";
+"Absorption scheme" = "Absorptionsschema";
 "Tap to edit, swipe left to delete" = "Zum Bearbeiten antippen, zum Löschen nach links wischen";
 "New absorption block:" = "Neuer Absorptionsblock:";
 "Edit absorption block:" = "Absorptionsblock bearbeiten:";

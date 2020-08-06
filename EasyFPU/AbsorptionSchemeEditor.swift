@@ -109,7 +109,7 @@ struct AbsorptionSchemeEditor: View {
                 }
                     
                 // Navigation bar
-                .navigationBarTitle(Text("Edit Absorption Scheme"))
+                .navigationBarTitle(Text("Absorption scheme"))
                 .navigationBarItems(
                     leading: Button(action: {
                         self.isPresented = false
