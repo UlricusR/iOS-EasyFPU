@@ -59,7 +59,7 @@ struct FoodItemSelector: View {
                                     newTypicalAmount.cdTypicalAmount = newCoreDataTypicalAmount
                                     let _ = newTypicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem)
                                     self.editedFoodItem.addToTypicalAmounts(newCoreDataTypicalAmount)
-                                    self.saveContext()
+                                    try? AppDelegate.viewContext.save()
                                     self.draftFoodItem.objectWillChange.send()
                                     
                                     self.addToTypicalAmounts = false
@@ -111,7 +111,7 @@ struct FoodItemSelector: View {
                         self.editedFoodItem.amount = Int64(amountAsInt)
                         
                         // Save new food item
-                        self.saveContext()
+                        try? AppDelegate.viewContext.save()
                         
                         // Quit edit mode
                         self.isPresented = false
@@ -131,16 +131,6 @@ struct FoodItemSelector: View {
                 message: Text(self.errorMessage),
                 dismissButton: .default(Text("OK"))
             )
-        }
-    }
-    
-    func saveContext() {
-        if self.managedObjectContext.hasChanges {
-            do {
-                try managedObjectContext.save()
-            } catch {
-                print("Error saving managed object context: \(error)")
-            }
         }
     }
 }

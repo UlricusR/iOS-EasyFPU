@@ -87,7 +87,7 @@ struct FoodItemView: View {
         .onTapGesture {
             if self.foodItem.amount > 0 {
                 self.foodItem.amount = 0
-                self.saveContext()
+                try? AppDelegate.viewContext.save()
             } else {
                 self.activeSheet = .selectFoodItem
                 self.showingSheet = true
@@ -119,13 +119,5 @@ struct FoodItemView: View {
             }
         }
         return foodItemVM
-    }
-    
-    func saveContext() {
-        do {
-            try managedObjectContext.save()
-        } catch {
-            print("Error saving managed object context: \(error)")
-        }
     }
 }

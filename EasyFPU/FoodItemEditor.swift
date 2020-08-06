@@ -18,12 +18,7 @@ struct FoodItemEditor: View {
     @State var errorMessage: String = ""
     
     @State var showingAlert = false
-    @FetchRequest(
-        entity: FoodItem.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \FoodItem.name, ascending: true)
-        ]
-    ) var foodItems: FetchedResults<FoodItem>
+    var foodItems = FoodItem.fetchAll()
     
     var typicalAmounts: [TypicalAmountViewModel] { draftFoodItem.typicalAmounts.sorted() }
     
@@ -186,7 +181,7 @@ struct FoodItemEditor: View {
                         }
                         
                         // Save new food item
-                        self.saveContext()
+                        try? AppDelegate.viewContext.save()
                         
                         // Quit edit mode
                         self.isPresented = false
@@ -219,15 +214,5 @@ struct FoodItemEditor: View {
             self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
         }
         self.draftFoodItem.objectWillChange.send()
-    }
-    
-    func saveContext() {
-        if self.managedObjectContext.hasChanges {
-            do {
-                try managedObjectContext.save()
-            } catch {
-                print("Error saving managed object context: \(error)")
-            }
-        }
     }
 }

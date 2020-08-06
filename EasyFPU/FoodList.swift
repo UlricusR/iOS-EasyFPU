@@ -10,18 +10,8 @@ import SwiftUI
 
 struct FoodList: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @FetchRequest(
-        entity: FoodItem.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \FoodItem.name, ascending: true)
-        ]
-    ) var foodItems: FetchedResults<FoodItem>
-    @FetchRequest(
-        entity: AbsorptionBlock.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \AbsorptionBlock.absorptionTime, ascending: true)
-        ]
-    ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
+    var foodItems = FoodItem.fetchAll()
+    var absorptionBlocks = AbsorptionBlock.fetchAll()
     var absorptionScheme = AbsorptionScheme()
     @State var showingSheet = false
     @State var activeSheet = ActiveFoodListSheet.addFoodItem
@@ -142,7 +132,7 @@ struct FoodList: View {
                         cdAbsorptionBlock.maxFpu = Int64(absorptionBlock.maxFpu)
                         self.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
                     }
-                    self.saveContext()
+                    try? AppDelegate.viewContext.save()
                 } else {
                     // Store absorption blocks loaded from core data
                     self.absorptionScheme.absorptionBlocks = self.absorptionBlocks.sorted()
@@ -157,14 +147,6 @@ struct FoodList: View {
             self.managedObjectContext.delete(foodItem)
         }
         
-        saveContext()
-    }
-    
-    func saveContext() {
-        do {
-            try managedObjectContext.save()
-        } catch {
-            print("Error saving managed object context: \(error)")
-        }
+        try? AppDelegate.viewContext.save()
     }
 }

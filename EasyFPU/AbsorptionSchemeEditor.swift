@@ -134,7 +134,7 @@ struct AbsorptionSchemeEditor: View {
                         self.absorptionBlocksToBeDeleted.removeAll()
                         
                         // Save new food item
-                        self.saveContext()
+                        try? AppDelegate.viewContext.save()
                         
                         // Close sheet
                         self.isPresented = false
@@ -179,15 +179,5 @@ struct AbsorptionSchemeEditor: View {
         }
         
         draftAbsorptionScheme.objectWillChange.send()
-    }
-    
-    func saveContext() {
-        if self.managedObjectContext.hasChanges {
-            do {
-                try managedObjectContext.save()
-            } catch {
-                print("Error saving managed object context: \(error)")
-            }
-        }
     }
 }
