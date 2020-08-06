@@ -10,8 +10,18 @@ import SwiftUI
 
 struct FoodList: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    var foodItems = FoodItem.fetchAll()
-    var absorptionBlocks = AbsorptionBlock.fetchAll()
+    @FetchRequest(
+        entity: FoodItem.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \FoodItem.name, ascending: true)
+        ]
+    ) var foodItems: FetchedResults<FoodItem>
+    @FetchRequest(
+        entity: AbsorptionBlock.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \AbsorptionBlock.absorptionTime, ascending: true)
+        ]
+    ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     var absorptionScheme = AbsorptionScheme()
     @State var showingSheet = false
     @State var activeSheet = ActiveFoodListSheet.addFoodItem

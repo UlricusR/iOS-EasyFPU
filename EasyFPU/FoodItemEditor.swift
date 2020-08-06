@@ -18,7 +18,12 @@ struct FoodItemEditor: View {
     @State var errorMessage: String = ""
     
     @State var showingAlert = false
-    var foodItems = FoodItem.fetchAll()
+    @FetchRequest(
+        entity: FoodItem.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \FoodItem.name, ascending: true)
+        ]
+    ) var foodItems: FetchedResults<FoodItem>
     
     var typicalAmounts: [TypicalAmountViewModel] { draftFoodItem.typicalAmounts.sorted() }
     
