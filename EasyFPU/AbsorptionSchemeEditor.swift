@@ -24,8 +24,29 @@ struct AbsorptionSchemeEditor: View {
     var body: some View {
         NavigationView {
             VStack {
+                // The list of absorption blocks
+                List {
+                    Text("Tap to edit, swipe left to delete").font(.caption)
+                    ForEach(draftAbsorptionScheme.absorptionBlocks, id: \.self) { absorptionBlock in
+                        HStack {
+                            Text(absorptionBlock.maxFpuAsString)
+                            Text("FPU -")
+                            Text(absorptionBlock.absorptionTimeAsString)
+                            Text("h")
+                        }
+                        .onTapGesture {
+                            self.newMaxFpu = absorptionBlock.maxFpuAsString
+                            self.newAbsorptionTime = absorptionBlock.absorptionTimeAsString
+                            self.newAbsorptionBlockId = absorptionBlock.id
+                            self.updateButton = true
+                        }
+                    }
+                    .onDelete(perform: deleteAbsorptionBlock)
+                }
+                
+                // The absorption block add/edit form
                 Form {
-                    Section(header: Text("Absorption blocks:")) {
+                    Section(header: self.updateButton ? Text("Edit absorption block:") : Text("New absorption block:")) {
                         HStack {
                             TextField("Max. FPUs", text: $newMaxFpu).keyboardType(.decimalPad)
                             Text("FPU -")
@@ -79,28 +100,15 @@ struct AbsorptionSchemeEditor: View {
                         }
                     }
                 }
-                List {
-                    ForEach(draftAbsorptionScheme.absorptionBlocks, id: \.self) { absorptionBlock in
-                        HStack {
-                            Text(absorptionBlock.maxFpuAsString)
-                            Text("FPU -")
-                            Text(absorptionBlock.absorptionTimeAsString)
-                            Text("h")
-                        }
-                        .onTapGesture {
-                            self.newMaxFpu = absorptionBlock.maxFpuAsString
-                            self.newAbsorptionTime = absorptionBlock.absorptionTimeAsString
-                            self.newAbsorptionBlockId = absorptionBlock.id
-                            self.updateButton = true
-                        }
-                    }
-                    .onDelete(perform: deleteAbsorptionBlock)
-                }
+                
+                // The reset button
                 Button(action: {
                     self.resetToDefaults()
                 }) {
                     Text("Reset to default")
                 }
+                    
+                // Navigation bar
                 .navigationBarTitle(Text("Edit Absorption Scheme"))
                 .navigationBarItems(
                     leading: Button(action: {
@@ -145,6 +153,8 @@ struct AbsorptionSchemeEditor: View {
                 )
             }
         }
+            
+        // Alert
         .alert(isPresented: $showingAlert) {
             Alert(
                 title: Text("Data alert"),

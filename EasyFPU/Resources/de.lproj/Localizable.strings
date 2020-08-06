@@ -54,6 +54,9 @@
 "Cannot delete typical amount " = "Kann typische Menge nicht löschen: ";
 
 "Edit Absorption Scheme" = "Absorptionsschema bearbeiten";
+"Tap to edit, swipe left to delete" = "Zum Bearbeiten antippen, zum Löschen nach links wischen";
+"New absorption block:" = "Neuer Absorptionsblock:";
+"Edit absorption block:" = "Absorptionsblock bearbeiten:";
 "Absorption blocks:" = "Absorptionsblöcke:";
 "Max. FPUs" = "Max. FPE";
 "Absorption time" = "Absorptionszeit";
