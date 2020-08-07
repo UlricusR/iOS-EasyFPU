@@ -69,3 +69,9 @@
 "Absorption time must be between previous and following block" = "Absorptionszeit muss zwischen vorherigem und nachfolgendem Block liegen";
 "At least one absorption block required" = "Mindestens ein Absorptionsblock benötigt";
 "Reset to default" = "Auf Voreinstellungen zurücksetzen";
+
+"Successfully exported food list" = "Essensliste erfolgreich exportiert";
+"Failed to export food list" = "Konnte Essensliste nicht exportieren";
+"Successfully imported food list" = "Essensliste erfolgreich importiert";
+"Failed to import food list" = "Konnte Essensliste nicht importieren";
+"Notice" = "Hinweis";

@@ -20,6 +20,7 @@
 		1B004A5424BA532E001E362A /* absorptionscheme_default.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B004A5324BA532E001E362A /* absorptionscheme_default.json */; };
 		1B1CC90F24DC4F390014DD7D /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1CC90E24DC4F390014DD7D /* MenuView.swift */; };
 		1B1CC91124DC57300014DD7D /* MenuViewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1CC91024DC57300014DD7D /* MenuViewSheets.swift */; };
+		1B1CC91924DD2FC50014DD7D /* FilePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */; };
 		1B24AD6C24BE38E800F3A100 /* FoodItemSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */; };
 		1B24AD6E24BE392100F3A100 /* FoodListSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B24AD6D24BE392100F3A100 /* FoodListSheets.swift */; };
 		1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */; };
@@ -59,6 +60,7 @@
 		1B004A5324BA532E001E362A /* absorptionscheme_default.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = absorptionscheme_default.json; sourceTree = "<group>"; };
 		1B1CC90E24DC4F390014DD7D /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		1B1CC91024DC57300014DD7D /* MenuViewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewSheets.swift; sourceTree = "<group>"; };
+		1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePickerView.swift; sourceTree = "<group>"; };
 		1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemSelector.swift; sourceTree = "<group>"; };
 		1B24AD6D24BE392100F3A100 /* FoodListSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodListSheets.swift; sourceTree = "<group>"; };
 		1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbsorptionBlockViewModel.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				1B68548724BC70ED005ABB8B /* FoodItemEditor.swift */,
 				1B870FC024C9A32E00183C9F /* MealDetail.swift */,
 				1B3CEB9A24D32D38001D64DA /* AbsorptionSchemeEditor.swift */,
+				1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */,
 				1B004A3524BA3038001E362A /* Assets.xcassets */,
 				1B004A3D24BA3038001E362A /* Info.plist */,
 				1B004A3024BA3035001E362A /* EasyFPU.xcdatamodeld */,
@@ -300,6 +303,7 @@
 				1BEE525524D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift in Sources */,
 				1B004A4B24BA36C1001E362A /* FPU.swift in Sources */,
 				1B24AD6E24BE392100F3A100 /* FoodListSheets.swift in Sources */,
+				1B1CC91924DD2FC50014DD7D /* FilePickerView.swift in Sources */,
 				1B68548A24BC9E12005ABB8B /* FoodItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

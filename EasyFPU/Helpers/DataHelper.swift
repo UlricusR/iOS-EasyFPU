@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import UIKit
+import MobileCoreServices
 
 class DataHelper {
     static func loadDefaultAbsorptionBlocks() -> [AbsorptionBlockFromJson] {
@@ -30,6 +32,30 @@ class DataHelper {
             return try decoder.decode(T.self, from: data)
         } catch {
             fatalError("Couldn't parse data as \(T.self):\n\(error.localizedDescription)")
+        }
+    }
+    
+    static func exportFoodItems() -> Bool {
+        let cdFoodItems = FoodItem.fetchAll()
+        var foodItems = [FoodItemViewModel]()
+        for cdFoodItem in cdFoodItems {
+            foodItems.append(FoodItemViewModel(from: cdFoodItem))
+        }
+        let file = "\(UUID().uuidString).json"
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let contents = try encoder.encode(foodItems)
+            guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                debugPrint("Could not open user directory")
+                return false
+            }
+            let fileURL = dir.appendingPathComponent(file)
+            try contents.write(to: fileURL)
+            return true
+        } catch {
+            debugPrint(error)
+            return false
         }
     }
 }

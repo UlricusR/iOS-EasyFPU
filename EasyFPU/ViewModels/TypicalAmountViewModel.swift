@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
+class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Encodable {
     var id = UUID()
     @Published var amountAsString: String {
         willSet {
@@ -25,6 +25,10 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
     @Published var comment: String
     private(set) var amount: Int = 0
     var cdTypicalAmount: TypicalAmount?
+    
+    enum CodingKeys: String, CodingKey {
+        case amount, comment
+    }
     
     init(from cdTypicalAmount: TypicalAmount) {
         self.cdTypicalAmount = cdTypicalAmount
@@ -58,6 +62,12 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable {
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(amount, forKey: .amount)
+        try container.encode(comment, forKey: .comment)
     }
     
     static func == (lhs: TypicalAmountViewModel, rhs: TypicalAmountViewModel) -> Bool {

@@ -68,3 +68,9 @@
 "Absorption time must be between previous and following block" = "Absorption time must be between previous and following block";
 "At least one absorption block required" = "At least one absorption block required";
 "Reset to default" = "Reset to default";
+
+"Successfully exported food list" = "Successfully exported food list";
+"Failed to export food list" = "Failed to export food list";
+"Successfully imported food list" = "Successfully imported food list";
+"Failed to import food list" = "Failed to import food list";
+"Notice" = "Notice";

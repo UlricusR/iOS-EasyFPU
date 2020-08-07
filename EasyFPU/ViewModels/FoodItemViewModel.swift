@@ -12,7 +12,7 @@ enum DataError: Error {
     case inputError(String)
 }
 
-class FoodItemViewModel: ObservableObject {
+class FoodItemViewModel: ObservableObject, Encodable {
     @Published var name: String
     @Published var favorite: Bool
     @Published var caloriesAsString: String = "" {
@@ -56,6 +56,11 @@ class FoodItemViewModel: ObservableObject {
     private(set) var amount: Int = 0
     var typicalAmounts = [TypicalAmountViewModel]()
     
+    enum CodingKeys: String, CodingKey {
+        case foodItem
+        case amount, caloriesPer100g, carbsPer100g, favorite, name, typicalAmounts
+    }
+    
     init(name: String, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, amount: Int) {
         self.name = name
         self.favorite = favorite
@@ -66,6 +71,25 @@ class FoodItemViewModel: ObservableObject {
         self.caloriesAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g))!
         self.carbsAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g))!
         self.amountAsString = NumberFormatter().string(from: NSNumber(value: amount))!
+    }
+    
+    init(from cdFoodItem: FoodItem) {
+        self.name = cdFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
+        self.favorite = cdFoodItem.favorite
+        self.caloriesPer100g = cdFoodItem.caloriesPer100g
+        self.carbsPer100g = cdFoodItem.carbsPer100g
+        self.amount = Int(cdFoodItem.amount)
+        
+        self.caloriesAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.caloriesPer100g))!
+        self.carbsAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.carbsPer100g))!
+        self.amountAsString = NumberFormatter().string(from: NSNumber(value: cdFoodItem.amount))!
+        
+        if cdFoodItem.typicalAmounts != nil {
+            for typicalAmount in cdFoodItem.typicalAmounts!.allObjects {
+                let castedTypicalAmount = typicalAmount as! TypicalAmount
+                typicalAmounts.append(TypicalAmountViewModel(from: castedTypicalAmount))
+            }
+        }
     }
     
     init?(name: String, favorite: Bool, caloriesAsString: String, carbsAsString: String, amountAsString: String, errorMessage: inout String) {
@@ -110,6 +134,17 @@ class FoodItemViewModel: ObservableObject {
             return nil
         }
         self.amountAsString = amountAsString
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        var foodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)
+        try foodItem.encode(amount, forKey: .amount)
+        try foodItem.encode(caloriesPer100g, forKey: .caloriesPer100g)
+        try foodItem.encode(carbsPer100g, forKey: .carbsPer100g)
+        try foodItem.encode(favorite, forKey: .favorite)
+        try foodItem.encode(name, forKey: .name)
+        try foodItem.encode(typicalAmounts, forKey: .typicalAmounts)
     }
     
     static func doubleFormatter(numberOfDigits: Int) -> NumberFormatter {
