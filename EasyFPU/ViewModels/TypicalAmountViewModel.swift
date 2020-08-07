@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Encodable {
+class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable {
     var id = UUID()
     @Published var amountAsString: String {
         willSet {
@@ -50,6 +50,13 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Encodable 
             return nil
         }
         self.amountAsString = amountAsString
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        amount = try container.decode(Int.self, forKey: .amount)
+        comment = try container.decode(String.self, forKey: .comment)
+        amountAsString = String(amount)
     }
     
     func updateCDTypicalAmount(foodItem: FoodItem?) -> Bool {

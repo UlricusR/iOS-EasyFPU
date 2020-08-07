@@ -12,7 +12,7 @@ enum DataError: Error {
     case inputError(String)
 }
 
-class FoodItemViewModel: ObservableObject, Encodable {
+class FoodItemViewModel: ObservableObject, Codable {
     @Published var name: String
     @Published var favorite: Bool
     @Published var caloriesAsString: String = "" {
@@ -136,7 +136,22 @@ class FoodItemViewModel: ObservableObject, Encodable {
         self.amountAsString = amountAsString
     }
     
-    public func encode(to encoder: Encoder) throws {
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let foodItem = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)
+        amount = try foodItem.decode(Int.self, forKey: .amount)
+        caloriesPer100g = try foodItem.decode(Double.self, forKey: .caloriesPer100g)
+        carbsPer100g = try foodItem.decode(Double.self, forKey: .carbsPer100g)
+        favorite = try foodItem.decode(Bool.self, forKey: .favorite)
+        name = try foodItem.decode(String.self, forKey: .name)
+        typicalAmounts = try foodItem.decode([TypicalAmountViewModel].self, forKey: .typicalAmounts)
+        
+        caloriesAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g))!
+        carbsAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g))!
+        amountAsString = NumberFormatter().string(from: NSNumber(value: amount))!
+    }
+    
+    func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         var foodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)
         try foodItem.encode(amount, forKey: .amount)
