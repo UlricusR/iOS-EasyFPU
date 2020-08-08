@@ -12,6 +12,7 @@ struct MenuView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var absorptionScheme: AbsorptionScheme
+    var filePicked: (URL) -> ()
     @State var activeSheet = ActiveMenuViewSheet.editAbsorptionScheme
     @State var showingSheet = false
     @State var showingAlert = false
@@ -77,9 +78,5 @@ struct MenuView: View {
                 dismissButton: .default(Text("OK"))
             )
         }
-    }
-    
-    func filePicked(_ url: URL) {
-        debugPrint("Filename: \(url)")
     }
 }

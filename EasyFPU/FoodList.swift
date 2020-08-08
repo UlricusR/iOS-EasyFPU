@@ -25,7 +25,10 @@ struct FoodList: View {
     var absorptionScheme = AbsorptionScheme()
     @State var showingSheet = false
     @State var showingMenu = false
+    @State var showingAlert = false
+    @State var showActionSheet = false
     @State var activeSheet = ActiveFoodListSheet.addFoodItem
+    @State var errorMessage = ""
     @State var draftFoodItem = FoodItemViewModel(
         name: "",
         favorite: false,
@@ -33,6 +36,7 @@ struct FoodList: View {
         carbsPer100g: 0.0,
         amount: 0
     )
+    @State var foodItemsToBeImported: [FoodItemViewModel]?
     
     var meal: Meal {
         var meal = Meal(name: "Total meal")
@@ -166,13 +170,32 @@ struct FoodList: View {
                 .disabled(self.showingMenu ? true : false)
                 
                 if self.showingMenu {
-                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme)
+                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON)
                         .frame(width: geometry.size.width/2)
                         .transition(.move(edge: .leading))
                 }
             }
         }
         .gesture(drag)
+        .alert(isPresented: self.$showingAlert) {
+            Alert(
+                title: Text("Notice"),
+                message: Text(self.errorMessage),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+        .actionSheet(isPresented: self.$showActionSheet) {
+            ActionSheet(title: Text("Import food list"), message: Text("Please select"), buttons: [
+                .default(Text("Replace")) {
+                    FoodItem.deleteAll()
+                    self.importFoodItems()
+                },
+                .default(Text("Append")) {
+                    self.importFoodItems()
+                },
+                .cancel()
+            ])
+        }
     }
     
     func deleteFoodItem(at offsets: IndexSet) {
@@ -182,5 +205,57 @@ struct FoodList: View {
         }
         
         try? AppDelegate.viewContext.save()
+    }
+    
+    func importJSON(_ url: URL) {
+        debugPrint("Trying to import following file: \(url)")
+        guard let jsonData = try? Data(contentsOf: url) else {
+            showingAlert = true
+            return
+        }
+        
+        let decoder = JSONDecoder()
+        
+        do {
+            self.foodItemsToBeImported = try decoder.decode([FoodItemViewModel].self, from: jsonData)
+            self.showActionSheet = true
+        } catch DecodingError.keyNotFound(let key, let context) {
+            errorMessage = NSLocalizedString("Failed to decode due to missing key ", comment: "") + key.stringValue + " - " + context.debugDescription
+            showingAlert = true
+        } catch DecodingError.typeMismatch(_, let context) {
+            errorMessage = NSLocalizedString("Failed to decode due to type mismatch - ", comment: "") + context.debugDescription
+            showingAlert = true
+        } catch DecodingError.valueNotFound(let type, let context) {
+            errorMessage = NSLocalizedString("Failed to decode due to missing value - ", comment: "") + "\(type)" + " - " + context.debugDescription
+            showingAlert = true
+        } catch DecodingError.dataCorrupted(_) {
+            errorMessage = NSLocalizedString("Failed to decode because it appears to be invalid JSON", comment: "")
+            showingAlert = true
+        } catch {
+            errorMessage = NSLocalizedString("Failed to decode - ", comment: "") + error.localizedDescription
+            showingAlert = true
+        }
+    }
+    
+    func importFoodItems() {
+        if foodItemsToBeImported != nil {
+            for foodItemToBeImported in foodItemsToBeImported! {
+                var newFoodItem = FoodItem(context: managedObjectContext)
+                foodItemToBeImported.updateCDFoodItem(&newFoodItem)
+                for typicalAmount in foodItemToBeImported.typicalAmounts {
+                    let newCDTypicalAmount = TypicalAmount(context: managedObjectContext)
+                    newCDTypicalAmount.amount = Int64(typicalAmount.amount)
+                    newCDTypicalAmount.comment = typicalAmount.comment
+                    newFoodItem.addToTypicalAmounts(newCDTypicalAmount)
+                }
+            }
+            try? AppDelegate.viewContext.save()
+        } else {
+            errorMessage = "Could not import food list"
+            showingAlert = true
+        }
+        withAnimation {
+            self.showingMenu = false
+        }
     }
 }

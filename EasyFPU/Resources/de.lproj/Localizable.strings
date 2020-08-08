@@ -75,3 +75,12 @@
 "Successfully imported food list" = "Essensliste erfolgreich importiert";
 "Failed to import food list" = "Konnte Essensliste nicht importieren";
 "Notice" = "Hinweis";
+"Import food list" = "Essensliste importieren";
+"Please select" = "Bitte auswählen";
+"Replace" = "Ersetzen";
+"Append" = "Anhängen";
+"Failed to decode due to missing key " = "Konnte nicht entschlüsseln wegen fehlendem Schlüssel ";
+"Failed to decode due to type mismatch - " = "Konnte nicht entschlüsseln wegen Typfehler - ";
+"Failed to decode due to missing value - " = "Konnte nicht entschlüsseln wegen fehlendem Wert - ";
+"Failed to decode because it appears to be invalid JSON" = "Ungültige JSON-Datei";
+"Failed to decode - " = "Konnte nicht entschlüsseln - ";

@@ -151,6 +151,14 @@ class FoodItemViewModel: ObservableObject, Codable {
         amountAsString = NumberFormatter().string(from: NSNumber(value: amount))!
     }
     
+    func updateCDFoodItem(_ cdFoodItem: inout FoodItem) {
+        cdFoodItem.name = name
+        cdFoodItem.amount = Int64(amount)
+        cdFoodItem.caloriesPer100g = caloriesPer100g
+        cdFoodItem.carbsPer100g = carbsPer100g
+        cdFoodItem.favorite = favorite
+    }
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         var foodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)

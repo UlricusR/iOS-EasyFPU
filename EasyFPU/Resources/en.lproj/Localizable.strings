@@ -74,3 +74,12 @@
 "Successfully imported food list" = "Successfully imported food list";
 "Failed to import food list" = "Failed to import food list";
 "Notice" = "Notice";
+"Import food list" = "Import food list";
+"Please select" = "Please select";
+"Replace" = "Replace";
+"Append" = "Add";
+"Failed to decode due to missing key " = "Failed to decode due to missing key ";
+"Failed to decode due to type mismatch - " = "Failed to decode due to type mismatch - ";
+"Failed to decode due to missing value - " = "Failed to decode due to missing value - ";
+"Failed to decode because it appears to be invalid JSON" = "Failed to decode because it appears to be invalid JSON";
+"Failed to decode - " = "Failed to decode - ";
