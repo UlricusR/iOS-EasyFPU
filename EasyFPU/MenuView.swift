@@ -13,6 +13,7 @@ struct MenuView: View {
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var absorptionScheme: AbsorptionScheme
     var filePicked: (URL) -> ()
+    var exportDirectory: (URL) -> ()
     @State var activeSheet = ActiveMenuViewSheet.editAbsorptionScheme
     @State var showingSheet = false
     @State var showingAlert = false
@@ -42,13 +43,8 @@ struct MenuView: View {
             
             // Export
             Button(action: {
-                if DataHelper.exportFoodItems() {
-                    self.alertMessage = NSLocalizedString("Successfully exported food list", comment: "")
-                    self.showingAlert = true
-                } else {
-                    self.alertMessage = NSLocalizedString("Failed to export food list", comment: "")
-                    self.showingAlert = true
-                }
+                self.activeSheet = ActiveMenuViewSheet.pickExportDirectory
+                self.showingSheet = true
             }) {
                 Text("Export to JSON")
             }
@@ -67,7 +63,8 @@ struct MenuView: View {
                 isPresented: self.$showingSheet,
                 draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme),
                 absorptionScheme: self.absorptionScheme,
-                callback: self.filePicked
+                filePicked: self.filePicked,
+                exportDirectory: self.exportDirectory
             )
             .environment(\.managedObjectContext, self.managedObjectContext)
         }

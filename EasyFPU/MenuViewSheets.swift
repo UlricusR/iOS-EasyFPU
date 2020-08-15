@@ -7,9 +7,10 @@
 //
 
 import SwiftUI
+import MobileCoreServices
 
 enum ActiveMenuViewSheet {
-    case editAbsorptionScheme, pickFileToImport
+    case editAbsorptionScheme, pickFileToImport, pickExportDirectory
 }
 
 struct MenuViewSheets: View {
@@ -18,7 +19,8 @@ struct MenuViewSheets: View {
     @Binding var isPresented: Bool
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var absorptionScheme: AbsorptionScheme
-    var callback: (URL) -> ()
+    var filePicked: (URL) -> ()
+    var exportDirectory: (URL) -> ()
     
     var body: some View {
         switch activeSheet {
@@ -29,7 +31,11 @@ struct MenuViewSheets: View {
             )
         case .pickFileToImport:
             return AnyView(
-                FilePickerView(callback: callback)
+                FilePickerView(callback: filePicked, documentTypes: [kUTTypeText as String])
+            )
+        case .pickExportDirectory:
+            return AnyView(
+                FilePickerView(callback: exportDirectory, documentTypes: [kUTTypeFolder as String])
             )
         }
     }

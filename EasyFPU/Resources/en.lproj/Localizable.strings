@@ -78,6 +78,7 @@
 "Please select" = "Please select";
 "Replace" = "Replace";
 "Append" = "Add";
+"Unable to open URL: " = "Unable to open URL: ";
 "Failed to decode due to missing key " = "Failed to decode due to missing key ";
 "Failed to decode due to type mismatch - " = "Failed to decode due to type mismatch - ";
 "Failed to decode due to missing value - " = "Failed to decode due to missing value - ";

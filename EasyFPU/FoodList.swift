@@ -37,6 +37,7 @@ struct FoodList: View {
         amount: 0
     )
     @State var foodItemsToBeImported: [FoodItemViewModel]?
+
     
     var meal: Meal {
         var meal = Meal(name: "Total meal")
@@ -170,7 +171,7 @@ struct FoodList: View {
                 .disabled(self.showingMenu ? true : false)
                 
                 if self.showingMenu {
-                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON)
+                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON, exportDirectory: self.exportJSON)
                         .frame(width: geometry.size.width/2)
                         .transition(.move(edge: .leading))
                 }
@@ -198,18 +199,30 @@ struct FoodList: View {
         }
     }
     
-    func deleteFoodItem(at offsets: IndexSet) {
+    private func deleteFoodItem(at offsets: IndexSet) {
         offsets.forEach { index in
             let foodItem = self.foodItems[index]
+            
+            // Delete typical amounts first
+            let typicalAmountsToBeDeleted = foodItem.typicalAmounts
+            if typicalAmountsToBeDeleted != nil {
+                for typicalAmountToBeDeleted in typicalAmountsToBeDeleted! {
+                    self.managedObjectContext.delete(typicalAmountToBeDeleted as! TypicalAmount)
+                }
+                foodItem.removeFromTypicalAmounts(typicalAmountsToBeDeleted!)
+            }
+            
+            // Delete food item
             self.managedObjectContext.delete(foodItem)
         }
         
         try? AppDelegate.viewContext.save()
     }
     
-    func importJSON(_ url: URL) {
+    private func importJSON(_ url: URL) {
         debugPrint("Trying to import following file: \(url)")
         guard let jsonData = try? Data(contentsOf: url) else {
+            errorMessage = NSLocalizedString("Unable to open URL: ", comment: "") + url.absoluteString
             showingAlert = true
             return
         }
@@ -237,7 +250,19 @@ struct FoodList: View {
         }
     }
     
-    func importFoodItems() {
+    private func exportJSON(_ url: URL) {
+        var fileName = ""
+        if DataHelper.exportFoodItems(url, fileName: &fileName) {
+            errorMessage = NSLocalizedString("Successfully exported food list to: ", comment: "") + fileName
+            showingAlert = true
+        } else {
+            errorMessage = NSLocalizedString("Failed to export food list to: ", comment: "") + fileName
+            showingAlert = true
+        }
+        withAnimation { showingMenu = false }
+    }
+    
+    private func importFoodItems() {
         if foodItemsToBeImported != nil {
             for foodItemToBeImported in foodItemsToBeImported! {
                 var newFoodItem = FoodItem(context: managedObjectContext)

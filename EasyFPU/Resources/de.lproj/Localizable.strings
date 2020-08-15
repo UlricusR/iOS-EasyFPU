@@ -79,6 +79,7 @@
 "Please select" = "Bitte auswählen";
 "Replace" = "Ersetzen";
 "Append" = "Anhängen";
+"Unable to open URL: " = "Kann folgende URL nicht öffnen: ";
 "Failed to decode due to missing key " = "Konnte nicht entschlüsseln wegen fehlendem Schlüssel ";
 "Failed to decode due to type mismatch - " = "Konnte nicht entschlüsseln wegen Typfehler - ";
 "Failed to decode due to missing value - " = "Konnte nicht entschlüsseln wegen fehlendem Wert - ";

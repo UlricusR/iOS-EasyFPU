@@ -35,22 +35,18 @@ class DataHelper {
         }
     }
     
-    static func exportFoodItems() -> Bool {
+    static func exportFoodItems(_ dir: URL, fileName: inout String) -> Bool {
         let cdFoodItems = FoodItem.fetchAll()
         var foodItems = [FoodItemViewModel]()
         for cdFoodItem in cdFoodItems {
             foodItems.append(FoodItemViewModel(from: cdFoodItem))
         }
-        let file = "\(UUID().uuidString).json"
+        fileName = "\(UUID().uuidString).json"
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
             let contents = try encoder.encode(foodItems)
-            guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-                debugPrint("Could not open user directory")
-                return false
-            }
-            let fileURL = dir.appendingPathComponent(file)
+            let fileURL = dir.appendingPathComponent(fileName)
             try contents.write(to: fileURL)
             return true
         } catch {
