@@ -11,7 +11,7 @@
 "Add" = "Add";
 "Update" = "Update";
 "Tap to edit" = "Tap to edit";
-"Tap to select, long press to edit" = "Tap to select, long press to edit";
+"Tap to select, long press to edit" = "Tap to select, long press to edit, swipe left to delete";
 
 "Food List" = "Food List";
 "Name" = "Name";
@@ -69,8 +69,10 @@
 "At least one absorption block required" = "At least one absorption block required";
 "Reset to default" = "Reset to default";
 
-"Successfully exported food list" = "Successfully exported food list";
-"Failed to export food list" = "Failed to export food list";
+"Import from JSON" = "Import from JSON";
+"Export to JSON" = "Export to JSON";
+"Successfully exported food list to: " = "Successfully exported food list to: ";
+"Failed to export food list to: " = "Failed to export food list to: ";
 "Successfully imported food list" = "Successfully imported food list";
 "Failed to import food list" = "Failed to import food list";
 "Notice" = "Notice";

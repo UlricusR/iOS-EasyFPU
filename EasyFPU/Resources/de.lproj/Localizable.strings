@@ -11,7 +11,7 @@
 "Add" = "Hinzufügen";
 "Update" = "Aktualisieren";
 "Tap to edit" = "Zum Bearbeiten antippen";
-"Tap to select, long press to edit" = "Zum Auswählen antippen, zum Bearbeiten lange drücken";
+"Tap to select, long press to edit" = "Zum Auswählen antippen, zum Bearbeiten lange drücken, zum Löschen nach links wischen";
 
 "Food List" = "Essensliste";
 "Name" = "Name";
@@ -70,8 +70,10 @@
 "At least one absorption block required" = "Mindestens ein Absorptionsblock benötigt";
 "Reset to default" = "Auf Voreinstellungen zurücksetzen";
 
-"Successfully exported food list" = "Essensliste erfolgreich exportiert";
-"Failed to export food list" = "Konnte Essensliste nicht exportieren";
+"Import from JSON" = "JSON importieren";
+"Export to JSON" = "JSON exportieren";
+"Successfully exported food list to: " = "Essensliste erfolgreich exportiert nach: ";
+"Failed to export food list to: " = "Konnte Essensliste nicht exportieren nach: ";
 "Successfully imported food list" = "Essensliste erfolgreich importiert";
 "Failed to import food list" = "Konnte Essensliste nicht importieren";
 "Notice" = "Hinweis";
