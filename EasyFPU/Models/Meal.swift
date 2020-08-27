@@ -14,9 +14,9 @@ struct Meal {
     var carbs: Double = 0.0
     var amount: Int = 0
     var fpus: FPU = FPU(fpu: 0.0)
-    var foodItems = [FoodItem]()
+    var foodItems = [FoodItemViewModel]()
     
-    mutating func add(foodItem: FoodItem) {
+    mutating func add(foodItem: FoodItemViewModel) {
         foodItems.append(foodItem)
         let tempFPUs = fpus.fpu
         calories += foodItem.getCalories()

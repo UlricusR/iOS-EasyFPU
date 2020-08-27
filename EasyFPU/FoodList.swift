@@ -51,7 +51,9 @@ struct FoodList: View {
     var meal: Meal {
         var meal = Meal(name: "Total meal")
         for foodItem in foodItems {
-            meal.add(foodItem: foodItem)
+            if foodItem.amount > 0 {
+                meal.add(foodItem: FoodItemViewModel(from: foodItem))
+            }
         }
         return meal
     }
