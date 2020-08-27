@@ -11,12 +11,13 @@ import SwiftUI
 struct FoodItemView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var absorptionScheme: AbsorptionScheme
-    @ObservedObject var foodItem: FoodItem
+    @ObservedObject var foodItem: FoodItemViewModel
     @State private var showingSheet = false
     @State var activeSheet = ActiveFoodItemViewSheet.selectFoodItem
     
     var body: some View {
         VStack {
+            // First line: amount, name, favorite
             HStack {
                 if foodItem.amount > 0 {
                     Image(systemName: "xmark.circle").foregroundColor(.red)
@@ -25,25 +26,27 @@ struct FoodItemView: View {
                 } else {
                     Image(systemName: "plus.circle").foregroundColor(.green)
                 }
-                Text(foodItem.name ?? "- Unnamed -").font(.headline).foregroundColor(foodItem.amount > 0 ? .accentColor : .none)
+                Text(foodItem.name).font(.headline).foregroundColor(foodItem.amount > 0 ? .accentColor : .none)
                 if foodItem.favorite { Image(systemName: "star.fill").foregroundColor(.yellow).imageScale(.small) }
                 Spacer()
             }
             
+            // Second line: Nutritional values per 100g
             HStack {
                 Text("Nutritional values per 100g:").font(.caption).foregroundColor(.gray)
-                
+
                 Spacer()
-                
+
                 Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.caloriesPer100g))!).font(.caption).foregroundColor(.gray)
                 Text("kcal").font(.caption).foregroundColor(.gray)
-                
+
                 Text("|").foregroundColor(.gray)
-                
+
                 Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.carbsPer100g))!).font(.caption).foregroundColor(.gray)
                 Text("g Carbs").font(.caption).foregroundColor(.gray)
             }
             
+            // Third line: Nutritional values for selected amount (if amount > 0)
             if foodItem.amount > 0 {
                 HStack(alignment: .top) {
                     HStack {
@@ -54,28 +57,24 @@ struct FoodItemView: View {
                     }
                     
                     Spacer()
-                        
+                    
                     VStack(alignment: .leading) {
                         HStack {
-                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getCalories()))!).font(.caption)
+                            Text(foodItem.caloriesAsString).font(.caption)
                             Text("kcal").font(.caption)
                         }
-                        
                         HStack {
-                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getCarbs()))!).font(.caption)
+                            Text(foodItem.carbsAsString).font(.caption)
                             Text("g Carbs").font(.caption)
                         }
-                
                         HStack {
                             Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().fpu))!).font(.caption)
                             Text("FPU").font(.caption)
                         }
-                        
                         HStack {
                             Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().getExtendedCarbs()))!).font(.caption)
                             Text("g Extended Carbs").font(.caption)
                         }
-                        
                         HStack {
                             Text(NumberFormatter().string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme)))!).font(.caption)
                             Text("h Absorption Time").font(.caption)
@@ -86,7 +85,8 @@ struct FoodItemView: View {
         }
         .onTapGesture {
             if self.foodItem.amount > 0 {
-                self.foodItem.amount = 0
+                self.foodItem.amountAsString = "0"
+                self.foodItem.cdFoodItem?.amount = 0
                 try? AppDelegate.viewContext.save()
             } else {
                 self.activeSheet = .selectFoodItem
@@ -99,25 +99,8 @@ struct FoodItemView: View {
             self.showingSheet = true
         }
         .sheet(isPresented: $showingSheet) {
-            FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.getFoodItemViewModel(), editedFoodItem: self.foodItem)
+            FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!)
                 .environment(\.managedObjectContext, self.managedObjectContext)
         }
-    }
-    
-    private func getFoodItemViewModel() -> FoodItemViewModel {
-        let foodItemVM = FoodItemViewModel(
-            name: self.foodItem.name ?? "",
-            favorite: self.foodItem.favorite,
-            caloriesPer100g: self.foodItem.caloriesPer100g,
-            carbsPer100g: self.foodItem.carbsPer100g,
-            amount: Int(self.foodItem.amount)
-        )
-        if self.foodItem.typicalAmounts != nil {
-            for typicalAmount in self.foodItem.typicalAmounts!.sortedArray(using: [NSSortDescriptor(key: "amount", ascending: true)]) {
-                let castedTypicalAmount = typicalAmount as! TypicalAmount
-                foodItemVM.typicalAmounts.append(TypicalAmountViewModel(from: castedTypicalAmount))
-            }
-        }
-        return foodItemVM
     }
 }

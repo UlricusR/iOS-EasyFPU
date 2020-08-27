@@ -29,7 +29,7 @@ public class FoodItem: NSManagedObject {
         
         try? viewContext.save()
     }
-    
+    // ToDo: Remove
     func getCalories() -> Double {
         Double(self.amount) * self.caloriesPer100g / 100
     }

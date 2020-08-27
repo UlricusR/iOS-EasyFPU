@@ -37,7 +37,16 @@ struct FoodList: View {
         amount: 0
     )
     @State var foodItemsToBeImported: [FoodItemViewModel]?
+    @State private var searchString = ""
+    @State private var showFavoritesOnly = false
 
+    var filteredFoodItems: [FoodItemViewModel] {
+        if searchString == "" {
+            return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite } : foodItems.map { FoodItemViewModel(from: $0) }
+        } else {
+            return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite && $0.name.contains(searchString) } : foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.name.contains(searchString) }
+        }
+    }
     
     var meal: Meal {
         var meal = Meal(name: "Total meal")
@@ -63,7 +72,7 @@ struct FoodList: View {
                     NavigationView {
                         List {
                             Text("Tap to select, long press to edit").font(.caption)
-                            ForEach(self.foodItems, id: \.self) { foodItem in
+                            ForEach(self.filteredFoodItems, id: \.self) { foodItem in
                                 FoodItemView(absorptionScheme: self.absorptionScheme, foodItem: foodItem)
                                     .environment(\.managedObjectContext, self.managedObjectContext)
                             }

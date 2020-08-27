@@ -12,7 +12,7 @@ enum DataError: Error {
     case inputError(String)
 }
 
-class FoodItemViewModel: ObservableObject, Codable {
+class FoodItemViewModel: ObservableObject, Codable, Hashable {
     @Published var name: String
     @Published var favorite: Bool
     @Published var caloriesAsString: String = "" {
@@ -55,6 +55,7 @@ class FoodItemViewModel: ObservableObject, Codable {
     private(set) var carbsPer100g: Double = 0.0
     private(set) var amount: Int = 0
     var typicalAmounts = [TypicalAmountViewModel]()
+    var cdFoodItem: FoodItem?
     
     enum CodingKeys: String, CodingKey {
         case foodItem
@@ -79,6 +80,7 @@ class FoodItemViewModel: ObservableObject, Codable {
         self.caloriesPer100g = cdFoodItem.caloriesPer100g
         self.carbsPer100g = cdFoodItem.carbsPer100g
         self.amount = Int(cdFoodItem.amount)
+        self.cdFoodItem = cdFoodItem
         
         self.caloriesAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.caloriesPer100g))!
         self.carbsAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.carbsPer100g))!
@@ -151,6 +153,28 @@ class FoodItemViewModel: ObservableObject, Codable {
         amountAsString = NumberFormatter().string(from: NSNumber(value: amount))!
     }
     
+    func getCalories() -> Double {
+        Double(self.amount) * self.caloriesPer100g / 100
+    }
+    
+    func getCarbs() -> Double {
+        Double(self.amount) * self.carbsPer100g / 100
+    }
+    
+    func getFPU() -> FPU {
+        // 1g carbs has ~4 kcal, so calculate carb portion of calories
+        let carbsCal = Double(self.amount) / 100 * self.carbsPer100g * 4;
+
+        // The carbs from fat and protein is the remainder
+        let calFromFP = getCalories() - carbsCal;
+
+        // 100kcal makes 1 FPU
+        let fpus = calFromFP / 100;
+
+        // Create and return the FPU object
+        return FPU(fpu: fpus)
+    }
+    
     func updateCDFoodItem(_ cdFoodItem: inout FoodItem) {
         cdFoodItem.name = name
         cdFoodItem.amount = Int64(amount)
@@ -195,5 +219,20 @@ class FoodItemViewModel: ObservableObject, Codable {
             return .failure(.inputError(NSLocalizedString("Value must not be zero or negative", comment: "")))
         }
         return .success(valueAsNumber.intValue)
+    }
+    
+    static func == (lhs: FoodItemViewModel, rhs: FoodItemViewModel) -> Bool {
+        if lhs.name != rhs.name { return false }
+        if lhs.caloriesPer100g != rhs.caloriesPer100g { return false }
+        if lhs.carbsPer100g != rhs.carbsPer100g { return false }
+        if lhs.amount != rhs.amount { return false }
+        return true
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(caloriesPer100g)
+        hasher.combine(carbsPer100g)
+        hasher.combine(amount)
     }
 }
