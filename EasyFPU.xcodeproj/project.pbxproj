@@ -34,6 +34,8 @@
 		1B870FC124C9A32E00183C9F /* MealDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B870FC024C9A32E00183C9F /* MealDetail.swift */; };
 		1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */; };
 		1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */; };
+		1B90D2DA24F7A8EB0059BFFA /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2D924F7A8EB0059BFFA /* SearchView.swift */; };
+		1B90D2DC24F7A9660059BFFA /* ResignKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2DB24F7A9660059BFFA /* ResignKeyboard.swift */; };
 		1BA040CA24BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA040C624BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift */; };
 		1BA040CB24BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA040C724BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift */; };
 		1BBD6C4924C9D5700025AB84 /* FoodItemViewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBD6C4824C9D5700025AB84 /* FoodItemViewSheets.swift */; };
@@ -75,6 +77,8 @@
 		1B870FC024C9A32E00183C9F /* MealDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetail.swift; sourceTree = "<group>"; };
 		1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewModel.swift; sourceTree = "<group>"; };
 		1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmountViewModel.swift; sourceTree = "<group>"; };
+		1B90D2D924F7A8EB0059BFFA /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		1B90D2DB24F7A9660059BFFA /* ResignKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResignKeyboard.swift; sourceTree = "<group>"; };
 		1BA040C624BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TypicalAmount+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BA040C724BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TypicalAmount+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BBD6C4824C9D5700025AB84 /* FoodItemViewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewSheets.swift; sourceTree = "<group>"; };
@@ -134,6 +138,8 @@
 				1B870FC024C9A32E00183C9F /* MealDetail.swift */,
 				1B3CEB9A24D32D38001D64DA /* AbsorptionSchemeEditor.swift */,
 				1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */,
+				1B90D2D924F7A8EB0059BFFA /* SearchView.swift */,
+				1B90D2DB24F7A9660059BFFA /* ResignKeyboard.swift */,
 				1B004A3524BA3038001E362A /* Assets.xcassets */,
 				1B004A3D24BA3038001E362A /* Info.plist */,
 				1B004A3024BA3035001E362A /* EasyFPU.xcdatamodeld */,
@@ -286,6 +292,7 @@
 				1B68548824BC70ED005ABB8B /* FoodItemEditor.swift in Sources */,
 				1BF8A4C024C21A52008634DF /* FoodItem+CoreDataClass.swift in Sources */,
 				1BF8A4C124C21A52008634DF /* FoodItem+CoreDataProperties.swift in Sources */,
+				1B90D2DA24F7A8EB0059BFFA /* SearchView.swift in Sources */,
 				1B55E68E24C7804B00072217 /* Meal.swift in Sources */,
 				1B004A4D24BA3E7F001E362A /* AbsorptionScheme.swift in Sources */,
 				1B004A3224BA3035001E362A /* EasyFPU.xcdatamodeld in Sources */,
@@ -294,6 +301,7 @@
 				1BA040CB24BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift in Sources */,
 				1B004A4F24BA3EF1001E362A /* AbsorptionBlockFromJson.swift in Sources */,
 				1B004A3424BA3035001E362A /* FoodList.swift in Sources */,
+				1B90D2DC24F7A9660059BFFA /* ResignKeyboard.swift in Sources */,
 				1B870FC124C9A32E00183C9F /* MealDetail.swift in Sources */,
 				1BBD6C4924C9D5700025AB84 /* FoodItemViewSheets.swift in Sources */,
 				1B004A2F24BA3035001E362A /* SceneDelegate.swift in Sources */,

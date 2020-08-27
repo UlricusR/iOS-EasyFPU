@@ -38,6 +38,7 @@ struct FoodList: View {
     )
     @State var foodItemsToBeImported: [FoodItemViewModel]?
     @State private var searchString = ""
+    @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
 
     var filteredFoodItems: [FoodItemViewModel] {
@@ -73,6 +74,9 @@ struct FoodList: View {
                 VStack {
                     NavigationView {
                         List {
+                            // Search view
+                            SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
+                                .padding(.horizontal)
                             Text("Tap to select, long press to edit").font(.caption)
                             ForEach(self.filteredFoodItems, id: \.self) { foodItem in
                                 FoodItemView(absorptionScheme: self.absorptionScheme, foodItem: foodItem)
