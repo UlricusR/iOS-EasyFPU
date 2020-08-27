@@ -210,7 +210,7 @@ struct FoodList: View {
     
     private func deleteFoodItem(at offsets: IndexSet) {
         offsets.forEach { index in
-            let foodItem = self.foodItems[index]
+            let foodItem = self.filteredFoodItems[index].cdFoodItem!
             
             // Delete typical amounts first
             let typicalAmountsToBeDeleted = foodItem.typicalAmounts
