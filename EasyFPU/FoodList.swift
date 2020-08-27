@@ -94,21 +94,37 @@ struct FoodList: View {
                                 Image(systemName: "line.horizontal.3")
                                     .imageScale(.large)
                             },
-                            trailing: Button(action: {
-                                // Add new food item
-                                self.draftFoodItem = FoodItemViewModel(
-                                    name: "",
-                                    favorite: false,
-                                    caloriesPer100g: 0.0,
-                                    carbsPer100g: 0.0,
-                                    amount: 0
-                                )
-                                self.activeSheet = .addFoodItem
-                                self.showingSheet = true
-                            }) {
-                                Image(systemName: "plus.circle")
-                                    .imageScale(.large)
-                                    .foregroundColor(.green)
+                            trailing: HStack {
+                                Button(action: {
+                                    self.showFavoritesOnly.toggle()
+                                }) {
+                                    if self.showFavoritesOnly {
+                                        Image(systemName: "star.fill")
+                                            .foregroundColor(Color.yellow)
+                                            .padding()
+                                    } else {
+                                        Image(systemName: "star")
+                                            .foregroundColor(Color.gray)
+                                            .padding()
+                                    }
+                                }
+                                
+                                Button(action: {
+                                    // Add new food item
+                                    self.draftFoodItem = FoodItemViewModel(
+                                        name: "",
+                                        favorite: false,
+                                        caloriesPer100g: 0.0,
+                                        carbsPer100g: 0.0,
+                                        amount: 0
+                                    )
+                                    self.activeSheet = .addFoodItem
+                                    self.showingSheet = true
+                                }) {
+                                    Image(systemName: "plus.circle")
+                                        .imageScale(.large)
+                                        .foregroundColor(.green)
+                                }
                             }
                         )
                     }
