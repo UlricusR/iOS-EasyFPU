@@ -11,42 +11,51 @@ import SwiftUI
 struct MealDetail: View {
     @Binding var isPresented: Bool
     var absorptionScheme: AbsorptionScheme
-    var meal: Meal
+    var meal: MealViewModel
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
-                Text("Total nutritional values").font(.headline)
-            
-                HStack {
-                    Text(NumberFormatter().string(from: NSNumber(value: self.meal.amount))!)
-                    Text("g")
-                    Text("Amount consumed")
-                }
+            VStack {
+                VStack(alignment: .leading) {
+                    Text("Total nutritional values").font(.headline)
                 
-                HStack {
-                    Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.calories))!)
-                    Text("kcal")
-                }
+                    HStack {
+                        Text(NumberFormatter().string(from: NSNumber(value: self.meal.amount))!)
+                        Text("g")
+                        Text("Amount consumed")
+                    }
+                    
+                    HStack {
+                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.calories))!)
+                        Text("kcal")
+                    }
+                    
+                    HStack {
+                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
+                        Text("g Carbs")
+                    }
+                    
+                    HStack {
+                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.fpu))!)
+                        Text("FPU")
+                    }
+                    
+                    HStack {
+                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
+                        Text("g Extended Carbs")
+                    }
+                    
+                    HStack {
+                        Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionScheme)))!)
+                        Text("h Absorption Time")
+                    }
+                }.padding().foregroundColor(.red)
                 
-                HStack {
-                    Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
-                    Text("g Carbs")
-                }
-                
-                HStack {
-                    Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.fpu))!)
-                    Text("FPU")
-                }
-                
-                HStack {
-                    Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
-                    Text("g Extended Carbs")
-                }
-                
-                HStack {
-                    Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionScheme)))!)
-                    Text("h Absorption Time")
+                List {
+                    Text("Included food items:").font(.headline)
+                    ForEach(meal.foodItems, id: \.self) { foodItem in
+                        MealItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundColorName: Color.blue)
+                    }
                 }
                 
                 Spacer()

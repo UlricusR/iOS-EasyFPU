@@ -16,7 +16,6 @@
 
 "Food List" = "Essensliste";
 "Name" = "Name";
-"- Unnamed -" = "- Namenlos -";
 "Favorite" = "Lieblingsessen";
 "Carbs per 100g" = "Kohlendydrate pro 100g";
 "Calories per 100g" = "Kalorien pro 100g";
@@ -43,6 +42,7 @@
 "Enter amount consumed or select typical amount" = "Gegessene Menge eingeben oder typische Menge auswählen";
 "Enter amount consumed" = "Gegessene Menge eingeben";
 "Select amount" = "Menge auswählen";
+"Included food items:" = "Bestehend aus:";
 
 "Data alert" = "Eingabefehler";
 "Name must not be empty" = "Name darf nicht leer sein";

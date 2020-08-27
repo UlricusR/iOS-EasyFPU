@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Meal {
+class MealViewModel {
     var name: String
     var calories: Double = 0.0
     var carbs: Double = 0.0
@@ -16,7 +16,11 @@ struct Meal {
     var fpus: FPU = FPU(fpu: 0.0)
     var foodItems = [FoodItemViewModel]()
     
-    mutating func add(foodItem: FoodItemViewModel) {
+    init(name: String) {
+        self.name = name
+    }
+    
+    func add(foodItem: FoodItemViewModel) {
         foodItems.append(foodItem)
         let tempFPUs = fpus.fpu
         calories += foodItem.getCalories()

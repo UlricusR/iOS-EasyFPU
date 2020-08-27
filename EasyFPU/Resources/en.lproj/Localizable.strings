@@ -16,7 +16,6 @@
 
 "Food List" = "Food List";
 "Name" = "Name";
-"- Unnamed -" = "- Unnamed -";
 "Favorite" = "Favorite";
 "Carbs per 100g" = "Carbs per 100g";
 "Calories per 100g" = "Calories per 100g";
@@ -43,6 +42,7 @@
 "Enter amount consumed or select typical amount" = "Enter amount consumed or select typical amount";
 "Enter amount consumed" = "Enter amount consumed";
 "Select amount" = "Select amount";
+"Included food items:" = "Included food items:";
 
 "Data alert" = "Data alert";
 "Name must not be empty" = "Name must not be empty";

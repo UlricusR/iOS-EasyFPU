@@ -18,7 +18,7 @@ struct FoodListSheets: View {
     @Binding var isPresented: Bool
     var draftFoodItem: FoodItemViewModel
     var absorptionScheme: AbsorptionScheme
-    var meal: Meal
+    var meal: MealViewModel
     
     var body: some View {
         switch activeSheet {

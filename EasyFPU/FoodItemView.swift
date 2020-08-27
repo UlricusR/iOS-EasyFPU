@@ -45,43 +45,6 @@ struct FoodItemView: View {
                 Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.carbsPer100g))!).font(.caption).foregroundColor(.gray)
                 Text("g Carbs").font(.caption).foregroundColor(.gray)
             }
-            
-            // Third line: Nutritional values for selected amount (if amount > 0)
-            if foodItem.amount > 0 {
-                HStack(alignment: .top) {
-                    HStack {
-                        Text("Nutritional values for").font(.caption)
-                        Text(String(foodItem.amount)).font(.caption)
-                        Text("g").font(.caption)
-                        Text(":").font(.caption)
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text(foodItem.caloriesAsString).font(.caption)
-                            Text("kcal").font(.caption)
-                        }
-                        HStack {
-                            Text(foodItem.carbsAsString).font(.caption)
-                            Text("g Carbs").font(.caption)
-                        }
-                        HStack {
-                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().fpu))!).font(.caption)
-                            Text("FPU").font(.caption)
-                        }
-                        HStack {
-                            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().getExtendedCarbs()))!).font(.caption)
-                            Text("g Extended Carbs").font(.caption)
-                        }
-                        HStack {
-                            Text(NumberFormatter().string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme)))!).font(.caption)
-                            Text("h Absorption Time").font(.caption)
-                        }
-                    }
-                }
-            }
         }
         .onTapGesture {
             if self.foodItem.amount > 0 {

@@ -49,8 +49,8 @@ struct FoodList: View {
         }
     }
     
-    var meal: Meal {
-        var meal = Meal(name: "Total meal")
+    var meal: MealViewModel {
+        let meal = MealViewModel(name: "Total meal")
         for foodItem in foodItems {
             if foodItem.amount > 0 {
                 meal.add(foodItem: FoodItemViewModel(from: foodItem))
