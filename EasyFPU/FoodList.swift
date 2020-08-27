@@ -45,7 +45,7 @@ struct FoodList: View {
         if searchString == "" {
             return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite } : foodItems.map { FoodItemViewModel(from: $0) }
         } else {
-            return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite && $0.name.contains(searchString) } : foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.name.contains(searchString) }
+            return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite && $0.name.lowercased().contains(searchString.lowercased()) } : foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.name.lowercased().contains(searchString.lowercased()) }
         }
     }
     
