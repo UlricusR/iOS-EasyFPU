@@ -232,7 +232,11 @@ struct FoodList: View {
     
     private func deleteFoodItem(at offsets: IndexSet) {
         offsets.forEach { index in
-            let foodItem = self.filteredFoodItems[index].cdFoodItem!
+            guard let foodItem = self.filteredFoodItems[index].cdFoodItem else {
+                errorMessage = NSLocalizedString("Cannot delete food item", comment: "")
+                showingAlert = true
+                return
+            }
             
             // Delete typical amounts first
             let typicalAmountsToBeDeleted = foodItem.typicalAmounts

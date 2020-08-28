@@ -17,7 +17,7 @@ struct FoodItemViewSheets: View {
     var activeSheet: ActiveFoodItemViewSheet
     @Binding var isPresented: Bool
     var draftFoodItem: FoodItemViewModel
-    var editedFoodItem: FoodItem?
+    var editedFoodItem: FoodItem
     
     var body: some View {
         switch activeSheet {
@@ -32,7 +32,7 @@ struct FoodItemViewSheets: View {
             )
         case .selectFoodItem:
             return AnyView(
-                FoodItemSelector(isPresented: $isPresented, draftFoodItem: draftFoodItem, editedFoodItem: editedFoodItem!)
+                FoodItemSelector(isPresented: $isPresented, draftFoodItem: draftFoodItem, editedFoodItem: editedFoodItem)
             )
         }
     }

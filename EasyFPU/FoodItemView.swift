@@ -62,8 +62,12 @@ struct FoodItemView: View {
             self.showingSheet = true
         }
         .sheet(isPresented: $showingSheet) {
-            FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!)
-                .environment(\.managedObjectContext, self.managedObjectContext)
+            if self.foodItem.cdFoodItem != nil {
+                FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!)
+                    .environment(\.managedObjectContext, self.managedObjectContext)
+            } else {
+                Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
+            }
         }
     }
 }

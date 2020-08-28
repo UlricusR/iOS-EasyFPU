@@ -43,6 +43,7 @@
 "Enter amount consumed" = "Enter amount consumed";
 "Select amount" = "Select amount";
 "Included food items:" = "Included food items:";
+"Cannot delete food item" = "Cannot delete food item";
 
 "Data alert" = "Data alert";
 "Name must not be empty" = "Name must not be empty";
@@ -68,6 +69,9 @@
 "Absorption time is equals or less than the one of the block before" = "Absorption time is equals or less than the one of the block before";
 "Absorption time must be between previous and following block" = "Absorption time must be between previous and following block";
 "At least one absorption block required" = "At least one absorption block required";
+"Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fatal error: Cannot determine absorption block index, please inform the app developer";
+"Fatal error: Cannot convert numbers into string, please contact app developer" = "Fatal error: Cannot convert numbers into string, please contact app developer";
+"Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer";
 "Reset to default" = "Reset to default";
 
 "Import from JSON" = "Import from JSON";

@@ -121,7 +121,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         self.carbsAsString = carbsAsString
         
         // Check if calories from carbs exceed total calories
-        if FoodItemViewModel.doubleFormatter(numberOfDigits: 5).number(from: carbsAsString)!.doubleValue * 4 > FoodItemViewModel.doubleFormatter(numberOfDigits: 5).number(from: caloriesAsString)!.doubleValue {
+        if carbsPer100g * 4 > caloriesPer100g {
             errorMessage = NSLocalizedString("Calories from carbs (4 kcal per gram) exceed total calories", comment: "")
             return nil
         }
@@ -148,9 +148,16 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         name = try foodItem.decode(String.self, forKey: .name)
         typicalAmounts = try foodItem.decode([TypicalAmountViewModel].self, forKey: .typicalAmounts)
         
-        caloriesAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g))!
-        carbsAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g))!
-        amountAsString = NumberFormatter().string(from: NSNumber(value: amount))!
+        guard
+            let caloriesAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g)),
+            let carbsAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g)),
+            let amountAsString = NumberFormatter().string(from: NSNumber(value: amount))
+        else {
+            throw DataError.inputError(NSLocalizedString("Fatal error: Cannot convert numbers into string, please contact app developer", comment: ""))
+        }
+        self.caloriesAsString = caloriesAsString
+        self.carbsAsString = carbsAsString
+        self.amountAsString = amountAsString
     }
     
     func getCalories() -> Double {

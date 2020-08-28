@@ -39,14 +39,18 @@ class AbsorptionSchemeViewModel: ObservableObject {
         absorptionBlocks = absorptionBlocks.sorted()
 
         // Check no. 3: The absorption block before the new one must have a lower, the one after a higher absorption time
-        let newBlockIndex = absorptionBlocks.firstIndex(of: newAbsorptionBlock)
+        guard let newBlockIndex = absorptionBlocks.firstIndex(of: newAbsorptionBlock) else {
+            // This should never happen
+            errorMessage = NSLocalizedString("Fatal error: Cannot determine absorption block index, please inform the app developer", comment: "")
+            return false
+        }
 
         // Case 3a: It's the first element, so just check the block after -
         // we have already excluded the case that the new block is the only element in check no. 1!
         if newBlockIndex == 0 {
             if newAbsorptionBlock.absorptionTime >= absorptionBlocks[1].absorptionTime {
                 // Error: The new block's absorption time is equals or larger than of the one after
-                absorptionBlocks.remove(at: newBlockIndex!)
+                absorptionBlocks.remove(at: newBlockIndex)
                 errorMessage = NSLocalizedString("Absorption time is equals or larger than the one of the following absorption block", comment: "")
                 return false
             } else {
@@ -58,7 +62,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
         if newBlockIndex == absorptionBlocks.count - 1 {
             if newAbsorptionBlock.absorptionTime <= absorptionBlocks[absorptionBlocks.count - 2].absorptionTime {
                 // Error: The new block's absorption time is equals or less than of the one before
-                absorptionBlocks.remove(at: newBlockIndex!)
+                absorptionBlocks.remove(at: newBlockIndex)
                 errorMessage = NSLocalizedString("Absorption time is equals or less than the one of the block before", comment: "")
                 return false
             } else {
@@ -67,9 +71,9 @@ class AbsorptionSchemeViewModel: ObservableObject {
         }
 
         // Case 3c: It's somewhere in the middle
-        if !(newAbsorptionBlock.absorptionTime > absorptionBlocks[newBlockIndex! - 1].absorptionTime &&
-              newAbsorptionBlock.absorptionTime < absorptionBlocks[newBlockIndex! + 1].absorptionTime) {
-            absorptionBlocks.remove(at: newBlockIndex!)
+        if !(newAbsorptionBlock.absorptionTime > absorptionBlocks[newBlockIndex - 1].absorptionTime &&
+              newAbsorptionBlock.absorptionTime < absorptionBlocks[newBlockIndex + 1].absorptionTime) {
+            absorptionBlocks.remove(at: newBlockIndex)
             errorMessage = NSLocalizedString("Absorption time must be between previous and following block", comment: "")
             return false
         } else {
