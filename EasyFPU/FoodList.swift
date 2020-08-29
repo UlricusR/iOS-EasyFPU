@@ -40,6 +40,7 @@ struct FoodList: View {
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
+    @State private var disclaimerViewIsDisplayed = !UserDefaults.standard.bool(forKey: DisclaimerView.disclaimerAcceptedKey)
 
     var filteredFoodItems: [FoodItemViewModel] {
         if searchString == "" {
@@ -61,172 +62,180 @@ struct FoodList: View {
     
     var body: some View {
         let drag = DragGesture()
-            .onEnded {
-                if $0.translation.width < -100 {
-                    withAnimation {
-                        self.showingMenu = false
-                    }
-                }
-        }
-        
-        return ZStack(alignment: .leading) {
-            GeometryReader { geometry in
-                VStack {
-                    NavigationView {
-                        List {
-                            // Search view
-                            SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
-                                .padding(.horizontal)
-                            Text("Tap to select, long press to edit").font(.caption)
-                            ForEach(self.filteredFoodItems, id: \.self) { foodItem in
-                                FoodItemView(absorptionScheme: self.absorptionScheme, foodItem: foodItem)
-                                    .environment(\.managedObjectContext, self.managedObjectContext)
-                            }
-                            .onDelete(perform: self.deleteFoodItem)
-                        }
-                        .navigationBarTitle("Food List")
-                        .navigationBarItems(
-                            leading: Button(action: {
-                                withAnimation {
-                                    self.showingMenu.toggle()
-                                }
-                            }) {
-                                Image(systemName: "line.horizontal.3")
-                                    .imageScale(.large)
-                            },
-                            trailing: HStack {
-                                Button(action: {
-                                    self.showFavoritesOnly.toggle()
-                                }) {
-                                    if self.showFavoritesOnly {
-                                        Image(systemName: "star.fill")
-                                            .foregroundColor(Color.yellow)
-                                            .padding()
-                                    } else {
-                                        Image(systemName: "star")
-                                            .foregroundColor(Color.gray)
-                                            .padding()
-                                    }
-                                }
-                                
-                                Button(action: {
-                                    // Add new food item
-                                    self.draftFoodItem = FoodItemViewModel(
-                                        name: "",
-                                        favorite: false,
-                                        caloriesPer100g: 0.0,
-                                        carbsPer100g: 0.0,
-                                        amount: 0
-                                    )
-                                    self.activeSheet = .addFoodItem
-                                    self.showingSheet = true
-                                }) {
-                                    Image(systemName: "plus.circle")
-                                        .imageScale(.large)
-                                        .foregroundColor(.green)
-                                }
-                            }
-                        )
-                    }.navigationViewStyle(StackNavigationViewStyle())
-                    
-                    if self.meal.amount > 0 {
-                        VStack {
-                            Text("Total meal").font(.headline)
-                            
-                            HStack {
-                                VStack {
-                                    HStack {
-                                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
-                                        Text("g")
-                                    }
-                                    Text("Carbs").font(.caption)
-                                }
-                                
-                                VStack {
-                                    HStack {
-                                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
-                                        Text("g")
-                                    }
-                                    Text("Extended Carbs").font(.caption)
-                                }
-                                
-                                VStack {
-                                    HStack {
-                                        Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionScheme)))!)
-                                        Text("h")
-                                    }
-                                    Text("Absorption Time").font(.caption)
-                                }
-                            }
-                        }
-                        .onTapGesture {
-                            self.activeSheet = .showMealDetails
-                            self.showingSheet = true
-                        }
-                        .foregroundColor(.red)
-                    }
-                }
-                .sheet(isPresented: self.$showingSheet) {
-                    FoodListSheets(
-                        activeSheet: self.activeSheet,
-                        isPresented: self.$showingSheet,
-                        draftFoodItem: self.draftFoodItem,
-                        absorptionScheme: self.absorptionScheme,
-                        meal: self.meal
-                    )
-                        .environment(\.managedObjectContext, self.managedObjectContext)
-                }
-                .onAppear {
-                    if self.absorptionScheme.absorptionBlocks.isEmpty {
-                        // Absorption scheme hasn't been loaded yet
-                        if self.absorptionBlocks.isEmpty {
-                            // Absorption blocks are empty, so initialize with default absorption scheme
-                            // and store default blocks back to core data
-                            let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks()
-                            
-                            for absorptionBlock in defaultAbsorptionBlocks {
-                                let cdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
-                                cdAbsorptionBlock.absorptionTime = Int64(absorptionBlock.absorptionTime)
-                                cdAbsorptionBlock.maxFpu = Int64(absorptionBlock.maxFpu)
-                                self.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
-                            }
-                            try? AppDelegate.viewContext.save()
-                        } else {
-                            // Store absorption blocks loaded from core data
-                            self.absorptionScheme.absorptionBlocks = self.absorptionBlocks.sorted()
-                        }
-                    }
-                }
-                .frame(width: geometry.size.width, height: geometry.size.height)
-                .offset(x: self.showingMenu ? geometry.size.width/2 : 0)
-                .disabled(self.showingMenu ? true : false)
-                
-                if self.showingMenu {
-                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON, exportDirectory: self.exportJSON)
-                        .frame(width: geometry.size.width/2)
-                        .transition(.move(edge: .leading))
+        .onEnded {
+            if $0.translation.width < -100 {
+                withAnimation {
+                    self.showingMenu = false
                 }
             }
         }
-        .gesture(drag)
-        .alert(isPresented: self.$showingAlert) {
-            Alert(
-                title: Text("Notice"),
-                message: Text(self.errorMessage),
-                dismissButton: .default(Text("OK"))
+        
+        if self.disclaimerViewIsDisplayed {
+            return AnyView(
+                DisclaimerView(isDisplayed: self.$disclaimerViewIsDisplayed)
             )
-        }
-        .actionSheet(isPresented: self.$showActionSheet) {
-            ActionSheet(title: Text("Import food list"), message: Text("Please select"), buttons: [
-                .default(Text("Replace")) {
-                    FoodItem.deleteAll()
-                    self.importFoodItems()
-                },
-                .default(Text("Append")) {
-                    self.importFoodItems()
-                },
-                .cancel()
-            ])
+        } else {
+            return AnyView(
+                ZStack(alignment: .leading) {
+                    GeometryReader { geometry in
+                        VStack {
+                            NavigationView {
+                                List {
+                                    // Search view
+                                    SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
+                                        .padding(.horizontal)
+                                    Text("Tap to select, long press to edit").font(.caption)
+                                    ForEach(self.filteredFoodItems, id: \.self) { foodItem in
+                                        FoodItemView(absorptionScheme: self.absorptionScheme, foodItem: foodItem)
+                                            .environment(\.managedObjectContext, self.managedObjectContext)
+                                    }
+                                    .onDelete(perform: self.deleteFoodItem)
+                                }
+                                .navigationBarTitle("Food List")
+                                .navigationBarItems(
+                                    leading: Button(action: {
+                                        withAnimation {
+                                            self.showingMenu.toggle()
+                                        }
+                                    }) {
+                                        Image(systemName: "line.horizontal.3")
+                                            .imageScale(.large)
+                                    },
+                                    trailing: HStack {
+                                        Button(action: {
+                                            self.showFavoritesOnly.toggle()
+                                        }) {
+                                            if self.showFavoritesOnly {
+                                                Image(systemName: "star.fill")
+                                                    .foregroundColor(Color.yellow)
+                                                    .padding()
+                                            } else {
+                                                Image(systemName: "star")
+                                                    .foregroundColor(Color.gray)
+                                                    .padding()
+                                            }
+                                        }
+                                        
+                                        Button(action: {
+                                            // Add new food item
+                                            self.draftFoodItem = FoodItemViewModel(
+                                                name: "",
+                                                favorite: false,
+                                                caloriesPer100g: 0.0,
+                                                carbsPer100g: 0.0,
+                                                amount: 0
+                                            )
+                                            self.activeSheet = .addFoodItem
+                                            self.showingSheet = true
+                                        }) {
+                                            Image(systemName: "plus.circle")
+                                                .imageScale(.large)
+                                                .foregroundColor(.green)
+                                        }
+                                    }
+                                )
+                            }.navigationViewStyle(StackNavigationViewStyle())
+                            
+                            if self.meal.amount > 0 {
+                                VStack {
+                                    Text("Total meal").font(.headline)
+                                    
+                                    HStack {
+                                        VStack {
+                                            HStack {
+                                                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
+                                                Text("g")
+                                            }
+                                            Text("Carbs").font(.caption)
+                                        }
+                                        
+                                        VStack {
+                                            HStack {
+                                                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
+                                                Text("g")
+                                            }
+                                            Text("Extended Carbs").font(.caption)
+                                        }
+                                        
+                                        VStack {
+                                            HStack {
+                                                Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionScheme)))!)
+                                                Text("h")
+                                            }
+                                            Text("Absorption Time").font(.caption)
+                                        }
+                                    }
+                                }
+                                .onTapGesture {
+                                    self.activeSheet = .showMealDetails
+                                    self.showingSheet = true
+                                }
+                                .foregroundColor(.red)
+                            }
+                        }
+                        .sheet(isPresented: self.$showingSheet) {
+                            FoodListSheets(
+                                activeSheet: self.activeSheet,
+                                isPresented: self.$showingSheet,
+                                draftFoodItem: self.draftFoodItem,
+                                absorptionScheme: self.absorptionScheme,
+                                meal: self.meal
+                            )
+                                .environment(\.managedObjectContext, self.managedObjectContext)
+                        }
+                        .onAppear {
+                            if self.absorptionScheme.absorptionBlocks.isEmpty {
+                                // Absorption scheme hasn't been loaded yet
+                                if self.absorptionBlocks.isEmpty {
+                                    // Absorption blocks are empty, so initialize with default absorption scheme
+                                    // and store default blocks back to core data
+                                    let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks()
+                                    
+                                    for absorptionBlock in defaultAbsorptionBlocks {
+                                        let cdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
+                                        cdAbsorptionBlock.absorptionTime = Int64(absorptionBlock.absorptionTime)
+                                        cdAbsorptionBlock.maxFpu = Int64(absorptionBlock.maxFpu)
+                                        self.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
+                                    }
+                                    try? AppDelegate.viewContext.save()
+                                } else {
+                                    // Store absorption blocks loaded from core data
+                                    self.absorptionScheme.absorptionBlocks = self.absorptionBlocks.sorted()
+                                }
+                            }
+                        }
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .offset(x: self.showingMenu ? geometry.size.width/2 : 0)
+                        .disabled(self.showingMenu ? true : false)
+                        
+                        if self.showingMenu {
+                            MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON, exportDirectory: self.exportJSON)
+                                .frame(width: geometry.size.width/2)
+                                .transition(.move(edge: .leading))
+                        }
+                    }
+                }
+                .gesture(drag)
+                .alert(isPresented: self.$showingAlert) {
+                    Alert(
+                        title: Text("Notice"),
+                        message: Text(self.errorMessage),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
+                .actionSheet(isPresented: self.$showActionSheet) {
+                    ActionSheet(title: Text("Import food list"), message: Text("Please select"), buttons: [
+                        .default(Text("Replace")) {
+                            FoodItem.deleteAll()
+                            self.importFoodItems()
+                        },
+                        .default(Text("Append")) {
+                            self.importFoodItems()
+                        },
+                        .cancel()
+                    ])
+                }
+            )
         }
     }
     

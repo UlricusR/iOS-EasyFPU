@@ -23,6 +23,7 @@
 		1B1CC91924DD2FC50014DD7D /* FilePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */; };
 		1B24AD6C24BE38E800F3A100 /* FoodItemSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */; };
 		1B24AD6E24BE392100F3A100 /* FoodListSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B24AD6D24BE392100F3A100 /* FoodListSheets.swift */; };
+		1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */; };
 		1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */; };
 		1B3CEB9B24D32D38001D64DA /* AbsorptionSchemeEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9A24D32D38001D64DA /* AbsorptionSchemeEditor.swift */; };
 		1B3CEB9D24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */; };
@@ -66,6 +67,7 @@
 		1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePickerView.swift; sourceTree = "<group>"; };
 		1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemSelector.swift; sourceTree = "<group>"; };
 		1B24AD6D24BE392100F3A100 /* FoodListSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodListSheets.swift; sourceTree = "<group>"; };
+		1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 		1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbsorptionBlockViewModel.swift; sourceTree = "<group>"; };
 		1B3CEB9A24D32D38001D64DA /* AbsorptionSchemeEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionSchemeEditor.swift; sourceTree = "<group>"; };
 		1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionSchemeViewModel.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				1B004A4324BA3383001E362A /* EasyFPU.entitlements */,
 				1B004A2C24BA3035001E362A /* AppDelegate.swift */,
 				1B004A2E24BA3035001E362A /* SceneDelegate.swift */,
+				1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */,
 				1B004A3324BA3035001E362A /* FoodList.swift */,
 				1B24AD6D24BE392100F3A100 /* FoodListSheets.swift */,
 				1B1CC90E24DC4F390014DD7D /* MenuView.swift */,
@@ -301,6 +304,7 @@
 				1B004A4D24BA3E7F001E362A /* AbsorptionScheme.swift in Sources */,
 				1B004A3224BA3035001E362A /* EasyFPU.xcdatamodeld in Sources */,
 				1B24AD6C24BE38E800F3A100 /* FoodItemSelector.swift in Sources */,
+				1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */,
 				1BA040CA24BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift in Sources */,
 				1BA040CB24BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift in Sources */,
 				1B004A4F24BA3EF1001E362A /* AbsorptionBlockFromJson.swift in Sources */,

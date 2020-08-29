@@ -6,6 +6,13 @@
   Copyright © 2020 Ulrich Rüth. All rights reserved.
 */
 
+"Disclaimer" = "Disclaimer";
+"Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!" = "Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!";
+"Declining will not let you continue to use the app." = "Declining will not let you continue to use the app.";
+"You need to accept the disclaimer to continue." = "You need to accept the disclaimer to continue.";
+"Accept" = "Accept";
+"Decline" = "Decline";
+
 "Done" = "Done";
 "Cancel" = "Cancel";
 "Add" = "Add";

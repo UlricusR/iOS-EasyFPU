@@ -6,6 +6,13 @@
   Copyright © 2020 Ulrich Rüth. All rights reserved.
 */
 
+"Disclaimer" = "Haftungsausschluss";
+"Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!" = "Die Anwendung der von dieser App berechneten Ernährungsdaten im Rahmen einer Insulintherapie kann zu hohen oder niedrigen Blutzuckerwerten führen. Anwendung auf eigene Gefahr!";
+"Declining will not let you continue to use the app." = "Bei Ablehnung werden Sie die App nicht weiter nutzen können.";
+"You need to accept the disclaimer to continue." = "Sie müssen dem Haftungsausschluss zustimmen, um fortfahren zu können.";
+"Accept" = "Zustimmen";
+"Decline" = "Ablehnen";
+
 "Done" = "Fertig";
 "Cancel" = "Abbrechen";
 "Add" = "Hinzufügen";
@@ -72,7 +79,7 @@
 "At least one absorption block required" = "Mindestens ein Absorptionsblock benötigt";
 "Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fataler Fehler: Kann Absorptionsblock-Index nicht festlegen, bitte informieren Sie den App-Entwickler";
 "Fatal error: Cannot convert numbers into string, please contact app developer" = "Fataler Fehler: Kann Zahlen nicht in String umwandeln, bitte informieren Sie den App-Entwickler";
-"Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fatal error: Konnte das CoreData FoodItem nicht finden, bitte informieren Sie den App-Entwickler";
+"Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fataler Fehler: Konnte das CoreData FoodItem nicht finden, bitte informieren Sie den App-Entwickler";
 "Reset to default" = "Auf Voreinstellungen zurücksetzen";
 
 "Import from JSON" = "JSON importieren";
