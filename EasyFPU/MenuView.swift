@@ -51,6 +51,15 @@ struct MenuView: View {
             .foregroundColor(.gray)
             .padding(.top, 30)
             
+            Button(action: {
+                self.activeSheet = ActiveMenuViewSheet.about
+                self.showingSheet = true
+            }) {
+                Text("About")
+            }
+            .foregroundColor(.gray)
+            .padding(.top, 80)
+            
             Spacer()
         }
         .padding()

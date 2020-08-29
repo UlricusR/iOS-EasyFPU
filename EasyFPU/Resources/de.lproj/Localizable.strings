@@ -21,6 +21,11 @@
 "Tap to edit" = "Zum Bearbeiten antippen";
 "Tap to select, long press to edit" = "Zum Auswählen antippen, zum Bearbeiten lange drücken, zum Löschen nach links wischen";
 
+"About" = "Über";
+"About this app" = "Über diese App";
+"Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "Berechnet Kohlenhydrate, verlängerte Kohlenhydrate (auch bekannt als eCarbs oder Fake Carbs) und die entsprechende Absorptionszeit für ein Essen oder ganze Mahlzeiten.";
+"Documentation on rueth.info" = "Dokumentation auf rueth.info";
+
 "Food List" = "Essensliste";
 "Name" = "Name";
 "Favorite" = "Lieblingsessen";

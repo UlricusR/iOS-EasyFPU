@@ -21,6 +21,11 @@
 "Tap to edit" = "Tap to edit";
 "Tap to select, long press to edit" = "Tap to select, long press to edit, swipe left to delete";
 
+"About" = "About";
+"About this app" = "About this app";
+"Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal.";
+"Documentation on rueth.info" = "Documentation on rueth.info";
+
 "Food List" = "Food List";
 "Name" = "Name";
 "Favorite" = "Favorite";

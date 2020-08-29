@@ -24,6 +24,7 @@
 		1B24AD6C24BE38E800F3A100 /* FoodItemSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */; };
 		1B24AD6E24BE392100F3A100 /* FoodListSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B24AD6D24BE392100F3A100 /* FoodListSheets.swift */; };
 		1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */; };
+		1B377A6824FAA935005AC5C6 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6724FAA935005AC5C6 /* AboutView.swift */; };
 		1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */; };
 		1B3CEB9B24D32D38001D64DA /* AbsorptionSchemeEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9A24D32D38001D64DA /* AbsorptionSchemeEditor.swift */; };
 		1B3CEB9D24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */; };
@@ -68,6 +69,7 @@
 		1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemSelector.swift; sourceTree = "<group>"; };
 		1B24AD6D24BE392100F3A100 /* FoodListSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodListSheets.swift; sourceTree = "<group>"; };
 		1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
+		1B377A6724FAA935005AC5C6 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbsorptionBlockViewModel.swift; sourceTree = "<group>"; };
 		1B3CEB9A24D32D38001D64DA /* AbsorptionSchemeEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionSchemeEditor.swift; sourceTree = "<group>"; };
 		1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionSchemeViewModel.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				1B004A2C24BA3035001E362A /* AppDelegate.swift */,
 				1B004A2E24BA3035001E362A /* SceneDelegate.swift */,
 				1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */,
+				1B377A6724FAA935005AC5C6 /* AboutView.swift */,
 				1B004A3324BA3035001E362A /* FoodList.swift */,
 				1B24AD6D24BE392100F3A100 /* FoodListSheets.swift */,
 				1B1CC90E24DC4F390014DD7D /* MenuView.swift */,
@@ -290,6 +293,7 @@
 			files = (
 				1B6106BB24D93346001F2284 /* DataHelper.swift in Sources */,
 				1BEE525624D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift in Sources */,
+				1B377A6824FAA935005AC5C6 /* AboutView.swift in Sources */,
 				1B90D2DE24F7BAB40059BFFA /* MealItemView.swift in Sources */,
 				1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */,
 				1B1CC91124DC57300014DD7D /* MenuViewSheets.swift in Sources */,

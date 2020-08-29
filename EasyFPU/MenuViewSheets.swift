@@ -10,7 +10,7 @@ import SwiftUI
 import MobileCoreServices
 
 enum ActiveMenuViewSheet {
-    case editAbsorptionScheme, pickFileToImport, pickExportDirectory
+    case editAbsorptionScheme, pickFileToImport, pickExportDirectory, about
 }
 
 struct MenuViewSheets: View {
@@ -36,6 +36,10 @@ struct MenuViewSheets: View {
         case .pickExportDirectory:
             return AnyView(
                 FilePickerView(callback: exportDirectory, documentTypes: [kUTTypeFolder as String])
+            )
+        case .about:
+            return AnyView(
+                AboutView(isPresented: self.$isPresented)
             )
         }
     }
