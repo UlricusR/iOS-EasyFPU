@@ -36,6 +36,7 @@ struct DisclaimerView: View {
                 }
             )
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .alert(isPresented: self.$showingAlert) {
             Alert(
                 title: Text("Disclaimer"),

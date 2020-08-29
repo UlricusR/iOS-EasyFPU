@@ -24,6 +24,6 @@ struct AboutView: View {
             }) {
                 Text("Done")
             })
-        }
+        }.navigationViewStyle(StackNavigationViewStyle())
     }
 }
