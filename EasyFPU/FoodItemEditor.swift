@@ -199,6 +199,7 @@ struct FoodItemEditor: View {
                 }
             )
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .alert(isPresented: $showingAlert) {
             Alert(
                 title: Text("Data alert"),

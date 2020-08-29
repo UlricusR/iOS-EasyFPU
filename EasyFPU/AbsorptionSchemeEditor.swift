@@ -153,6 +153,7 @@ struct AbsorptionSchemeEditor: View {
                 )
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
             
         // Alert
         .alert(isPresented: $showingAlert) {

@@ -67,6 +67,6 @@ struct MealDetail: View {
                     Text("Done")
                 }
             )
-        }
+        }.navigationViewStyle(StackNavigationViewStyle())
     }
 }

@@ -127,7 +127,7 @@ struct FoodList: View {
                                 }
                             }
                         )
-                    }
+                    }.navigationViewStyle(StackNavigationViewStyle())
                     
                     if self.meal.amount > 0 {
                         VStack {
