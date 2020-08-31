@@ -41,6 +41,7 @@ struct FoodList: View {
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
     @State private var disclaimerViewIsDisplayed = !UserDefaults.standard.bool(forKey: DisclaimerView.disclaimerAcceptedKey)
+    private let helpScreen = HelpScreen.foodList
 
     var filteredFoodItems: [FoodItemViewModel] {
         if searchString == "" {
@@ -93,13 +94,26 @@ struct FoodList: View {
                                 }
                                 .navigationBarTitle("Food List")
                                 .navigationBarItems(
-                                    leading: Button(action: {
-                                        withAnimation {
-                                            self.showingMenu.toggle()
-                                        }
-                                    }) {
-                                        Image(systemName: "line.horizontal.3")
+                                    leading: HStack {
+                                        Button(action: {
+                                            withAnimation {
+                                                self.showingMenu.toggle()
+                                            }
+                                        }) {
+                                            Image(systemName: "line.horizontal.3")
                                             .imageScale(.large)
+                                        }
+                                        
+                                        Button(action: {
+                                            withAnimation {
+                                                self.activeSheet = .help
+                                                self.showingSheet = true
+                                            }
+                                        }) {
+                                            Image(systemName: "questionmark.circle")
+                                            .imageScale(.large)
+                                            .padding()
+                                        }
                                     },
                                     trailing: HStack {
                                         Button(action: {
@@ -107,12 +121,12 @@ struct FoodList: View {
                                         }) {
                                             if self.showFavoritesOnly {
                                                 Image(systemName: "star.fill")
-                                                    .foregroundColor(Color.yellow)
-                                                    .padding()
+                                                .foregroundColor(Color.yellow)
+                                                .padding()
                                             } else {
                                                 Image(systemName: "star")
-                                                    .foregroundColor(Color.gray)
-                                                    .padding()
+                                                .foregroundColor(Color.gray)
+                                                .padding()
                                             }
                                         }
                                         
@@ -176,6 +190,7 @@ struct FoodList: View {
                         .sheet(isPresented: self.$showingSheet) {
                             FoodListSheets(
                                 activeSheet: self.activeSheet,
+                                helpScreen: self.helpScreen,
                                 isPresented: self.$showingSheet,
                                 draftFoodItem: self.draftFoodItem,
                                 absorptionScheme: self.absorptionScheme,

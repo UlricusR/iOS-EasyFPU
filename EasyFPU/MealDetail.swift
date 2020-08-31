@@ -12,6 +12,8 @@ struct MealDetail: View {
     @Binding var isPresented: Bool
     var absorptionScheme: AbsorptionScheme
     var meal: MealViewModel
+    @State private var showingSheet = false
+    private let helpScreen = HelpScreen.mealDetails
     
     var body: some View {
         NavigationView {
@@ -61,12 +63,23 @@ struct MealDetail: View {
                 Spacer()
             }
             .navigationBarTitle(NSLocalizedString(self.meal.name, comment: ""))
-            .navigationBarItems(trailing: Button(action: {
+            .navigationBarItems(
+                leading: Button(action: {
+                    self.showingSheet = true
+                }) {
+                    Image(systemName: "questionmark.circle").imageScale(.large)
+                },
+                
+                trailing: Button(action: {
                     self.isPresented = false
                 }) {
                     Text("Done")
                 }
             )
-        }.navigationViewStyle(StackNavigationViewStyle())
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .sheet(isPresented: self.$showingSheet) {
+            HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
+        }
     }
 }

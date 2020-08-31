@@ -210,20 +210,20 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
     
     static func checkForPositiveDouble(valueAsString: String, allowZero: Bool) -> Result<Double, DataError> {
         guard let valueAsNumber = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).number(from: valueAsString) else {
-            return .failure(.inputError(NSLocalizedString("Value not a number: ", comment: "") + valueAsString))
+            return .failure(.inputError("Value not a number"))
         }
         guard allowZero ? valueAsNumber.doubleValue >= 0.0 : valueAsNumber.doubleValue > 0.0 else {
-            return .failure(.inputError(NSLocalizedString("Value must not be zero or negative", comment: "")))
+            return .failure(.inputError("Value must not be zero or negative"))
         }
         return .success(valueAsNumber.doubleValue)
     }
     
     static func checkForPositiveInt(valueAsString: String, allowZero: Bool) -> Result<Int, DataError> {
         guard let valueAsNumber = NumberFormatter().number(from: valueAsString) else {
-            return .failure(.inputError(NSLocalizedString("Value not a number: ", comment: "") + valueAsString))
+            return .failure(.inputError("Value not a number"))
         }
         guard allowZero ? valueAsNumber.intValue >= 0 : valueAsNumber.intValue > 0 else {
-            return .failure(.inputError(NSLocalizedString("Value must not be zero or negative", comment: "")))
+            return .failure(.inputError("Value must not be zero or negative"))
         }
         return .success(valueAsNumber.intValue)
     }

@@ -12,13 +12,15 @@ struct AbsorptionSchemeEditor: View {
     @Binding var isPresented: Bool
     @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var editedAbsorptionScheme: AbsorptionScheme
-    @State var newMaxFpu: String = ""
-    @State var newAbsorptionTime: String = ""
-    @State var newAbsorptionBlockId: UUID?
-    @State var errorMessage: String = ""
-    @State var updateButton: Bool = false
-    @State var showingAlert: Bool = false
-    @State var absorptionBlocksToBeDeleted = [AbsorptionBlockViewModel]()
+    @State private var newMaxFpu: String = ""
+    @State private var newAbsorptionTime: String = ""
+    @State private var newAbsorptionBlockId: UUID?
+    @State private var errorMessage: String = ""
+    @State private var updateButton: Bool = false
+    @State private var showingAlert: Bool = false
+    @State private var absorptionBlocksToBeDeleted = [AbsorptionBlockViewModel]()
+    @State private var showingScreen = false
+    private let helpScreen = HelpScreen.absorptionSchemeEditor
     @Environment(\.managedObjectContext) var managedObjectContext
     
     var body: some View {
@@ -111,11 +113,20 @@ struct AbsorptionSchemeEditor: View {
                 // Navigation bar
                 .navigationBarTitle(Text("Absorption scheme"))
                 .navigationBarItems(
-                    leading: Button(action: {
-                        self.isPresented = false
-                    }) {
-                        Text("Cancel")
+                    leading: HStack {
+                        Button(action: {
+                            self.isPresented = false
+                        }) {
+                            Text("Cancel")
+                        }
+                        
+                        Button(action: {
+                            self.showingScreen = true
+                        }) {
+                            Image(systemName: "questionmark.circle").imageScale(.large)
+                        }.padding()
                     },
+                    
                     trailing: Button(action: {
                         // Update absorption block
                         for absorptionBlock in self.draftAbsorptionScheme.absorptionBlocks {
@@ -162,6 +173,9 @@ struct AbsorptionSchemeEditor: View {
                 message: Text(self.errorMessage),
                 dismissButton: .default(Text("OK"))
             )
+        }
+        .sheet(isPresented: self.$showingScreen) {
+            HelpView(isPresented: self.$showingScreen, helpScreen: self.helpScreen)
         }
     }
     

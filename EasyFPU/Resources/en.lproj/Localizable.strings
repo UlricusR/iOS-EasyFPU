@@ -6,6 +6,7 @@
   Copyright © 2020 Ulrich Rüth. All rights reserved.
 */
 
+// Disclaimer
 "Disclaimer" = "Disclaimer";
 "Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!" = "Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!";
 "Declining will not let you continue to use the app." = "Declining will not let you continue to use the app.";
@@ -13,6 +14,7 @@
 "Accept" = "Accept";
 "Decline" = "Decline";
 
+// General buttons
 "Done" = "Done";
 "Cancel" = "Cancel";
 "Add" = "Add";
@@ -21,11 +23,70 @@
 "Tap to edit" = "Tap to edit";
 "Tap to select, long press to edit" = "Tap to select, long press to edit, swipe left to delete";
 
+// About
 "About" = "About";
 "About this app" = "About this app";
 "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal.";
 "Documentation on rueth.info" = "Documentation on rueth.info";
 
+// Food List help
+"The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
+"The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food.";
+"To add a new food item, tap on the large Plus button in the top right corner to add a new food item." = "To add a new food item, tap on the large Plus button in the top right corner to add a new food item.";
+"As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed.";
+"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
+"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
+"In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen." = "In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen.";
+"Tapping the summary will open the Meal Details view." = "Tapping the summary will open the Meal Details view.";
+
+// Select Food Item help
+"Select Food Item" = "Select Food Item";
+"You may enter the consumed amount in three different ways." = "You may enter the consumed amount in three different ways.";
+"1. You directly enter it in the text field." = "1. You directly enter it in the text field.";
+"2. You use the green number fields to add to the amount already displayed in the text field." = "2. You use the green number fields to add to the amount already displayed in the text field.";
+"3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value." = "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value.";
+"You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment." = "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment.";
+"Save the typical amount by confirming with the yellow checkmark." = "Save the typical amount by confirming with the yellow checkmark.";
+"Use the food item editor to maintain existing typical amounts." = "Use the food item editor to maintain existing typical amounts.";
+
+// Food Item Editor help
+"Edit Food Item" = "Edit Food Item";
+"This dialog allows you to edit a food item." = "This dialog allows you to edit a food item.";
+"All fields are mandatory, but you may leave away typical amounts." = "All fields are mandatory, but you may leave away typical amounts.";
+"Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal.";
+"To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button.";
+"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button.";
+"Swipe left to remove a typical amount." = "Swipe left to remove a typical amount.";
+
+// Meal Details help
+"Meal Details" = "Meal Details";
+"This view displays the details of your meal." = "This view displays the details of your meal.";
+"In the upper part, printed in red, you see the nutritional values of the total meal. This includes:" = "In the upper part, printed in red, you see the nutritional values of the total meal. This includes:";
+"- The total amount consumed in grams" = "- The total amount consumed in grams";
+"- The total energy consumed in kcal" = "- The total energy consumed in kcal";
+"- The total amount of carbs consumed in grams" = "- The total amount of carbs consumed in grams";
+"- The amount of Food Protein Units" = "- The amount of Food Protein Units";
+"- The corresponding amount of extended carbs in grams" = "- The corresponding amount of extended carbs in grams";
+"- The corresponding absorption time" = "- The corresponding absorption time";
+"Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above.";
+
+// Absorption scheme help
+"Edit Absorption Scheme" = "Edit Absorption Scheme";
+"The absorption scheme defines, which absorption time is proposed for a given amount of FPUs. The pre-defined absorption scheme matches today‘s recommendations from nutrition science and is as follows:" = "The absorption scheme defines, which absorption time is proposed for a given amount of FPUs. The pre-defined absorption scheme matches today‘s recommendations from nutrition science and is as follows:";
+"1 FPU (= 10g extended carbs): 3 hours absorption time" = "1 FPU (= 10g extended carbs): 3 hours absorption time";
+"2 FPUs (= 20g extended carbs): 4 hours absorption time" = "2 FPUs (= 20g extended carbs): 4 hours absorption time";
+"3 FPUs (= 30g extended carbs): 5 hours absorption time" = "3 FPUs (= 30g extended carbs): 5 hours absorption time";
+"4 FPUs (= 40g extended carbs): 6 hours absorption time" = "4 FPUs (= 40g extended carbs): 6 hours absorption time";
+"6 FPUs (= 60g extended carbs) and more: 8 hours absorption time" = "6 FPUs (= 60g extended carbs) and more: 8 hours absorption time";
+"The calculation logic is as follows:" = "The calculation logic is as follows:";
+"Step 1: Calculation of the total calories, e.g. for 72g Chicken McNuggets (249 kcal per 100g): 72g * 249 kcal / 100g = 179 kcal" = "Step 1: Calculation of the total calories, e.g. for 72g Chicken McNuggets (249 kcal per 100g): 72g * 249 kcal / 100g = 179 kcal";
+"Step 2: Calculation of the calories caused by carbs (4 kcal per 1g of carbs), e.g. for 72g Chicken McNuggets (17g carbs per 100g): 72g * 17gCarbs / 100g * 4 kcal/gCarbs = 49 kcal" = "Step 2: Calculation of the calories caused by carbs (4 kcal per 1g of carbs), e.g. for 72g Chicken McNuggets (17g carbs per 100g): 72g * 17gCarbs / 100g * 4 kcal/gCarbs = 49 kcal";
+"Step 3: Substract the calories caused by carbs from the total calories, e.g.: 179 kcal - 49 kcal = 130 kcal" = "Step 3: Substract the calories caused by carbs from the total calories, e.g.: 179 kcal - 49 kcal = 130 kcal";
+"Step 4: As 100 kcal represent 1 FPU, this results in 1.3 FPUs respectively 13g of extended carbs." = "Step 4: As 100 kcal represent 1 FPU, this results in 1.3 FPUs respectively 13g of extended carbs.";
+"Step 5: The FPUs will be rounded, in our example to 1 FPU, and the absorption time will be looked up, in our example 3 hours." = "Step 5: The FPUs will be rounded, in our example to 1 FPU, and the absorption time will be looked up, in our example 3 hours.";
+"Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above." = "Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above.";
+
+// Food List
 "Food List" = "Food List";
 "Name" = "Name";
 "Favorite" = "Favorite";
@@ -57,6 +118,7 @@
 "Included food items:" = "Included food items:";
 "Cannot delete food item" = "Cannot delete food item";
 
+// Food item editor
 "Data alert" = "Data alert";
 "Name must not be empty" = "Name must not be empty";
 "Calories not a valid number or negative" = "Calories not a valid number or negative";
@@ -67,6 +129,7 @@
 "Value must not be zero or negative" = "Value must not be zero or negative";
 "Cannot delete typical amount " = "Cannot delete typical amount ";
 
+// Absorption scheme editor
 "Absorption scheme" = "Absorption scheme";
 "Tap to edit, swipe left to delete" = "Tap to edit, swipe left to delete";
 "New absorption block:" = "New absorption block:";
@@ -86,6 +149,7 @@
 "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer";
 "Reset to default" = "Reset to default";
 
+// Menu actions
 "Import from JSON" = "Import from JSON";
 "Export to JSON" = "Export to JSON";
 "Successfully exported food list to: " = "Successfully exported food list to: ";

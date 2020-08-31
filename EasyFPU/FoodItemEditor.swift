@@ -16,6 +16,7 @@ struct FoodItemEditor: View {
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem? // Working copy of the food item
     @State var errorMessage: String = ""
+    @State private var showingSheet = false;
     
     @State var showingAlert = false
     @FetchRequest(
@@ -32,6 +33,7 @@ struct FoodItemEditor: View {
     @State var newTypicalAmountId: UUID?
     @State var typicalAmountsToBeDeleted = [TypicalAmountViewModel]()
     @State var updateButton = false
+    private let helpScreen = HelpScreen.foodItemEditor
     
     var body: some View {
         NavigationView {
@@ -123,11 +125,19 @@ struct FoodItemEditor: View {
             }
             .navigationBarTitle(navigationBarTitle)
             .navigationBarItems(
-                leading: Button(action: {
-                    // Do nothing, just quit edit mode, as food item hasn't been modified
-                    self.isPresented = false
-                }) {
-                    Text("Cancel")
+                leading: HStack {
+                    Button(action: {
+                        // Do nothing, just quit edit mode, as food item hasn't been modified
+                        self.isPresented = false
+                    }) {
+                        Text("Cancel")
+                    }
+                    
+                    Button(action: {
+                        self.showingSheet = true
+                    }) {
+                        Image(systemName: "questionmark.circle").imageScale(.large)
+                    }.padding()
                 },
                 trailing: Button(action: {
                     if let updatedFoodItem = FoodItemViewModel(
@@ -206,6 +216,9 @@ struct FoodItemEditor: View {
                 message: Text(self.errorMessage),
                 dismissButton: .default(Text("OK"))
             )
+        }
+        .sheet(isPresented: self.$showingSheet) {
+            HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
         }
     }
     

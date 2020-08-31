@@ -13,10 +13,12 @@ struct FoodItemSelector: View {
     @Binding var isPresented: Bool
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem
-    @State var showingAlert = false
-    @State var errorMessage = ""
-    @State var newTypicalAmountComment = ""
-    @State var addToTypicalAmounts = false
+    @State private var showingAlert = false
+    @State private var errorMessage = ""
+    @State private var newTypicalAmountComment = ""
+    @State private var addToTypicalAmounts = false
+    @State private var showingSheet = false
+    private let helpScreen = HelpScreen.foodItemSelector
     
     var body: some View {
         NavigationView {
@@ -98,11 +100,19 @@ struct FoodItemSelector: View {
             }
             .navigationBarTitle(draftFoodItem.name)
             .navigationBarItems(
-                leading: Button(action: {
-                    // Do nothing, just quit edit mode, as food item hasn't been modified
-                    self.isPresented = false
-                }) {
-                    Text("Cancel")
+                leading: HStack {
+                    Button(action: {
+                        // Do nothing, just quit edit mode, as food item hasn't been modified
+                        self.isPresented = false
+                    }) {
+                        Text("Cancel")
+                    }
+                    
+                    Button(action: {
+                        self.showingSheet = true
+                    }) {
+                        Image(systemName: "questionmark.circle").imageScale(.large)
+                    }.padding()
                 },
                 trailing: Button(action: {
                     let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
@@ -132,6 +142,9 @@ struct FoodItemSelector: View {
                 message: Text(self.errorMessage),
                 dismissButton: .default(Text("OK"))
             )
+        }
+        .sheet(isPresented: self.$showingSheet) {
+            HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
         }
     }
 }

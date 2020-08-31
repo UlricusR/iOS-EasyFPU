@@ -9,12 +9,13 @@
 import SwiftUI
 
 enum ActiveFoodListSheet {
-    case addFoodItem, showMealDetails
+    case addFoodItem, showMealDetails, help
 }
 
 struct FoodListSheets: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var activeSheet: ActiveFoodListSheet
+    var helpScreen: HelpScreen
     @Binding var isPresented: Bool
     var draftFoodItem: FoodItemViewModel
     var absorptionScheme: AbsorptionScheme
@@ -33,6 +34,10 @@ struct FoodListSheets: View {
         case .showMealDetails:
             return AnyView(
                 MealDetail(isPresented: self.$isPresented, absorptionScheme: absorptionScheme, meal: self.meal)
+            )
+        case .help:
+            return AnyView(
+                HelpView(isPresented: $isPresented, helpScreen: helpScreen)
             )
         }
     }

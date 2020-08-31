@@ -29,7 +29,7 @@ struct MenuView: View {
                 Text("Absorption scheme")
             }
             .foregroundColor(.gray)
-            .padding(.top, 100)
+            .padding(.top, 50)
             
             // Import
             Button(action: {
@@ -39,7 +39,7 @@ struct MenuView: View {
                 Text("Import from JSON")
             }
             .foregroundColor(.gray)
-            .padding(.top, 80)
+            .padding(.top, 40)
             
             // Export
             Button(action: {
@@ -49,8 +49,9 @@ struct MenuView: View {
                 Text("Export to JSON")
             }
             .foregroundColor(.gray)
-            .padding(.top, 30)
+            .padding(.top, 15)
             
+            // About
             Button(action: {
                 self.activeSheet = ActiveMenuViewSheet.about
                 self.showingSheet = true
@@ -58,7 +59,7 @@ struct MenuView: View {
                 Text("About")
             }
             .foregroundColor(.gray)
-            .padding(.top, 80)
+            .padding(.top, 40)
             
             Spacer()
         }
