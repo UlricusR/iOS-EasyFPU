@@ -31,6 +31,7 @@
 "About this app" = "Über diese App";
 "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "Berechnet Kohlenhydrate, verlängerte Kohlenhydrate (auch bekannt als eCarbs oder Fake Carbs) und die entsprechende Absorptionszeit für ein Essen oder ganze Mahlzeiten.";
 "Documentation on rueth.info" = "Dokumentation auf rueth.info";
+"Home-Link" = "https://rueth.info/index.php/de/";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";
