@@ -61,6 +61,16 @@ struct MenuView: View {
             .foregroundColor(.gray)
             .padding(.top, 40)
             
+            // Disclaimer
+            Button(action: {
+                self.activeSheet = ActiveMenuViewSheet.disclaimer
+                self.showingSheet = true
+            }) {
+                Text("Disclaimer")
+            }
+            .foregroundColor(.gray)
+            .padding(.top, 15)
+            
             Spacer()
         }
         .padding()

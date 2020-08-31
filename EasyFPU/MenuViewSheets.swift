@@ -10,7 +10,7 @@ import SwiftUI
 import MobileCoreServices
 
 enum ActiveMenuViewSheet {
-    case editAbsorptionScheme, pickFileToImport, pickExportDirectory, about
+    case editAbsorptionScheme, pickFileToImport, pickExportDirectory, about, disclaimer
 }
 
 struct MenuViewSheets: View {
@@ -40,6 +40,10 @@ struct MenuViewSheets: View {
         case .about:
             return AnyView(
                 AboutView(isPresented: self.$isPresented)
+            )
+        case .disclaimer:
+            return AnyView(
+                DisclaimerView(isDisplayed: self.$isPresented)
             )
         }
     }
