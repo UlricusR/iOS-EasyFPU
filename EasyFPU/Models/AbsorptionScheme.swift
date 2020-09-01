@@ -42,20 +42,37 @@ class AbsorptionScheme: Equatable {
         return Int(absorptionBlocks[absorptionBlocks.count - 1].maxFpu)
     }
     
-    func getMaximumAbsorptionTime() -> Int {
-        Int(absorptionBlocks[absorptionBlocks.count - 1].absorptionTime)
+    func getMaximumAbsorptionTime() -> Int? {
+        if absorptionBlocks.count > 0 {
+            return Int(absorptionBlocks[absorptionBlocks.count - 1].absorptionTime)
+        } else {
+            return nil
+        }
     }
     
-    func getMaximumFPUs() -> Int {
-        Int(absorptionBlocks[absorptionBlocks.count - 1].maxFpu)
+    func getMaximumFPUs() -> Int? {
+        if absorptionBlocks.count > 0 {
+            return Int(absorptionBlocks[absorptionBlocks.count - 1].maxFpu)
+        } else {
+            return nil
+        }
     }
     
     static func == (lhs: AbsorptionScheme, rhs: AbsorptionScheme) -> Bool {
-        if lhs.getMaximumAbsorptionTime() != rhs.getMaximumAbsorptionTime() {
+        guard
+            let lhsMaxAbsorptionTime = lhs.getMaximumAbsorptionTime(),
+            let rhsMaxAbsorptionTime = rhs.getMaximumAbsorptionTime(),
+            let lhsMaxFPUs = lhs.getMaximumFPUs(),
+            let rhsMaxFPUs = rhs.getMaximumFPUs()
+        else {
             return false
         }
         
-        if lhs.getMaximumFPUs() != rhs.getMaximumFPUs() {
+        if lhsMaxAbsorptionTime != rhsMaxAbsorptionTime {
+            return false
+        }
+        
+        if lhsMaxFPUs != rhsMaxFPUs {
             return false
         }
         
