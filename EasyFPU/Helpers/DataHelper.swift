@@ -11,27 +11,30 @@ import UIKit
 import MobileCoreServices
 
 class DataHelper {
-    static func loadDefaultAbsorptionBlocks() -> [AbsorptionBlockFromJson] {
+    static func loadDefaultAbsorptionBlocks(errorMessage: inout String) -> [AbsorptionBlockFromJson]? {
         // Load default absorption scheme
         let absorptionSchemeDefaultFile = "absorptionscheme_default.json"
         guard let file = Bundle.main.url(forResource: absorptionSchemeDefaultFile, withExtension: nil) else {
-            fatalError("Unable to load \(absorptionSchemeDefaultFile)")
+            errorMessage = "Unable to load \(absorptionSchemeDefaultFile)"
+            return nil
         }
         do {
             let data = try Data(contentsOf: file)
-            return DataHelper.decode(json: data, strategy: .convertFromSnakeCase) as [AbsorptionBlockFromJson]
+            return DataHelper.decode(json: data, strategy: .convertFromSnakeCase, errorMessage: &errorMessage) as [AbsorptionBlockFromJson]?
         } catch {
-            fatalError("Could not decode data of \(absorptionSchemeDefaultFile):\n\(error.localizedDescription)")
+            errorMessage = ("Could not decode data of \(absorptionSchemeDefaultFile):\n\(error.localizedDescription)")
+            return nil
         }
     }
     
-    static private func decode<T: Decodable>(json data: Data, strategy: JSONDecoder.KeyDecodingStrategy) -> T {
+    static private func decode<T: Decodable>(json data: Data, strategy: JSONDecoder.KeyDecodingStrategy, errorMessage: inout String) -> T? {
         do {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = strategy
             return try decoder.decode(T.self, from: data)
         } catch {
-            fatalError("Couldn't parse data as \(T.self):\n\(error.localizedDescription)")
+            errorMessage = "Couldn't parse data as \(T.self):\n\(error.localizedDescription)"
+            return nil
         }
     }
     

@@ -73,7 +73,9 @@ struct AbsorptionSchemeEditor: View {
                                     }
                                 } else { // This is an existing typical amount
                                     guard let index = self.draftAbsorptionScheme.absorptionBlocks.firstIndex(where: { $0.id == self.newAbsorptionBlockId }) else {
-                                        fatalError("Fatal error: Could not identify absorption block")
+                                        self.errorMessage = NSLocalizedString("Fatal error: Could not identify absorption block", comment: "")
+                                        self.showingAlert = true
+                                        return
                                     }
                                     let existingAbsorptionBlock = self.draftAbsorptionScheme.absorptionBlocks[index]
                                     self.draftAbsorptionScheme.absorptionBlocks.remove(at: index)
@@ -195,7 +197,10 @@ struct AbsorptionSchemeEditor: View {
     }
     
     func resetToDefaults() {
-        let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks()
+        guard let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) else {
+            self.showingAlert = true
+            return
+        }
         absorptionBlocksToBeDeleted = draftAbsorptionScheme.absorptionBlocks
         draftAbsorptionScheme.absorptionBlocks.removeAll()
         

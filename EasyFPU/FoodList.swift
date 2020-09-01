@@ -204,7 +204,10 @@ struct FoodList: View {
                                 if self.absorptionBlocks.isEmpty {
                                     // Absorption blocks are empty, so initialize with default absorption scheme
                                     // and store default blocks back to core data
-                                    let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks()
+                                    guard let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks(errorMessage: &self.errorMessage) else {
+                                        self.showingAlert = true
+                                        return
+                                    }
                                     
                                     for absorptionBlock in defaultAbsorptionBlocks {
                                         let cdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)

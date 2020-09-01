@@ -86,7 +86,9 @@ struct FoodItemEditor: View {
                                     }
                                 } else { // This is an existing typical amount
                                     guard let index = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
-                                        fatalError("Fatal error: Could not identify typical amount")
+                                        self.errorMessage = NSLocalizedString("Fatal error: Could not identify typical amount", comment: "")
+                                        self.showingAlert = true
+                                        return
                                     }
                                     self.draftFoodItem.typicalAmounts[index].amountAsString = self.newTypicalAmount
                                     self.draftFoodItem.typicalAmounts[index].comment = self.newTypicalAmountComment
