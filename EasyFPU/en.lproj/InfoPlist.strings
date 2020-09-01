@@ -1,0 +1,8 @@
+/* 
+  InfoPlist.strings
+  EasyFPU
+
+  Created by Ulrich Rüth on 01.09.20.
+  Copyright © 2020 Ulrich Rüth. All rights reserved.
+*/
+"CFBundleDisplayName" = "EasyFPU";
