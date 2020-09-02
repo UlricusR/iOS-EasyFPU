@@ -111,15 +111,33 @@ struct FoodItemEditor: View {
                     Section(footer: Text("Tap to edit")) {
                         ForEach(self.typicalAmounts, id: \.self) { typicalAmount in
                             HStack {
-                                Text(typicalAmount.amountAsString)
-                                Text("g")
-                                Text(typicalAmount.comment)
-                            }
-                            .onTapGesture {
-                                self.newTypicalAmount = typicalAmount.amountAsString
-                                self.newTypicalAmountComment = typicalAmount.comment
-                                self.newTypicalAmountId = typicalAmount.id
-                                self.updateButton = true
+                                HStack {
+                                    Text(typicalAmount.amountAsString)
+                                    Text("g")
+                                    Text(typicalAmount.comment)
+                                }
+                                .onTapGesture {
+                                    self.newTypicalAmount = typicalAmount.amountAsString
+                                    self.newTypicalAmountComment = typicalAmount.comment
+                                    self.newTypicalAmountId = typicalAmount.id
+                                    self.updateButton = true
+                                }
+                                
+                                Spacer()
+                                Button(action: {
+                                    // First clear edit fields if filled
+                                    if self.updateButton {
+                                        self.newTypicalAmount = ""
+                                        self.newTypicalAmountComment = ""
+                                        self.newTypicalAmountId = nil
+                                        self.updateButton.toggle()
+                                    }
+                                    
+                                    // Then delete typical amount
+                                    self.deleteTypicalAmount(typicalAmount)
+                                }) {
+                                    Image(systemName: "xmark.circle").foregroundColor(.red)
+                                }
                             }
                         }.onDelete(perform: deleteTypicalAmount)
                     }
@@ -160,8 +178,14 @@ struct FoodItemEditor: View {
             .navigationBarItems(
                 leading: HStack {
                     Button(action: {
-                        // Do nothing, just quit edit mode, as food item hasn't been modified
+                        // First quit edit mode
                         self.isPresented = false
+                        
+                        // Then undo the changes made to typical amounts
+                        for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
+                            self.draftFoodItem.typicalAmounts.append(typicalAmountToBeDeleted)
+                        }
+                        self.typicalAmountsToBeDeleted.removeAll()
                     }) {
                         Text("Cancel")
                     }
@@ -255,16 +279,20 @@ struct FoodItemEditor: View {
         }
     }
     
-    func deleteTypicalAmount(at offsets: IndexSet) {
+    private func deleteTypicalAmount(at offsets: IndexSet) {
         offsets.forEach { index in
             let typicalAmountToBeDeleted = self.typicalAmounts[index]
-            typicalAmountsToBeDeleted.append(typicalAmountToBeDeleted)
-            guard let originalIndex = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
-                self.errorMessage = NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment
-                return
-            }
-            self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
+            deleteTypicalAmount(typicalAmountToBeDeleted)
         }
+    }
+    
+    private func deleteTypicalAmount(_ typicalAmountToBeDeleted: TypicalAmountViewModel) {
+        typicalAmountsToBeDeleted.append(typicalAmountToBeDeleted)
+        guard let originalIndex = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
+            self.errorMessage = NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment
+            return
+        }
+        self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
         self.draftFoodItem.objectWillChange.send()
     }
 }
