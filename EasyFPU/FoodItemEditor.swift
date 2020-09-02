@@ -123,6 +123,37 @@ struct FoodItemEditor: View {
                             }
                         }.onDelete(perform: deleteTypicalAmount)
                     }
+                    
+                    // Delete food item (only when editing an existing food item)
+                    if editedFoodItem != nil {
+                        Section {
+                            Button(action: {
+                                // First close the sheet
+                                self.isPresented = false
+                                
+                                // Then delete all related typical amounts
+                                for typicalAmount in self.typicalAmounts {
+                                    if typicalAmount.cdTypicalAmount != nil {
+                                        typicalAmount.cdTypicalAmount!.prepareForDeletion()
+                                        if self.draftFoodItem.cdFoodItem != nil {
+                                            self.draftFoodItem.cdFoodItem!.removeFromTypicalAmounts(typicalAmount.cdTypicalAmount!)
+                                        }
+                                        self.managedObjectContext.delete(typicalAmount.cdTypicalAmount!)
+                                    }
+                                }
+                                
+                                // Then delete the food item itself
+                                if self.draftFoodItem.cdFoodItem != nil {
+                                    self.managedObjectContext.delete(self.draftFoodItem.cdFoodItem!)
+                                }
+                                
+                                // And save the context
+                                try? AppDelegate.viewContext.save()
+                            }) {
+                                Text("Delete food item")
+                            }
+                        }
+                    }
                 }
             }
             .navigationBarTitle(navigationBarTitle)
