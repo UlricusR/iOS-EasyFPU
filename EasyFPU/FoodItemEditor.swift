@@ -69,39 +69,7 @@ struct FoodItemEditor: View {
                             Text("g")
                             TextField("Comment", text: $newTypicalAmountComment)
                             Button(action: {
-                                if self.newTypicalAmountId == nil { // This is a new typical amount
-                                    if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.newTypicalAmount, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
-                                        // Add new typical amount to typical amounts of food item
-                                        self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
-                                        
-                                        // Reset text fields
-                                        self.newTypicalAmount = ""
-                                        self.newTypicalAmountComment = ""
-                                        self.updateButton = false
-                                        
-                                        // Broadcast changed object
-                                        self.draftFoodItem.objectWillChange.send()
-                                    } else {
-                                        self.showingAlert = true
-                                    }
-                                } else { // This is an existing typical amount
-                                    guard let index = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
-                                        self.errorMessage = NSLocalizedString("Fatal error: Could not identify typical amount", comment: "")
-                                        self.showingAlert = true
-                                        return
-                                    }
-                                    self.draftFoodItem.typicalAmounts[index].amountAsString = self.newTypicalAmount
-                                    self.draftFoodItem.typicalAmounts[index].comment = self.newTypicalAmountComment
-                                    
-                                    // Reset text fields and typical amount id
-                                    self.newTypicalAmount = ""
-                                    self.newTypicalAmountComment = ""
-                                    self.updateButton = false
-                                    self.newTypicalAmountId = nil
-                                    
-                                    // Broadcast changed object
-                                    self.draftFoodItem.objectWillChange.send()
-                                }
+                                self.addTypicalAmount()
                             }) {
                                 Image(systemName: self.updateButton ? "checkmark.circle" : "plus.circle").foregroundColor(self.updateButton ? .yellow : .green)
                             }
@@ -197,6 +165,12 @@ struct FoodItemEditor: View {
                     }.padding()
                 },
                 trailing: Button(action: {
+                    // First check if there's an unsaved typical amount
+                    if self.newTypicalAmount != "" && self.newTypicalAmountComment != "" { // We have an unsaved typical amount
+                        self.addTypicalAmount()
+                    }
+                    
+                    // Create updated food item
                     if let updatedFoodItem = FoodItemViewModel(
                         name: self.draftFoodItem.name,
                         favorite: self.draftFoodItem.favorite,
@@ -213,15 +187,7 @@ struct FoodItemEditor: View {
                             
                             // Update typical amounts
                             for typicalAmount in self.draftFoodItem.typicalAmounts {
-                                // Check if it's an existing core data entry
-                                if typicalAmount.cdTypicalAmount == nil { // This is a new typical amount
-                                    let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-                                    typicalAmount.cdTypicalAmount = newTypicalAmount
-                                    let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
-                                    self.editedFoodItem!.addToTypicalAmounts(newTypicalAmount)
-                                } else { // This is an existing typical amount, so just update values
-                                    let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
-                                }
+                                self.updateCDTypicalAmount(with: typicalAmount)
                             }
                             
                             // Remove deleted typical amounts
@@ -294,5 +260,53 @@ struct FoodItemEditor: View {
         }
         self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
         self.draftFoodItem.objectWillChange.send()
+    }
+    
+    private func updateCDTypicalAmount(with typicalAmount: TypicalAmountViewModel) {
+        // Check if it's an existing core data entry
+        if typicalAmount.cdTypicalAmount == nil { // This is a new typical amount
+            let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
+            typicalAmount.cdTypicalAmount = newTypicalAmount
+            let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
+            self.editedFoodItem!.addToTypicalAmounts(newTypicalAmount)
+        } else { // This is an existing typical amount, so just update values
+            let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
+        }
+    }
+    
+    private func addTypicalAmount() {
+        if newTypicalAmountId == nil { // This is a new typical amount
+            if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.newTypicalAmount, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
+                // Add new typical amount to typical amounts of food item
+                self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
+                
+                // Reset text fields
+                self.newTypicalAmount = ""
+                self.newTypicalAmountComment = ""
+                self.updateButton = false
+                
+                // Broadcast changed object
+                self.draftFoodItem.objectWillChange.send()
+            } else {
+                self.showingAlert = true
+            }
+        } else { // This is an existing typical amount
+            guard let index = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
+                self.errorMessage = NSLocalizedString("Fatal error: Could not identify typical amount", comment: "")
+                self.showingAlert = true
+                return
+            }
+            self.draftFoodItem.typicalAmounts[index].amountAsString = self.newTypicalAmount
+            self.draftFoodItem.typicalAmounts[index].comment = self.newTypicalAmountComment
+            
+            // Reset text fields and typical amount id
+            self.newTypicalAmount = ""
+            self.newTypicalAmountComment = ""
+            self.updateButton = false
+            self.newTypicalAmountId = nil
+            
+            // Broadcast changed object
+            self.draftFoodItem.objectWillChange.send()
+        }
     }
 }
