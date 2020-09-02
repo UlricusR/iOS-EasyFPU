@@ -25,7 +25,10 @@ struct HelpViewFoodItemEditor: View {
                 Text("To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button.")
             }.padding()
             
-            Text("Swipe left to remove a typical amount.").padding()
+            HStack {
+                Image(systemName: "xmark.circle").foregroundColor(.red)
+                Text("Swipe left to remove a typical amount.")
+            }.padding()
         }
     }
 }
