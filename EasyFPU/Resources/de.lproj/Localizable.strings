@@ -60,7 +60,7 @@
 "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Bitte beachten Sie, dass 1 Gramm Kohlenhydrate ca. 4 kcal Energiegehalt hat, d.h. die hier eingegebene Menge Kohlenhydrate multipliziert mit vier darf die Gesamt-Energiemenge in kcal nicht überschreiten.";
 "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "Um eine neue typische Menge hinzuzufügen, geben Sie die Menge und einen passenden Kommentar in die entsprechenden Felder ein und bestätigen Sie die Eingabe mit dem grünen Plus-Knopf.";
 "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "Um eine existierende typische Menge zu bearbeiten, tippen Sie diese an, ändern dann die Werte und bestätigen die Änderung durch Antippen des gelben Hakens.";
-"Swipe left to remove a typical amount." = "Wischen Sie die typische Menge nach links, um sie zu löschen.";
+"Swipe left to remove a typical amount." = "Wischen Sie die typische Menge nach links oder tippen Sie auf das kleine rote X, um sie zu löschen.";
 
 // Meal Details help
 "Meal Details" = "Details zur Mahlzeit";
