@@ -69,9 +69,9 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         self.carbsPer100g = carbsPer100g
         self.amount = amount
         
-        self.caloriesAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g))!
-        self.carbsAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g))!
-        self.amountAsString = NumberFormatter().string(from: NSNumber(value: amount))!
+        self.caloriesAsString = caloriesPer100g == 0 ? "" : FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g))!
+        self.carbsAsString = carbsPer100g == 0 ? "" : FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g))!
+        self.amountAsString = amount == 0 ? "" : NumberFormatter().string(from: NSNumber(value: amount))!
     }
     
     init(from cdFoodItem: FoodItem) {
@@ -82,9 +82,9 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         self.amount = Int(cdFoodItem.amount)
         self.cdFoodItem = cdFoodItem
         
-        self.caloriesAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.caloriesPer100g))!
-        self.carbsAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.carbsPer100g))!
-        self.amountAsString = NumberFormatter().string(from: NSNumber(value: cdFoodItem.amount))!
+        self.caloriesAsString = cdFoodItem.caloriesPer100g == 0 ? "" : FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.caloriesPer100g))!
+        self.carbsAsString = cdFoodItem.carbsPer100g == 0 ? "" : FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.carbsPer100g))!
+        self.amountAsString = cdFoodItem.amount == 0 ? "" : NumberFormatter().string(from: NSNumber(value: cdFoodItem.amount))!
         
         if cdFoodItem.typicalAmounts != nil {
             for typicalAmount in cdFoodItem.typicalAmounts!.allObjects {
@@ -99,7 +99,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         self.favorite = favorite
         
         // Check for valid calories
-        let caloriesResult = FoodItemViewModel.checkForPositiveDouble(valueAsString: caloriesAsString, allowZero: true)
+        let caloriesResult = FoodItemViewModel.checkForPositiveDouble(valueAsString: caloriesAsString == "" ? "0" : caloriesAsString, allowZero: true)
         switch caloriesResult {
         case .success(let caloriesAsDouble):
             caloriesPer100g = caloriesAsDouble
@@ -110,7 +110,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         self.caloriesAsString = caloriesAsString
         
         // Check for valid carbs
-        let carbsResult = FoodItemViewModel.checkForPositiveDouble(valueAsString: carbsAsString, allowZero: true)
+        let carbsResult = FoodItemViewModel.checkForPositiveDouble(valueAsString: carbsAsString == "" ? "0" : carbsAsString, allowZero: true)
         switch carbsResult {
         case .success(let carbsAsDouble):
             carbsPer100g = carbsAsDouble
@@ -127,7 +127,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         }
         
         // Check for valid amount
-        let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString, allowZero: true)
+        let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString == "" ? "0" : amountAsString, allowZero: true)
         switch amountResult {
         case .success(let amountAsInt):
             amount = amountAsInt

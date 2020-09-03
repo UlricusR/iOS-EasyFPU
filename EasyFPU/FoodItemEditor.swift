@@ -61,7 +61,7 @@ struct FoodItemEditor: View {
                         HStack {
                             TextField("Carbs per 100g", text: $draftFoodItem.carbsAsString)
                                 .keyboardType(.decimalPad)
-                            Text("g")
+                            Text("g Carbs")
                         }
                     }
                     
