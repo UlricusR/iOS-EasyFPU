@@ -28,11 +28,17 @@ struct FoodItemEditor: View {
     
     var typicalAmounts: [TypicalAmountViewModel] { draftFoodItem.typicalAmounts.sorted() }
     
+    @State private var oldName = ""
+    @State private var oldCaloriesAsString = ""
+    @State private var oldCarbsAsString = ""
+    @State private var oldAmountAsString = ""
+    
     @State var newTypicalAmount = ""
     @State var newTypicalAmountComment = ""
     @State var newTypicalAmountId: UUID?
     @State var typicalAmountsToBeDeleted = [TypicalAmountViewModel]()
     @State var updateButton = false
+    
     private let helpScreen = HelpScreen.foodItemEditor
     
     @ObservedObject private var keyboardGuardian = KeyboardGuardian()
@@ -174,6 +180,9 @@ struct FoodItemEditor: View {
                         self.addTypicalAmount()
                     }
                     
+                    // Create error to store feedback from FoodItemViewModel
+                    var error = FoodItemViewModelError.name("Dummy")
+                    
                     // Create updated food item
                     if let updatedFoodItem = FoodItemViewModel(
                         name: self.draftFoodItem.name,
@@ -181,7 +190,7 @@ struct FoodItemEditor: View {
                         caloriesAsString: self.draftFoodItem.caloriesAsString,
                         carbsAsString: self.draftFoodItem.carbsAsString,
                         amountAsString: self.draftFoodItem.amountAsString,
-                        errorMessage: &self.errorMessage) { // We have a valid food item
+                        error: &error) { // We have a valid food item
                         if self.editedFoodItem != nil { // We need to update an existing food item
                             self.editedFoodItem!.name = updatedFoodItem.name
                             self.editedFoodItem!.favorite = updatedFoodItem.favorite
@@ -228,6 +237,26 @@ struct FoodItemEditor: View {
                         // Quit edit mode
                         self.isPresented = false
                     } else { // Invalid data, display alert
+                        // Evaluate error
+                        switch error {
+                        case .name(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.name = self.oldName
+                        case .calories(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.caloriesAsString = self.oldCaloriesAsString
+                        case .carbs(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.carbsAsString = self.oldCarbsAsString
+                        case .tooMuchCarbs(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.caloriesAsString = self.oldCaloriesAsString
+                            self.draftFoodItem.carbsAsString = self.oldCarbsAsString
+                        case .amount(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.amountAsString = self.oldAmountAsString
+                        }
+                        
                         // Display alert and stay in edit mode
                         self.showingAlert = true
                     }
@@ -246,6 +275,12 @@ struct FoodItemEditor: View {
         }
         .sheet(isPresented: self.$showingSheet) {
             HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
+        }
+        .onAppear() {
+            self.oldName = self.draftFoodItem.name
+            self.oldCaloriesAsString = self.draftFoodItem.caloriesAsString
+            self.oldCarbsAsString = self.draftFoodItem.carbsAsString
+            self.oldAmountAsString = self.draftFoodItem.amountAsString
         }
     }
     
