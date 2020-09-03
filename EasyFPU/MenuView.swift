@@ -71,6 +71,15 @@ struct MenuView: View {
             .foregroundColor(.gray)
             .padding(.top, 15)
             
+            // Web help
+            Button(action: {
+                UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
+            }) {
+                Text("Help on the Web")
+            }
+            .foregroundColor(.gray)
+            .padding(.top, 15)
+            
             Spacer()
         }
         .padding()

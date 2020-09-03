@@ -31,7 +31,7 @@
 "About this app" = "Über diese App";
 "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "Berechnet Kohlenhydrate, verlängerte Kohlenhydrate (auch bekannt als eCarbs oder Fake Carbs) und die entsprechende Absorptionszeit für ein Essen oder ganze Mahlzeiten.";
 "Documentation on rueth.info" = "Dokumentation auf rueth.info";
-"Home-Link" = "https://rueth.info/index.php/de/";
+"Home-Link" = "https://rueth.info/index.php/de/easyfpe-fuer-ios";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";
@@ -61,6 +61,9 @@
 "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "Um eine neue typische Menge hinzuzufügen, geben Sie die Menge und einen passenden Kommentar in die entsprechenden Felder ein und bestätigen Sie die Eingabe mit dem grünen Plus-Knopf.";
 "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "Um eine existierende typische Menge zu bearbeiten, tippen Sie diese an, ändern dann die Werte und bestätigen die Änderung durch Antippen des gelben Hakens.";
 "Swipe left to remove a typical amount." = "Wischen Sie die typische Menge nach links oder tippen Sie auf das kleine rote X, um sie zu löschen.";
+"A good source for nutritional values (calories and carbs per 100g) is:" = "Eine gute Quelle für Nährwerte (Kalorien und Kohlenhydrate pro 100g) ist:";
+"Link-text-to-nutritional-values" = "FDDB.info";
+"Link-URL-to-nutritional-values" = "https://fddb.info/";
 
 // Meal Details help
 "Meal Details" = "Details zur Mahlzeit";
@@ -174,3 +177,4 @@
 "Failed to decode due to missing value - " = "Konnte nicht entschlüsseln wegen fehlendem Wert - ";
 "Failed to decode because it appears to be invalid JSON" = "Ungültige JSON-Datei";
 "Failed to decode - " = "Konnte nicht entschlüsseln - ";
+"Help on the Web" = "Hilfe im Web";
