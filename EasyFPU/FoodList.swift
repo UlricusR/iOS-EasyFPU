@@ -179,7 +179,12 @@ struct FoodList: View {
                                             Text("Absorption Time").font(.caption)
                                         }
                                     }
+                                    
+                                    Text("Recommended delay of extended carbs:").font(.caption).padding(.top).multilineTextAlignment(.center)
+                                    Text("1.5h")
                                 }
+                                .animation(.easeInOut)
+                                .padding()
                                 .onTapGesture {
                                     self.activeSheet = .showMealDetails
                                     self.showingSheet = true

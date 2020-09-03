@@ -121,6 +121,8 @@
 "Select amount" = "Select amount";
 "Included food items:" = "Included food items:";
 "Cannot delete food item" = "Cannot delete food item";
+"Recommended delay of extended carbs:" = "Recommended delay of extended carbs:";
+"1.5h" = "1.5h";
 
 // Food item editor
 "Data alert" = "Data alert";

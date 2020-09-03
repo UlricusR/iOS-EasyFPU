@@ -121,6 +121,8 @@
 "Select amount" = "Menge auswählen";
 "Included food items:" = "Bestehend aus:";
 "Cannot delete food item" = "Kann Essen nicht löschen";
+"Recommended delay of extended carbs:" = "Empfohlene Verzögerung für verlängerte Kohlenhydrate:";
+"1.5h" = "1,5h";
 
 // Food item editor
 "Data alert" = "Eingabefehler";
