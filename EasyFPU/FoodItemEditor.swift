@@ -28,12 +28,20 @@ struct FoodItemEditor: View {
     
     var typicalAmounts: [TypicalAmountViewModel] { draftFoodItem.typicalAmounts.sorted() }
     
+    @State private var oldName = ""
+    @State private var oldCaloriesAsString = ""
+    @State private var oldCarbsAsString = ""
+    @State private var oldAmountAsString = ""
+    
     @State var newTypicalAmount = ""
     @State var newTypicalAmountComment = ""
     @State var newTypicalAmountId: UUID?
     @State var typicalAmountsToBeDeleted = [TypicalAmountViewModel]()
     @State var updateButton = false
+    
     private let helpScreen = HelpScreen.foodItemEditor
+    
+    @ObservedObject private var keyboardGuardian = KeyboardGuardian()
     
     var body: some View {
         NavigationView {
@@ -59,7 +67,7 @@ struct FoodItemEditor: View {
                         HStack {
                             TextField("Carbs per 100g", text: $draftFoodItem.carbsAsString)
                                 .keyboardType(.decimalPad)
-                            Text("g")
+                            Text("g Carbs")
                         }
                     }
                     
@@ -69,39 +77,7 @@ struct FoodItemEditor: View {
                             Text("g")
                             TextField("Comment", text: $newTypicalAmountComment)
                             Button(action: {
-                                if self.newTypicalAmountId == nil { // This is a new typical amount
-                                    if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.newTypicalAmount, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
-                                        // Add new typical amount to typical amounts of food item
-                                        self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
-                                        
-                                        // Reset text fields
-                                        self.newTypicalAmount = ""
-                                        self.newTypicalAmountComment = ""
-                                        self.updateButton = false
-                                        
-                                        // Broadcast changed object
-                                        self.draftFoodItem.objectWillChange.send()
-                                    } else {
-                                        self.showingAlert = true
-                                    }
-                                } else { // This is an existing typical amount
-                                    guard let index = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
-                                        self.errorMessage = NSLocalizedString("Fatal error: Could not identify typical amount", comment: "")
-                                        self.showingAlert = true
-                                        return
-                                    }
-                                    self.draftFoodItem.typicalAmounts[index].amountAsString = self.newTypicalAmount
-                                    self.draftFoodItem.typicalAmounts[index].comment = self.newTypicalAmountComment
-                                    
-                                    // Reset text fields and typical amount id
-                                    self.newTypicalAmount = ""
-                                    self.newTypicalAmountComment = ""
-                                    self.updateButton = false
-                                    self.newTypicalAmountId = nil
-                                    
-                                    // Broadcast changed object
-                                    self.draftFoodItem.objectWillChange.send()
-                                }
+                                self.addTypicalAmount()
                             }) {
                                 Image(systemName: self.updateButton ? "checkmark.circle" : "plus.circle").foregroundColor(self.updateButton ? .yellow : .green)
                             }
@@ -111,26 +87,83 @@ struct FoodItemEditor: View {
                     Section(footer: Text("Tap to edit")) {
                         ForEach(self.typicalAmounts, id: \.self) { typicalAmount in
                             HStack {
-                                Text(typicalAmount.amountAsString)
-                                Text("g")
-                                Text(typicalAmount.comment)
-                            }
-                            .onTapGesture {
-                                self.newTypicalAmount = typicalAmount.amountAsString
-                                self.newTypicalAmountComment = typicalAmount.comment
-                                self.newTypicalAmountId = typicalAmount.id
-                                self.updateButton = true
+                                HStack {
+                                    Text(typicalAmount.amountAsString)
+                                    Text("g")
+                                    Text(typicalAmount.comment)
+                                }
+                                .onTapGesture {
+                                    self.newTypicalAmount = typicalAmount.amountAsString
+                                    self.newTypicalAmountComment = typicalAmount.comment
+                                    self.newTypicalAmountId = typicalAmount.id
+                                    self.updateButton = true
+                                }
+                                
+                                Spacer()
+                                Button(action: {
+                                    // First clear edit fields if filled
+                                    if self.updateButton {
+                                        self.newTypicalAmount = ""
+                                        self.newTypicalAmountComment = ""
+                                        self.newTypicalAmountId = nil
+                                        self.updateButton.toggle()
+                                    }
+                                    
+                                    // Then delete typical amount
+                                    self.deleteTypicalAmount(typicalAmount)
+                                }) {
+                                    Image(systemName: "xmark.circle").foregroundColor(.red)
+                                }
                             }
                         }.onDelete(perform: deleteTypicalAmount)
                     }
+                    
+                    // Delete food item (only when editing an existing food item)
+                    if editedFoodItem != nil {
+                        Section {
+                            Button(action: {
+                                // First close the sheet
+                                self.isPresented = false
+                                
+                                // Then delete all related typical amounts
+                                for typicalAmount in self.typicalAmounts {
+                                    if typicalAmount.cdTypicalAmount != nil {
+                                        typicalAmount.cdTypicalAmount!.prepareForDeletion()
+                                        if self.draftFoodItem.cdFoodItem != nil {
+                                            self.draftFoodItem.cdFoodItem!.removeFromTypicalAmounts(typicalAmount.cdTypicalAmount!)
+                                        }
+                                        self.managedObjectContext.delete(typicalAmount.cdTypicalAmount!)
+                                    }
+                                }
+                                
+                                // Then delete the food item itself
+                                if self.draftFoodItem.cdFoodItem != nil {
+                                    self.managedObjectContext.delete(self.draftFoodItem.cdFoodItem!)
+                                }
+                                
+                                // And save the context
+                                try? AppDelegate.viewContext.save()
+                            }) {
+                                Text("Delete food item")
+                            }
+                        }
+                    }
                 }
+                .padding(.bottom, keyboardGuardian.currentHeight)
+                .animation(.easeInOut(duration: 0.16))
             }
             .navigationBarTitle(navigationBarTitle)
             .navigationBarItems(
                 leading: HStack {
                     Button(action: {
-                        // Do nothing, just quit edit mode, as food item hasn't been modified
+                        // First quit edit mode
                         self.isPresented = false
+                        
+                        // Then undo the changes made to typical amounts
+                        for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
+                            self.draftFoodItem.typicalAmounts.append(typicalAmountToBeDeleted)
+                        }
+                        self.typicalAmountsToBeDeleted.removeAll()
                     }) {
                         Text("Cancel")
                     }
@@ -142,13 +175,22 @@ struct FoodItemEditor: View {
                     }.padding()
                 },
                 trailing: Button(action: {
+                    // First check if there's an unsaved typical amount
+                    if self.newTypicalAmount != "" && self.newTypicalAmountComment != "" { // We have an unsaved typical amount
+                        self.addTypicalAmount()
+                    }
+                    
+                    // Create error to store feedback from FoodItemViewModel
+                    var error = FoodItemViewModelError.name("Dummy")
+                    
+                    // Create updated food item
                     if let updatedFoodItem = FoodItemViewModel(
                         name: self.draftFoodItem.name,
                         favorite: self.draftFoodItem.favorite,
                         caloriesAsString: self.draftFoodItem.caloriesAsString,
                         carbsAsString: self.draftFoodItem.carbsAsString,
                         amountAsString: self.draftFoodItem.amountAsString,
-                        errorMessage: &self.errorMessage) { // We have a valid food item
+                        error: &error) { // We have a valid food item
                         if self.editedFoodItem != nil { // We need to update an existing food item
                             self.editedFoodItem!.name = updatedFoodItem.name
                             self.editedFoodItem!.favorite = updatedFoodItem.favorite
@@ -158,15 +200,7 @@ struct FoodItemEditor: View {
                             
                             // Update typical amounts
                             for typicalAmount in self.draftFoodItem.typicalAmounts {
-                                // Check if it's an existing core data entry
-                                if typicalAmount.cdTypicalAmount == nil { // This is a new typical amount
-                                    let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-                                    typicalAmount.cdTypicalAmount = newTypicalAmount
-                                    let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
-                                    self.editedFoodItem!.addToTypicalAmounts(newTypicalAmount)
-                                } else { // This is an existing typical amount, so just update values
-                                    let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
-                                }
+                                self.updateCDTypicalAmount(with: typicalAmount)
                             }
                             
                             // Remove deleted typical amounts
@@ -203,6 +237,26 @@ struct FoodItemEditor: View {
                         // Quit edit mode
                         self.isPresented = false
                     } else { // Invalid data, display alert
+                        // Evaluate error
+                        switch error {
+                        case .name(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.name = self.oldName
+                        case .calories(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.caloriesAsString = self.oldCaloriesAsString
+                        case .carbs(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.carbsAsString = self.oldCarbsAsString
+                        case .tooMuchCarbs(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.caloriesAsString = self.oldCaloriesAsString
+                            self.draftFoodItem.carbsAsString = self.oldCarbsAsString
+                        case .amount(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.amountAsString = self.oldAmountAsString
+                        }
+                        
                         // Display alert and stay in edit mode
                         self.showingAlert = true
                     }
@@ -222,18 +276,76 @@ struct FoodItemEditor: View {
         .sheet(isPresented: self.$showingSheet) {
             HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
         }
+        .onAppear() {
+            self.oldName = self.draftFoodItem.name
+            self.oldCaloriesAsString = self.draftFoodItem.caloriesAsString
+            self.oldCarbsAsString = self.draftFoodItem.carbsAsString
+            self.oldAmountAsString = self.draftFoodItem.amountAsString
+        }
     }
     
-    func deleteTypicalAmount(at offsets: IndexSet) {
+    private func deleteTypicalAmount(at offsets: IndexSet) {
         offsets.forEach { index in
             let typicalAmountToBeDeleted = self.typicalAmounts[index]
-            typicalAmountsToBeDeleted.append(typicalAmountToBeDeleted)
-            guard let originalIndex = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
-                self.errorMessage = NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment
+            deleteTypicalAmount(typicalAmountToBeDeleted)
+        }
+    }
+    
+    private func deleteTypicalAmount(_ typicalAmountToBeDeleted: TypicalAmountViewModel) {
+        typicalAmountsToBeDeleted.append(typicalAmountToBeDeleted)
+        guard let originalIndex = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
+            self.errorMessage = NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment
+            return
+        }
+        self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
+        self.draftFoodItem.objectWillChange.send()
+    }
+    
+    private func updateCDTypicalAmount(with typicalAmount: TypicalAmountViewModel) {
+        // Check if it's an existing core data entry
+        if typicalAmount.cdTypicalAmount == nil { // This is a new typical amount
+            let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
+            typicalAmount.cdTypicalAmount = newTypicalAmount
+            let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
+            self.editedFoodItem!.addToTypicalAmounts(newTypicalAmount)
+        } else { // This is an existing typical amount, so just update values
+            let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
+        }
+    }
+    
+    private func addTypicalAmount() {
+        if newTypicalAmountId == nil { // This is a new typical amount
+            if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.newTypicalAmount, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
+                // Add new typical amount to typical amounts of food item
+                self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
+                
+                // Reset text fields
+                self.newTypicalAmount = ""
+                self.newTypicalAmountComment = ""
+                self.updateButton = false
+                
+                // Broadcast changed object
+                self.draftFoodItem.objectWillChange.send()
+            } else {
+                self.showingAlert = true
+            }
+        } else { // This is an existing typical amount
+            guard let index = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
+                self.errorMessage = NSLocalizedString("Fatal error: Could not identify typical amount", comment: "")
+                self.showingAlert = true
                 return
             }
-            self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
+            self.draftFoodItem.typicalAmounts[index].amountAsString = self.newTypicalAmount
+            self.draftFoodItem.typicalAmounts[index].comment = self.newTypicalAmountComment
+            
+            // Reset text fields and typical amount id
+            self.newTypicalAmount = ""
+            self.newTypicalAmountComment = ""
+            self.updateButton = false
+            self.newTypicalAmountId = nil
+            
+            // Broadcast changed object
+            self.draftFoodItem.objectWillChange.send()
         }
-        self.draftFoodItem.objectWillChange.send()
     }
 }

@@ -79,8 +79,8 @@ struct FoodList: View {
             return AnyView(
                 ZStack(alignment: .leading) {
                     GeometryReader { geometry in
-                        VStack {
-                            NavigationView {
+                        NavigationView {
+                            VStack {
                                 List {
                                     // Search view
                                     SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
@@ -92,101 +92,110 @@ struct FoodList: View {
                                     }
                                     .onDelete(perform: self.deleteFoodItem)
                                 }
-                                .navigationBarTitle("Food List")
-                                .navigationBarItems(
-                                    leading: HStack {
-                                        Button(action: {
-                                            withAnimation {
-                                                self.showingMenu.toggle()
+                                
+                                if self.meal.amount > 0 {
+                                    NavigationLink(destination: MealDetail(absorptionScheme: self.absorptionScheme, meal: self.meal)) {
+                                        VStack {
+                                            Divider()
+                                            
+                                            HStack(alignment: .center) {
+                                                Text("Total meal").font(.headline).multilineTextAlignment(.center)
+                                                Image(systemName: "info.circle").imageScale(.large).foregroundColor(.blue)
                                             }
-                                        }) {
-                                            Image(systemName: "line.horizontal.3")
-                                            .imageScale(.large)
+                                            
+                                            HStack {
+                                                VStack {
+                                                    HStack {
+                                                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
+                                                        Text("g")
+                                                    }
+                                                    Text("Carbs").font(.caption).multilineTextAlignment(.center)
+                                                }
+                                                
+                                                VStack {
+                                                    HStack {
+                                                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
+                                                        Text("g")
+                                                    }
+                                                    Text("Extended Carbs").font(.caption).multilineTextAlignment(.center)
+                                                }
+                                                
+                                                VStack {
+                                                    HStack {
+                                                        Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionScheme)))!)
+                                                        Text("h")
+                                                    }
+                                                    Text("Absorption Time").font(.caption).multilineTextAlignment(.center)
+                                                }
+                                            }
+                                            
+                                            Text("Recommended delay of extended carbs:").font(.caption).padding(.top).multilineTextAlignment(.center)
+                                            Text("1.5h")
                                         }
-                                        
-                                        Button(action: {
-                                            withAnimation {
-                                                self.activeSheet = .help
-                                                self.showingSheet = true
-                                            }
-                                        }) {
-                                            Image(systemName: "questionmark.circle")
-                                            .imageScale(.large)
+                                        .animation(.easeInOut)
+                                        .padding([.leading, .trailing])
+                                        .foregroundColor(.red)
+                                    }
+                                }
+                            }
+                            .navigationBarTitle("Food List")
+                            .navigationBarItems(
+                                leading: HStack {
+                                    Button(action: {
+                                        withAnimation {
+                                            self.showingMenu.toggle()
+                                        }
+                                    }) {
+                                        Image(systemName: "line.horizontal.3")
+                                        .imageScale(.large)
+                                    }
+                                    
+                                    Button(action: {
+                                        withAnimation {
+                                            self.activeSheet = .help
+                                            self.showingSheet = true
+                                        }
+                                    }) {
+                                        Image(systemName: "questionmark.circle")
+                                        .imageScale(.large)
+                                        .padding()
+                                    }
+                                },
+                                trailing: HStack {
+                                    Button(action: {
+                                        self.showFavoritesOnly.toggle()
+                                    }) {
+                                        if self.showFavoritesOnly {
+                                            Image(systemName: "star.fill")
+                                            .foregroundColor(Color.yellow)
+                                            .padding()
+                                        } else {
+                                            Image(systemName: "star")
+                                            .foregroundColor(Color.gray)
                                             .padding()
                                         }
-                                    },
-                                    trailing: HStack {
-                                        Button(action: {
-                                            self.showFavoritesOnly.toggle()
-                                        }) {
-                                            if self.showFavoritesOnly {
-                                                Image(systemName: "star.fill")
-                                                .foregroundColor(Color.yellow)
-                                                .padding()
-                                            } else {
-                                                Image(systemName: "star")
-                                                .foregroundColor(Color.gray)
-                                                .padding()
-                                            }
-                                        }
-                                        
-                                        Button(action: {
-                                            // Add new food item
-                                            self.draftFoodItem = FoodItemViewModel(
-                                                name: "",
-                                                favorite: false,
-                                                caloriesPer100g: 0.0,
-                                                carbsPer100g: 0.0,
-                                                amount: 0
-                                            )
-                                            self.activeSheet = .addFoodItem
-                                            self.showingSheet = true
-                                        }) {
-                                            Image(systemName: "plus.circle")
-                                                .imageScale(.large)
-                                                .foregroundColor(.green)
-                                        }
                                     }
-                                )
-                            }.navigationViewStyle(StackNavigationViewStyle())
-                            
-                            if self.meal.amount > 0 {
-                                VStack {
-                                    Text("Total meal").font(.headline)
                                     
-                                    HStack {
-                                        VStack {
-                                            HStack {
-                                                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
-                                                Text("g")
-                                            }
-                                            Text("Carbs").font(.caption)
-                                        }
-                                        
-                                        VStack {
-                                            HStack {
-                                                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
-                                                Text("g")
-                                            }
-                                            Text("Extended Carbs").font(.caption)
-                                        }
-                                        
-                                        VStack {
-                                            HStack {
-                                                Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionScheme)))!)
-                                                Text("h")
-                                            }
-                                            Text("Absorption Time").font(.caption)
-                                        }
+                                    Button(action: {
+                                        // Add new food item
+                                        self.draftFoodItem = FoodItemViewModel(
+                                            name: "",
+                                            favorite: false,
+                                            caloriesPer100g: 0.0,
+                                            carbsPer100g: 0.0,
+                                            amount: 0
+                                        )
+                                        self.activeSheet = .addFoodItem
+                                        self.showingSheet = true
+                                    }) {
+                                        Image(systemName: "plus.circle")
+                                            .imageScale(.large)
+                                            .foregroundColor(.green)
                                     }
                                 }
-                                .onTapGesture {
-                                    self.activeSheet = .showMealDetails
-                                    self.showingSheet = true
-                                }
-                                .foregroundColor(.red)
-                            }
+                            )
                         }
+                        .navigationViewStyle(StackNavigationViewStyle())
                         .sheet(isPresented: self.$showingSheet) {
                             FoodListSheets(
                                 activeSheet: self.activeSheet,

@@ -21,84 +21,87 @@ struct FoodItemSelector: View {
     private let helpScreen = HelpScreen.foodItemSelector
     
     var body: some View {
+        
         NavigationView {
-            Form {
-                Section(header: draftFoodItem.typicalAmounts.isEmpty ? Text("Enter amount consumed") : Text("Enter amount consumed or select typical amount")) {
-                    HStack {
-                        Text("Amount consumed")
-                        TextField("Amount consumed", text: $draftFoodItem.amountAsString)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                        Text("g")
-                    }
-                    
-                    // Buttons to ease input
-                    HStack {
-                        Spacer()
-                        NumberButton(number: 100, draftFoodItem: self.draftFoodItem)
-                        NumberButton(number: 50, draftFoodItem: self.draftFoodItem)
-                        NumberButton(number: 10, draftFoodItem: self.draftFoodItem)
-                        NumberButton(number: 5, draftFoodItem: self.draftFoodItem)
-                        NumberButton(number: 1, draftFoodItem: self.draftFoodItem)
-                        Spacer()
-                    }
-                    
-                    // Add to typical amounts
-                    if addToTypicalAmounts {
-                        // User wants to add amount to typical amounts, so comment is required
+            GeometryReader { geometry in
+                Form {
+                    Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text("Enter amount consumed") : Text("Enter amount consumed or select typical amount")) {
                         HStack {
-                            TextField("Comment", text: $newTypicalAmountComment)
-                            Button(action: {
-                                if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.draftFoodItem.amountAsString, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
-                                    // Add new typical amount to typical amounts of food item
-                                    self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
-                                    
-                                    // Reset text fields
-                                    self.newTypicalAmountComment = ""
-                                    
-                                    // Update food item in core data, save and broadcast changed object
-                                    let newCoreDataTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-                                    newTypicalAmount.cdTypicalAmount = newCoreDataTypicalAmount
-                                    let _ = newTypicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem)
-                                    self.editedFoodItem.addToTypicalAmounts(newCoreDataTypicalAmount)
-                                    try? AppDelegate.viewContext.save()
-                                    self.draftFoodItem.objectWillChange.send()
-                                    
-                                    self.addToTypicalAmounts = false
-                                } else {
-                                    self.showingAlert = true
-                                }
-                            }) {
-                                Image(systemName: "checkmark.circle").foregroundColor(.yellow)
-                            }
+                            Text("Amount consumed")
+                            TextField("Amount consumed", text: self.$draftFoodItem.amountAsString)
+                                .keyboardType(.numberPad)
+                                .multilineTextAlignment(.trailing)
+                            Text("g")
                         }
-                    } else {
-                        // Give user possibility to add the entered amount to typical amounts
-                        Button(action: {
-                            self.addToTypicalAmounts = true
-                        }) {
-                            Text("Add to typical amounts")
+                        
+                        // Buttons to ease input
+                        HStack {
+                            Spacer()
+                            NumberButton(number: 100, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 6)
+                            NumberButton(number: 50, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 6)
+                            NumberButton(number: 10, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 6)
+                            NumberButton(number: 5, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 6)
+                            NumberButton(number: 1, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 6)
+                            Spacer()
+                        }
+                        
+                        // Add to typical amounts
+                        if self.addToTypicalAmounts {
+                            // User wants to add amount to typical amounts, so comment is required
+                            HStack {
+                                TextField("Comment", text: self.$newTypicalAmountComment)
+                                Button(action: {
+                                    if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.draftFoodItem.amountAsString, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
+                                        // Add new typical amount to typical amounts of food item
+                                        self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
+                                        
+                                        // Reset text fields
+                                        self.newTypicalAmountComment = ""
+                                        
+                                        // Update food item in core data, save and broadcast changed object
+                                        let newCoreDataTypicalAmount = TypicalAmount(context: self.managedObjectContext)
+                                        newTypicalAmount.cdTypicalAmount = newCoreDataTypicalAmount
+                                        let _ = newTypicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem)
+                                        self.editedFoodItem.addToTypicalAmounts(newCoreDataTypicalAmount)
+                                        try? AppDelegate.viewContext.save()
+                                        self.draftFoodItem.objectWillChange.send()
+                                        
+                                        self.addToTypicalAmounts = false
+                                    } else {
+                                        self.showingAlert = true
+                                    }
+                                }) {
+                                    Image(systemName: "checkmark.circle").foregroundColor(.yellow)
+                                }
+                            }
+                        } else {
+                            // Give user possibility to add the entered amount to typical amounts
+                            Button(action: {
+                                self.addToTypicalAmounts = true
+                            }) {
+                                Text("Add to typical amounts")
+                            }
                         }
                     }
-                }
-                
-                if !draftFoodItem.typicalAmounts.isEmpty {
-                    Section(header: Text("Typical amounts:")) {
-                        ForEach(draftFoodItem.typicalAmounts.sorted(), id: \.self) { typicalAmount in
-                            HStack {
-                                Text(typicalAmount.amountAsString)
-                                Text("g")
-                                Text(typicalAmount.comment)
-                            }
-                            .onTapGesture {
-                                self.draftFoodItem.amountAsString = typicalAmount.amountAsString
-                                self.draftFoodItem.objectWillChange.send()
+                    
+                    if !self.draftFoodItem.typicalAmounts.isEmpty {
+                        Section(header: Text("Typical amounts:")) {
+                            ForEach(self.draftFoodItem.typicalAmounts.sorted(), id: \.self) { typicalAmount in
+                                HStack {
+                                    Text(typicalAmount.amountAsString)
+                                    Text("g")
+                                    Text(typicalAmount.comment)
+                                }
+                                .onTapGesture {
+                                    self.draftFoodItem.amountAsString = typicalAmount.amountAsString
+                                    self.draftFoodItem.objectWillChange.send()
+                                }
                             }
                         }
                     }
                 }
             }
-            .navigationBarTitle(draftFoodItem.name)
+            .navigationBarTitle(self.draftFoodItem.name)
             .navigationBarItems(
                 leading: HStack {
                     Button(action: {
@@ -136,7 +139,7 @@ struct FoodItemSelector: View {
             )
         }
         .navigationViewStyle(StackNavigationViewStyle())
-        .alert(isPresented: $showingAlert) {
+        .alert(isPresented: self.$showingAlert) {
             Alert(
                 title: Text("Data alert"),
                 message: Text(self.errorMessage),
@@ -152,19 +155,20 @@ struct FoodItemSelector: View {
 struct NumberButton: View {
     var number: Int
     var draftFoodItem: FoodItemViewModel
+    var width: CGFloat
     
     var body: some View {
         Button(action: {
             let newValue = self.draftFoodItem.amount + self.number
             self.draftFoodItem.amountAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
         }) {
-            Text("+\(number)")
+            Text("+\(self.number)")
         }
-        .padding()
-        .buttonStyle(BorderlessButtonStyle())
+        .frame(width: width, height: 40, alignment: .center)
         .background(Color.green)
         .foregroundColor(.white)
-        .cornerRadius(10)
+        .buttonStyle(BorderlessButtonStyle())
+        .cornerRadius(20)
     }
 }
 

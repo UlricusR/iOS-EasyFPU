@@ -31,7 +31,7 @@
 "About this app" = "About this app";
 "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal.";
 "Documentation on rueth.info" = "Documentation on rueth.info";
-"Home-Link" = "https://rueth.info/index.php/en/";
+"Home-Link" = "https://rueth.info/index.php/en/easyfpu-for-ios";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
@@ -60,7 +60,10 @@
 "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal.";
 "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button.";
 "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button.";
-"Swipe left to remove a typical amount." = "Swipe left to remove a typical amount.";
+"Swipe left to remove a typical amount." = "Swipe left or hit the small red X to remove a typical amount.";
+"A good source for nutritional values (calories and carbs per 100g) is:" = "A good source for nutritional values (calories and carbs per 100g) is:";
+"Link-text-to-nutritional-values" = "Nutrition value";
+"Link-URL-to-nutritional-values" = "https://www.nutritionvalue.org/";
 
 // Meal Details help
 "Meal Details" = "Meal Details";
@@ -121,6 +124,8 @@
 "Select amount" = "Select amount";
 "Included food items:" = "Included food items:";
 "Cannot delete food item" = "Cannot delete food item";
+"Recommended delay of extended carbs:" = "Recommended delay of extended carbs:";
+"1.5h" = "1.5h";
 
 // Food item editor
 "Data alert" = "Data alert";
@@ -154,8 +159,8 @@
 "Reset to default" = "Reset to default";
 
 // Menu actions
-"Import from JSON" = "Import from JSON";
-"Export to JSON" = "Export to JSON";
+"Import from JSON" = "Import (format: JSON)";
+"Export to JSON" = "Export (format: JSON)";
 "Successfully exported food list to: " = "Successfully exported food list to: ";
 "Failed to export food list to: " = "Failed to export food list to: ";
 "Successfully imported food list" = "Successfully imported food list";
@@ -171,3 +176,4 @@
 "Failed to decode due to missing value - " = "Failed to decode due to missing value - ";
 "Failed to decode because it appears to be invalid JSON" = "Failed to decode because it appears to be invalid JSON";
 "Failed to decode - " = "Failed to decode - ";
+"Help on the Web" = "Help on the Web";
