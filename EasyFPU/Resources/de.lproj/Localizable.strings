@@ -136,6 +136,7 @@
 "Amount not a valid number or negative" = "Menge keine gültige Zahl oder negativ";
 "Value not a number: " = "Ungültiger Wert: ";
 "Value must not be zero or negative" = "Wert darf nicht negative oder null sein";
+"Delete food item" = "Dieses Essen löschen";
 "Cannot delete typical amount " = "Kann typische Menge nicht löschen: ";
 
 // Absorption scheme editor
