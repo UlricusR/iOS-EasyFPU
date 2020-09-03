@@ -155,8 +155,8 @@
 "Reset to default" = "Auf Voreinstellungen zurücksetzen";
 
 // Menu actions
-"Import from JSON" = "JSON importieren";
-"Export to JSON" = "JSON exportieren";
+"Import from JSON" = "Importieren (Format: JSON)";
+"Export to JSON" = "Exportieren (Format: JSON)";
 "Successfully exported food list to: " = "Essensliste erfolgreich exportiert nach: ";
 "Failed to export food list to: " = "Konnte Essensliste nicht exportieren nach: ";
 "Successfully imported food list" = "Essensliste erfolgreich importiert";
