@@ -35,6 +35,8 @@ struct FoodItemEditor: View {
     @State var updateButton = false
     private let helpScreen = HelpScreen.foodItemEditor
     
+    @ObservedObject private var keyboardGuardian = KeyboardGuardian()
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -141,6 +143,8 @@ struct FoodItemEditor: View {
                         }
                     }
                 }
+                .padding(.bottom, keyboardGuardian.currentHeight)
+                .animation(.easeInOut(duration: 0.16))
             }
             .navigationBarTitle(navigationBarTitle)
             .navigationBarItems(

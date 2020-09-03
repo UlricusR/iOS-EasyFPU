@@ -23,6 +23,8 @@ struct AbsorptionSchemeEditor: View {
     private let helpScreen = HelpScreen.absorptionSchemeEditor
     @Environment(\.managedObjectContext) var managedObjectContext
     
+    @ObservedObject private var keyboardGuardian = KeyboardGuardian()
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -165,6 +167,8 @@ struct AbsorptionSchemeEditor: View {
                     }
                 )
             }
+            .padding(.bottom, keyboardGuardian.currentHeight)
+            .animation(.easeInOut(duration: 0.16))
         }
         .navigationViewStyle(StackNavigationViewStyle())
             
