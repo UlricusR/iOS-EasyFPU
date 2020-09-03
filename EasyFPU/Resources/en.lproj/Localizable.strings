@@ -136,6 +136,7 @@
 "Amount not a valid number or negative" = "Amount not a valid number or negative";
 "Value not a number: " = "Value not a number: ";
 "Value must not be zero or negative" = "Value must not be zero or negative";
+"Delete food item" = "Delete food item";
 "Cannot delete typical amount " = "Cannot delete typical amount ";
 
 // Absorption scheme editor
