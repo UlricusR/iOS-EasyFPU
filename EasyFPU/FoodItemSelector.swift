@@ -130,7 +130,7 @@ struct FoodItemSelector: View {
                         self.isPresented = false
                     case .failure(let err):
                         // Display alert and stay in edit mode
-                        self.errorMessage = err.localizedDescription
+                        self.errorMessage = FoodItemViewModel.getErrorMessage(from: err)
                         self.showingAlert = true
                     }
                 }) {

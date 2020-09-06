@@ -128,15 +128,19 @@
 "1.5h" = "1,5h";
 
 // Food item editor
+"Carbs: " = "Kohlenhydrate: ";
+"Calories: " = "Kalorien: ";
+"Amount: " = "Menge: ";
 "Data alert" = "Eingabefehler";
 "Name must not be empty" = "Name darf nicht leer sein";
 "Calories not a valid number or negative" = "Kalorien sind keine gültige Zahl oder negativ";
 "Carbs not a valid number or negative" = "Kohlenhydrate sind keine gültige Zahl oder negativ";
 "Calories from carbs (4 kcal per gram) exceed total calories" = "Kalorien aus Kohlenhydraten (ca. 4 kcal pro Gramm) übersteigen Gesamtkalorien";
 "Amount not a valid number or negative" = "Menge keine gültige Zahl oder negativ";
-"Value not a number: " = "Ungültiger Wert: ";
-"Value must not be zero or negative" = "Wert darf nicht negative oder null sein";
-"Cannot delete typical amount " = "Kann typische Menge nicht löschen: ";
+"Value not a number" = "Ungültiger Wert";
+"Value must not be negative" = "Wert darf nicht negativ sein";
+"Value must not be zero or negative" = "Wert darf nicht negativ oder null sein";
+"Delete food item" = "Dieses Essen löschen";
 
 // Absorption scheme editor
 "Absorption scheme" = "Absorptionsschema";

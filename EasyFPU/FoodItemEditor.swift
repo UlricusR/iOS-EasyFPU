@@ -243,17 +243,17 @@ struct FoodItemEditor: View {
                             self.errorMessage = errorMessage
                             self.draftFoodItem.name = self.oldName
                         case .calories(let errorMessage):
-                            self.errorMessage = errorMessage
+                            self.errorMessage = NSLocalizedString("Calories: ", comment:"") + errorMessage
                             self.draftFoodItem.caloriesAsString = self.oldCaloriesAsString
                         case .carbs(let errorMessage):
-                            self.errorMessage = errorMessage
+                            self.errorMessage = NSLocalizedString("Carbs: ", comment:"") + errorMessage
                             self.draftFoodItem.carbsAsString = self.oldCarbsAsString
                         case .tooMuchCarbs(let errorMessage):
                             self.errorMessage = errorMessage
                             self.draftFoodItem.caloriesAsString = self.oldCaloriesAsString
                             self.draftFoodItem.carbsAsString = self.oldCarbsAsString
                         case .amount(let errorMessage):
-                            self.errorMessage = errorMessage
+                            self.errorMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
                             self.draftFoodItem.amountAsString = self.oldAmountAsString
                         }
                         
