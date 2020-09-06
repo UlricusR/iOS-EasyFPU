@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum DataError: Error {
+enum InvalidNumberError: Error {
     case inputError(String)
 }
 
@@ -27,7 +27,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             case .success(let caloriesAsDouble):
                 caloriesPer100g = caloriesAsDouble
             case .failure(let err):
-                debugPrint(err.localizedDescription)
+                debugPrint(FoodItemViewModel.getErrorMessage(from: err))
                 return
             }
         }
@@ -39,7 +39,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             case .success(let carbsAsDouble):
                 carbsPer100g = carbsAsDouble
             case .failure(let err):
-                debugPrint(err.localizedDescription)
+                debugPrint(FoodItemViewModel.getErrorMessage(from: err))
                 return
             }
         }
@@ -51,7 +51,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             case .success(let amountAsInt):
                 amount = amountAsInt
             case .failure(let err):
-                debugPrint(err.localizedDescription)
+                debugPrint(FoodItemViewModel.getErrorMessage(from: err))
                 return
             }
         }
@@ -118,7 +118,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         case .success(let caloriesAsDouble):
             caloriesPer100g = caloriesAsDouble
         case .failure(let err):
-            error = .calories(err.localizedDescription)
+            let errorMessage = FoodItemViewModel.getErrorMessage(from: err)
+            error = .calories(errorMessage)
             return nil
         }
         self.caloriesAsString = caloriesAsString
@@ -129,7 +130,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         case .success(let carbsAsDouble):
             carbsPer100g = carbsAsDouble
         case .failure(let err):
-            error = .carbs(err.localizedDescription)
+            let errorMessage = FoodItemViewModel.getErrorMessage(from: err)
+            error = .carbs(errorMessage)
             return nil
         }
         self.carbsAsString = carbsAsString
@@ -146,7 +148,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         case .success(let amountAsInt):
             amount = amountAsInt
         case .failure(let err):
-            error = .amount(err.localizedDescription)
+            let errorMessage = FoodItemViewModel.getErrorMessage(from: err)
+            error = .amount(errorMessage)
             return nil
         }
         self.amountAsString = amountAsString
@@ -167,7 +170,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             let carbsAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g)),
             let amountAsString = NumberFormatter().string(from: NSNumber(value: amount))
         else {
-            throw DataError.inputError(NSLocalizedString("Fatal error: Cannot convert numbers into string, please contact app developer", comment: ""))
+            throw InvalidNumberError.inputError(NSLocalizedString("Fatal error: Cannot convert numbers into string, please contact app developer", comment: ""))
         }
         self.caloriesAsString = caloriesAsString
         self.carbsAsString = carbsAsString
@@ -222,7 +225,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         return numberFormatter
     }
     
-    static func checkForPositiveDouble(valueAsString: String, allowZero: Bool) -> Result<Double, DataError> {
+    static func checkForPositiveDouble(valueAsString: String, allowZero: Bool) -> Result<Double, InvalidNumberError> {
         guard let valueAsNumber = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
             return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
         }
@@ -232,7 +235,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         return .success(valueAsNumber.doubleValue)
     }
     
-    static func checkForPositiveInt(valueAsString: String, allowZero: Bool) -> Result<Int, DataError> {
+    static func checkForPositiveInt(valueAsString: String, allowZero: Bool) -> Result<Int, InvalidNumberError> {
         guard let valueAsNumber = NumberFormatter().number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
             return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
         }
@@ -240,6 +243,13 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             return .failure(.inputError(NSLocalizedString("Value must not be zero or negative", comment: "")))
         }
         return .success(valueAsNumber.intValue)
+    }
+    
+    static func getErrorMessage(from error: InvalidNumberError) -> String {
+        switch error {
+        case .inputError(let errorMessage):
+            return errorMessage
+        }
     }
     
     static func == (lhs: FoodItemViewModel, rhs: FoodItemViewModel) -> Bool {

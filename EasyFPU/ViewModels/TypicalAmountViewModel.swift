@@ -17,7 +17,7 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable {
             case .success(let amount):
                 self.amount = amount
             case .failure(let err):
-                debugPrint(err.localizedDescription)
+                debugPrint(FoodItemViewModel.getErrorMessage(from: err))
                 return
             }
         }
@@ -46,7 +46,7 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable {
         case .success(let amount):
             self.amount = amount
         case .failure(let err):
-            errorMessage = err.localizedDescription
+            errorMessage = FoodItemViewModel.getErrorMessage(from: err)
             return nil
         }
         self.amountAsString = amountAsString
