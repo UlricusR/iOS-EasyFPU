@@ -128,16 +128,19 @@
 "1.5h" = "1.5h";
 
 // Food item editor
+"Carbs: " = "Carbs: ";
+"Calories: " = "Calories: ";
+"Amount: " = "Amount: ";
 "Data alert" = "Data alert";
 "Name must not be empty" = "Name must not be empty";
 "Calories not a valid number or negative" = "Calories not a valid number or negative";
 "Carbs not a valid number or negative" = "Carbs not a valid number or negative";
 "Calories from carbs (4 kcal per gram) exceed total calories" = "Calories from carbs (4 kcal per gram) exceed total calories";
 "Amount not a valid number or negative" = "Amount not a valid number or negative";
-"Value not a number: " = "Value not a number: ";
+"Value not a number" = "Value not a number";
+"Value must not be negative" = "Value must not be negative";
 "Value must not be zero or negative" = "Value must not be zero or negative";
 "Delete food item" = "Delete food item";
-"Cannot delete typical amount " = "Cannot delete typical amount ";
 
 // Absorption scheme editor
 "Absorption scheme" = "Absorption scheme";

@@ -230,7 +230,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
         }
         guard allowZero ? valueAsNumber.doubleValue >= 0.0 : valueAsNumber.doubleValue > 0.0 else {
-            return .failure(.inputError(NSLocalizedString("Value must not be zero or negative", comment: "")))
+            return .failure(.inputError(NSLocalizedString(allowZero ? "Value must not be negative" : "Value must not be zero or negative", comment: "")))
         }
         return .success(valueAsNumber.doubleValue)
     }
@@ -240,7 +240,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
         }
         guard allowZero ? valueAsNumber.intValue >= 0 : valueAsNumber.intValue > 0 else {
-            return .failure(.inputError(NSLocalizedString("Value must not be zero or negative", comment: "")))
+            return .failure(.inputError(NSLocalizedString(allowZero ? "Value must not be negative" : "Value must not be zero or negative", comment: "")))
         }
         return .success(valueAsNumber.intValue)
     }
