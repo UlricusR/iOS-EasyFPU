@@ -39,7 +39,7 @@ class AbsorptionScheme: Equatable {
         }
         
         // Seems to be beyond the last block, so return time of the last block
-        return Int(absorptionBlocks[absorptionBlocks.count - 1].maxFpu)
+        return Int(absorptionBlocks[absorptionBlocks.count - 1].absorptionTime)
     }
     
     func getMaximumAbsorptionTime() -> Int? {
