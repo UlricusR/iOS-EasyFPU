@@ -182,3 +182,13 @@
 "Failed to decode because it appears to be invalid JSON" = "Ungültige JSON-Datei";
 "Failed to decode - " = "Konnte nicht entschlüsseln - ";
 "Help on the Web" = "Hilfe im Web";
+
+// Health kit helper
+"Cannot write data: HealthKit seem not to be available on your device." = "Kann keine Daten schreiben: HealthKit scheint auf Ihrem Gerät nicht zur Verfügung zu stehen.";
+"Cannot save data to Health: " = "Kann keine Daten in Health schreiben: ";
+"Unspecified error" = "Unspezifischer Fehler";
+"Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Kann keine Daten in Health schreiben: Bitte geben Sie EasyFPE in den Einstellungen die Berechtigung, in Health zu schreiben.";
+"Successfully exported extended carbs to Health" = "Verlängerte Kohlenhydrate wurden erfolgreich nach Health exportiert";
+"Export to Health" = "Health-Export";
+"Do you really want to export the extended carbs to Health?" = "Möchten Sie wirklich die verlängerten Kohlenhydrate nach Health exportieren?";
+"Export" = "Exportieren";

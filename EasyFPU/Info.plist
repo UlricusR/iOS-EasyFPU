@@ -6,8 +6,6 @@
 	<string>The app uses your Documents folder to export and import food list in JSON format</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>The app uses HealthKit to store extended carbs in the Health app</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>The app uses HealthKit to store extended carbs in the Health app</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
