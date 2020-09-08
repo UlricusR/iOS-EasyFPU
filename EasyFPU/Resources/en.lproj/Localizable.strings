@@ -75,6 +75,8 @@
 "- The amount of Food Protein Units" = "- The amount of Food Protein Units";
 "- The corresponding amount of extended carbs in grams" = "- The corresponding amount of extended carbs in grams";
 "- The corresponding absorption time" = "- The corresponding absorption time";
+"- The recommended delay for the extended carbs to start" = "- The recommended delay for the extended carbs to start";
+"You may export the extended carbs to the Apple Health app" = "You may export the extended carbs to the Apple Health app";
 "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above.";
 
 // Absorption scheme help
@@ -122,10 +124,13 @@
 "Enter amount consumed or select typical amount" = "Enter amount consumed or select typical amount";
 "Enter amount consumed" = "Enter amount consumed";
 "Select amount" = "Select amount";
-"Included food items:" = "Included food items:";
 "Cannot delete food item" = "Cannot delete food item";
 "Recommended delay of extended carbs:" = "Recommended delay of extended carbs:";
 "1.5h" = "1.5h";
+
+// Meal details
+"Included food items:" = "Included food items:";
+"Export to Apple Health" = "Export to Apple Health";
 
 // Food item editor
 "Carbs: " = "Carbs: ";
@@ -187,7 +192,12 @@
 "Cannot save data to Health: " = "Cannot save data to Health: ";
 "Unspecified error" = "Unspecified error";
 "Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings.";
-"Successfully exported extended carbs to Health" = "Successfully exported extended carbs to Health";
+"Successfully exported data to Health" = "Successfully exported data to Health";
 "Export to Health" = "Export to Health";
 "Do you really want to export the extended carbs to Health?" = "Do you really want to export the extended carbs to Health?";
-"Export" = "Export";
+"Export" = "Export to Apple Health";
+"Error requesting authorization to write to Health: " = "Error requesting authorization to write to Health: ";
+"Please choose the data to export:" = "Please choose the data to export:";
+"If you're using the Loop app for your diabetes pump therapy, the recommendation is to only export extended carbs." = "If you're using the Loop app for your diabetes pump therapy, the recommendation is to only export extended carbs.";
+"Total Meal Carbs" = "Total Meal Carbs";
+"Total Meal Calories" = "Total Meal Calories";

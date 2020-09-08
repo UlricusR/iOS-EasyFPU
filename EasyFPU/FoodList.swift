@@ -100,7 +100,7 @@ struct FoodList: View {
                                             
                                             HStack(alignment: .center) {
                                                 Text("Total meal").font(.headline).multilineTextAlignment(.center)
-                                                Image(systemName: "info.circle").imageScale(.large).foregroundColor(.blue)
+                                                Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor)
                                             }
                                             
                                             HStack {

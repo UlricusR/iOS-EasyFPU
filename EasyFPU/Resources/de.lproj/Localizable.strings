@@ -75,6 +75,8 @@
 "- The amount of Food Protein Units" = "- Die Fett-Protein-Einheiten";
 "- The corresponding amount of extended carbs in grams" = "- Die zugehörigen verlängerten Kohlenhydrate in Gramm";
 "- The corresponding absorption time" = "- Die entsprechende Absorptionszeit";
+"- The recommended delay for the extended carbs to start" = "- Die empfohlene Verzögerung der Wirksamkeit der verlängerten Kohlenhydrate";
+"You may export the extended carbs to the Apple Health app" = "Sie können die verlängerten Kohlenhydrate in die Apple Health App exportieren";
 "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Unter der Gesamtmahlzeit werden die gleichen Werte für die individuellen Essen dargestellt, die zur Berechnung der Gesamtmahlzeit herangezogen wurden.";
 
 // Absorption scheme help
@@ -122,10 +124,13 @@
 "Enter amount consumed or select typical amount" = "Gegessene Menge eingeben oder typische Menge auswählen";
 "Enter amount consumed" = "Gegessene Menge eingeben";
 "Select amount" = "Menge auswählen";
-"Included food items:" = "Bestehend aus:";
 "Cannot delete food item" = "Kann Essen nicht löschen";
 "Recommended delay of extended carbs:" = "Empfohlene Verzögerung für verlängerte Kohlenhydrate:";
 "1.5h" = "1,5h";
+
+// Meal details
+"Included food items:" = "Bestehend aus:";
+"Export to Apple Health" = "In Apple Health exportieren";
 
 // Food item editor
 "Carbs: " = "Kohlenhydrate: ";
@@ -188,7 +193,12 @@
 "Cannot save data to Health: " = "Kann keine Daten in Health schreiben: ";
 "Unspecified error" = "Unspezifischer Fehler";
 "Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Kann keine Daten in Health schreiben: Bitte geben Sie EasyFPE in den Einstellungen die Berechtigung, in Health zu schreiben.";
-"Successfully exported extended carbs to Health" = "Verlängerte Kohlenhydrate wurden erfolgreich nach Health exportiert";
+"Successfully exported data to Health" = "Daten wurden erfolgreich nach Health exportiert";
 "Export to Health" = "Health-Export";
 "Do you really want to export the extended carbs to Health?" = "Möchten Sie wirklich die verlängerten Kohlenhydrate nach Health exportieren?";
-"Export" = "Exportieren";
+"Export" = "Nach Apple Health exportieren";
+"Error requesting authorization to write to Health: " = "Fehler beim Anfordern der Berechtigung, in Health zu schreiben: ";
+"Please choose the data to export:" = "Bitte wählen Sie die zu exportierenden Daten:";
+"If you're using the Loop app for your diabetes pump therapy, the recommendation is to only export extended carbs." = "Sollten Sie die Loop-App zur Insulinpumpentherapie nutzen, wird nur der Export der verlängerten Kohlenhydrate empfohlen.";
+"Total Meal Carbs" = "Kohlenhydrate Gesamtmahlzeit";
+"Total Meal Calories" = "Kalorien Gesamtmahlzeit";

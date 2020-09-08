@@ -15,7 +15,7 @@ struct HelpViewFoodItemEditor: View {
             Text("All fields are mandatory, but you may leave away typical amounts.").padding()
             Text("Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal.").padding()
             Text("A good source for nutritional values (calories and carbs per 100g) is:").padding([.leading, .trailing, .top])
-            Text("Link-text-to-nutritional-values").foregroundColor(.blue)
+            Text("Link-text-to-nutritional-values").foregroundColor(.accentColor)
             .padding()
             .onTapGesture {
                 UIApplication.shared.open(URL(string: NSLocalizedString("Link-URL-to-nutritional-values", comment: ""))!)

@@ -27,7 +27,8 @@ class HealthDataHelper {
         debugPrint("Requesting HealthKit authorization...")
         healthStore.requestAuthorization(toShare: shareTypes, read: readTypes) { (success, error) in
             if let error = error {
-                debugPrint("requestAuthorization error:", error.localizedDescription)
+                errorMessage = NSLocalizedString("Error requesting authorization to write to Health: ", comment: "") + error.localizedDescription
+                debugPrint(errorMessage!)
             }
             
             if success {

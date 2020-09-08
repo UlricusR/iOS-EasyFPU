@@ -14,6 +14,7 @@ enum HelpScreen: String {
     case foodItemEditor = "Edit Food Item"
     case mealDetails = "Meal Details"
     case absorptionSchemeEditor = "Edit Absorption Scheme"
+    case mealExport = "Export to Health"
 }
 
 struct HelpView: View {
@@ -32,8 +33,10 @@ struct HelpView: View {
                     return AnyView(HelpViewFoodItemEditor())
                 case .mealDetails:
                     return AnyView(HelpViewMealDetails())
-                case.absorptionSchemeEditor:
+                case .absorptionSchemeEditor:
                     return AnyView(HelpViewAbsorptionSchemeEditor())
+                case .mealExport:
+                    return AnyView(HelpMealExportView())
                 }
             }
             .navigationBarTitle(NSLocalizedString(self.helpScreen.rawValue, comment: ""))
