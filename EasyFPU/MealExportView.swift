@@ -18,9 +18,13 @@ struct MealExportView: View {
     @State var errorMessage = ""
     private let helpScreen = HelpScreen.mealExport
     
-    @State var exportECarbs = true
-    @State var exportTotalMealCarbs = false
-    @State var exportTotalMealCalories = false
+    @State var exportECarbs = UserDefaults.standard.object(forKey: MealExportView.exportECarbsKey) != nil ? UserDefaults.standard.bool(forKey: MealExportView.exportECarbsKey) : true
+    @State var exportTotalMealCarbs = UserDefaults.standard.object(forKey: MealExportView.exportTotalMealCarbsKey) != nil ? UserDefaults.standard.bool(forKey: MealExportView.exportTotalMealCarbsKey) : false
+    @State var exportTotalMealCalories = UserDefaults.standard.object(forKey: MealExportView.exportTotalMealCaloriesKey) != nil ? UserDefaults.standard.bool(forKey: MealExportView.exportTotalMealCaloriesKey) : false
+    
+    static let exportECarbsKey = "ExportECarbs"
+    static let exportTotalMealCarbsKey = "ExportTotalMealCarbs"
+    static let exportTotalMealCaloriesKey = "ExportTotalMealCalories"
     
     var body: some View {
         NavigationView {
@@ -56,6 +60,12 @@ struct MealExportView: View {
                     Image(systemName: "questionmark.circle").imageScale(.large)
                 },
                 trailing: Button(action: {
+                    // Store UserDefaults
+                    UserDefaults.standard.set(self.exportECarbs, forKey: MealExportView.exportECarbsKey)
+                    UserDefaults.standard.set(self.exportTotalMealCarbs, forKey: MealExportView.exportTotalMealCarbsKey)
+                    UserDefaults.standard.set(self.exportTotalMealCalories, forKey: MealExportView.exportTotalMealCaloriesKey)
+                    
+                    // Close sheet
                     self.isPresented = false
                 }) {
                     Text("Done")
@@ -76,23 +86,41 @@ struct MealExportView: View {
     }
     
     private func processHealthSample(delayInMinutes: Double, intervalInMinutes: Double) {
-        let absorptionTimeInMinutes = Double(meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)) * 60.0
-        let now = Date()
-        let start = now.addingTimeInterval(delayInMinutes * 60.0)
-        let end = start.addingTimeInterval(absorptionTimeInMinutes * 60.0)
-        let numberOfECarbEntries = absorptionTimeInMinutes / intervalInMinutes
-        let eCarbsAmount = meal.fpus.getExtendedCarbs() / numberOfECarbEntries
-        let unit = HKUnit.gram()
-        let objectType = HKObjectType.quantityType(forIdentifier: .dietaryCarbohydrates)!
-        
-        var time = start
+        if !exportECarbs && !exportTotalMealCalories && !exportTotalMealCarbs {
+            errorMessage = NSLocalizedString("Please select at least one entry to export", comment: "")
+            showingAlert = true
+            return
+        }
+            
         var hkObjects = [HKObject]()
-        repeat {
-            hkObjects.append(processQuantitySample(value: eCarbsAmount, unit: unit, start: time, end: time, sampleType: objectType))
-            time = time.addingTimeInterval(intervalInMinutes * 60)
-        } while time < end
+        let unitCarbs = HKUnit.gram()
+        let objectTypeCarbs = HKObjectType.quantityType(forIdentifier: .dietaryCarbohydrates)!
+        let objectTypeCalories = HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed)!
+        let now = Date()
         
-        HealthDataHelper.requestHealthDataAccessIfNeeded(toShare: Set([objectType]), read: nil) { completion in
+        if exportECarbs {
+            let absorptionTimeInMinutes = Double(meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)) * 60.0
+            let start = now.addingTimeInterval(delayInMinutes * 60.0)
+            let end = start.addingTimeInterval(absorptionTimeInMinutes * 60.0)
+            let numberOfECarbEntries = absorptionTimeInMinutes / intervalInMinutes
+            let eCarbsAmount = meal.fpus.getExtendedCarbs() / numberOfECarbEntries
+            
+            var time = start
+            repeat {
+                hkObjects.append(processQuantitySample(value: eCarbsAmount, unit: unitCarbs, start: time, end: time, sampleType: objectTypeCarbs))
+                time = time.addingTimeInterval(intervalInMinutes * 60)
+            } while time < end
+        }
+        
+        if exportTotalMealCarbs {
+            hkObjects.append(processQuantitySample(value: meal.carbs, unit: unitCarbs, start: now, end: now, sampleType: objectTypeCarbs))
+        }
+        
+        if exportTotalMealCalories {
+            hkObjects.append(processQuantitySample(value: meal.calories, unit: HKUnit.kilocalorie(), start: now, end: now, sampleType: objectTypeCalories))
+        }
+            
+        HealthDataHelper.requestHealthDataAccessIfNeeded(toShare: Set([objectTypeCarbs, objectTypeCalories]), read: nil) { completion in
             if completion {
                 HealthDataHelper.saveHealthData(hkObjects) { (success, error) in
                     if !success {
