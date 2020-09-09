@@ -51,27 +51,9 @@ struct FoodItemSelector: View {
                             HStack {
                                 TextField("Comment", text: self.$newTypicalAmountComment)
                                 Button(action: {
-                                    if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.draftFoodItem.amountAsString, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
-                                        // Add new typical amount to typical amounts of food item
-                                        self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
-                                        
-                                        // Reset text fields
-                                        self.newTypicalAmountComment = ""
-                                        
-                                        // Update food item in core data, save and broadcast changed object
-                                        let newCoreDataTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-                                        newTypicalAmount.cdTypicalAmount = newCoreDataTypicalAmount
-                                        let _ = newTypicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem)
-                                        self.editedFoodItem.addToTypicalAmounts(newCoreDataTypicalAmount)
-                                        try? AppDelegate.viewContext.save()
-                                        self.draftFoodItem.objectWillChange.send()
-                                        
-                                        self.addToTypicalAmounts = false
-                                    } else {
-                                        self.showingAlert = true
-                                    }
+                                    self.addTypicalAmount()
                                 }) {
-                                    Image(systemName: "checkmark.circle").foregroundColor(.yellow)
+                                    Image(systemName: "plus.circle").foregroundColor(.green)
                                 }
                             }
                         } else {
@@ -118,6 +100,11 @@ struct FoodItemSelector: View {
                     }.padding()
                 },
                 trailing: Button(action: {
+                    // First check for unsaved typical amount
+                    if self.addToTypicalAmounts {
+                        self.addTypicalAmount()
+                    }
+                    
                     let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
                     switch amountResult {
                     case .success(let amountAsInt):
@@ -148,6 +135,28 @@ struct FoodItemSelector: View {
         }
         .sheet(isPresented: self.$showingSheet) {
             HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
+        }
+    }
+    
+    private func addTypicalAmount() {
+        if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.draftFoodItem.amountAsString, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
+            // Add new typical amount to typical amounts of food item
+            self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
+            
+            // Reset text fields
+            self.newTypicalAmountComment = ""
+            
+            // Update food item in core data, save and broadcast changed object
+            let newCoreDataTypicalAmount = TypicalAmount(context: self.managedObjectContext)
+            newTypicalAmount.cdTypicalAmount = newCoreDataTypicalAmount
+            let _ = newTypicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem)
+            self.editedFoodItem.addToTypicalAmounts(newCoreDataTypicalAmount)
+            try? AppDelegate.viewContext.save()
+            self.draftFoodItem.objectWillChange.send()
+            
+            self.addToTypicalAmounts = false
+        } else {
+            self.showingAlert = true
         }
     }
 }
