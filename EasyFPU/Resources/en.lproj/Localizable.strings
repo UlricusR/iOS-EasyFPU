@@ -205,3 +205,4 @@
 "Total Meal Carbs" = "Total Meal Carbs";
 "Total Meal Calories" = "Total Meal Calories";
 "Please select at least one entry to export" = "Please select at least one entry to export";
+"Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks";

@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-class AbsorptionScheme: Equatable {
-    var absorptionBlocks = [AbsorptionBlock]()
+class AbsorptionScheme: Equatable, ObservableObject {
+    @Published var absorptionBlocks = [AbsorptionBlock]()
     
     func addToAbsorptionBlocks(newAbsorptionBlock: AbsorptionBlock) {
         absorptionBlocks.append(newAbsorptionBlock)
@@ -23,10 +23,10 @@ class AbsorptionScheme: Equatable {
         absorptionBlocks.remove(at: index)
     }
     
-    func getAbsorptionTime(fpus: Double) -> Int {
+    func getAbsorptionTime(fpus: Double) -> Int? {
         if absorptionBlocks.count == 0 {
             // This is to make sure we have no index error and app crash - default will be loaded later
-            return 100
+            return nil
         }
         // Round up the fpus - it's more secure to get a longer insulin interval
         let roundedFPUs = Int(fpus.rounded(.up))

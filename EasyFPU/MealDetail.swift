@@ -9,11 +9,18 @@
 import SwiftUI
 
 struct MealDetail: View {
-    var absorptionScheme: AbsorptionScheme
+    @ObservedObject var absorptionScheme: AbsorptionScheme
     var meal: MealViewModel
     private let helpScreen = HelpScreen.mealDetails
     @State var activeSheet = ActiveMealDetailSheet.help
     @State private var showingSheet = false
+    var absorptionTimeAsString: String {
+        if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
+            return NumberFormatter().string(from: NSNumber(value: meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+        } else {
+            return "..."
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -48,7 +55,7 @@ struct MealDetail: View {
                     }
                     
                     HStack {
-                        Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionScheme)))!)
+                        Text(self.absorptionTimeAsString)
                         Text("h Absorption Time")
                     }
                     

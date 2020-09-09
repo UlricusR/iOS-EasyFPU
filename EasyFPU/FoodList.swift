@@ -22,7 +22,14 @@ struct FoodList: View {
             NSSortDescriptor(keyPath: \AbsorptionBlock.absorptionTime, ascending: true)
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
-    var absorptionScheme = AbsorptionScheme()
+    @ObservedObject var absorptionScheme = AbsorptionScheme()
+    var absorptionTimeAsString: String {
+        if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
+            return NumberFormatter().string(from: NSNumber(value: meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+        } else {
+            return "..."
+        }
+    }
     @State var showingSheet = false
     @State var showingMenu = false
     @State var showingAlert = false
@@ -122,7 +129,7 @@ struct FoodList: View {
                                                 
                                                 VStack {
                                                     HStack {
-                                                        Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionScheme)))!)
+                                                        Text(self.absorptionTimeAsString)
                                                         Text("h")
                                                     }
                                                     Text("Absorption Time").font(.caption).multilineTextAlignment(.center)
@@ -232,6 +239,9 @@ struct FoodList: View {
                                     // Store absorption blocks loaded from core data
                                     self.absorptionScheme.absorptionBlocks = self.absorptionBlocks.sorted()
                                 }
+                                
+                                // Publish change
+                                self.absorptionScheme.objectWillChange.send()
                             }
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height)

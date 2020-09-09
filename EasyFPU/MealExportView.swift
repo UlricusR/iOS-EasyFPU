@@ -12,7 +12,7 @@ import HealthKit
 struct MealExportView: View {
     @Binding var isPresented: Bool
     var meal: MealViewModel
-    var absorptionScheme: AbsorptionScheme
+    @ObservedObject var absorptionScheme: AbsorptionScheme
     @State var showingSheet = false
     @State var showingAlert = false
     @State var errorMessage = ""
@@ -94,7 +94,7 @@ struct MealExportView: View {
             showingAlert = true
             return
         }
-            
+        
         var hkObjects = [HKObject]()
         let unitCarbs = HKUnit.gram()
         let objectTypeCarbs = HKObjectType.quantityType(forIdentifier: .dietaryCarbohydrates)!
@@ -102,7 +102,12 @@ struct MealExportView: View {
         let now = Date()
         
         if exportECarbs {
-            let absorptionTimeInMinutes = Double(meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)) * 60.0
+            guard let absorptionTimeInHours = meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) else {
+                errorMessage = NSLocalizedString("Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks", comment: "")
+                showingAlert = true
+                return
+            }
+            let absorptionTimeInMinutes = Double(absorptionTimeInHours) * 60.0
             let start = now.addingTimeInterval(delayInMinutes * 60.0)
             let end = start.addingTimeInterval(absorptionTimeInMinutes * 60.0)
             let numberOfECarbEntries = absorptionTimeInMinutes / intervalInMinutes

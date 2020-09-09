@@ -10,10 +10,17 @@ import SwiftUI
 
 struct MealItemView: View {
     var foodItem: FoodItemViewModel
-    var absorptionScheme: AbsorptionScheme
+    @ObservedObject var absorptionScheme: AbsorptionScheme
     var fontSizeName: Font?
     var fontSizeDetails: Font?
     var foregroundColorName: Color?
+    var absorptionTimeAsString: String {
+        if foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
+            return NumberFormatter().string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+        } else {
+            return "..."
+        }
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -45,7 +52,7 @@ struct MealItemView: View {
             }
             // Absorption time
             HStack {
-                Text(NumberFormatter().string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme)))!).font(fontSizeDetails)
+                Text(self.absorptionTimeAsString).font(fontSizeDetails)
                 Text("h Absorption Time").font(fontSizeDetails)
             }
         }
