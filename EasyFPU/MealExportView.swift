@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import HealthKit
 
 struct MealExportView: View {
     @Binding var isPresented: Bool
@@ -95,40 +94,12 @@ struct MealExportView: View {
             return
         }
         
-        var hkObjects = [HKObject]()
-        let unitCarbs = HKUnit.gram()
-        let objectTypeCarbs = HKObjectType.quantityType(forIdentifier: .dietaryCarbohydrates)!
-        let objectTypeCalories = HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed)!
-        let now = Date()
-        
-        if exportECarbs {
-            guard let absorptionTimeInHours = meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) else {
-                errorMessage = NSLocalizedString("Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks", comment: "")
-                showingAlert = true
-                return
-            }
-            let absorptionTimeInMinutes = Double(absorptionTimeInHours) * 60.0
-            let start = now.addingTimeInterval(delayInMinutes * 60.0)
-            let end = start.addingTimeInterval(absorptionTimeInMinutes * 60.0)
-            let numberOfECarbEntries = absorptionTimeInMinutes / intervalInMinutes
-            let eCarbsAmount = meal.fpus.getExtendedCarbs() / numberOfECarbEntries
-            
-            var time = start
-            repeat {
-                hkObjects.append(processQuantitySample(value: eCarbsAmount, unit: unitCarbs, start: time, end: time, sampleType: objectTypeCarbs))
-                time = time.addingTimeInterval(intervalInMinutes * 60)
-            } while time < end
+        guard let hkObjects = HealthDataHelper.processHealthSample(for: meal, with: absorptionScheme, exportECarbs: exportECarbs, exportTotalMealCarbs: exportTotalMealCarbs, exportTotalMealCalories: exportTotalMealCalories, delayInMinutes: delayInMinutes, intervalInMinutes: intervalInMinutes, errorMessage: &errorMessage) else {
+            showingAlert = true
+            return
         }
         
-        if exportTotalMealCarbs {
-            hkObjects.append(processQuantitySample(value: meal.carbs, unit: unitCarbs, start: now, end: now, sampleType: objectTypeCarbs))
-        }
-        
-        if exportTotalMealCalories {
-            hkObjects.append(processQuantitySample(value: meal.calories, unit: HKUnit.kilocalorie(), start: now, end: now, sampleType: objectTypeCalories))
-        }
-            
-        HealthDataHelper.requestHealthDataAccessIfNeeded(toShare: Set([objectTypeCarbs, objectTypeCalories]), read: nil) { completion in
+        HealthDataHelper.requestHealthDataAccessIfNeeded() { completion in
             if completion {
                 HealthDataHelper.saveHealthData(hkObjects) { (success, error) in
                     if !success {
@@ -149,11 +120,5 @@ struct MealExportView: View {
                 self.showingAlert = true
             }
         }
-    }
-    
-    private func processQuantitySample(value: Double, unit: HKUnit, start: Date, end: Date, sampleType: HKObjectType) -> HKObject {
-        let quantity = HKQuantity(unit: unit, doubleValue: value)
-        let hkQuantitySample = HKQuantitySample(type: sampleType as! HKQuantityType, quantity: quantity, start: start, end: end)
-        return hkQuantitySample
     }
 }
