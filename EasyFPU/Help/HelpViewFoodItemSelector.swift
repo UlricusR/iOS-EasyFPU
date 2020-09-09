@@ -19,8 +19,8 @@ struct HelpViewFoodItemSelector: View {
             
             Text("You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment.").padding()
             HStack {
-                Image(systemName: "checkmark.circle").foregroundColor(.yellow)
-                Text("Save the typical amount by confirming with the yellow checkmark.")
+                Image(systemName: "plus.circle").foregroundColor(.green)
+                Text("Save the typical amount by confirming with the green plus.")
             }.padding()
             Text("Use the food item editor to maintain existing typical amounts.").padding()
         }

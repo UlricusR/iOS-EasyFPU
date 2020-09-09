@@ -64,13 +64,15 @@ struct MealDetail: View {
                     }
                 }.padding().foregroundColor(.red)
                 
-                Button(action: {
-                    self.activeSheet = .exportToHealth
-                    self.showingSheet = true
-                }) {
-                    Image(systemName: "square.and.arrow.up").imageScale(.large)
-                    Text("Export to Apple Health")
-                }.padding([.leading, .trailing, .bottom])
+                if HealthDataHelper.healthKitIsAvailable() {
+                    Button(action: {
+                        self.activeSheet = .exportToHealth
+                        self.showingSheet = true
+                    }) {
+                        Image(systemName: "square.and.arrow.up").imageScale(.large)
+                        Text("Export to Apple Health")
+                    }.padding([.leading, .trailing, .bottom])
+                }
                 
                 List {
                     Text("Included food items:").font(.headline)

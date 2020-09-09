@@ -41,7 +41,7 @@
 "A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
 "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
 "In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen." = "In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen.";
-"Tapping the summary will open the Meal Details view." = "Tapping the summary will open the Meal Details view.";
+"Tapping the summary will open the Meal Details view." = "Tapping the summary will open the Meal Details view and let you export nutritional values to Apple Health.";
 
 // Select Food Item help
 "Select Food Item" = "Select Food Item";
@@ -50,7 +50,7 @@
 "2. You use the green number fields to add to the amount already displayed in the text field." = "2. You use the green number fields to add to the amount already displayed in the text field.";
 "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value." = "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value.";
 "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment." = "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment.";
-"Save the typical amount by confirming with the yellow checkmark." = "Save the typical amount by confirming with the yellow checkmark.";
+"Save the typical amount by confirming with the green plus." = "Save the typical amount by confirming with the green plus.";
 "Use the food item editor to maintain existing typical amounts." = "Use the food item editor to maintain existing typical amounts.";
 
 // Food Item Editor help
@@ -64,6 +64,7 @@
 "A good source for nutritional values (calories and carbs per 100g) is:" = "A good source for nutritional values (calories and carbs per 100g) is:";
 "Link-text-to-nutritional-values" = "Nutrition value";
 "Link-URL-to-nutritional-values" = "https://www.nutritionvalue.org/";
+"Delete the food item by tapping the link on the bottom of the view." = "Delete the food item by tapping the link on the bottom of the view.";
 
 // Meal Details help
 "Meal Details" = "Meal Details";
@@ -76,7 +77,7 @@
 "- The corresponding amount of extended carbs in grams" = "- The corresponding amount of extended carbs in grams";
 "- The corresponding absorption time" = "- The corresponding absorption time";
 "- The recommended delay for the extended carbs to start" = "- The recommended delay for the extended carbs to start";
-"You may export the extended carbs to the Apple Health app" = "You may export the extended carbs to the Apple Health app";
+"You may export the extended carbs to the Apple Health app" = "You may export the extended carbs to the Apple Health app, if Apple Health is available on your device.";
 "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above.";
 
 // Absorption scheme help
@@ -94,6 +95,20 @@
 "Step 4: As 100 kcal represent 1 FPU, this results in 1.3 FPUs respectively 13g of extended carbs." = "Step 4: As 100 kcal represent 1 FPU, this results in 1.3 FPUs respectively 13g of extended carbs.";
 "Step 5: The FPUs will be rounded, in our example to 1 FPU, and the absorption time will be looked up, in our example 3 hours." = "Step 5: The FPUs will be rounded, in our example to 1 FPU, and the absorption time will be looked up, in our example 3 hours.";
 "Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above." = "Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above.";
+
+// Health export help
+"You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles.";
+"The following data are available for export:" = "The following data are available for export:";
+"- Extended Carbs" = "- Extended Carbs";
+"- Total Meal Carbs" = "- Total Meal Carbs";
+"- Total Meal Calories" = "- Total Meal Calories";
+"Important information for Loop users:" = "Important information for Loop users:";
+"- It is recommended to only export Extended Carbs" = "- It is recommended to only export Extended Carbs";
+"- If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings." = "- If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings.";
+"How are the Extended Carbs exported?" = "How are the Extended Carbs exported?";
+"- The number of e-carb entries is determined by dividing the absorption time (e.g. 5 hours) by the interval (e.g. 10 minutes, see Absorption Scheme view), i.e. 5 hours / 10 minutes = 30" = "- The number of e-carb entries is determined by dividing the absorption time (e.g. 5 hours) by the interval (e.g. 10 minutes, see Absorption Scheme view), i.e. 5 hours / 10 minutes = 30";
+"- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g" = "- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g";
+"- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)" = "- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)";
 
 // Food List
 "Food List" = "Food List";

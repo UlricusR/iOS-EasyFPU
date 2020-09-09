@@ -15,6 +15,10 @@ class HealthDataHelper {
     
     // MARK: - Authorization
     
+    static func healthKitIsAvailable() -> Bool {
+        HKHealthStore.isHealthDataAvailable()
+    }
+    
     private static func requestHealthDataAccessIfNeeded(toShare shareTypes: Set<HKSampleType>?,
                                                read readTypes: Set<HKObjectType>?,
                                                completion: @escaping (_ success: Bool) -> Void) {

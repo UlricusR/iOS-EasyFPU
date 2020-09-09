@@ -35,6 +35,8 @@ struct HelpViewFoodItemEditor: View {
                 Image(systemName: "xmark.circle").foregroundColor(.red)
                 Text("Swipe left to remove a typical amount.")
             }.padding()
+            
+            Text("Delete the food item by tapping the link on the bottom of the view.").padding()
         }
     }
 }
