@@ -18,13 +18,9 @@ struct MealExportView: View {
     @State var errorMessage = ""
     private let helpScreen = HelpScreen.mealExport
     
-    @State var exportECarbs = UserDefaults.standard.object(forKey: MealExportView.exportECarbsKey) != nil ? UserDefaults.standard.bool(forKey: MealExportView.exportECarbsKey) : true
-    @State var exportTotalMealCarbs = UserDefaults.standard.object(forKey: MealExportView.exportTotalMealCarbsKey) != nil ? UserDefaults.standard.bool(forKey: MealExportView.exportTotalMealCarbsKey) : false
-    @State var exportTotalMealCalories = UserDefaults.standard.object(forKey: MealExportView.exportTotalMealCaloriesKey) != nil ? UserDefaults.standard.bool(forKey: MealExportView.exportTotalMealCaloriesKey) : false
-    
-    static let exportECarbsKey = "ExportECarbs"
-    static let exportTotalMealCarbsKey = "ExportTotalMealCarbs"
-    static let exportTotalMealCaloriesKey = "ExportTotalMealCalories"
+    @State var exportECarbs = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true
+    @State var exportTotalMealCarbs = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false
+    @State var exportTotalMealCalories = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCalories) ?? false
     
     var body: some View {
         NavigationView {
@@ -61,12 +57,17 @@ struct MealExportView: View {
                 },
                 trailing: Button(action: {
                     // Store UserDefaults
-                    UserDefaults.standard.set(self.exportECarbs, forKey: MealExportView.exportECarbsKey)
-                    UserDefaults.standard.set(self.exportTotalMealCarbs, forKey: MealExportView.exportTotalMealCarbsKey)
-                    UserDefaults.standard.set(self.exportTotalMealCalories, forKey: MealExportView.exportTotalMealCaloriesKey)
-                    
-                    // Close sheet
-                    self.isPresented = false
+                    if
+                        !(UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &self.errorMessage))
+                    {
+                        // Something went terribly wrong - inform user
+                        self.showingAlert = true
+                    } else {
+                        // Close sheet
+                        self.isPresented = false
+                    }
                 }) {
                     Text("Done")
                 }

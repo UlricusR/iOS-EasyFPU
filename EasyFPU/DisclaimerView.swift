@@ -10,8 +10,9 @@ import SwiftUI
 
 struct DisclaimerView: View {
     @Binding var isDisplayed: Bool
-    @State var showingAlert = false
-    static let disclaimerAcceptedKey = "DisclaimerAccepted"
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
+    @State private var showingAlert = false
     
     var body: some View {
         NavigationView {
@@ -30,13 +31,25 @@ struct DisclaimerView: View {
             .navigationBarTitle(Text("Disclaimer"))
             .navigationBarItems(
                 leading: Button(action: {
-                    UserDefaults.standard.set(false, forKey: DisclaimerView.disclaimerAcceptedKey)
+                    var settingsError = ""
+                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
+                        self.alertTitle = "Notice"
+                        self.alertMessage = settingsError
+                    } else {
+                        self.alertTitle = "Disclaimer"
+                        self.alertMessage = "You need to accept the disclaimer to continue."
+                    }
                     self.showingAlert = true
                 }) {
                     Text("Decline")
                 },
                 trailing: Button(action: {
-                    UserDefaults.standard.set(true, forKey: DisclaimerView.disclaimerAcceptedKey)
+                    var settingsError = ""
+                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
+                        self.alertTitle = "Notice"
+                        self.alertMessage = settingsError
+                        self.showingAlert = true
+                    }
                     self.isDisplayed = false
                 }) {
                     Text("Accept")
@@ -46,8 +59,8 @@ struct DisclaimerView: View {
         .navigationViewStyle(StackNavigationViewStyle())
         .alert(isPresented: self.$showingAlert) {
             Alert(
-                title: Text("Disclaimer"),
-                message: Text("You need to accept the disclaimer to continue."),
+                title: Text(self.alertTitle),
+                message: Text(self.alertMessage),
                 dismissButton: .default(Text("OK"))
             )
         }

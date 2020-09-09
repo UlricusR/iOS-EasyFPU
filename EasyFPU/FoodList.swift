@@ -40,7 +40,7 @@ struct FoodList: View {
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
-    @State private var disclaimerViewIsDisplayed = !UserDefaults.standard.bool(forKey: DisclaimerView.disclaimerAcceptedKey)
+    @State private var disclaimerViewIsDisplayed = !(UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.disclaimerAccepted) ?? false)
     private let helpScreen = HelpScreen.foodList
 
     var filteredFoodItems: [FoodItemViewModel] {
