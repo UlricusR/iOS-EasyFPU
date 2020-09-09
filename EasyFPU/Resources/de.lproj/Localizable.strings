@@ -125,8 +125,7 @@
 "Enter amount consumed" = "Gegessene Menge eingeben";
 "Select amount" = "Menge auswählen";
 "Cannot delete food item" = "Kann Essen nicht löschen";
-"Recommended delay of extended carbs:" = "Empfohlene Verzögerung für verlängerte Kohlenhydrate:";
-"1.5h" = "1,5h";
+"Delay of Extended Carbs" = "Verzögerung der verlängerten Kohlenhydrate";
 
 // Meal details
 "Included food items:" = "Bestehend aus:";
@@ -167,6 +166,10 @@
 "Fatal error: Cannot convert numbers into string, please contact app developer" = "Fataler Fehler: Kann Zahlen nicht in String umwandeln, bitte informieren Sie den App-Entwickler";
 "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fataler Fehler: Konnte das CoreData FoodItem nicht finden, bitte informieren Sie den App-Entwickler";
 "Reset to default" = "Auf Voreinstellungen zurücksetzen";
+"Absorption Time Parameters" = "Absorptionszeit-Parameter";
+"Delay" = "Verzögerung";
+"Interval" = "Intervall";
+"min" = "min";
 
 // Menu actions
 "Import from JSON" = "Importieren (Format: JSON)";

@@ -129,8 +129,11 @@ struct FoodList: View {
                                                 }
                                             }
                                             
-                                            Text("Recommended delay of extended carbs:").font(.caption).padding(.top).multilineTextAlignment(.center)
-                                            Text("1.5h")
+                                            HStack {
+                                                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault))!)
+                                                Text("min")
+                                            }.padding(.top)
+                                            Text("Delay of Extended Carbs").font(.caption).multilineTextAlignment(.center)
                                         }
                                         .animation(.easeInOut)
                                         .padding([.leading, .trailing])

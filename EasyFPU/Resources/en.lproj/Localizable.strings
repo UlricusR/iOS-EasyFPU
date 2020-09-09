@@ -125,8 +125,7 @@
 "Enter amount consumed" = "Enter amount consumed";
 "Select amount" = "Select amount";
 "Cannot delete food item" = "Cannot delete food item";
-"Recommended delay of extended carbs:" = "Recommended delay of extended carbs:";
-"1.5h" = "1.5h";
+"Delay of Extended Carbs" = "Delay of Extended Carbs";
 
 // Meal details
 "Included food items:" = "Included food items:";
@@ -166,6 +165,10 @@
 "Fatal error: Cannot convert numbers into string, please contact app developer" = "Fatal error: Cannot convert numbers into string, please contact app developer";
 "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer";
 "Reset to default" = "Reset to default";
+"Absorption Time Parameters" = "Absorption Time Parameters";
+"Delay" = "Delay";
+"Interval" = "Interval";
+"min" = "min";
 
 // Menu actions
 "Import from JSON" = "Import (format: JSON)";

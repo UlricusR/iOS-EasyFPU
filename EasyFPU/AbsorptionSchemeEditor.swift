@@ -105,6 +105,22 @@ struct AbsorptionSchemeEditor: View {
                             }
                         }
                     }
+                    
+                    Section(header: Text("Absorption Time Parameters")) {
+                        HStack {
+                            Text("Delay")
+                            Spacer()
+                            TextField("Delay", text: $draftAbsorptionScheme.delayAsString).keyboardType(.numberPad)
+                            Text("min")
+                        }
+                        
+                        HStack {
+                            Text("Interval")
+                            Spacer()
+                            TextField("Interval", text: $draftAbsorptionScheme.intervalAsString).keyboardType(.numberPad)
+                            Text("min")
+                        }
+                    }
                 }
                 
                 // The reset button
@@ -156,11 +172,18 @@ struct AbsorptionSchemeEditor: View {
                         // Reset typical amounts to be deleted
                         self.absorptionBlocksToBeDeleted.removeAll()
                         
-                        // Save new food item
+                        // Save new absorption blocks
                         try? AppDelegate.viewContext.save()
                         
-                        // Close sheet
-                        self.isPresented = false
+                        // Save new user settings
+                        if !(
+                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.delay, UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.interval, UserSettings.UserDefaultsDoubleKey.absorptionTimeLongInterval), errorMessage: &self.errorMessage)) {
+                            self.showingAlert = true
+                        } else {
+                            // Close sheet
+                            self.isPresented = false
+                        }
                     }) {
                         // Quit edit mode
                         Text("Done")
@@ -201,6 +224,7 @@ struct AbsorptionSchemeEditor: View {
     }
     
     func resetToDefaults() {
+        // Reset absorption blocks
         guard let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) else {
             self.showingAlert = true
             return
@@ -212,6 +236,11 @@ struct AbsorptionSchemeEditor: View {
             let _ = draftAbsorptionScheme.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock), errorMessage: &errorMessage)
         }
         
+        // Reset absorption time delay and interval
+        draftAbsorptionScheme.delayAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault))!
+        draftAbsorptionScheme.intervalAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault))!
+        
+        // Notify change
         draftAbsorptionScheme.objectWillChange.send()
     }
 }

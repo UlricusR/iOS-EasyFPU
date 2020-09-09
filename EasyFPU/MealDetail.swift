@@ -53,8 +53,9 @@ struct MealDetail: View {
                     }
                     
                     HStack {
-                        Text("Recommended delay of extended carbs:")
-                        Text("1.5h")
+                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault))!)
+                        Text("min")
+                        Text("Delay of Extended Carbs")
                     }.padding(.top)
                 }.padding().foregroundColor(.red)
                 

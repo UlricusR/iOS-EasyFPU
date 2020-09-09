@@ -41,7 +41,9 @@ struct MealExportView: View {
                 }.padding([.leading, .trailing, .bottom])
                 
                 Button(action: {
-                    self.processHealthSample(delayInMinutes: 90, intervalInMinutes: 10)
+                    let delay = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault
+                    let interval = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
+                    self.processHealthSample(delayInMinutes: delay, intervalInMinutes: interval)
                 }) {
                     Text("Export")
                 }.padding()
