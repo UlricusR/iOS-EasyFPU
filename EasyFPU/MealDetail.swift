@@ -24,10 +24,8 @@ struct MealDetail: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
-                VStack(alignment: .leading) {
-                    Text("Total nutritional values").font(.headline)
-                    
+            VStack() {
+                VStack() {
                     HStack {
                         Text(NumberFormatter().string(from: NSNumber(value: self.meal.amount))!)
                         Text("g")
@@ -37,9 +35,9 @@ struct MealDetail: View {
                     HStack {
                         Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.calories))!)
                         Text("kcal")
-                    }
-                    
-                    HStack {
+                        
+                        Text("|")
+                        
                         Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
                         Text("g Carbs")
                     }
@@ -47,9 +45,9 @@ struct MealDetail: View {
                     HStack {
                         Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.fpu))!)
                         Text("FPU")
-                    }
-                    
-                    HStack {
+                        
+                        Text("|")
+                        
                         Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
                         Text("g Extended Carbs")
                     }
@@ -57,13 +55,13 @@ struct MealDetail: View {
                     HStack {
                         Text(self.absorptionTimeAsString)
                         Text("h Absorption Time")
-                    }
-                    
-                    HStack {
+                        
+                        Text("|")
+                        
                         Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault))!)
                         Text("min")
-                        Text("Delay of Extended Carbs")
-                    }.padding(.top)
+                        Text("Delay")
+                    }
                 }.padding().foregroundColor(.red)
                 
                 Button(action: {
@@ -72,7 +70,7 @@ struct MealDetail: View {
                 }) {
                     Image(systemName: "square.and.arrow.up").imageScale(.large)
                     Text("Export to Apple Health")
-                }.padding()
+                }.padding([.leading, .trailing, .bottom])
                 
                 List {
                     Text("Included food items:").font(.headline)
