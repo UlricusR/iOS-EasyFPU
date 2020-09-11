@@ -11,6 +11,8 @@ import SwiftUI
 class AbsorptionScheme: Equatable, ObservableObject {
     @Published var absorptionBlocks = [AbsorptionBlock]()
     
+    
+    
     func addToAbsorptionBlocks(newAbsorptionBlock: AbsorptionBlock) {
         absorptionBlocks.append(newAbsorptionBlock)
         absorptionBlocks = absorptionBlocks.sorted()

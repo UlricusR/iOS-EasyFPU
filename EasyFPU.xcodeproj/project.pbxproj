@@ -39,6 +39,7 @@
 		1B6867E324FD22D60057EC6A /* HelpViewFoodItemEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6867E224FD22D60057EC6A /* HelpViewFoodItemEditor.swift */; };
 		1B6867E524FD37F80057EC6A /* HelpViewMealDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6867E424FD37F80057EC6A /* HelpViewMealDetails.swift */; };
 		1B6867E724FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6867E624FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift */; };
+		1B7318C0250A2BA3008BAA41 /* HealthExportPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7318BF250A2BA3008BAA41 /* HealthExportPreview.swift */; };
 		1B870FC124C9A32E00183C9F /* MealDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B870FC024C9A32E00183C9F /* MealDetail.swift */; };
 		1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */; };
 		1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */; };
@@ -61,6 +62,7 @@
 		1BEE525624D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE525424D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift */; };
 		1BF8A4C024C21A52008634DF /* FoodItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF8A4BE24C21A52008634DF /* FoodItem+CoreDataClass.swift */; };
 		1BF8A4C124C21A52008634DF /* FoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */; };
+		1BFDFA24250A1DBB00379EB3 /* CarbsEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFDFA23250A1DBB00379EB3 /* CarbsEntries.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +102,7 @@
 		1B6867E224FD22D60057EC6A /* HelpViewFoodItemEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewFoodItemEditor.swift; sourceTree = "<group>"; };
 		1B6867E424FD37F80057EC6A /* HelpViewMealDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewMealDetails.swift; sourceTree = "<group>"; };
 		1B6867E624FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewAbsorptionSchemeEditor.swift; sourceTree = "<group>"; };
+		1B7318BF250A2BA3008BAA41 /* HealthExportPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthExportPreview.swift; sourceTree = "<group>"; };
 		1B870FC024C9A32E00183C9F /* MealDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetail.swift; sourceTree = "<group>"; };
 		1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewModel.swift; sourceTree = "<group>"; };
 		1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmountViewModel.swift; sourceTree = "<group>"; };
@@ -123,6 +126,7 @@
 		1BEE525424D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AbsorptionBlock+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BF8A4BE24C21A52008634DF /* FoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1BFDFA23250A1DBB00379EB3 /* CarbsEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsEntries.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				1B6106B924D93325001F2284 /* Helpers */,
+				1BFDFA22250A1D9B00379EB3 /* HealthKit */,
 				1B004A5224BA52E9001E362A /* Resources */,
 				1B004A4724BA3419001E362A /* Models */,
 				1B8A4A8E24CAB9D300542212 /* ViewModels */,
@@ -179,6 +184,7 @@
 				1B870FC024C9A32E00183C9F /* MealDetail.swift */,
 				1BA963E12507E03000375650 /* MealDetailSheets.swift */,
 				1BA963DF2507DFC200375650 /* MealExportView.swift */,
+				1B7318BF250A2BA3008BAA41 /* HealthExportPreview.swift */,
 				1B90D2DD24F7BAB40059BFFA /* MealItemView.swift */,
 				1B3CEB9A24D32D38001D64DA /* AbsorptionSchemeEditor.swift */,
 				1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */,
@@ -240,7 +246,6 @@
 			isa = PBXGroup;
 			children = (
 				1B6106BA24D93346001F2284 /* DataHelper.swift */,
-				1B0CE2B9250663B5008B04E3 /* HealthDataHelper.swift */,
 				1B9723EC2508AC5C00E606A7 /* UserSettings.swift */,
 			);
 			path = Helpers;
@@ -279,6 +284,15 @@
 				1BAEE08C2500E21200B4891F /* KeyboardGuardian.swift */,
 			);
 			path = UIHelpers;
+			sourceTree = "<group>";
+		};
+		1BFDFA22250A1D9B00379EB3 /* HealthKit */ = {
+			isa = PBXGroup;
+			children = (
+				1B0CE2B9250663B5008B04E3 /* HealthDataHelper.swift */,
+				1BFDFA23250A1DBB00379EB3 /* CarbsEntries.swift */,
+			);
+			path = HealthKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -367,6 +381,7 @@
 				1B6867E124FD0C6B0057EC6A /* HelpViewFoodItemSelector.swift in Sources */,
 				1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */,
 				1B1CC91124DC57300014DD7D /* MenuViewSheets.swift in Sources */,
+				1BFDFA24250A1DBB00379EB3 /* CarbsEntries.swift in Sources */,
 				1B004A2D24BA3035001E362A /* AppDelegate.swift in Sources */,
 				1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */,
 				1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */,
@@ -386,6 +401,7 @@
 				1B0CE2BA250663B5008B04E3 /* HealthDataHelper.swift in Sources */,
 				1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */,
 				1BA040CA24BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift in Sources */,
+				1B7318C0250A2BA3008BAA41 /* HealthExportPreview.swift in Sources */,
 				1BA040CB24BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift in Sources */,
 				1B6867E724FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift in Sources */,
 				1B004A4F24BA3EF1001E362A /* AbsorptionBlockFromJson.swift in Sources */,

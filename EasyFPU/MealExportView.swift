@@ -7,18 +7,18 @@
 //
 
 import SwiftUI
+import HealthKit
 
 struct MealExportView: View {
     @Binding var isPresented: Bool
     var meal: MealViewModel
-    @ObservedObject var absorptionScheme: AbsorptionScheme
+    var absorptionScheme: AbsorptionScheme
+    @ObservedObject var carbsEntries = CarbsEntries.default
     @State var showingSheet = false
     @State var showingAlert = false
     @State var errorMessage = ""
     private let helpScreen = HelpScreen.mealExport
     
-    @State var exportECarbs = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true
-    @State var exportTotalMealCarbs = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false
     @State var exportTotalMealCalories = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCalories) ?? false
     
     var body: some View {
@@ -29,23 +29,30 @@ struct MealExportView: View {
                 Text("Please choose the data to export:").padding()
                 Text("If you're using the Loop app for your diabetes pump therapy, the recommendation is to only export extended carbs.").font(.caption).padding([.leading, .trailing, .bottom])
                 
-                Toggle(isOn: $exportECarbs) {
+                Toggle(isOn: $carbsEntries.includeECarbs) {
                     Text("Extended Carbs")
-                }.padding([.leading, .trailing, .top])
-                Toggle(isOn: $exportTotalMealCarbs) {
+                }
+                .padding([.leading, .trailing, .top])
+                
+                Toggle(isOn: $carbsEntries.includeTotalMealCarbs) {
                     Text("Total Meal Carbs")
-                }.padding([.leading, .trailing])
+                }
+                .padding([.leading, .trailing])
+                
                 Toggle(isOn: $exportTotalMealCalories) {
                     Text("Total Meal Calories")
                 }.padding([.leading, .trailing, .bottom])
                 
                 Button(action: {
-                    let delay = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault
-                    let interval = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
-                    self.processHealthSample(delayInMinutes: delay, intervalInMinutes: interval)
+                    self.exportHealthSample()
                 }) {
                     Text("Export")
                 }.padding()
+                
+                // The carbs preview
+                if !carbsEntries.hkObjects.isEmpty {
+                    HealthExportPreview(carbsEntries: self.carbsEntries).padding()
+                }
                 
                 Spacer()
             }
@@ -59,8 +66,8 @@ struct MealExportView: View {
                 trailing: Button(action: {
                     // Store UserDefaults
                     if
-                        !(UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage) &&
+                        !(UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsEntries.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsEntries.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &self.errorMessage))
                     {
                         // Something went terribly wrong - inform user
@@ -75,6 +82,9 @@ struct MealExportView: View {
             )
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .onAppear() {
+            self.processHealthSample()
+        }
         .alert(isPresented: self.$showingAlert) {
             Alert(
                 title: Text("Notice"),
@@ -87,16 +97,23 @@ struct MealExportView: View {
         }
     }
     
-    private func processHealthSample(delayInMinutes: Double, intervalInMinutes: Double) {
-        if !exportECarbs && !exportTotalMealCalories && !exportTotalMealCarbs {
-            errorMessage = NSLocalizedString("Please select at least one entry to export", comment: "")
+    private func processHealthSample() {
+        guard let absorptionTimeInHours = meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) else {
+            errorMessage = NSLocalizedString("Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks", comment: "")
             showingAlert = true
             return
         }
-        
-        guard let hkObjects = HealthDataHelper.processHealthSample(for: meal, with: absorptionScheme, exportECarbs: exportECarbs, exportTotalMealCarbs: exportTotalMealCarbs, exportTotalMealCalories: exportTotalMealCalories, delayInMinutes: delayInMinutes, intervalInMinutes: intervalInMinutes, errorMessage: &errorMessage) else {
-            showingAlert = true
-            return
+        self.carbsEntries.meal = meal
+        self.carbsEntries.absorptionTimeInMinutes = Double(absorptionTimeInHours) * 60.0
+        self.carbsEntries.recalculate()
+    }
+    
+    private func exportHealthSample() {
+        var hkObjects = [HKObject]()
+        hkObjects.append(contentsOf: carbsEntries.hkObjects)
+        if exportTotalMealCalories {
+            let caloriesObject = HealthDataHelper.processQuantitySample(value: meal.calories, unit: HealthDataHelper.unitCalories, start: Date(), end: Date(), sampleType: HealthDataHelper.objectTypeCalories)
+            hkObjects.append(caloriesObject)
         }
         
         HealthDataHelper.requestHealthDataAccessIfNeeded() { completion in
