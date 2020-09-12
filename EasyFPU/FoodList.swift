@@ -137,7 +137,7 @@ struct FoodList: View {
                                             }
                                             
                                             HStack {
-                                                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault))!)
+                                                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelay))!)
                                                 Text("min")
                                             }.padding(.top)
                                             Text("Delay of Extended Carbs").font(.caption).multilineTextAlignment(.center)

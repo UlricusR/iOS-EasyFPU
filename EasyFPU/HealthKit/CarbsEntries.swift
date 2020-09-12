@@ -33,8 +33,6 @@ class CarbsEntries: ObservableObject {
     
     private var now: Date
     private var eCarbsStart: Date
-    private let intervalInMinutes = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
-    private let delayInMinutes = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault
     
     // MARK: - Variables required for fitting the chart
     
@@ -64,7 +62,7 @@ class CarbsEntries: ObservableObject {
         self.now = Date()
         
         self.absorptionTimeInMinutes = Double(absorptionTimeInHours) * 60.0
-        self.eCarbsStart = now.addingTimeInterval(delayInMinutes * 60.0)
+        self.eCarbsStart = now.addingTimeInterval(UserSettings.shared.absorptionTimeLongDelay * 60.0)
         
         if !(includeTotalMealCarbs || includeECarbs) {
             self.start = now
@@ -88,7 +86,7 @@ class CarbsEntries: ObservableObject {
         hkObjects.removeAll()
         eCarbEntries.removeAll()
         now = Date()
-        eCarbsStart = now.addingTimeInterval(delayInMinutes * 60.0)
+        eCarbsStart = now.addingTimeInterval(UserSettings.shared.absorptionTimeLongDelay * 60.0)
         
         if !(includeTotalMealCarbs || includeECarbs) {
             start = now
@@ -113,7 +111,7 @@ class CarbsEntries: ObservableObject {
     private func calculateECarbs() {
         if includeECarbs {
             // Make sure to not go below 1 for number carb entries, otherwise we'd increase e-carbs amount in the next step
-            let numberOfECarbEntries = max(absorptionTimeInMinutes / intervalInMinutes, 1.0)
+            let numberOfECarbEntries = max(absorptionTimeInMinutes / UserSettings.shared.absorptionTimeLongInterval, 1.0)
             let eCarbsAmount = meal.fpus.getExtendedCarbs() / numberOfECarbEntries
             
             // Generate numberOfECarbEntries, but omit the last one, as it needs to be corrected using the total amount of e-carbs
@@ -124,14 +122,14 @@ class CarbsEntries: ObservableObject {
                 let hkObject = HealthDataHelper.processQuantitySample(value: eCarbsAmount, unit: HealthDataHelper.unitCarbs, start: time, end: time, sampleType: HealthDataHelper.objectTypeCarbs)
                 self.hkObjects.append(hkObject)
                 self.eCarbEntries.append(eCarbsAmount)
-                time = time.addingTimeInterval(intervalInMinutes * 60)
+                time = time.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * 60)
                 totalECarbs += eCarbsAmount
-            } while time < end.addingTimeInterval(-intervalInMinutes * 60)
+            } while time < end.addingTimeInterval(-UserSettings.shared.absorptionTimeLongInterval * 60)
             
             // Now determine the final amount of e-carbs and generate the final entry
             let finalAmountOfECarbs = meal.fpus.getExtendedCarbs() - totalECarbs
             if finalAmountOfECarbs > 0 {
-                time = time.addingTimeInterval(intervalInMinutes * 60)
+                time = time.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * 60)
                 let hkObject = HealthDataHelper.processQuantitySample(value: finalAmountOfECarbs, unit: HealthDataHelper.unitCarbs, start: time, end: time, sampleType: HealthDataHelper.objectTypeCarbs)
                 self.hkObjects.append(hkObject)
                 self.eCarbEntries.append(finalAmountOfECarbs)
@@ -154,13 +152,13 @@ class CarbsEntries: ObservableObject {
         if includeTotalMealCarbs {
             carbsRegime.append((now, meal.carbs))
             if includeECarbs {
-                let numberOfDelaySegments = Int((delayInMinutes / intervalInMinutes).rounded(.up)) - 1
+                let numberOfDelaySegments = Int((UserSettings.shared.absorptionTimeLongDelay / UserSettings.shared.absorptionTimeLongInterval).rounded(.up)) - 1
                 if numberOfDelaySegments <= 3 {
                     // We don't need to split the x axis, as there are sufficiently few delay segments
                     timeSplittingAfterIndex = -1
                     if numberOfDelaySegments > 0 {
                         for index in (1...numberOfDelaySegments) {
-                            carbsRegime.append((now.addingTimeInterval(intervalInMinutes * Double(index) * 60), 0.0))
+                            carbsRegime.append((now.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * Double(index) * 60), 0.0))
                         }
                     }
                 } else {
@@ -168,8 +166,8 @@ class CarbsEntries: ObservableObject {
                     timeSplittingAfterIndex = 1
                     
                     // Add one delay segment after the total meal carbs, one before e-carbs entries start
-                    carbsRegime.append((now.addingTimeInterval(intervalInMinutes * 60), 0.0))
-                    carbsRegime.append((eCarbsStart.addingTimeInterval(-intervalInMinutes * 60), 0.0))
+                    carbsRegime.append((now.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * 60), 0.0))
+                    carbsRegime.append((eCarbsStart.addingTimeInterval(-UserSettings.shared.absorptionTimeLongInterval * 60), 0.0))
                 }
             } else {
                 timeSplittingAfterIndex = -1
@@ -179,7 +177,7 @@ class CarbsEntries: ObservableObject {
         }
         
         for index in (0..<eCarbEntries.count) {
-            carbsRegime.append((eCarbsStart.addingTimeInterval(intervalInMinutes * Double(index) * 60), eCarbEntries[index]))
+            carbsRegime.append((eCarbsStart.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * Double(index) * 60), eCarbEntries[index]))
         }
         
         return carbsRegime

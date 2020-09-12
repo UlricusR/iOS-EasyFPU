@@ -49,7 +49,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             }
         }
         
-        let delay = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault
+        let delay = UserSettings.shared.absorptionTimeLongDelay
         self.delay = delay
         self.delayAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delay))!
         

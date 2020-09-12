@@ -180,6 +180,11 @@ struct AbsorptionSchemeEditor: View {
                             UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.interval, UserSettings.UserDefaultsDoubleKey.absorptionTimeLongInterval), errorMessage: &self.errorMessage)) {
                             self.showingAlert = true
                         } else {
+                            // Set the dynamic user parameters and broadcast change
+                            UserSettings.shared.absorptionTimeLongDelay = self.draftAbsorptionScheme.delay
+                            UserSettings.shared.absorptionTimeLongInterval = self.draftAbsorptionScheme.interval
+                            UserSettings.shared.objectWillChange.send()
+                            
                             // Close sheet
                             self.isPresented = false
                         }

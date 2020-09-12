@@ -8,7 +8,7 @@
 
 import Foundation
 
-class UserSettings {
+class UserSettings: ObservableObject {
     // MARK: - The keys
     enum UserDefaultsType {
         case bool(Bool, UserSettings.UserDefaultsBoolKey)
@@ -29,6 +29,23 @@ class UserSettings {
     
     // MARK: - The key store for syncing via iCloud
     private static var keyStore = NSUbiquitousKeyValueStore()
+    
+    // MARK: - Dynamic user settings are treated here
+    
+    @Published var absorptionTimeLongDelay: Double
+    @Published var absorptionTimeLongInterval: Double
+    
+    static let shared = UserSettings(
+        absorptionTimeLongDelay: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault,
+        absorptionTimeLongInterval: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
+    )
+    
+    private init(absorptionTimeLongDelay: Double, absorptionTimeLongInterval: Double) {
+        self.absorptionTimeLongDelay = absorptionTimeLongDelay
+        self.absorptionTimeLongInterval = absorptionTimeLongInterval
+    }
+    
+    // MARK: - Static helper functions
     
     static func set(_ parameter: UserDefaultsType, errorMessage: inout String) -> Bool {
         switch parameter {
