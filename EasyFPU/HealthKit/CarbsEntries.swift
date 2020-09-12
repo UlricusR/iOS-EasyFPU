@@ -45,7 +45,7 @@ class CarbsEntries: ObservableObject {
     var theoreticalMaxBarHeight = 0.0
     var requiresTimeSplitting = false
     
-    private let previewHeight = 120.0
+    let previewHeight = 120.0
     private let barMinHeight = 20.0
     
     // MARK: - Static variables / constants
@@ -158,8 +158,10 @@ class CarbsEntries: ObservableObject {
                 if numberOfDelaySegments <= 3 {
                     // We don't need to split the x axis, as there are sufficiently few delay segments
                     requiresTimeSplitting = false
-                    for index in (1...numberOfDelaySegments) {
-                        carbsRegime.append((now.addingTimeInterval(intervalInMinutes * Double(index) * 60), 0.0))
+                    if numberOfDelaySegments > 0 {
+                        for index in (1...numberOfDelaySegments) {
+                            carbsRegime.append((now.addingTimeInterval(intervalInMinutes * Double(index) * 60), 0.0))
+                        }
                     }
                 } else {
                     // We need to split the time axis

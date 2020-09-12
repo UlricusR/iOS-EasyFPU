@@ -13,7 +13,7 @@ struct HealthExportPreview: View {
     
     var body: some View {
         if self.carbsEntries.requiresTimeSplitting {
-            return AnyView(GeometryReader { reader in
+            return AnyView(
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(0..<self.carbsEntries.carbsRegime.count, id: \.self) { index in
@@ -26,14 +26,14 @@ struct HealthExportPreview: View {
                         .padding([.bottom, .top], 1.0)
                         .background(Color.black)
                         .rotationEffect(.degrees(80))
-                        .offset(x: -reader.size.width / 2 + 2 * 15)
+                        .position(x: 70, y: CGFloat(self.carbsEntries.previewHeight + 42))
                     )
                     .padding()
                     .animation(.interactiveSpring())
                 }.onAppear() {
                     self.carbsEntries.fitCarbChartBars()
                 }
-            })
+            )
         } else {
             return AnyView(ScrollView(.horizontal) {
                 HStack {
@@ -81,17 +81,23 @@ struct ChartBar: View {
                         .fill(Color(UIColor.systemBackground))
                         .frame(width: 20, height: 5)
                         .padding([.bottom, .top], 1.0)
-                        .background(Color.black)
+                        .background(Color.primary)
                         .rotationEffect(.degrees(-10))
                         .offset(y: CGFloat(self.carbsEntries.getSplitBarHeight(carbs: entry.carbs) / 2 - 10))
                 )
             }
+            
+            Rectangle()
+                .fill(Color(UIColor.systemBackground))
+                .frame(width: 40, height: 0)
+                .padding([.top], 2.0)
+                .background(Color.primary)
             
             Text(ChartBar.timeStyle.string(from: entry.date))
                 .font(.footnote)
                 .rotationEffect(.degrees(-90))
                 .offset(y: 10)
                 .frame(height: 20)
-        }
+        }.frame(width: 30)
     }
 }

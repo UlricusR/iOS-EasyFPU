@@ -43,7 +43,10 @@ class AbsorptionSchemeViewModel: ObservableObject {
     init(from cdAbsorptionScheme: AbsorptionScheme) {
         self.absorptionBlocks = [AbsorptionBlockViewModel]()
         for absorptionBlock in cdAbsorptionScheme.absorptionBlocks {
-            self.absorptionBlocks.append(AbsorptionBlockViewModel(from: absorptionBlock))
+            let newAbsorptionBlockViewModel = AbsorptionBlockViewModel(from: absorptionBlock)
+            if !self.absorptionBlocks.contains(newAbsorptionBlockViewModel) {
+                self.absorptionBlocks.append(AbsorptionBlockViewModel(from: absorptionBlock))
+            }
         }
         
         let delay = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault

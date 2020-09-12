@@ -96,6 +96,6 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
     }
     
     static func == (lhs: AbsorptionBlockViewModel, rhs: AbsorptionBlockViewModel) -> Bool {
-        lhs.id == rhs.id
+        lhs.absorptionTime == rhs.absorptionTime && lhs.maxFpu == rhs.maxFpu
     }
 }

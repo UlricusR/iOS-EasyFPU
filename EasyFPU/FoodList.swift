@@ -232,7 +232,9 @@ struct FoodList: View {
                                         let cdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
                                         cdAbsorptionBlock.absorptionTime = Int64(absorptionBlock.absorptionTime)
                                         cdAbsorptionBlock.maxFpu = Int64(absorptionBlock.maxFpu)
-                                        self.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
+                                        if !self.absorptionScheme.absorptionBlocks.contains(cdAbsorptionBlock) {
+                                            self.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
+                                        }
                                     }
                                     try? AppDelegate.viewContext.save()
                                 } else {
