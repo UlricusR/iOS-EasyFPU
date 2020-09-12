@@ -24,10 +24,7 @@ struct MealExportView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                Text("Do you really want to export the extended carbs to Health?").padding()
-                
                 Text("Please choose the data to export:").padding()
-                Text("If you're using the Loop app for your diabetes pump therapy, the recommendation is to only export extended carbs.").font(.caption).padding([.leading, .trailing, .bottom])
                 
                 Toggle(isOn: $carbsEntries.includeECarbs) {
                     Text("Extended Carbs")
@@ -51,12 +48,13 @@ struct MealExportView: View {
                 
                 // The carbs preview
                 if !carbsEntries.hkObjects.isEmpty {
+                    Text("Preview of exported carbs in g").padding([.top, .leading, .trailing])
                     HealthExportPreview(carbsEntries: self.carbsEntries).padding()
                 }
                 
                 Spacer()
             }
-            .navigationBarTitle("Export to Health")
+            .navigationBarTitle("Export to Health", displayMode: .inline)
             .navigationBarItems(
                 leading: Button(action: {
                     self.showingSheet = true

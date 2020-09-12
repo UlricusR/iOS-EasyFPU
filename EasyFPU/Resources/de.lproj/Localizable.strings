@@ -215,12 +215,11 @@
 "Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Kann keine Daten in Health schreiben: Bitte geben Sie EasyFPE in den Einstellungen die Berechtigung, in Health zu schreiben.";
 "Successfully exported data to Health" = "Daten wurden erfolgreich nach Health exportiert";
 "Export to Health" = "Health-Export";
-"Do you really want to export the extended carbs to Health?" = "Möchten Sie wirklich die verlängerten Kohlenhydrate nach Health exportieren?";
 "Export" = "Nach Apple Health exportieren";
 "Error requesting authorization to write to Health: " = "Fehler beim Anfordern der Berechtigung, in Health zu schreiben: ";
 "Please choose the data to export:" = "Bitte wählen Sie die zu exportierenden Daten:";
-"If you're using the Loop app for your diabetes pump therapy, the recommendation is to only export extended carbs." = "Sollten Sie die Loop-App zur Insulinpumpentherapie nutzen, wird nur der Export der verlängerten Kohlenhydrate empfohlen.";
 "Total Meal Carbs" = "Kohlenhydrate Gesamtmahlzeit";
 "Total Meal Calories" = "Kalorien Gesamtmahlzeit";
 "Please select at least one entry to export" = "Bitte mindestens einen Eintrag zum Export auswählen";
 "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fataler Fehler, kann Daten nicht exportieren, bitte den App-Entwickler informieren: Absorptionsschema hat keine Absorptionsblöcke";
+"Preview of exported carbs in g" = "Vorschau der exportierten Kohlenhydrate in g";

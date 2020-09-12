@@ -43,7 +43,7 @@ class CarbsEntries: ObservableObject {
     var regularMultiplier = 0.0
     var appliedMultiplier = 0.0
     var theoreticalMaxBarHeight = 0.0
-    var requiresTimeSplitting = false
+    var timeSplittingAfterIndex = 0
     
     let previewHeight = 120.0
     private let barMinHeight = 20.0
@@ -157,7 +157,7 @@ class CarbsEntries: ObservableObject {
                 let numberOfDelaySegments = Int((delayInMinutes / intervalInMinutes).rounded(.up)) - 1
                 if numberOfDelaySegments <= 3 {
                     // We don't need to split the x axis, as there are sufficiently few delay segments
-                    requiresTimeSplitting = false
+                    timeSplittingAfterIndex = -1
                     if numberOfDelaySegments > 0 {
                         for index in (1...numberOfDelaySegments) {
                             carbsRegime.append((now.addingTimeInterval(intervalInMinutes * Double(index) * 60), 0.0))
@@ -165,15 +165,17 @@ class CarbsEntries: ObservableObject {
                     }
                 } else {
                     // We need to split the time axis
-                    requiresTimeSplitting = true
+                    timeSplittingAfterIndex = 1
                     
                     // Add one delay segment after the total meal carbs, one before e-carbs entries start
                     carbsRegime.append((now.addingTimeInterval(intervalInMinutes * 60), 0.0))
                     carbsRegime.append((eCarbsStart.addingTimeInterval(-intervalInMinutes * 60), 0.0))
                 }
             } else {
-                requiresTimeSplitting = false
+                timeSplittingAfterIndex = -1
             }
+        } else {
+            timeSplittingAfterIndex = -1
         }
         
         for index in (0..<eCarbEntries.count) {

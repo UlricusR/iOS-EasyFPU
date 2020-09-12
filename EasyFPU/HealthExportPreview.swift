@@ -12,40 +12,18 @@ struct HealthExportPreview: View {
     @ObservedObject var carbsEntries: CarbsEntries
     
     var body: some View {
-        if self.carbsEntries.requiresTimeSplitting {
-            return AnyView(
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(0..<self.carbsEntries.carbsRegime.count, id: \.self) { index in
-                            ChartBar(carbsEntries: self.carbsEntries, entry: self.carbsEntries.carbsRegime[index])
-                        }
-                    }
-                    .overlay(Rectangle()
-                        .fill(Color(UIColor.systemBackground))
-                        .frame(width: 20, height: 5)
-                        .padding([.bottom, .top], 1.0)
-                        .background(Color.black)
-                        .rotationEffect(.degrees(80))
-                        .position(x: 70, y: CGFloat(self.carbsEntries.previewHeight + 42))
-                    )
-                    .padding()
-                    .animation(.interactiveSpring())
-                }.onAppear() {
-                    self.carbsEntries.fitCarbChartBars()
+        ScrollView(.horizontal) {
+            HStack {
+                ForEach(0..<self.carbsEntries.carbsRegime.count, id: \.self) { index in
+                    ChartBar(carbsEntries: self.carbsEntries, entry: self.carbsEntries.carbsRegime[index], requiresTimeSplitting: index == self.carbsEntries.timeSplittingAfterIndex)
                 }
-            )
-        } else {
-            return AnyView(ScrollView(.horizontal) {
-                HStack {
-                    ForEach(0..<self.carbsEntries.carbsRegime.count, id: \.self) { index in
-                        ChartBar(carbsEntries: self.carbsEntries, entry: self.carbsEntries.carbsRegime[index])
-                    }
-                }
-                .padding()
-                .animation(.interactiveSpring())
-            }.onAppear() {
-                self.carbsEntries.fitCarbChartBars()
-            })
+            }
+            .padding()
+            .animation(.interactiveSpring())
+        }
+        .frame(height: CGFloat(carbsEntries.previewHeight + 80))
+        .onAppear() {
+            self.carbsEntries.fitCarbChartBars()
         }
     }
 }
@@ -53,6 +31,7 @@ struct HealthExportPreview: View {
 struct ChartBar: View {
     var carbsEntries: CarbsEntries
     var entry: (date: Date, carbs: Double)
+    var requiresTimeSplitting: Bool
     
     static var timeStyle: DateFormatter {
         let formatter = DateFormatter()
@@ -63,7 +42,7 @@ struct ChartBar: View {
     var body: some View {
         VStack {
             Spacer()
-            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: entry.carbs))!)
+            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: entry.carbs >= 100 ? 0 : (entry.carbs >= 10 ? 1 : 2)).string(from: NSNumber(value: entry.carbs))!)
                 .font(.footnote)
                 .rotationEffect(.degrees(-90))
                 .offset(y: self.carbsEntries.appliedMultiplier * entry.carbs <= 40 ? 0 : 40)
@@ -87,17 +66,36 @@ struct ChartBar: View {
                 )
             }
             
-            Rectangle()
-                .fill(Color(UIColor.systemBackground))
-                .frame(width: 40, height: 0)
-                .padding([.top], 2.0)
-                .background(Color.primary)
+            if self.requiresTimeSplitting {
+                Rectangle()
+                    .fill(Color(UIColor.systemBackground))
+                    .frame(width: 40, height: 0)
+                    .padding([.top], 2.0)
+                    .background(Color.primary)
+                    .overlay(Rectangle()
+                        .fill(Color(UIColor.systemBackground))
+                        .frame(width: 20, height: 5)
+                        .padding([.bottom, .top], 1.0)
+                        .background(Color.black)
+                        .rotationEffect(.degrees(80))
+                        .offset(x: 20)
+                        .zIndex(1)
+                    )
+            } else {
+                Rectangle()
+                    .fill(Color(UIColor.systemBackground))
+                    .frame(width: 40, height: 0)
+                    .padding([.top], 2.0)
+                    .background(Color.primary)
+            }
             
             Text(ChartBar.timeStyle.string(from: entry.date))
                 .font(.footnote)
                 .rotationEffect(.degrees(-90))
                 .offset(y: 10)
-                .frame(height: 20)
+                .frame(height: 50)
+                .multilineTextAlignment(.trailing)
+                .lineLimit(1)
         }.frame(width: 30)
     }
 }

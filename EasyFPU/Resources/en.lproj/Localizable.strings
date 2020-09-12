@@ -214,12 +214,11 @@
 "Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings.";
 "Successfully exported data to Health" = "Successfully exported data to Health";
 "Export to Health" = "Export to Health";
-"Do you really want to export the extended carbs to Health?" = "Do you really want to export the extended carbs to Health?";
 "Export" = "Export to Apple Health";
 "Error requesting authorization to write to Health: " = "Error requesting authorization to write to Health: ";
 "Please choose the data to export:" = "Please choose the data to export:";
-"If you're using the Loop app for your diabetes pump therapy, the recommendation is to only export extended carbs." = "If you're using the Loop app for your diabetes pump therapy, the recommendation is to only export extended carbs.";
 "Total Meal Carbs" = "Total Meal Carbs";
 "Total Meal Calories" = "Total Meal Calories";
 "Please select at least one entry to export" = "Please select at least one entry to export";
 "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks";
+"Preview of exported carbs in g" = "Preview of exported carbs in g";
