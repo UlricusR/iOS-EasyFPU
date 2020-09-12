@@ -90,11 +90,12 @@ struct ChartBar: View {
             }
             
             Text(ChartBar.timeStyle.string(from: entry.date))
+                .fixedSize()
+                .layoutPriority(1)
                 .font(.footnote)
                 .rotationEffect(.degrees(-90))
                 .offset(y: 10)
                 .frame(height: 50)
-                .multilineTextAlignment(.trailing)
                 .lineLimit(1)
         }.frame(width: 30)
     }
