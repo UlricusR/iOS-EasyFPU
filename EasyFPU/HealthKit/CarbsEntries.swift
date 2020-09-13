@@ -149,35 +149,39 @@ class CarbsEntries: ObservableObject {
     private func getCarbRegime() -> [(Date, Double)] {
         var carbsRegime = [(Date, Double)]()
         
+        // The first entry is either the total meal carbs or zero, if e-carbs are included
         if includeTotalMealCarbs {
             carbsRegime.append((now, meal.carbs))
-            if includeECarbs {
-                let numberOfDelaySegments = Int((UserSettings.shared.absorptionTimeLongDelay / UserSettings.shared.absorptionTimeLongInterval).rounded(.up)) - 1
-                if numberOfDelaySegments <= 3 {
-                    // We don't need to split the x axis, as there are sufficiently few delay segments
-                    timeSplittingAfterIndex = -1
-                    if numberOfDelaySegments > 0 {
-                        for index in (1...numberOfDelaySegments) {
-                            carbsRegime.append((now.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * Double(index) * 60), 0.0))
-                        }
+        } else if includeECarbs {
+            carbsRegime.append((now, 0.0))
+        }
+        
+        if includeECarbs {
+            // Append the delay entries
+            let numberOfDelaySegments = Int((UserSettings.shared.absorptionTimeLongDelay / UserSettings.shared.absorptionTimeLongInterval).rounded(.up)) - 1
+            if numberOfDelaySegments <= 3 {
+                // We don't need to split the x axis, as there are sufficiently few delay segments
+                timeSplittingAfterIndex = -1
+                if numberOfDelaySegments > 0 {
+                    for index in (1...numberOfDelaySegments) {
+                        carbsRegime.append((now.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * Double(index) * 60), 0.0))
                     }
-                } else {
-                    // We need to split the time axis
-                    timeSplittingAfterIndex = 1
-                    
-                    // Add one delay segment after the total meal carbs, one before e-carbs entries start
-                    carbsRegime.append((now.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * 60), 0.0))
-                    carbsRegime.append((eCarbsStart.addingTimeInterval(-UserSettings.shared.absorptionTimeLongInterval * 60), 0.0))
                 }
             } else {
-                timeSplittingAfterIndex = -1
+                // We need to split the time axis
+                timeSplittingAfterIndex = 1
+                
+                // Add one delay segment after the total meal carbs, one before e-carbs entries start
+                carbsRegime.append((now.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * 60), 0.0))
+                carbsRegime.append((eCarbsStart.addingTimeInterval(-UserSettings.shared.absorptionTimeLongInterval * 60), 0.0))
+            }
+            
+            // Append the e-carbs entries
+            for index in (0..<eCarbEntries.count) {
+                carbsRegime.append((eCarbsStart.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * Double(index) * 60), eCarbEntries[index]))
             }
         } else {
             timeSplittingAfterIndex = -1
-        }
-        
-        for index in (0..<eCarbEntries.count) {
-            carbsRegime.append((eCarbsStart.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * Double(index) * 60), eCarbEntries[index]))
         }
         
         return carbsRegime
