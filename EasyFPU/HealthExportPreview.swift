@@ -12,16 +12,29 @@ struct HealthExportPreview: View {
     @ObservedObject var carbsEntries: CarbsEntries
     
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack {
-                ForEach(0..<self.carbsEntries.carbsRegime.count, id: \.self) { index in
-                    ChartBar(carbsEntries: self.carbsEntries, entry: self.carbsEntries.carbsRegime[index], requiresTimeSplitting: index == self.carbsEntries.timeSplittingAfterIndex)
+        GeometryReader { reader in
+            ZStack {
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(0..<self.carbsEntries.carbsRegime.count, id: \.self) { index in
+                            ChartBar(carbsEntries: self.carbsEntries, entry: self.carbsEntries.carbsRegime[index], requiresTimeSplitting: index == self.carbsEntries.timeSplittingAfterIndex)
+                        }
+                    }
+                    .padding()
+                    .animation(.interactiveSpring())
                 }
-            }
-            .padding()
-            .animation(.interactiveSpring())
+                
+                Rectangle()
+                    .fill(
+                        LinearGradient(gradient: Gradient(stops: [
+                            .init(color: Color(UIColor.systemBackground).opacity(0.01), location: 0),
+                            .init(color: Color(UIColor.systemBackground), location: 1)
+                        ]), startPoint: .leading, endPoint: .trailing)
+                    )
+                    .frame(width: 0.05 * reader.size.width)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+            }.fixedSize(horizontal: false, vertical: true)
         }
-        .frame(height: CGFloat(carbsEntries.previewHeight + 80))
         .onAppear() {
             self.carbsEntries.fitCarbChartBars()
         }
