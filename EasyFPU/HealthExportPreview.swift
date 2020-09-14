@@ -89,7 +89,7 @@ struct ChartBar: View {
                         .fill(Color(UIColor.systemBackground))
                         .frame(width: 20, height: 5)
                         .padding([.bottom, .top], 1.0)
-                        .background(Color.black)
+                        .background(Color.primary)
                         .rotationEffect(.degrees(80))
                         .offset(x: 20)
                         .zIndex(1)
