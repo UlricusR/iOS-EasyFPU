@@ -12,12 +12,12 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable {
     var id = UUID()
     @Published var amountAsString: String {
         willSet {
-            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, allowZero: false)
+            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
             switch result {
             case .success(let amount):
                 self.amount = amount
             case .failure(let err):
-                debugPrint(FoodItemViewModel.getErrorMessage(from: err))
+                debugPrint(DataHelper.getErrorMessage(from: err))
                 return
             }
         }
@@ -41,12 +41,12 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable {
         self.comment = comment
         
         // Check for valid amount
-        let result = FoodItemViewModel.checkForPositiveInt(valueAsString: amountAsString, allowZero: false)
+        let result = DataHelper.checkForPositiveInt(valueAsString: amountAsString, allowZero: false)
         switch result {
         case .success(let amount):
             self.amount = amount
         case .failure(let err):
-            errorMessage = FoodItemViewModel.getErrorMessage(from: err)
+            errorMessage = DataHelper.getErrorMessage(from: err)
             return nil
         }
         self.amountAsString = amountAsString

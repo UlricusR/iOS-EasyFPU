@@ -241,8 +241,8 @@ struct AbsorptionSchemeEditor: View {
         }
         
         // Reset absorption time delay and interval
-        draftAbsorptionScheme.delayAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault))!
-        draftAbsorptionScheme.intervalAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault))!
+        draftAbsorptionScheme.delayAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault))!
+        draftAbsorptionScheme.intervalAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault))!
         
         // Notify change
         draftAbsorptionScheme.objectWillChange.send()

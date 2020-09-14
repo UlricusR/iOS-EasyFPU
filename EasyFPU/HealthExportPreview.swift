@@ -55,7 +55,7 @@ struct ChartBar: View {
     var body: some View {
         VStack {
             Spacer()
-            Text(FoodItemViewModel.doubleFormatter(numberOfDigits: entry.carbs >= 100 ? 0 : (entry.carbs >= 10 ? 1 : 2)).string(from: NSNumber(value: entry.carbs))!)
+            Text(DataHelper.doubleFormatter(numberOfDigits: entry.carbs >= 100 ? 0 : (entry.carbs >= 10 ? 1 : 2)).string(from: NSNumber(value: entry.carbs))!)
                 .font(.footnote)
                 .rotationEffect(.degrees(-90))
                 .offset(y: self.carbsEntries.appliedMultiplier * entry.carbs <= 40 ? 0 : 40)

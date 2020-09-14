@@ -113,7 +113,7 @@ struct FoodList: View {
                                             HStack {
                                                 VStack {
                                                     HStack {
-                                                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
+                                                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
                                                         Text("g")
                                                     }
                                                     Text("Carbs").font(.caption).multilineTextAlignment(.center)
@@ -121,7 +121,7 @@ struct FoodList: View {
                                                 
                                                 VStack {
                                                     HStack {
-                                                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
+                                                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
                                                         Text("g")
                                                     }
                                                     Text("Extended Carbs").font(.caption).multilineTextAlignment(.center)
@@ -137,7 +137,7 @@ struct FoodList: View {
                                             }
                                             
                                             HStack {
-                                                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelay))!)
+                                                Text(DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelay))!)
                                                 Text("min")
                                             }.padding(.top)
                                             Text("Delay of Extended Carbs").font(.caption).multilineTextAlignment(.center)

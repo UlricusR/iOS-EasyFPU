@@ -13,12 +13,12 @@ class AbsorptionSchemeViewModel: ObservableObject {
     private(set) var delay: Double = AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault
     @Published var delayAsString = "" {
         willSet {
-            let result = FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue, allowZero: true)
+            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: true)
             switch result {
             case .success(let value):
                 self.delay = value
             case .failure(let err):
-                debugPrint(FoodItemViewModel.getErrorMessage(from: err))
+                debugPrint(DataHelper.getErrorMessage(from: err))
                 return
             }
         }
@@ -26,12 +26,12 @@ class AbsorptionSchemeViewModel: ObservableObject {
     private(set) var interval: Double = AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
     @Published var intervalAsString = "" {
         willSet {
-            let result = FoodItemViewModel.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
+            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
             switch result {
             case .success(let value):
                 self.interval = value
             case .failure(let err):
-                debugPrint(FoodItemViewModel.getErrorMessage(from: err))
+                debugPrint(DataHelper.getErrorMessage(from: err))
                 return
             }
         }
@@ -51,11 +51,11 @@ class AbsorptionSchemeViewModel: ObservableObject {
         
         let delay = UserSettings.shared.absorptionTimeLongDelay
         self.delay = delay
-        self.delayAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delay))!
+        self.delayAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delay))!
         
         let interval = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
         self.interval = interval
-        self.intervalAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: interval))!
+        self.intervalAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: interval))!
     }
     
     func add(newAbsorptionBlock: AbsorptionBlockViewModel, errorMessage: inout String) -> Bool {

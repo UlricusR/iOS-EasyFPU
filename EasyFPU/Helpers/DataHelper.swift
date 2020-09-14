@@ -10,7 +10,14 @@ import Foundation
 import UIKit
 import MobileCoreServices
 
+enum InvalidNumberError: Error {
+    case inputError(String)
+}
+
 class DataHelper {
+    
+    // MARK: - Reading the default absorption block JSON
+    
     static func loadDefaultAbsorptionBlocks(errorMessage: inout String) -> [AbsorptionBlockFromJson]? {
         // Load default absorption scheme
         let absorptionSchemeDefaultFile = "absorptionscheme_default.json"
@@ -38,6 +45,8 @@ class DataHelper {
         }
     }
     
+    // MARK: - Exporting food items as JSON
+    
     static func exportFoodItems(_ dir: URL, fileName: inout String) -> Bool {
         let cdFoodItems = FoodItem.fetchAll()
         var foodItems = [FoodItemViewModel]()
@@ -55,6 +64,42 @@ class DataHelper {
         } catch {
             debugPrint(error)
             return false
+        }
+    }
+    
+    // MARK: - Data checker and formatter
+    
+    static func doubleFormatter(numberOfDigits: Int) -> NumberFormatter {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = numberOfDigits
+        return numberFormatter
+    }
+    
+    static func checkForPositiveDouble(valueAsString: String, allowZero: Bool) -> Result<Double, InvalidNumberError> {
+        guard let valueAsNumber = DataHelper.doubleFormatter(numberOfDigits: 5).number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
+            return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
+        }
+        guard allowZero ? valueAsNumber.doubleValue >= 0.0 : valueAsNumber.doubleValue > 0.0 else {
+            return .failure(.inputError(NSLocalizedString(allowZero ? "Value must not be negative" : "Value must not be zero or negative", comment: "")))
+        }
+        return .success(valueAsNumber.doubleValue)
+    }
+    
+    static func checkForPositiveInt(valueAsString: String, allowZero: Bool) -> Result<Int, InvalidNumberError> {
+        guard let valueAsNumber = NumberFormatter().number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
+            return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
+        }
+        guard allowZero ? valueAsNumber.intValue >= 0 : valueAsNumber.intValue > 0 else {
+            return .failure(.inputError(NSLocalizedString(allowZero ? "Value must not be negative" : "Value must not be zero or negative", comment: "")))
+        }
+        return .success(valueAsNumber.intValue)
+    }
+    
+    static func getErrorMessage(from error: InvalidNumberError) -> String {
+        switch error {
+        case .inputError(let errorMessage):
+            return errorMessage
         }
     }
 }

@@ -105,7 +105,7 @@ struct FoodItemSelector: View {
                         self.addTypicalAmount()
                     }
                     
-                    let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
+                    let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
                     switch amountResult {
                     case .success(let amountAsInt):
                         self.editedFoodItem.amount = Int64(amountAsInt)
@@ -117,7 +117,7 @@ struct FoodItemSelector: View {
                         self.isPresented = false
                     case .failure(let err):
                         // Display alert and stay in edit mode
-                        self.errorMessage = FoodItemViewModel.getErrorMessage(from: err)
+                        self.errorMessage = DataHelper.getErrorMessage(from: err)
                         self.showingAlert = true
                     }
                 }) {
@@ -169,7 +169,7 @@ struct NumberButton: View {
     var body: some View {
         Button(action: {
             let newValue = self.draftFoodItem.amount + self.number
-            self.draftFoodItem.amountAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
+            self.draftFoodItem.amountAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
         }) {
             Text("+\(self.number)")
         }
