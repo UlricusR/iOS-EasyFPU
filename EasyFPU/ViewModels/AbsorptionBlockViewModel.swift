@@ -12,24 +12,24 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
     var id = UUID()
     @Published var maxFpuAsString: String {
         willSet {
-            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, allowZero: false)
+            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
             switch result {
             case .success(let maxFpu):
                 self.maxFpu = maxFpu
             case .failure(let err):
-                debugPrint(FoodItemViewModel.getErrorMessage(from: err))
+                debugPrint(DataHelper.getErrorMessage(from: err))
                 return
             }
         }
     }
     var absorptionTimeAsString: String {
         willSet {
-            let result = FoodItemViewModel.checkForPositiveInt(valueAsString: newValue, allowZero: false)
+            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
             switch result {
             case .success(let absorptionTime):
                 self.absorptionTime = absorptionTime
             case .failure(let err):
-                debugPrint(FoodItemViewModel.getErrorMessage(from: err))
+                debugPrint(DataHelper.getErrorMessage(from: err))
                 return
             }
         }
@@ -55,23 +55,23 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
     
     init?(maxFpuAsString: String, absorptionTimeAsString: String, errorMessage: inout String) {
         // Check for valid max fpu
-        let resultMaxFpu = FoodItemViewModel.checkForPositiveInt(valueAsString: maxFpuAsString, allowZero: false)
+        let resultMaxFpu = DataHelper.checkForPositiveInt(valueAsString: maxFpuAsString, allowZero: false)
         switch resultMaxFpu {
         case .success(let maxFpu):
             self.maxFpu = maxFpu
         case .failure(let err):
-            errorMessage = FoodItemViewModel.getErrorMessage(from: err)
+            errorMessage = DataHelper.getErrorMessage(from: err)
             return nil
         }
         self.maxFpuAsString = maxFpuAsString
         
         // Check for valid absorption time
-        let resultAbsorptionTime = FoodItemViewModel.checkForPositiveInt(valueAsString: absorptionTimeAsString, allowZero: false)
+        let resultAbsorptionTime = DataHelper.checkForPositiveInt(valueAsString: absorptionTimeAsString, allowZero: false)
         switch resultAbsorptionTime {
         case .success(let absorptionTime):
             self.absorptionTime = absorptionTime
         case .failure(let err):
-            errorMessage = FoodItemViewModel.getErrorMessage(from: err)
+            errorMessage = DataHelper.getErrorMessage(from: err)
             return nil
         }
         self.absorptionTimeAsString = absorptionTimeAsString
@@ -96,6 +96,6 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
     }
     
     static func == (lhs: AbsorptionBlockViewModel, rhs: AbsorptionBlockViewModel) -> Bool {
-        lhs.id == rhs.id
+        lhs.absorptionTime == rhs.absorptionTime && lhs.maxFpu == rhs.maxFpu
     }
 }

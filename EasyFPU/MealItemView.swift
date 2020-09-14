@@ -10,10 +10,17 @@ import SwiftUI
 
 struct MealItemView: View {
     var foodItem: FoodItemViewModel
-    var absorptionScheme: AbsorptionScheme
+    @ObservedObject var absorptionScheme: AbsorptionScheme
     var fontSizeName: Font?
     var fontSizeDetails: Font?
     var foregroundColorName: Color?
+    var absorptionTimeAsString: String {
+        if foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
+            return NumberFormatter().string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+        } else {
+            return "..."
+        }
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -25,27 +32,27 @@ struct MealItemView: View {
             }.foregroundColor(foregroundColorName)
             // Calories
             HStack {
-                Text(foodItem.caloriesAsString).font(fontSizeDetails)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getCalories()))!).font(fontSizeDetails)
                 Text("kcal").font(fontSizeDetails)
             }
             // Carbs
             HStack {
-                Text(foodItem.carbsAsString).font(fontSizeDetails)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getCarbs()))!).font(fontSizeDetails)
                 Text("g Carbs").font(fontSizeDetails)
             }
             // FPU
             HStack {
-                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().fpu))!).font(fontSizeDetails)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().fpu))!).font(fontSizeDetails)
                 Text("FPU").font(fontSizeDetails)
             }
             // Extended carbs
             HStack {
-                Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().getExtendedCarbs()))!).font(fontSizeDetails)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().getExtendedCarbs()))!).font(fontSizeDetails)
                 Text("g Extended Carbs").font(fontSizeDetails)
             }
             // Absorption time
             HStack {
-                Text(NumberFormatter().string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme)))!).font(fontSizeDetails)
+                Text(self.absorptionTimeAsString).font(fontSizeDetails)
                 Text("h Absorption Time").font(fontSizeDetails)
             }
         }

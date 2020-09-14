@@ -16,6 +16,8 @@ class MealViewModel {
     var fpus: FPU = FPU(fpu: 0.0)
     var foodItems = [FoodItemViewModel]()
     
+    static let `default` = MealViewModel(name: "Default")
+    
     init(name: String) {
         self.name = name
     }

@@ -27,83 +27,98 @@ struct AbsorptionSchemeEditor: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                // The list of absorption blocks
-                List {
-                    Text("Tap to edit, swipe left to delete").font(.caption)
-                    ForEach(draftAbsorptionScheme.absorptionBlocks, id: \.self) { absorptionBlock in
-                        HStack {
-                            Text(absorptionBlock.maxFpuAsString)
-                            Text("FPU -")
-                            Text(absorptionBlock.absorptionTimeAsString)
-                            Text("h")
+            Form {
+                Section(header: Text("Absorption Blocks")) {
+                    // The list of absorption blocks
+                    List {
+                        Text("Tap to edit, swipe left to delete").font(.caption)
+                        ForEach(draftAbsorptionScheme.absorptionBlocks, id: \.self) { absorptionBlock in
+                            HStack {
+                                Text(absorptionBlock.maxFpuAsString)
+                                Text("FPU -")
+                                Text(absorptionBlock.absorptionTimeAsString)
+                                Text("h")
+                            }
+                            .onTapGesture {
+                                self.newMaxFpu = absorptionBlock.maxFpuAsString
+                                self.newAbsorptionTime = absorptionBlock.absorptionTimeAsString
+                                self.newAbsorptionBlockId = absorptionBlock.id
+                                self.updateButton = true
+                            }
                         }
-                        .onTapGesture {
-                            self.newMaxFpu = absorptionBlock.maxFpuAsString
-                            self.newAbsorptionTime = absorptionBlock.absorptionTimeAsString
-                            self.newAbsorptionBlockId = absorptionBlock.id
-                            self.updateButton = true
-                        }
+                        .onDelete(perform: deleteAbsorptionBlock)
                     }
-                    .onDelete(perform: deleteAbsorptionBlock)
                 }
                 
                 // The absorption block add/edit form
-                Form {
-                    Section(header: self.updateButton ? Text("Edit absorption block:") : Text("New absorption block:")) {
-                        HStack {
-                            TextField("Max. FPUs", text: $newMaxFpu).keyboardType(.decimalPad)
-                            Text("FPU -")
-                            TextField("Absorption time", text: $newAbsorptionTime).keyboardType(.decimalPad)
-                            Button(action: {
-                                if self.newAbsorptionBlockId == nil { // This is a new absorption block
-                                    if let newAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, errorMessage: &self.errorMessage) {
-                                        // Check validity of new absorption block
-                                        if self.draftAbsorptionScheme.add(newAbsorptionBlock: newAbsorptionBlock, errorMessage: &self.errorMessage) {
-                                            // Reset text fields
-                                            self.newMaxFpu = ""
-                                            self.newAbsorptionTime = ""
-                                            self.updateButton = false
-                                            
-                                            // Broadcast change
-                                            self.draftAbsorptionScheme.objectWillChange.send()
-                                        } else {
-                                            self.showingAlert = true
-                                        }
+                Section(header: self.updateButton ? Text("Edit absorption block:") : Text("New absorption block:")) {
+                    HStack {
+                        TextField("Max. FPUs", text: $newMaxFpu).keyboardType(.decimalPad)
+                        Text("FPU -")
+                        TextField("Absorption time", text: $newAbsorptionTime).keyboardType(.decimalPad)
+                        Button(action: {
+                            if self.newAbsorptionBlockId == nil { // This is a new absorption block
+                                if let newAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, errorMessage: &self.errorMessage) {
+                                    // Check validity of new absorption block
+                                    if self.draftAbsorptionScheme.add(newAbsorptionBlock: newAbsorptionBlock, errorMessage: &self.errorMessage) {
+                                        // Reset text fields
+                                        self.newMaxFpu = ""
+                                        self.newAbsorptionTime = ""
+                                        self.updateButton = false
+                                        
+                                        // Broadcast change
+                                        self.draftAbsorptionScheme.objectWillChange.send()
                                     } else {
                                         self.showingAlert = true
                                     }
-                                } else { // This is an existing typical amount
-                                    guard let index = self.draftAbsorptionScheme.absorptionBlocks.firstIndex(where: { $0.id == self.newAbsorptionBlockId }) else {
-                                        self.errorMessage = NSLocalizedString("Fatal error: Could not identify absorption block", comment: "")
+                                } else {
+                                    self.showingAlert = true
+                                }
+                            } else { // This is an existing typical amount
+                                guard let index = self.draftAbsorptionScheme.absorptionBlocks.firstIndex(where: { $0.id == self.newAbsorptionBlockId }) else {
+                                    self.errorMessage = NSLocalizedString("Fatal error: Could not identify absorption block", comment: "")
+                                    self.showingAlert = true
+                                    return
+                                }
+                                let existingAbsorptionBlock = self.draftAbsorptionScheme.absorptionBlocks[index]
+                                self.draftAbsorptionScheme.absorptionBlocks.remove(at: index)
+                                if let updatedAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, errorMessage: &self.errorMessage) {
+                                    if self.draftAbsorptionScheme.add(newAbsorptionBlock: updatedAbsorptionBlock, errorMessage: &self.errorMessage) {
+                                        // Add old absorption block to the list of blocks to be deleted
+                                        self.absorptionBlocksToBeDeleted.append(existingAbsorptionBlock)
+                                        
+                                        // Reset text fields
+                                        self.newMaxFpu = ""
+                                        self.newAbsorptionTime = ""
+                                        self.updateButton = false
+                                        
+                                        // Broadcast change
+                                        self.draftAbsorptionScheme.objectWillChange.send()
+                                    } else {
+                                        // Undo deletion of block and show alert
+                                        self.draftAbsorptionScheme.absorptionBlocks.insert(existingAbsorptionBlock, at: index)
                                         self.showingAlert = true
-                                        return
-                                    }
-                                    let existingAbsorptionBlock = self.draftAbsorptionScheme.absorptionBlocks[index]
-                                    self.draftAbsorptionScheme.absorptionBlocks.remove(at: index)
-                                    if let updatedAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, errorMessage: &self.errorMessage) {
-                                        if self.draftAbsorptionScheme.add(newAbsorptionBlock: updatedAbsorptionBlock, errorMessage: &self.errorMessage) {
-                                            // Add old absorption block to the list of blocks to be deleted
-                                            self.absorptionBlocksToBeDeleted.append(existingAbsorptionBlock)
-                                            
-                                            // Reset text fields
-                                            self.newMaxFpu = ""
-                                            self.newAbsorptionTime = ""
-                                            self.updateButton = false
-                                            
-                                            // Broadcast change
-                                            self.draftAbsorptionScheme.objectWillChange.send()
-                                        } else {
-                                            // Undo deletion of block and show alert
-                                            self.draftAbsorptionScheme.absorptionBlocks.insert(existingAbsorptionBlock, at: index)
-                                            self.showingAlert = true
-                                        }
                                     }
                                 }
-                            }) {
-                                Image(systemName: self.updateButton ? "checkmark.circle" : "plus.circle").foregroundColor(self.updateButton ? .yellow : .green)
                             }
+                        }) {
+                            Image(systemName: self.updateButton ? "checkmark.circle" : "plus.circle").foregroundColor(self.updateButton ? .yellow : .green)
                         }
+                    }
+                }
+                
+                    
+                Section(header: Text("Absorption Time Parameters")) {
+                    HStack {
+                        Text("Delay")
+                        TextField("Delay", text: $draftAbsorptionScheme.delayAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        Text("min")
+                    }
+                    
+                    HStack {
+                        Text("Interval")
+                        TextField("Interval", text: $draftAbsorptionScheme.intervalAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        Text("min")
                     }
                 }
                 
@@ -156,11 +171,23 @@ struct AbsorptionSchemeEditor: View {
                         // Reset typical amounts to be deleted
                         self.absorptionBlocksToBeDeleted.removeAll()
                         
-                        // Save new food item
+                        // Save new absorption blocks
                         try? AppDelegate.viewContext.save()
                         
-                        // Close sheet
-                        self.isPresented = false
+                        // Save new user settings
+                        if !(
+                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.delay, UserSettings.UserDefaultsDoubleKey.absorptionTimeLongDelay), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.interval, UserSettings.UserDefaultsDoubleKey.absorptionTimeLongInterval), errorMessage: &self.errorMessage)) {
+                            self.showingAlert = true
+                        } else {
+                            // Set the dynamic user parameters and broadcast change
+                            UserSettings.shared.absorptionTimeLongDelay = self.draftAbsorptionScheme.delay
+                            UserSettings.shared.absorptionTimeLongInterval = self.draftAbsorptionScheme.interval
+                            UserSettings.shared.objectWillChange.send()
+                            
+                            // Close sheet
+                            self.isPresented = false
+                        }
                     }) {
                         // Quit edit mode
                         Text("Done")
@@ -201,6 +228,7 @@ struct AbsorptionSchemeEditor: View {
     }
     
     func resetToDefaults() {
+        // Reset absorption blocks
         guard let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) else {
             self.showingAlert = true
             return
@@ -212,6 +240,11 @@ struct AbsorptionSchemeEditor: View {
             let _ = draftAbsorptionScheme.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock), errorMessage: &errorMessage)
         }
         
+        // Reset absorption time delay and interval
+        draftAbsorptionScheme.delayAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault))!
+        draftAbsorptionScheme.intervalAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault))!
+        
+        // Notify change
         draftAbsorptionScheme.objectWillChange.send()
     }
 }

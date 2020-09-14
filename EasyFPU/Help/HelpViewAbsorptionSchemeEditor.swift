@@ -34,6 +34,10 @@ struct HelpViewAbsorptionSchemeEditor: View {
 
                 Text("Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above.").padding()
             }
+            
+            Text("Furthermore you may modify the delay for the extended carbs, i.e. the time your body will need to digest your meal before the extended carbs from fat and protein start to be effective. Recommendation and default is 90 minutes.").padding()
+            
+            Text("Finally, the interval parameter will be used to determine the time interval between each extended carb entry in Apple Health. Default is 10 minutes. Please see the help pages of the meal export view for further details.").padding()
         }
     }
 }

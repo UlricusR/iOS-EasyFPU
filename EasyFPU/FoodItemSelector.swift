@@ -51,27 +51,9 @@ struct FoodItemSelector: View {
                             HStack {
                                 TextField("Comment", text: self.$newTypicalAmountComment)
                                 Button(action: {
-                                    if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.draftFoodItem.amountAsString, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
-                                        // Add new typical amount to typical amounts of food item
-                                        self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
-                                        
-                                        // Reset text fields
-                                        self.newTypicalAmountComment = ""
-                                        
-                                        // Update food item in core data, save and broadcast changed object
-                                        let newCoreDataTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-                                        newTypicalAmount.cdTypicalAmount = newCoreDataTypicalAmount
-                                        let _ = newTypicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem)
-                                        self.editedFoodItem.addToTypicalAmounts(newCoreDataTypicalAmount)
-                                        try? AppDelegate.viewContext.save()
-                                        self.draftFoodItem.objectWillChange.send()
-                                        
-                                        self.addToTypicalAmounts = false
-                                    } else {
-                                        self.showingAlert = true
-                                    }
+                                    self.addTypicalAmount()
                                 }) {
-                                    Image(systemName: "checkmark.circle").foregroundColor(.yellow)
+                                    Image(systemName: "plus.circle").foregroundColor(.green)
                                 }
                             }
                         } else {
@@ -118,7 +100,12 @@ struct FoodItemSelector: View {
                     }.padding()
                 },
                 trailing: Button(action: {
-                    let amountResult = FoodItemViewModel.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
+                    // First check for unsaved typical amount
+                    if self.addToTypicalAmounts {
+                        self.addTypicalAmount()
+                    }
+                    
+                    let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
                     switch amountResult {
                     case .success(let amountAsInt):
                         self.editedFoodItem.amount = Int64(amountAsInt)
@@ -130,7 +117,7 @@ struct FoodItemSelector: View {
                         self.isPresented = false
                     case .failure(let err):
                         // Display alert and stay in edit mode
-                        self.errorMessage = FoodItemViewModel.getErrorMessage(from: err)
+                        self.errorMessage = DataHelper.getErrorMessage(from: err)
                         self.showingAlert = true
                     }
                 }) {
@@ -150,6 +137,28 @@ struct FoodItemSelector: View {
             HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
         }
     }
+    
+    private func addTypicalAmount() {
+        if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.draftFoodItem.amountAsString, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
+            // Add new typical amount to typical amounts of food item
+            self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
+            
+            // Reset text fields
+            self.newTypicalAmountComment = ""
+            
+            // Update food item in core data, save and broadcast changed object
+            let newCoreDataTypicalAmount = TypicalAmount(context: self.managedObjectContext)
+            newTypicalAmount.cdTypicalAmount = newCoreDataTypicalAmount
+            let _ = newTypicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem)
+            self.editedFoodItem.addToTypicalAmounts(newCoreDataTypicalAmount)
+            try? AppDelegate.viewContext.save()
+            self.draftFoodItem.objectWillChange.send()
+            
+            self.addToTypicalAmounts = false
+        } else {
+            self.showingAlert = true
+        }
+    }
 }
 
 struct NumberButton: View {
@@ -160,7 +169,7 @@ struct NumberButton: View {
     var body: some View {
         Button(action: {
             let newValue = self.draftFoodItem.amount + self.number
-            self.draftFoodItem.amountAsString = FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
+            self.draftFoodItem.amountAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
         }) {
             Text("+\(self.number)")
         }

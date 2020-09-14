@@ -19,7 +19,7 @@ class FPU {
         fpu * 10
     }
     
-    func getAbsorptionTime(absorptionScheme: AbsorptionScheme) -> Int {
+    func getAbsorptionTime(absorptionScheme: AbsorptionScheme) -> Int? {
         absorptionScheme.getAbsorptionTime(fpus: fpu)
     }
 }

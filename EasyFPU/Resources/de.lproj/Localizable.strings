@@ -35,13 +35,13 @@
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";
-"The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "Die Essensliste ist absichtlich leer, denn jeder hat eigene FPE-relevanten Lieblingsessen.";
+"The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "Die Essensliste ist absichtlich leer, denn jeder hat eigene FPE-relevante Lieblingsessen.";
 "To add a new food item, tap on the large Plus button in the top right corner to add a new food item." = "Drücken Sie den großen, grünen Plus-Knopf, um ein neues Essen hinzuzufügen.";
 "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "Sobald Ihre Essensliste ein oder mehrere Essen beinhaltet, können Sie eine Mahlzeit zusammenstellen. Drücken Sie dazu kurz auf ein Essen. Dies öffnet den Dialog zur Eingabe der gegessenen Menge.";
 "A green Plus icon indicates that the food item has not yet been selected." = "Ein grünes Plus-Zeichen zeigt an, dass das Essen noch nicht zu einer Mahlzeit hinzugefügt wurde.";
-"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "Ein rotes Kreuz zeigt an, dass das Essen ausgewählt wurde. Es wird nun bei der Berechnung der Gesamtmahlzeit berücksichtigt. Drücken Sie ein weiteres Mal kurz auf das Essen, um es wieder aus der Mahlzeit auszuschließen.";
+"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "Ein rotes Kreuz zeigt an, dass das Essen ausgewählt wurde. Es wird nun bei der Berechnung der Gesamtmahlzeit berücksichtigt. Drücken Sie ein weiteres Mal kurz auf das Essen, um es wieder aus der Mahlzeit zu entfernen.";
 "In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen." = "Haben Sie mindestens ein Essen ausgewählt, werden die wichtigsten Nährwerte der Gesamtmahlzeit am unteren Rand der Ansicht in roter Schrift angezeigt.";
-"Tapping the summary will open the Meal Details view." = "Drücken Sie auf die Zusammenfassung der Nährwerte, um weitere Details zu sehen.";
+"Tapping the summary will open the Meal Details view." = "Drücken Sie auf die Zusammenfassung der Nährwerte, um weitere Details zu sehen oder die Nährwerte nach Apple Health zu exportieren.";
 
 // Select Food Item help
 "Select Food Item" = "Essen auswählen";
@@ -50,7 +50,7 @@
 "2. You use the green number fields to add to the amount already displayed in the text field." = "Sie nutzen die grünen Zahlenfelder, um die darauf abgebildete Menge der existierenden Menge hinzuzufügen.";
 "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value." = "Sollten Sie bereits typische Mengen für das Essen angelegt haben, können Sie diese aus der angezeigten Liste auswählen. Diese Auswahl überschreibt die aktuell angezeigte Menge.";
 "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment." = "Sie können die aktuell angezeigte Menge auch als neue typische Menge abspeichern, indem Sie 'Zu typischen Mengen hinzufügen' antippen. Sie werden dann nach einem Kommentar zu dieser Menge gebeten.";
-"Save the typical amount by confirming with the yellow checkmark." = "Speichern Sie die neue typische Menge, indem Sie die Eingabe mit dem gelben Haken bestätigen.";
+"Save the typical amount by confirming with the green plus." = "Speichern Sie die neue typische Menge, indem Sie die Eingabe mit dem grünen Plus bestätigen.";
 "Use the food item editor to maintain existing typical amounts." = "Um existierende typische Mengen zu bearbeiten, nutzen Sie bitte den Dialog zum Bearbeiten eines Essens.";
 
 // Food Item Editor help
@@ -64,6 +64,7 @@
 "A good source for nutritional values (calories and carbs per 100g) is:" = "Eine gute Quelle für Nährwerte (Kalorien und Kohlenhydrate pro 100g) ist:";
 "Link-text-to-nutritional-values" = "FDDB.info";
 "Link-URL-to-nutritional-values" = "https://fddb.info/";
+"Delete the food item by tapping the link on the bottom of the view." = "Löschen Sie das Essen, indem Sie den Link am unteren Rand der Ansicht antippen.";
 
 // Meal Details help
 "Meal Details" = "Details zur Mahlzeit";
@@ -75,6 +76,8 @@
 "- The amount of Food Protein Units" = "- Die Fett-Protein-Einheiten";
 "- The corresponding amount of extended carbs in grams" = "- Die zugehörigen verlängerten Kohlenhydrate in Gramm";
 "- The corresponding absorption time" = "- Die entsprechende Absorptionszeit";
+"- The recommended delay for the extended carbs to start" = "- Die empfohlene Verzögerung der Wirksamkeit der verlängerten Kohlenhydrate";
+"You may export the extended carbs to the Apple Health app" = "Sie können die verlängerten Kohlenhydrate in die Apple Health App exportieren, wenn Apple Health auf Ihrem Gerät zur Verfügung steht.";
 "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Unter der Gesamtmahlzeit werden die gleichen Werte für die individuellen Essen dargestellt, die zur Berechnung der Gesamtmahlzeit herangezogen wurden.";
 
 // Absorption scheme help
@@ -91,7 +94,23 @@
 "Step 3: Substract the calories caused by carbs from the total calories, e.g.: 179 kcal - 49 kcal = 130 kcal" = "Schritt 3: Subtraktion der Kalorien aus Kohlenhydraten von den Gesamtkalorien, z.B.: 179 kcal - 49 kcal = 130 kcal";
 "Step 4: As 100 kcal represent 1 FPU, this results in 1.3 FPUs respectively 13g of extended carbs." = "Schritt 4: Da 100 kcal einer 1 FPE entsprechen, führt das zu 1,3 FPE bzw. 13g verlängerten Kohlenhydraten.";
 "Step 5: The FPUs will be rounded, in our example to 1 FPU, and the absorption time will be looked up, in our example 3 hours." = "Schritt 5: Die FPE werden gerundet (in unserem Beispiel auf 1 FPE) und die Absorptionszeit im Absorptionsschema nachgeschlagen (in unserem Beispiel 3 Stunden).";
-"Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above." = "Es wird nur erfahrenen Benutzern mit guter Kenntnis der diabetologieschen Konsequenzen empfohlen, das Absorptionsschema anzupassen. Es kann jedoch jederzeit auf das voreingestellte Schema zurückgesetzt werden.";
+"Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above." = "Es wird nur erfahrenen Benutzern mit guter Kenntnis der diabetologischen Konsequenzen empfohlen, das Absorptionsschema anzupassen. Es kann jedoch jederzeit auf das voreingestellte Schema zurückgesetzt werden.";
+"Furthermore you may modify the delay for the extended carbs, i.e. the time your body will need to digest your meal before the extended carbs from fat and protein start to be effective. Recommendation and default is 90 minutes." = "Sie können außerdem die Verzögerung der verlängerten Kohlenhydrate einstellen, d.h. die Zeit, die Ihr Körper für die Verdauung benötigt, bevor die Kohlenhydrate aus Fett und Protein wirksam werden. Empfehlung und Voreinstellung ist 90 Minuten.";
+"Finally, the interval parameter will be used to determine the time interval between each extended carb entry in Apple Health. Default is 10 minutes. Please see the help pages of the meal export view for further details." = "Der Intervall-Parameter legt den Zeitraum zwischen den einzelnen Kohlenhydrat-Einträgen beim Export nach Apple Health fest. Voreinstellung ist 10 Minuten. Mehr dazu auf der Hilfe-Seite der Export-Ansicht.";
+
+// Health export help
+"You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "Sie können Nährwerte nach Apple Health exportieren. Wählen Sie die entsprechenden Daten mit den Auswahlknöpfen aus.";
+"The following data are available for export:" = "Folgende Daten stehen zum Export zur Verfügung:";
+"- Extended Carbs" = "- Verlängerte Kohlenhydrate";
+"- Total Meal Carbs" = "- Kohlenhydrate der Gesamtmahlzeit";
+"- Total Meal Calories" = "Kalorien der Gesamtmahlzeit";
+"Important information for Loop users:" = "Wichtige Hinweise für Loop-Nutzer:";
+"- It is recommended to only export Extended Carbs" = "- Es wird empfohlen, nur die verlängerten Kohlenhydrate zu exportieren";
+"- If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings." = "Wenn Loop diese Kohlenhydrate in seiner Berechnung berücksichtigen soll, stellen Sie in den Einstellungen von Health sicher, dass Loop Kohlenhydrat-Daten aus Apple Health lesen darf";
+"How are the Extended Carbs exported?" = "Wie werden die verlängerten Kohlenhydrate (e-Carbs) exportiert?";
+"- The number of e-carb entries is determined by dividing the absorption time (e.g. 5 hours) by the interval (e.g. 10 minutes, see Absorption Scheme view), i.e. 5 hours / 10 minutes = 30" = "- Die Anzahl der e-Carbs-Einträge wird berechnet, indem die Absorptionszeit (z.B. 5 Stunden) durch die Intervallzeit (z.B. 10 Minuten, siehe Absorptionsschema-Ansicht) geteilt wird, also: 5 Stunden / 10 Minuten = 30";
+"- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g" = "- Die e-Carbs-Menge pro Eintrag wird berechnet, die e-Carbs der Mahlzeit (z.B. 60 g) durch die Anzahl der Einträge (z.B. 30) geteilt wird, also: 60 g / 30 = 2 g";
+"- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)" = "- Für jeden dieser Einträge wird ein Apple Health Datensatz generiert und nach Apple Health exportiert, beginnend mit der aktuellen Zeit plus die eingestellte Verzögerung (Voreinstellung: 90 Minuten; siehe Absorptionsschema-Ansicht) und mit den eingestellten Zeit-Intervall (Voreinstellung: 10 Minuten; siehe Absorptionsschema-Ansicht)";
 
 // Food List
 "Food List" = "Essensliste";
@@ -122,10 +141,12 @@
 "Enter amount consumed or select typical amount" = "Gegessene Menge eingeben oder typische Menge auswählen";
 "Enter amount consumed" = "Gegessene Menge eingeben";
 "Select amount" = "Menge auswählen";
-"Included food items:" = "Bestehend aus:";
 "Cannot delete food item" = "Kann Essen nicht löschen";
-"Recommended delay of extended carbs:" = "Empfohlene Verzögerung für verlängerte Kohlenhydrate:";
-"1.5h" = "1,5h";
+"Delay of Extended Carbs" = "Verzögerung der verlängerten Kohlenhydrate";
+
+// Meal details
+"Included food items:" = "Bestehend aus:";
+"Export to Apple Health" = "Nach Apple Health exportieren";
 
 // Food item editor
 "Carbs: " = "Kohlenhydrate: ";
@@ -162,6 +183,10 @@
 "Fatal error: Cannot convert numbers into string, please contact app developer" = "Fataler Fehler: Kann Zahlen nicht in String umwandeln, bitte informieren Sie den App-Entwickler";
 "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fataler Fehler: Konnte das CoreData FoodItem nicht finden, bitte informieren Sie den App-Entwickler";
 "Reset to default" = "Auf Voreinstellungen zurücksetzen";
+"Absorption Time Parameters" = "Absorptionszeit-Parameter";
+"Delay" = "Verzögerung";
+"Interval" = "Intervall";
+"min" = "min";
 
 // Menu actions
 "Import from JSON" = "Importieren (Format: JSON)";
@@ -182,3 +207,19 @@
 "Failed to decode because it appears to be invalid JSON" = "Ungültige JSON-Datei";
 "Failed to decode - " = "Konnte nicht entschlüsseln - ";
 "Help on the Web" = "Hilfe im Web";
+
+// Health kit helper
+"Cannot write data: HealthKit seem not to be available on your device." = "Kann keine Daten schreiben: HealthKit scheint auf Ihrem Gerät nicht zur Verfügung zu stehen.";
+"Cannot save data to Health: " = "Kann keine Daten in Health schreiben: ";
+"Unspecified error" = "Unspezifischer Fehler";
+"Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Kann keine Daten in Health schreiben: Bitte geben Sie EasyFPE in den Einstellungen die Berechtigung, in Health zu schreiben.";
+"Successfully exported data to Health" = "Daten wurden erfolgreich nach Health exportiert";
+"Export to Health" = "Health-Export";
+"Export" = "Nach Apple Health exportieren";
+"Error requesting authorization to write to Health: " = "Fehler beim Anfordern der Berechtigung, in Health zu schreiben: ";
+"Please choose the data to export:" = "Bitte wählen Sie die zu exportierenden Daten:";
+"Total Meal Carbs" = "Kohlenhydrate Gesamtmahlzeit";
+"Total Meal Calories" = "Kalorien Gesamtmahlzeit";
+"Please select at least one entry to export" = "Bitte mindestens einen Eintrag zum Export auswählen";
+"Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fataler Fehler, kann Daten nicht exportieren, bitte den App-Entwickler informieren: Absorptionsschema hat keine Absorptionsblöcke";
+"Preview of exported carbs in g" = "Vorschau der exportierten Kohlenhydrate in g";

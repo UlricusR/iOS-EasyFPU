@@ -22,7 +22,14 @@ struct FoodList: View {
             NSSortDescriptor(keyPath: \AbsorptionBlock.absorptionTime, ascending: true)
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
-    var absorptionScheme = AbsorptionScheme()
+    @ObservedObject var absorptionScheme = AbsorptionScheme()
+    var absorptionTimeAsString: String {
+        if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
+            return NumberFormatter().string(from: NSNumber(value: meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+        } else {
+            return "..."
+        }
+    }
     @State var showingSheet = false
     @State var showingMenu = false
     @State var showingAlert = false
@@ -40,7 +47,7 @@ struct FoodList: View {
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
-    @State private var disclaimerViewIsDisplayed = !UserDefaults.standard.bool(forKey: DisclaimerView.disclaimerAcceptedKey)
+    @State private var disclaimerViewIsDisplayed = !(UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.disclaimerAccepted) ?? false)
     private let helpScreen = HelpScreen.foodList
 
     var filteredFoodItems: [FoodItemViewModel] {
@@ -100,13 +107,13 @@ struct FoodList: View {
                                             
                                             HStack(alignment: .center) {
                                                 Text("Total meal").font(.headline).multilineTextAlignment(.center)
-                                                Image(systemName: "info.circle").imageScale(.large).foregroundColor(.blue)
+                                                Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor)
                                             }
                                             
                                             HStack {
                                                 VStack {
                                                     HStack {
-                                                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
+                                                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
                                                         Text("g")
                                                     }
                                                     Text("Carbs").font(.caption).multilineTextAlignment(.center)
@@ -114,7 +121,7 @@ struct FoodList: View {
                                                 
                                                 VStack {
                                                     HStack {
-                                                        Text(FoodItemViewModel.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
+                                                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
                                                         Text("g")
                                                     }
                                                     Text("Extended Carbs").font(.caption).multilineTextAlignment(.center)
@@ -122,15 +129,18 @@ struct FoodList: View {
                                                 
                                                 VStack {
                                                     HStack {
-                                                        Text(NumberFormatter().string(from: NSNumber(value: self.meal.fpus.getAbsorptionTime(absorptionScheme: self.absorptionScheme)))!)
+                                                        Text(self.absorptionTimeAsString)
                                                         Text("h")
                                                     }
                                                     Text("Absorption Time").font(.caption).multilineTextAlignment(.center)
                                                 }
                                             }
                                             
-                                            Text("Recommended delay of extended carbs:").font(.caption).padding(.top).multilineTextAlignment(.center)
-                                            Text("1.5h")
+                                            HStack {
+                                                Text(DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelay))!)
+                                                Text("min")
+                                            }.padding(.top)
+                                            Text("Delay of Extended Carbs").font(.caption).multilineTextAlignment(.center)
                                         }
                                         .animation(.easeInOut)
                                         .padding([.leading, .trailing])
@@ -222,13 +232,18 @@ struct FoodList: View {
                                         let cdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
                                         cdAbsorptionBlock.absorptionTime = Int64(absorptionBlock.absorptionTime)
                                         cdAbsorptionBlock.maxFpu = Int64(absorptionBlock.maxFpu)
-                                        self.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
+                                        if !self.absorptionScheme.absorptionBlocks.contains(cdAbsorptionBlock) {
+                                            self.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
+                                        }
                                     }
                                     try? AppDelegate.viewContext.save()
                                 } else {
                                     // Store absorption blocks loaded from core data
                                     self.absorptionScheme.absorptionBlocks = self.absorptionBlocks.sorted()
                                 }
+                                
+                                // Publish change
+                                self.absorptionScheme.objectWillChange.send()
                             }
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height)
