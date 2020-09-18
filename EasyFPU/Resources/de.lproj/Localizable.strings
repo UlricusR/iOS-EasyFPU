@@ -120,10 +120,15 @@
 "Calories per 100g" = "Kalorien pro 100g";
 "g" = "g";
 "g Carbs" = "g Kohlenhydrate";
+"g Sugars" = "g Zucker";
 "Carbs" = "Kohlenhydrate";
+"Sugars" = "Zucker";
 "g Extended Carbs" = "g verlängerte Kohlenhydrate";
+"Thereof Sugars per 100g" = "Davon Zucker pro 100g";
 "Extended Carbs" = "Verlängerte Kohlenhydrate";
 "kcal" = "kcal";
+"g/FPU" = "g/FPE";
+"e-Carbs Factor" = "e-Carbs-Faktor";
 "New food item" = "Neues Essen";
 "Edit food item" = "Essen bearbeiten";
 "Nutritional values per 100g:" = "Nährwerte pro 100g:";
@@ -162,6 +167,8 @@
 "Value must not be negative" = "Wert darf nicht negativ sein";
 "Value must not be zero or negative" = "Wert darf nicht negativ oder null sein";
 "Delete food item" = "Dieses Essen löschen";
+"Sugars exceed carbs" = "Zucker übersteigt Kohlenhydrate";
+"Thereof" = "Davon";
 
 // Absorption scheme editor
 "Absorption scheme" = "Absorptionsschema";

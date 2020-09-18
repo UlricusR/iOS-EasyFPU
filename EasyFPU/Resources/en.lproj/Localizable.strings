@@ -120,10 +120,15 @@
 "Calories per 100g" = "Calories per 100g";
 "g" = "g";
 "g Carbs" = "g Carbs";
+"g Sugars" = "g Sugars";
 "Carbs" = "Carbs";
+"Sugars" = "Zucker";
+"Thereof Sugars per 100g" = "Thereof Sugars per 100g";
 "g Extended Carbs" = "g Extended Carbs";
 "Extended Carbs" = "Extended Carbs";
 "kcal" = "kcal";
+"g/FPU" = "g/FPU";
+"e-Carbs Factor" = "e-Carbs Faktor";
 "New food item" = "New food item";
 "Edit food item" = "Edit food item";
 "Nutritional values per 100g:" = "Nutritional values per 100g:";
@@ -162,6 +167,8 @@
 "Value must not be negative" = "Value must not be negative";
 "Value must not be zero or negative" = "Value must not be zero or negative";
 "Delete food item" = "Delete food item";
+"Sugars exceed carbs" = "Sugars exceed carbs";
+"Thereof" = "Thereof";
 
 // Absorption scheme editor
 "Absorption scheme" = "Absorption scheme";

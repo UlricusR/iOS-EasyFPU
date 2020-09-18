@@ -9,7 +9,7 @@
 import Foundation
 
 enum FoodItemViewModelError {
-    case name(String), calories(String), carbs(String), amount(String), tooMuchCarbs(String)
+    case name(String), calories(String), carbs(String), sugars(String), amount(String), tooMuchCarbs(String), tooMuchSugars(String)
 }
 
 class FoodItemViewModel: ObservableObject, Codable, Hashable {
@@ -40,6 +40,18 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             }
         }
     }
+    @Published var sugarsPer100gAsString: String = "" {
+        willSet {
+            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: true)
+            switch result {
+            case .success(let sugarsAsDouble):
+                sugarsPer100g = sugarsAsDouble
+            case .failure(let err):
+                debugPrint(DataHelper.getErrorMessage(from: err))
+                return
+            }
+        }
+    }
     @Published var amountAsString: String = "" {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
@@ -54,24 +66,27 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
     }
     private(set) var caloriesPer100g: Double = 0.0
     private(set) var carbsPer100g: Double = 0.0
+    private(set) var sugarsPer100g: Double = 0.0
     private(set) var amount: Int = 0
     var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
     
     enum CodingKeys: String, CodingKey {
         case foodItem
-        case amount, caloriesPer100g, carbsPer100g, favorite, name, typicalAmounts
+        case amount, caloriesPer100g, carbsPer100g, sugarsPer100g, favorite, name, typicalAmounts
     }
     
-    init(name: String, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, amount: Int) {
+    init(name: String, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, sugarsPer100g: Double, amount: Int) {
         self.name = name
         self.favorite = favorite
         self.caloriesPer100g = caloriesPer100g
         self.carbsPer100g = carbsPer100g
+        self.sugarsPer100g = sugarsPer100g
         self.amount = amount
         
         self.caloriesPer100gAsString = caloriesPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g))!
         self.carbsPer100gAsString = carbsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g))!
+        self.sugarsPer100gAsString = sugarsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: sugarsPer100g))!
         self.amountAsString = amount == 0 ? "" : NumberFormatter().string(from: NSNumber(value: amount))!
     }
     
@@ -80,11 +95,13 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         self.favorite = cdFoodItem.favorite
         self.caloriesPer100g = cdFoodItem.caloriesPer100g
         self.carbsPer100g = cdFoodItem.carbsPer100g
+        self.sugarsPer100g = cdFoodItem.sugarsPer100g
         self.amount = Int(cdFoodItem.amount)
         self.cdFoodItem = cdFoodItem
         
         self.caloriesPer100gAsString = cdFoodItem.caloriesPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.caloriesPer100g))!
         self.carbsPer100gAsString = cdFoodItem.carbsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.carbsPer100g))!
+        self.sugarsPer100gAsString = cdFoodItem.sugarsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.sugarsPer100g))!
         self.amountAsString = cdFoodItem.amount == 0 ? "" : NumberFormatter().string(from: NSNumber(value: cdFoodItem.amount))!
         
         if cdFoodItem.typicalAmounts != nil {
@@ -95,7 +112,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         }
     }
     
-    init?(name: String, favorite: Bool, caloriesAsString: String, carbsAsString: String, amountAsString: String, error: inout FoodItemViewModelError) {
+    init?(name: String, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError) {
         // Check for a correct name
         let foodName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         if foodName == "" {
@@ -132,6 +149,24 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         }
         self.carbsPer100gAsString = carbsAsString
         
+        // Check for valid sugars
+        let sugarsResult = DataHelper.checkForPositiveDouble(valueAsString: sugarsAsString == "" ? "0" : sugarsAsString, allowZero: true)
+        switch sugarsResult {
+        case .success(let sugarsAsDouble):
+            sugarsPer100g = sugarsAsDouble
+        case .failure(let err):
+            let errorMessage = DataHelper.getErrorMessage(from: err)
+            error = .sugars(errorMessage)
+            return nil
+        }
+        self.sugarsPer100gAsString = sugarsAsString
+        
+        // Check if sugars exceed carbs
+        if sugarsPer100g > carbsPer100g {
+            error = .tooMuchSugars(NSLocalizedString("Sugars exceed carbs", comment: ""))
+            return nil
+        }
+        
         // Check if calories from carbs exceed total calories
         if carbsPer100g * 4 > caloriesPer100g {
             error = .tooMuchCarbs(NSLocalizedString("Calories from carbs (4 kcal per gram) exceed total calories", comment: ""))
@@ -157,6 +192,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         amount = try foodItem.decode(Int.self, forKey: .amount)
         caloriesPer100g = try foodItem.decode(Double.self, forKey: .caloriesPer100g)
         carbsPer100g = try foodItem.decode(Double.self, forKey: .carbsPer100g)
+        sugarsPer100g = try foodItem.decode(Double.self, forKey: .sugarsPer100g)
         favorite = try foodItem.decode(Bool.self, forKey: .favorite)
         name = try foodItem.decode(String.self, forKey: .name)
         typicalAmounts = try foodItem.decode([TypicalAmountViewModel].self, forKey: .typicalAmounts)
@@ -164,12 +200,14 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         guard
             let caloriesAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g)),
             let carbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g)),
+            let sugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: sugarsPer100g)),
             let amountAsString = NumberFormatter().string(from: NSNumber(value: amount))
         else {
             throw InvalidNumberError.inputError(NSLocalizedString("Fatal error: Cannot convert numbers into string, please contact app developer", comment: ""))
         }
         self.caloriesPer100gAsString = caloriesAsString
         self.carbsPer100gAsString = carbsAsString
+        self.sugarsPer100gAsString = sugarsAsString
         self.amountAsString = amountAsString
     }
     
@@ -178,7 +216,11 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
     }
     
     func getCarbs() -> Double {
-        Double(self.amount) * self.carbsPer100g / 100
+        Double(self.amount) * self.carbsPer100g / 100 - getSugars()
+    }
+    
+    func getSugars() -> Double {
+        Double(self.amount) * self.sugarsPer100g / 100
     }
     
     func getFPU() -> FPU {
@@ -200,6 +242,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         cdFoodItem.amount = Int64(amount)
         cdFoodItem.caloriesPer100g = caloriesPer100g
         cdFoodItem.carbsPer100g = carbsPer100g
+        cdFoodItem.sugarsPer100g = sugarsPer100g
         cdFoodItem.favorite = favorite
     }
     
@@ -209,6 +252,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         try foodItem.encode(amount, forKey: .amount)
         try foodItem.encode(caloriesPer100g, forKey: .caloriesPer100g)
         try foodItem.encode(carbsPer100g, forKey: .carbsPer100g)
+        try foodItem.encode(sugarsPer100g, forKey: .sugarsPer100g)
         try foodItem.encode(favorite, forKey: .favorite)
         try foodItem.encode(name, forKey: .name)
         try foodItem.encode(typicalAmounts, forKey: .typicalAmounts)

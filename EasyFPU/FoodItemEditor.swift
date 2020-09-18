@@ -29,8 +29,9 @@ struct FoodItemEditor: View {
     var typicalAmounts: [TypicalAmountViewModel] { draftFoodItem.typicalAmounts.sorted() }
     
     @State private var oldName = ""
-    @State private var oldCaloriesAsString = ""
-    @State private var oldCarbsAsString = ""
+    @State private var oldCaloriesPer100gAsString = ""
+    @State private var oldCarbsPer100gAsString = ""
+    @State private var oldSugarsPer100gAsString = ""
     @State private var oldAmountAsString = ""
     
     @State var newTypicalAmount = ""
@@ -68,6 +69,13 @@ struct FoodItemEditor: View {
                             TextField("Carbs per 100g", text: $draftFoodItem.carbsPer100gAsString)
                                 .keyboardType(.decimalPad)
                             Text("g Carbs")
+                        }
+                        
+                        // Sugars
+                        HStack {
+                            TextField("Thereof Sugars per 100g", text: $draftFoodItem.sugarsPer100gAsString)
+                                .keyboardType(.decimalPad)
+                            Text("g Sugars")
                         }
                     }
                     
@@ -189,6 +197,7 @@ struct FoodItemEditor: View {
                         favorite: self.draftFoodItem.favorite,
                         caloriesAsString: self.draftFoodItem.caloriesPer100gAsString,
                         carbsAsString: self.draftFoodItem.carbsPer100gAsString,
+                        sugarsAsString: self.draftFoodItem.sugarsPer100gAsString,
                         amountAsString: self.draftFoodItem.amountAsString,
                         error: &error) { // We have a valid food item
                         if self.editedFoodItem != nil { // We need to update an existing food item
@@ -196,6 +205,7 @@ struct FoodItemEditor: View {
                             self.editedFoodItem!.favorite = updatedFoodItem.favorite
                             self.editedFoodItem!.carbsPer100g = updatedFoodItem.carbsPer100g
                             self.editedFoodItem!.caloriesPer100g = updatedFoodItem.caloriesPer100g
+                            self.editedFoodItem!.sugarsPer100g = updatedFoodItem.sugarsPer100g
                             self.editedFoodItem!.amount = Int64(updatedFoodItem.amount)
                             
                             // Update typical amounts
@@ -221,6 +231,7 @@ struct FoodItemEditor: View {
                             newFoodItem.favorite = updatedFoodItem.favorite
                             newFoodItem.carbsPer100g = updatedFoodItem.carbsPer100g
                             newFoodItem.caloriesPer100g = updatedFoodItem.caloriesPer100g
+                            newFoodItem.sugarsPer100g = updatedFoodItem.sugarsPer100g
                             newFoodItem.amount = Int64(updatedFoodItem.amount)
                             
                             for typicalAmount in self.typicalAmounts {
@@ -244,14 +255,21 @@ struct FoodItemEditor: View {
                             self.draftFoodItem.name = self.oldName
                         case .calories(let errorMessage):
                             self.errorMessage = NSLocalizedString("Calories: ", comment:"") + errorMessage
-                            self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesAsString
+                            self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
                         case .carbs(let errorMessage):
                             self.errorMessage = NSLocalizedString("Carbs: ", comment:"") + errorMessage
-                            self.draftFoodItem.carbsPer100gAsString = self.oldCarbsAsString
+                            self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+                        case .sugars(let errorMessage):
+                            self.errorMessage = NSLocalizedString("Sugars: ", comment: "") + errorMessage
+                            self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
                         case .tooMuchCarbs(let errorMessage):
                             self.errorMessage = errorMessage
-                            self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesAsString
-                            self.draftFoodItem.carbsPer100gAsString = self.oldCarbsAsString
+                            self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
+                            self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+                        case .tooMuchSugars(let errorMessage):
+                            self.errorMessage = errorMessage
+                            self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
+                            self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
                         case .amount(let errorMessage):
                             self.errorMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
                             self.draftFoodItem.amountAsString = self.oldAmountAsString
@@ -278,8 +296,9 @@ struct FoodItemEditor: View {
         }
         .onAppear() {
             self.oldName = self.draftFoodItem.name
-            self.oldCaloriesAsString = self.draftFoodItem.caloriesPer100gAsString
-            self.oldCarbsAsString = self.draftFoodItem.carbsPer100gAsString
+            self.oldCaloriesPer100gAsString = self.draftFoodItem.caloriesPer100gAsString
+            self.oldCarbsPer100gAsString = self.draftFoodItem.carbsPer100gAsString
+            self.oldSugarsPer100gAsString = self.draftFoodItem.sugarsPer100gAsString
             self.oldAmountAsString = self.draftFoodItem.amountAsString
         }
     }

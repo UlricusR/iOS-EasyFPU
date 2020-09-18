@@ -23,8 +23,12 @@ class UserSettings: ObservableObject {
     }
     
     enum UserDefaultsDoubleKey: String, CaseIterable {
+        case absorptionTimeMediumDelay = "AbsorptionTimeMediumDelay"
+        case absorptionTimeMediumInterval = "AbsorptionTimeMediumInterval"
+        case absorptionTimeMediumDuration = "AbsorptionTimeMediumDuration"
         case absorptionTimeLongDelay = "AbsorptionTimeLongDelay"
         case absorptionTimeLongInterval = "AbsorptionTimeLongInterval"
+        case eCarbsFactor = "ECarbsFactor"
     }
     
     // MARK: - The key store for syncing via iCloud
@@ -34,15 +38,34 @@ class UserSettings: ObservableObject {
     
     @Published var absorptionTimeLongDelay: Double
     @Published var absorptionTimeLongInterval: Double
+    @Published var absorptionTimeMediumDelay: Double
+    @Published var absorptionTimeMediumInterval: Double
+    @Published var absorptionTimeMediumDuration: Double
+    @Published var eCarbsFactor: Double
     
     static let shared = UserSettings(
         absorptionTimeLongDelay: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault,
-        absorptionTimeLongInterval: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
+        absorptionTimeLongInterval: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault,
+        absorptionTimeMediumDelay: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeMediumDelay) ?? AbsorptionSchemeViewModel.absorptionTimeMediumDelayDefault,
+        absorptionTimeMediumInterval: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeMediumInterval) ?? AbsorptionSchemeViewModel.absorptionTimeMediumIntervalDefault,
+        absorptionTimeMediumDuration: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeMediumDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeMediumDurationDefault,
+        eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault
     )
     
-    private init(absorptionTimeLongDelay: Double, absorptionTimeLongInterval: Double) {
+    private init(
+        absorptionTimeLongDelay: Double,
+        absorptionTimeLongInterval: Double,
+        absorptionTimeMediumDelay: Double,
+        absorptionTimeMediumInterval: Double,
+        absorptionTimeMediumDuration: Double,
+        eCarbsFactor: Double
+    ) {
         self.absorptionTimeLongDelay = absorptionTimeLongDelay
         self.absorptionTimeLongInterval = absorptionTimeLongInterval
+        self.absorptionTimeMediumDelay = absorptionTimeMediumDelay
+        self.absorptionTimeMediumInterval = absorptionTimeMediumInterval
+        self.absorptionTimeMediumDuration = absorptionTimeMediumDuration
+        self.eCarbsFactor = eCarbsFactor
     }
     
     // MARK: - Static helper functions

@@ -42,8 +42,18 @@ struct FoodItemView: View {
 
                 Text("|").foregroundColor(.gray)
 
-                Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.carbsPer100g))!).font(.caption).foregroundColor(.gray)
-                Text("g Carbs").font(.caption).foregroundColor(.gray)
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.carbsPer100g))!).font(.caption).foregroundColor(.gray)
+                        Text("g Carbs").font(.caption).foregroundColor(.gray)
+                    }
+                    
+                    HStack {
+                        Text("Thereof").font(.caption).foregroundColor(.gray)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.sugarsPer100g))!).font(.caption).foregroundColor(.gray)
+                        Text("g Sugars").font(.caption).foregroundColor(.gray)
+                    }
+                }
             }
         }
         .onTapGesture {
