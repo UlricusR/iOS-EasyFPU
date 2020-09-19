@@ -96,22 +96,7 @@ struct FoodList: View {
                                 }
                                 
                                 if self.meal.amount > 0 {
-                                    Divider()
-                                    
-                                    HStack(alignment: .center) {
-                                        Text("Total meal").font(.headline).multilineTextAlignment(.center)
-                                        NavigationLink(destination: MealDetail(absorptionScheme: self.absorptionScheme, meal: self.meal)) {
-                                            Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor)
-                                        }
-                                        Button(action: {
-                                            self.activeSheet = .export
-                                            self.showingSheet = true
-                                        }) {
-                                            Image(systemName: "square.and.arrow.up").imageScale(.large).foregroundColor(.accentColor)
-                                        }
-                                    }
                                     MealSummaryView(absorptionScheme: self.absorptionScheme, meal: self.meal)
-                                        .frame(height: 200)
                                 }
                             }
                             .navigationBarTitle("Food List")
