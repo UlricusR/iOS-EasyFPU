@@ -23,13 +23,7 @@ struct FoodList: View {
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     @ObservedObject var absorptionScheme = AbsorptionScheme()
-    var absorptionTimeAsString: String {
-        if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return NumberFormatter().string(from: NSNumber(value: meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
-        } else {
-            return "..."
-        }
-    }
+    
     @State var showingSheet = false
     @State var showingMenu = false
     @State var showingAlert = false
@@ -102,51 +96,22 @@ struct FoodList: View {
                                 }
                                 
                                 if self.meal.amount > 0 {
-                                    NavigationLink(destination: MealDetail(absorptionScheme: self.absorptionScheme, meal: self.meal)) {
-                                        VStack {
-                                            Divider()
-                                            
-                                            HStack(alignment: .center) {
-                                                Text("Total meal").font(.headline).multilineTextAlignment(.center)
-                                                Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor)
-                                            }
-                                            
-                                            HStack {
-                                                VStack {
-                                                    HStack {
-                                                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
-                                                        Text("g")
-                                                    }
-                                                    Text("Carbs").font(.caption).multilineTextAlignment(.center)
-                                                }
-                                                
-                                                VStack {
-                                                    HStack {
-                                                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
-                                                        Text("g")
-                                                    }
-                                                    Text("Extended Carbs").font(.caption).multilineTextAlignment(.center)
-                                                }
-                                                
-                                                VStack {
-                                                    HStack {
-                                                        Text(self.absorptionTimeAsString)
-                                                        Text("h")
-                                                    }
-                                                    Text("Absorption Time").font(.caption).multilineTextAlignment(.center)
-                                                }
-                                            }
-                                            
-                                            HStack {
-                                                Text(DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelay))!)
-                                                Text("min")
-                                            }.padding(.top)
-                                            Text("Delay of Extended Carbs").font(.caption).multilineTextAlignment(.center)
+                                    Divider()
+                                    
+                                    HStack(alignment: .center) {
+                                        Text("Total meal").font(.headline).multilineTextAlignment(.center)
+                                        NavigationLink(destination: MealDetail(absorptionScheme: self.absorptionScheme, meal: self.meal)) {
+                                            Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor)
                                         }
-                                        .animation(.easeInOut)
-                                        .padding([.leading, .trailing])
-                                        .foregroundColor(.red)
+                                        Button(action: {
+                                            self.activeSheet = .export
+                                            self.showingSheet = true
+                                        }) {
+                                            Image(systemName: "square.and.arrow.up").imageScale(.large).foregroundColor(.accentColor)
+                                        }
                                     }
+                                    MealSummaryView(absorptionScheme: self.absorptionScheme, meal: self.meal)
+                                        .frame(height: 200)
                                 }
                             }
                             .navigationBarTitle("Food List")

@@ -215,7 +215,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         Double(self.amount) * self.caloriesPer100g / 100
     }
     
-    func getCarbs() -> Double {
+    func getRegularCarbs() -> Double {
         Double(self.amount) * self.carbsPer100g / 100 - getSugars()
     }
     

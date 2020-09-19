@@ -37,7 +37,7 @@ struct MealItemView: View {
             }
             // Carbs
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getCarbs()))!).font(fontSizeDetails)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getRegularCarbs()))!).font(fontSizeDetails)
                 Text("g Carbs").font(fontSizeDetails)
             }
             // FPU

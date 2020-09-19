@@ -122,7 +122,7 @@
 "g Carbs" = "g Carbs";
 "g Sugars" = "g Sugars";
 "Carbs" = "Carbs";
-"Sugars" = "Zucker";
+"Sugars" = "Sugars";
 "Thereof Sugars per 100g" = "Thereof Sugars per 100g";
 "g Extended Carbs" = "g Extended Carbs";
 "Extended Carbs" = "Extended Carbs";
@@ -148,6 +148,15 @@
 "Select amount" = "Select amount";
 "Cannot delete food item" = "Cannot delete food item";
 "Delay of Extended Carbs" = "Delay of Extended Carbs";
+
+// Meal preview
+"e-Carbs" = "e-Carbs";
+"Regular Carbs" = "Regular Carbs";
+"How much?" = "How much?";
+"When?" = "When?";
+"How long?" = "How long?";
+"All at once" = "All at once";
+"Now" = "Now";
 
 // Meal details
 "Included food items:" = "Included food items:";

@@ -38,7 +38,7 @@ struct MealDetail: View {
                         
                         Text("|")
                         
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.getRegularCarbs()))!)
                         Text("g Carbs")
                     }
                     

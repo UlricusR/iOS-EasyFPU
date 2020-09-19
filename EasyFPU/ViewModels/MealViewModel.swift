@@ -11,7 +11,8 @@ import Foundation
 class MealViewModel {
     var name: String
     var calories: Double = 0.0
-    var carbs: Double = 0.0
+    private var carbs: Double = 0.0
+    var sugars: Double = 0.0
     var amount: Int = 0
     var fpus: FPU = FPU(fpu: 0.0)
     var foodItems = [FoodItemViewModel]()
@@ -26,8 +27,13 @@ class MealViewModel {
         foodItems.append(foodItem)
         let tempFPUs = fpus.fpu
         calories += foodItem.getCalories()
-        carbs += foodItem.getCarbs()
+        carbs += foodItem.getRegularCarbs()
+        sugars += foodItem.getSugars()
         amount += Int(foodItem.amount)
         fpus = FPU(fpu: tempFPUs + foodItem.getFPU().fpu)
+    }
+    
+    func getRegularCarbs() -> Double {
+        carbs - sugars
     }
 }

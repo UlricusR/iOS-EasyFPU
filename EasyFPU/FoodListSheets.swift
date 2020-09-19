@@ -9,7 +9,7 @@
 import SwiftUI
 
 enum ActiveFoodListSheet {
-    case addFoodItem, help
+    case addFoodItem, export, help
 }
 
 struct FoodListSheets: View {
@@ -30,6 +30,10 @@ struct FoodListSheets: View {
                     navigationBarTitle: NSLocalizedString("New food item", comment: ""),
                     draftFoodItem: self.draftFoodItem
                 ).environment(\.managedObjectContext, managedObjectContext)
+            )
+        case .export:
+            return AnyView(
+                MealExportView(isPresented: $isPresented, meal: meal, absorptionScheme: absorptionScheme)
             )
         case .help:
             return AnyView(

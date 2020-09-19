@@ -139,7 +139,7 @@ class CarbsEntries: ObservableObject {
     
     private func calculateTotalMealCarbs() {
         if includeTotalMealCarbs {
-            let hkObject = HealthDataHelper.processQuantitySample(value: meal.carbs, unit: HealthDataHelper.unitCarbs, start: now, end: now, sampleType: HealthDataHelper.objectTypeCarbs)
+            let hkObject = HealthDataHelper.processQuantitySample(value: meal.getRegularCarbs(), unit: HealthDataHelper.unitCarbs, start: now, end: now, sampleType: HealthDataHelper.objectTypeCarbs)
             self.hkObjects.append(hkObject)
         }
     }
@@ -151,7 +151,7 @@ class CarbsEntries: ObservableObject {
         
         // The first entry is either the total meal carbs or zero, if e-carbs are included
         if includeTotalMealCarbs {
-            carbsRegime.append((now, meal.carbs))
+            carbsRegime.append((now, meal.getRegularCarbs()))
         } else if includeECarbs {
             carbsRegime.append((now, 0.0))
         }
@@ -188,8 +188,8 @@ class CarbsEntries: ObservableObject {
     }
     
     private func getMinMaxCarbs() -> (min: Double, max: Double) {
-        var minDouble = includeTotalMealCarbs ? meal.carbs : 0
-        var maxDouble = includeTotalMealCarbs ? meal.carbs : 0
+        var minDouble = includeTotalMealCarbs ? meal.getRegularCarbs() : 0
+        var maxDouble = includeTotalMealCarbs ? meal.getRegularCarbs() : 0
         
         if includeECarbs {
             for entry in eCarbEntries {

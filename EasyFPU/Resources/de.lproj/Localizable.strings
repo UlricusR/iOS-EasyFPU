@@ -149,6 +149,15 @@
 "Cannot delete food item" = "Kann Essen nicht löschen";
 "Delay of Extended Carbs" = "Verzögerung der verlängerten Kohlenhydrate";
 
+// Meal preview
+"e-Carbs" = "Verlängerte KH";
+"Regular Carbs" = "Reguläre Kohlenhydrate";
+"How much?" = "Wieviel?";
+"When?" = "Wann?";
+"How long?" = "Wie lange?";
+"All at once" = "Alles auf einmal";
+"Now" = "Sofort";
+
 // Meal details
 "Included food items:" = "Bestehend aus:";
 "Export to Apple Health" = "Nach Apple Health exportieren";
