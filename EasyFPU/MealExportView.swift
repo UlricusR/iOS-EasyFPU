@@ -102,7 +102,7 @@ struct MealExportView: View {
             return
         }
         self.carbsEntries.meal = meal
-        self.carbsEntries.absorptionTimeInMinutes = Double(absorptionTimeInHours) * 60.0
+        self.carbsEntries.absorptionTimeInMinutes = absorptionTimeInHours * 60
         self.carbsEntries.recalculate()
     }
     

@@ -58,7 +58,7 @@ struct MealDetail: View {
                         
                         Text("|")
                         
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelay))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelayInMinutes))!)
                         Text("min")
                         Text("Delay")
                     }

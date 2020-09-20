@@ -12,10 +12,10 @@ class AbsorptionSchemeViewModel: ObservableObject {
     var absorptionBlocks: [AbsorptionBlockViewModel]
     
     // Absorption block parameters for carbs
-    private(set) var delayMedium: Double = AbsorptionSchemeViewModel.absorptionTimeMediumDelayDefault
+    private(set) var delayMedium: Int = AbsorptionSchemeViewModel.absorptionTimeMediumDelayDefault
     @Published var delayMediumAsString = "" {
         willSet {
-            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: true)
+            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
             switch result {
             case .success(let value):
                 self.delayMedium = value
@@ -25,10 +25,10 @@ class AbsorptionSchemeViewModel: ObservableObject {
             }
         }
     }
-    private(set) var intervalMedium: Double = AbsorptionSchemeViewModel.absorptionTimeMediumIntervalDefault
+    private(set) var intervalMedium: Int = AbsorptionSchemeViewModel.absorptionTimeMediumIntervalDefault
     @Published var intervalMediumAsString = "" {
         willSet {
-            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
+            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
             switch result {
             case .success(let value):
                 self.intervalMedium = value
@@ -53,10 +53,10 @@ class AbsorptionSchemeViewModel: ObservableObject {
     }
     
     // Absorption block parameters for e-Carbs
-    private(set) var delayLong: Double = AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault
+    private(set) var delayLong: Int = AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault
     @Published var delayLongAsString = "" {
         willSet {
-            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: true)
+            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
             switch result {
             case .success(let value):
                 self.delayLong = value
@@ -66,10 +66,10 @@ class AbsorptionSchemeViewModel: ObservableObject {
             }
         }
     }
-    private(set) var intervalLong: Double = AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
+    private(set) var intervalLong: Int = AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
     @Published var intervalLongAsString = "" {
         willSet {
-            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
+            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
             switch result {
             case .success(let value):
                 self.intervalLong = value
@@ -95,11 +95,11 @@ class AbsorptionSchemeViewModel: ObservableObject {
         }
     }
     
-    static let absorptionTimeMediumDelayDefault: Double = 5 // minutes
-    static let absorptionTimeMediumIntervalDefault: Double = 5 // minutes
+    static let absorptionTimeMediumDelayDefault: Int = 5 // minutes
+    static let absorptionTimeMediumIntervalDefault: Int = 5 // minutes
     static let absoprtionTimeMediumDurationDefault: Double = 3 // hours
-    static let absorptionTimeLongDelayDefault: Double = 90 // minutes
-    static let absorptionTimeLongIntervalDefault: Double = 10 // minutes
+    static let absorptionTimeLongDelayDefault: Int = 90 // minutes
+    static let absorptionTimeLongIntervalDefault: Int = 10 // minutes
     static let eCarbsFactorDefault: Double = 10 // g e-carbs per FPU
     
     init(from cdAbsorptionScheme: AbsorptionScheme) {
@@ -111,23 +111,23 @@ class AbsorptionSchemeViewModel: ObservableObject {
             }
         }
         
-        let delayMedium = UserSettings.shared.absorptionTimeMediumDelay
+        let delayMedium = UserSettings.shared.absorptionTimeMediumDelayInMinutes
         self.delayMedium = delayMedium
         self.delayMediumAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delayMedium))!
         
-        let intervalMedium = UserSettings.shared.absorptionTimeMediumInterval
+        let intervalMedium = UserSettings.shared.absorptionTimeMediumIntervalInMinutes
         self.intervalMedium = intervalMedium
         self.intervalMediumAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: intervalMedium))!
         
-        let durationMedium = UserSettings.shared.absorptionTimeMediumDuration
-        self.intervalMedium = durationMedium
+        let durationMedium = UserSettings.shared.absorptionTimeMediumDurationInHours
+        self.durationMedium = durationMedium
         self.durationMediumAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: durationMedium))!
         
-        let delayLong = UserSettings.shared.absorptionTimeLongDelay
+        let delayLong = UserSettings.shared.absorptionTimeLongDelayInMinutes
         self.delayLong = delayLong
         self.delayLongAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delayLong))!
         
-        let intervalLong = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
+        let intervalLong = UserSettings.shared.absorptionTimeLongIntervalInMinutes
         self.intervalLong = intervalLong
         self.intervalLongAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: intervalLong))!
         

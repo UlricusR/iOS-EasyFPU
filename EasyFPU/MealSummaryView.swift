@@ -19,11 +19,11 @@ struct MealSummaryView: View {
         }
     }
     var regularCarbsTimeAsString: String {
-        let time = Date().addingTimeInterval(UserSettings.shared.absorptionTimeMediumDelay * 60)
+        let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeMediumDelayInMinutes * 60))
         return ChartBar.timeStyle.string(from: time)
     }
     var extendedCarbsTimeAsString: String {
-        let time = Date().addingTimeInterval(UserSettings.shared.absorptionTimeLongDelay * 60)
+        let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeLongDelayInMinutes * 60))
         return ChartBar.timeStyle.string(from: time)
     }
     
@@ -107,14 +107,14 @@ struct MealSummaryView: View {
                     }
                     HStack {
                         Text("In")
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeMediumDelay))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeMediumDelayInMinutes))!)
                         Text("min")
                         Text("-")
                         Text(self.regularCarbsTimeAsString)
                     }
                     HStack {
                         Text("For")
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeMediumDuration))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeMediumDurationInHours))!)
                         Text("h")
                     }
                 }
@@ -151,7 +151,7 @@ struct MealSummaryView: View {
                     }
                     HStack {
                         Text("In")
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelay))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelayInMinutes))!)
                         Text("min")
                         Text("-")
                         Text(self.extendedCarbsTimeAsString)

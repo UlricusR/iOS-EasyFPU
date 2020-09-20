@@ -14,10 +14,10 @@ class CarbsRegime: ObservableObject {
     // MARK: - Variables required by the HealthKit data model
     
     @Published var hkObjects: [HKObject]
-    var eCarbEntries: [Double]
-    var carbsRegime = [(date: Date, carbs: Double)]()
-    var start: Date
-    var end: Date
+    var sugarEntries: [Date: CarbsEntry]
+    var carbsEntries: [Date: CarbsEntry]
+    var eCarbEntries: [Date: CarbsEntry]
+    var carbsRegime = [Date: [CarbsEntry]]()
     @Published var includeECarbs: Bool {
         didSet {
             recalculate()
@@ -28,11 +28,17 @@ class CarbsRegime: ObservableObject {
             recalculate()
         }
     }
+    @Published var includeTotalMealSugars: Bool {
+        didSet {
+            recalculate()
+        }
+    }
     var meal: MealViewModel
-    var absorptionTimeInMinutes: Double
+    var absorptionTimeInMinutes: Int
     
     private var now: Date
     private var eCarbsStart: Date
+    private var carbsStart: Date
     
     // MARK: - Variables required for fitting the chart
     
@@ -48,33 +54,37 @@ class CarbsRegime: ObservableObject {
     
     // MARK: - Static variables / constants
     
-    static let `default` = CarbsRegime(meal: MealViewModel.default, absorptionTimeInHours: 5, includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true, includeTotalMealCarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false)
+    static let `default` = CarbsRegime(
+        meal: MealViewModel.default,
+        absorptionTimeInHours: 5,
+        includeSugars: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealSugars) ?? false,
+        includeTotalMealCarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false,
+        includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true
+    )
     
     // MARK: - Initializers
     
-    init(meal: MealViewModel, absorptionTimeInHours: Int, includeECarbs: Bool, includeTotalMealCarbs: Bool) {
+    init(meal: MealViewModel, absorptionTimeInHours: Int, includeSugars: Bool, includeTotalMealCarbs: Bool, includeECarbs: Bool) {
         self.hkObjects = [HKObject]()
-        self.eCarbEntries = [Double]()
+        self.sugarEntries = [Date: CarbsEntry]()
+        self.carbsEntries = [Date: CarbsEntry]()
+        self.eCarbEntries = [Date: CarbsEntry]()
         self.meal = meal
+        self.includeTotalMealSugars = includeSugars
         self.includeECarbs = includeECarbs
         self.includeTotalMealCarbs = includeTotalMealCarbs
         
         self.now = Date()
         
-        self.absorptionTimeInMinutes = Double(absorptionTimeInHours) * 60.0
-        self.eCarbsStart = now.addingTimeInterval(UserSettings.shared.absorptionTimeLongDelay * 60.0)
+        self.absorptionTimeInMinutes = absorptionTimeInHours * 60
+        self.eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeLongDelayInMinutes * 60))
+        self.carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeMediumDelayInMinutes * 60))
         
-        if !(includeTotalMealCarbs || includeECarbs) {
-            self.start = now
-            self.end = now
-        } else {
-            self.start = includeTotalMealCarbs ? now : eCarbsStart
-            self.end = !includeECarbs ? now : eCarbsStart.addingTimeInterval(absorptionTimeInMinutes * 60.0)
-            
-            calculateTotalMealCarbs()
-            calculateECarbs()
-        }
+        if includeSugars { calculateTotalMealSugars() }
+        if includeTotalMealCarbs { calculateTotalMealCarbs() }
+        if includeECarbs { calculateECarbs() }
         
+        // Then fit the chart bars
         fitCarbChartBars()
         carbsRegime = getCarbRegime()
     }
@@ -84,20 +94,16 @@ class CarbsRegime: ObservableObject {
     func recalculate() {
         // First recalculate the HealthKit data model
         hkObjects.removeAll()
+        sugarEntries.removeAll()
+        carbsEntries.removeAll()
         eCarbEntries.removeAll()
         now = Date()
-        eCarbsStart = now.addingTimeInterval(UserSettings.shared.absorptionTimeLongDelay * 60.0)
+        carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeMediumDelayInMinutes * 60))
+        eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeLongDelayInMinutes * 60))
         
-        if !(includeTotalMealCarbs || includeECarbs) {
-            start = now
-            end = now
-        } else {
-            start = includeTotalMealCarbs ? now : eCarbsStart
-            end = !includeECarbs ? now : eCarbsStart.addingTimeInterval(absorptionTimeInMinutes * 60.0)
-            
-            calculateTotalMealCarbs()
-            calculateECarbs()
-        }
+        if includeTotalMealSugars { calculateTotalMealSugars() }
+        if includeTotalMealCarbs { calculateTotalMealCarbs() }
+        if includeECarbs { calculateECarbs() }
         
         // Then fit the chart bars
         fitCarbChartBars()
@@ -108,46 +114,95 @@ class CarbsRegime: ObservableObject {
     
     // MARK: - Functions for calculating the HealthKit information
     
-    private func calculateECarbs() {
-        if includeECarbs {
-            // Make sure to not go below 1 for number carb entries, otherwise we'd increase e-carbs amount in the next step
-            let numberOfECarbEntries = max(absorptionTimeInMinutes / UserSettings.shared.absorptionTimeLongInterval, 1.0)
-            let eCarbsAmount = meal.fpus.getExtendedCarbs() / numberOfECarbEntries
-            
-            // Generate numberOfECarbEntries, but omit the last one, as it needs to be corrected using the total amount of e-carbs
-            // in order to get the exact amount of total e-carbs
-            var time = eCarbsStart
-            var totalECarbs = 0.0
-            repeat {
-                let hkObject = HealthDataHelper.processQuantitySample(value: eCarbsAmount, unit: HealthDataHelper.unitCarbs, start: time, end: time, sampleType: HealthDataHelper.objectTypeCarbs)
-                self.hkObjects.append(hkObject)
-                self.eCarbEntries.append(eCarbsAmount)
-                time = time.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * 60)
-                totalECarbs += eCarbsAmount
-            } while time < end.addingTimeInterval(-UserSettings.shared.absorptionTimeLongInterval * 60)
-            
-            // Now determine the final amount of e-carbs and generate the final entry
-            let finalAmountOfECarbs = meal.fpus.getExtendedCarbs() - totalECarbs
-            if finalAmountOfECarbs > 0 {
-                time = time.addingTimeInterval(UserSettings.shared.absorptionTimeLongInterval * 60)
-                let hkObject = HealthDataHelper.processQuantitySample(value: finalAmountOfECarbs, unit: HealthDataHelper.unitCarbs, start: time, end: time, sampleType: HealthDataHelper.objectTypeCarbs)
-                self.hkObjects.append(hkObject)
-                self.eCarbEntries.append(finalAmountOfECarbs)
-            }
+    private func calculateTotalMealSugars() {
+        if includeTotalMealSugars {
+            let entries = generateEntries(amount: meal.sugars, time: now, type: .sugars)
+            self.hkObjects.append(entries.hkObject)
+            sugarEntries[now] = entries.carbsEntry
         }
     }
     
     private func calculateTotalMealCarbs() {
         if includeTotalMealCarbs {
-            let hkObject = HealthDataHelper.processQuantitySample(value: meal.getRegularCarbs(), unit: HealthDataHelper.unitCarbs, start: now, end: now, sampleType: HealthDataHelper.objectTypeCarbs)
-            self.hkObjects.append(hkObject)
+            // Make sure to not go below 1 for number carb entries, otherwise we'd increase carbs amount in the next step
+            let numberOfCarbEntries = max(Int(UserSettings.shared.absorptionTimeMediumDurationInHours * 60) / UserSettings.shared.absorptionTimeMediumIntervalInMinutes, 1)
+            let totalCarbs = meal.getRegularCarbs()
+            calculateXCarbs(
+                xCarbsEntries: &self.carbsEntries,
+                numberOfXCarbsEntries: numberOfCarbEntries,
+                totalXCarbs: totalCarbs,
+                xCarbsStart: carbsStart,
+                xCarbsEnd: carbsStart.addingTimeInterval(UserSettings.shared.absorptionTimeMediumDurationInHours * 60 * 60),
+                xCarbsType: .carbs,
+                timeIntervalInMinutes: UserSettings.shared.absorptionTimeMediumIntervalInMinutes
+            )
         }
+    }
+    
+    private func calculateECarbs() {
+        if includeECarbs {
+            // Make sure to not go below 1 for number carb entries, otherwise we'd increase e-carbs amount in the next step
+            let numberOfECarbEntries = max(absorptionTimeInMinutes / UserSettings.shared.absorptionTimeLongIntervalInMinutes, 1)
+            let totalECarbs = meal.fpus.getExtendedCarbs()
+            calculateXCarbs(
+                xCarbsEntries: &self.eCarbEntries,
+                numberOfXCarbsEntries: numberOfECarbEntries,
+                totalXCarbs: totalECarbs,
+                xCarbsStart: eCarbsStart,
+                xCarbsEnd: eCarbsStart.addingTimeInterval(TimeInterval(absorptionTimeInMinutes * 60)),
+                xCarbsType: .eCarbs,
+                timeIntervalInMinutes: UserSettings.shared.absorptionTimeLongIntervalInMinutes
+            )
+        }
+    }
+    
+    private func calculateXCarbs(xCarbsEntries: inout [Date: CarbsEntry], numberOfXCarbsEntries: Int, totalXCarbs: Double, xCarbsStart: Date, xCarbsEnd: Date, xCarbsType: CarbsEntryType, timeIntervalInMinutes: Int) {
+        // Generate numberOfECarbEntries, but omit the last one, as it needs to be corrected using the total amount of e-carbs
+        // in order to get the exact amount of total e-carbs
+        let xCarbsAmount = totalXCarbs / Double(numberOfXCarbsEntries)
+        var time = xCarbsStart
+        var totalCarbs = 0.0
+        repeat {
+            let entries = generateEntries(amount: xCarbsAmount, time: time, type: xCarbsType)
+            self.hkObjects.append(entries.hkObject)
+            xCarbsEntries[time] = entries.carbsEntry
+            
+            time = time.addingTimeInterval(TimeInterval(timeIntervalInMinutes * 60))
+            totalCarbs += xCarbsAmount
+        } while time < xCarbsEnd.addingTimeInterval(-TimeInterval(timeIntervalInMinutes * 60))
+        
+        // Now determine the final amount of e-carbs and generate the final entry
+        let finalAmountOfXCarbs = totalXCarbs - totalCarbs
+        if finalAmountOfXCarbs > 0 {
+            time = time.addingTimeInterval(TimeInterval(timeIntervalInMinutes * 60))
+            let entries = generateEntries(amount: finalAmountOfXCarbs, time: time, type: xCarbsType)
+            self.hkObjects.append(entries.hkObject)
+            xCarbsEntries[time] = entries.carbsEntry
+        }
+    }
+    
+    private func generateEntries(amount: Double, time: Date, type: CarbsEntryType) -> (hkObject: HKObject, carbsEntry: CarbsEntry) {
+        let hkObject = HealthDataHelper.processQuantitySample(value: amount, unit: HealthDataHelper.unitCarbs, start: time, end: time, sampleType: HealthDataHelper.objectTypeCarbs)
+        let xCarbsEntry = CarbsEntry(type: type, value: amount, date: time)
+        return (hkObject, xCarbsEntry)
     }
     
     // MARK: - Functions for caluclating the carbs regime
     
-    private func getCarbRegime() -> [(Date, Double)] {
-        var carbsRegime = [(Date, Double)]()
+    private func getCarbRegime() -> [Date: [CarbsEntry]] {
+        var carbsRegime = [Date: [CarbsEntry]]()
+        
+        // Determine min interval from carbs and eCarbs, global start and end time
+        let intervalInMinutes = gcdRecursiveEuklid(UserSettings.shared.absorptionTimeMediumIntervalInMinutes, UserSettings.shared.absorptionTimeLongIntervalInMinutes)
+        let globalStartTime = now // Start is always now, as we want to visualize the idle time before any carbs hit the body
+        let globalEndTime = max(now.addingTimeInterval(
+            includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeMediumDelayInMinutes) + UserSettings.shared.absorptionTimeMediumDurationInHours * 60) * 60 : 0 // either carbs start + duration or zero
+        ), now.addingTimeInterval(
+            includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeLongDelayInMinutes + absorptionTimeInMinutes) * 60) : 0 // either eCarbs start + duration or zero
+        ))
+        
+        // Iterate through sugar/carbs/eCarbs entries and put together the total regime
+        
         
         // The first entry is either the total meal carbs or zero, if e-carbs are included
         if includeTotalMealCarbs {
@@ -199,6 +254,15 @@ class CarbsRegime: ObservableObject {
         }
         
         return (minDouble, maxDouble)
+    }
+    
+    func gcdRecursiveEuklid(_ m: Int, _ n: Int) -> Int {
+        let r: Int = m % n
+        if r != 0 {
+            return gcdRecursiveEuklid(n, r)
+        } else {
+            return n
+        }
     }
     
     // MARK: - Functions for fitting the chart

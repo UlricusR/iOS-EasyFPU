@@ -13,22 +13,27 @@ class UserSettings: ObservableObject {
     enum UserDefaultsType {
         case bool(Bool, UserSettings.UserDefaultsBoolKey)
         case double(Double, UserSettings.UserDefaultsDoubleKey)
+        case int(Int, UserSettings.UserDefaultsIntKey)
     }
     
     enum UserDefaultsBoolKey: String, CaseIterable {
         case disclaimerAccepted = "DisclaimerAccepted"
         case exportECarbs = "ExportECarbs"
         case exportTotalMealCarbs = "ExportTotalMealCarbs"
+        case exportTotalMealSugars = "ExportTotalMealSugars"
         case exportTotalMealCalories = "ExportTotalMealCalories"
     }
     
     enum UserDefaultsDoubleKey: String, CaseIterable {
+        case absorptionTimeMediumDuration = "AbsorptionTimeMediumDuration"
+        case eCarbsFactor = "ECarbsFactor"
+    }
+    
+    enum UserDefaultsIntKey: String, CaseIterable {
         case absorptionTimeMediumDelay = "AbsorptionTimeMediumDelay"
         case absorptionTimeMediumInterval = "AbsorptionTimeMediumInterval"
-        case absorptionTimeMediumDuration = "AbsorptionTimeMediumDuration"
         case absorptionTimeLongDelay = "AbsorptionTimeLongDelay"
         case absorptionTimeLongInterval = "AbsorptionTimeLongInterval"
-        case eCarbsFactor = "ECarbsFactor"
     }
     
     // MARK: - The key store for syncing via iCloud
@@ -36,35 +41,35 @@ class UserSettings: ObservableObject {
     
     // MARK: - Dynamic user settings are treated here
     
-    @Published var absorptionTimeLongDelay: Double
-    @Published var absorptionTimeLongInterval: Double
-    @Published var absorptionTimeMediumDelay: Double
-    @Published var absorptionTimeMediumInterval: Double
-    @Published var absorptionTimeMediumDuration: Double
+    @Published var absorptionTimeLongDelayInMinutes: Int
+    @Published var absorptionTimeLongIntervalInMinutes: Int
+    @Published var absorptionTimeMediumDelayInMinutes: Int
+    @Published var absorptionTimeMediumIntervalInMinutes: Int
+    @Published var absorptionTimeMediumDurationInHours: Double
     @Published var eCarbsFactor: Double
     
     static let shared = UserSettings(
-        absorptionTimeLongDelay: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault,
-        absorptionTimeLongInterval: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault,
-        absorptionTimeMediumDelay: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeMediumDelay) ?? AbsorptionSchemeViewModel.absorptionTimeMediumDelayDefault,
-        absorptionTimeMediumInterval: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeMediumInterval) ?? AbsorptionSchemeViewModel.absorptionTimeMediumIntervalDefault,
-        absorptionTimeMediumDuration: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeMediumDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeMediumDurationDefault,
+        absorptionTimeLongDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault,
+        absorptionTimeLongIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault,
+        absorptionTimeMediumDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeMediumDelay) ?? AbsorptionSchemeViewModel.absorptionTimeMediumDelayDefault,
+        absorptionTimeMediumIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeMediumInterval) ?? AbsorptionSchemeViewModel.absorptionTimeMediumIntervalDefault,
+        absorptionTimeMediumDurationInHours: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeMediumDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeMediumDurationDefault,
         eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault
     )
     
     private init(
-        absorptionTimeLongDelay: Double,
-        absorptionTimeLongInterval: Double,
-        absorptionTimeMediumDelay: Double,
-        absorptionTimeMediumInterval: Double,
-        absorptionTimeMediumDuration: Double,
+        absorptionTimeLongDelayInMinutes: Int,
+        absorptionTimeLongIntervalInMinutes: Int,
+        absorptionTimeMediumDelayInMinutes: Int,
+        absorptionTimeMediumIntervalInMinutes: Int,
+        absorptionTimeMediumDurationInHours: Double,
         eCarbsFactor: Double
     ) {
-        self.absorptionTimeLongDelay = absorptionTimeLongDelay
-        self.absorptionTimeLongInterval = absorptionTimeLongInterval
-        self.absorptionTimeMediumDelay = absorptionTimeMediumDelay
-        self.absorptionTimeMediumInterval = absorptionTimeMediumInterval
-        self.absorptionTimeMediumDuration = absorptionTimeMediumDuration
+        self.absorptionTimeLongDelayInMinutes = absorptionTimeLongDelayInMinutes // in minutes
+        self.absorptionTimeLongIntervalInMinutes = absorptionTimeLongIntervalInMinutes // in minutes
+        self.absorptionTimeMediumDelayInMinutes = absorptionTimeMediumDelayInMinutes // in minutes
+        self.absorptionTimeMediumIntervalInMinutes = absorptionTimeMediumIntervalInMinutes // in minutes
+        self.absorptionTimeMediumDurationInHours = absorptionTimeMediumDurationInHours // in hours
         self.eCarbsFactor = eCarbsFactor
     }
     
@@ -84,6 +89,12 @@ class UserSettings: ObservableObject {
                 return false
             }
             UserSettings.keyStore.set(value, forKey: key.rawValue)
+        case .int(let value, let key):
+            if !UserDefaultsIntKey.allCases.contains(key) {
+                errorMessage = NSLocalizedString("Fatal error, please inform app developer: Cannot store parameter: ", comment: "") + key.rawValue
+                return false
+            }
+            UserSettings.keyStore.set(value, forKey: key.rawValue)
         }
         
         // Synchronize
@@ -97,5 +108,9 @@ class UserSettings: ObservableObject {
     
     static func getValue(for key: UserDefaultsDoubleKey) -> Double? {
         UserSettings.keyStore.object(forKey: key.rawValue) == nil ? nil : UserSettings.keyStore.double(forKey: key.rawValue)
+    }
+    
+    static func getValue(for key: UserDefaultsIntKey) -> Int? {
+        UserSettings.keyStore.object(forKey: key.rawValue) == nil ? nil : Int(UserSettings.keyStore.longLong(forKey: key.rawValue))
     }
 }
