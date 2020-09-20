@@ -9,7 +9,7 @@
 import Foundation
 import HealthKit
 
-class CarbsEntries: ObservableObject {
+class CarbsRegime: ObservableObject {
     
     // MARK: - Variables required by the HealthKit data model
     
@@ -48,7 +48,7 @@ class CarbsEntries: ObservableObject {
     
     // MARK: - Static variables / constants
     
-    static let `default` = CarbsEntries(meal: MealViewModel.default, absorptionTimeInHours: 5, includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true, includeTotalMealCarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false)
+    static let `default` = CarbsRegime(meal: MealViewModel.default, absorptionTimeInHours: 5, includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true, includeTotalMealCarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false)
     
     // MARK: - Initializers
     

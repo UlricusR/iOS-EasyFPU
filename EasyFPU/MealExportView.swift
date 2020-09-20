@@ -13,7 +13,7 @@ struct MealExportView: View {
     @Binding var isPresented: Bool
     var meal: MealViewModel
     var absorptionScheme: AbsorptionScheme
-    @ObservedObject var carbsEntries = CarbsEntries.default
+    @ObservedObject var carbsEntries = CarbsRegime.default
     @State var showingSheet = false
     @State var showingAlert = false
     @State var errorMessage = ""

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct HealthExportPreview: View {
-    @ObservedObject var carbsEntries: CarbsEntries
+    @ObservedObject var carbsEntries: CarbsRegime
     
     var body: some View {
         GeometryReader { reader in
@@ -42,7 +42,7 @@ struct HealthExportPreview: View {
 }
 
 struct ChartBar: View {
-    var carbsEntries: CarbsEntries
+    var carbsEntries: CarbsRegime
     var entry: (date: Date, carbs: Double)
     var requiresTimeSplitting: Bool
     
