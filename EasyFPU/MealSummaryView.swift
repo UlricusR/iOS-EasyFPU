@@ -27,7 +27,10 @@ struct MealSummaryView: View {
         return ChartBar.timeStyle.string(from: time)
     }
     
-    @State var showingSheet = false
+    @State private var showingSheet = false
+    @State private var selectedTab: Int = 1
+    private let minTranslationForSwipe: CGFloat = 50
+    private let numberOfTabs: Int = 3
     
     var body: some View {
         Divider()
@@ -35,7 +38,7 @@ struct MealSummaryView: View {
         HStack(alignment: .center) {
             Text("Total meal").font(.headline).multilineTextAlignment(.center)
             NavigationLink(destination: MealDetail(absorptionScheme: self.absorptionScheme, meal: self.meal)) {
-                Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor)
+                Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor).padding([.leading, .trailing])
             }
             Button(action: {
                 self.showingSheet = true
@@ -44,103 +47,147 @@ struct MealSummaryView: View {
             }
         }
         
-        TabView {
+        TabView(selection: $selectedTab) {
             // Sugars if available
             if meal.sugars > 0 {
                 HStack {
-                    Image("sugar-35").padding()
+                    VStack(alignment: .center) {
+                        Image(systemName: "cube.fill")
+                        Text("Sugars").font(.headline).fontWeight(.bold).lineLimit(2)
+                    }
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.red)
+                    .padding(.trailing)
                     
-                    VStack(alignment: .leading) {
-                        Text("Sugars").font(.subheadline).foregroundColor(.accentColor).fontWeight(.bold)
-                        HStack {
-                            Text("How much?").foregroundColor(.accentColor)
+                    VStack(alignment: .trailing) { // Questions
+                        Text("How much?")
+                        Text("When?")
+                        Text("How long?")
+                    }.foregroundColor(.red)
+                    
+                    VStack(alignment: .leading) { // Answers
+                        HStack { // How much?
                             Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.sugars))!)
                             Text("g")
                         }
-                        HStack {
-                            Text("When?").foregroundColor(.accentColor)
-                            Text("Now")
-                        }
-                        HStack {
-                            Text("How long?").foregroundColor(.accentColor)
-                            Text("All at once")
-                        }
-                    }.padding()
+                        Text("Now") // When?
+                        Text("All at once") // How long?
+                    }
                 }
+                .lineLimit(1)
                 .tabItem {
-                    Image("sugar-35")
+                    Image(systemName: "cube")
                 }
-                .tag("Sugars")
+                .tag(0)
+                .highPriorityGesture(DragGesture().onEnded( {
+                    self.handleSwipe(translation: $0.translation.width)
+                }))
             }
             
             // Carbs
-            
             HStack {
-                Image("carbohydrates-35").padding()
+                VStack(alignment: .center) {
+                    Image(systemName: "hare.fill")
+                    Text("Regular Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
+                }
+                .multilineTextAlignment(.center)
+                .foregroundColor(.green)
+                .padding(.trailing)
                 
-                VStack(alignment: .leading) {
-                    Text("Regular Carbs").font(.subheadline).foregroundColor(.accentColor).fontWeight(.bold)
+                VStack(alignment: .trailing) { // Questions
+                    Text("How much?")
+                    Text("When?")
+                    Text("How long?")
+                }.foregroundColor(.green)
+                
+                VStack(alignment: .leading) { // Answers
                     HStack {
-                        Text("How much?").foregroundColor(.accentColor)
                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.getRegularCarbs()))!)
                         Text("g")
                     }
                     HStack {
-                        Text("When?").foregroundColor(.accentColor)
                         Text("In")
                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeMediumDelay))!)
                         Text("min")
-                        Text("(")
+                        Text("-")
                         Text(self.regularCarbsTimeAsString)
-                        Text(")")
                     }
                     HStack {
-                        Text("How long?").foregroundColor(.accentColor)
+                        Text("For")
                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeMediumDuration))!)
                         Text("h")
                     }
-                }.padding()
+                }
             }
+            .lineLimit(1)
             .tabItem {
-                Image("carbohydrates-35")
+                Image(systemName: "hare")
             }
-            .tag("Carbs")
+            .tag(1)
+            .highPriorityGesture(DragGesture().onEnded( {
+                self.handleSwipe(translation: $0.translation.width)
+            }))
             
             // Extended Carbs
             HStack {
-                Image("protein-35").padding()
+                VStack(alignment: .center) {
+                    Image(systemName: "tortoise.fill")
+                    Text("Extended Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
+                }
+                .multilineTextAlignment(.center)
+                .foregroundColor(.blue)
+                .padding(.trailing)
                 
-                VStack(alignment: .leading) {
-                    Text("Extended Carbs").font(.subheadline).foregroundColor(.accentColor).fontWeight(.bold)
+                VStack(alignment: .trailing) { // Questions
+                    Text("How much?")
+                    Text("When?")
+                    Text("How long?")
+                }.foregroundColor(.blue)
+                
+                VStack(alignment: .leading) { // Answers
                     HStack {
-                        Text("How much?").foregroundColor(.accentColor)
                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
                         Text("g")
                     }
                     HStack {
-                        Text("When?").foregroundColor(.accentColor)
                         Text("In")
                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelay))!)
                         Text("min")
-                        Text("(")
+                        Text("-")
                         Text(self.extendedCarbsTimeAsString)
-                        Text(")")
                     }
                     HStack {
-                        Text("How long?").foregroundColor(.accentColor)
+                        Text("For")
                         Text(self.absorptionTimeAsString)
                         Text("h")
                     }
-                }.padding()
+                }
             }
+            .lineLimit(1)
             .tabItem {
-                Image("protein-35")
+                Image(systemName: "tortoise")
             }
-            .tag("e-Carbs")
+            .tag(2)
+            .highPriorityGesture(DragGesture().onEnded( {
+                self.handleSwipe(translation: $0.translation.width)
+            }))
         }
-        .frame(height: 150)
+        .frame(height: 120)
+        .padding([.leading, .trailing])
         .sheet(isPresented: self.$showingSheet) {
             MealExportView(isPresented: self.$showingSheet, meal: self.meal, absorptionScheme: self.absorptionScheme)
+        }
+    }
+    
+    private func handleSwipe(translation: CGFloat) {
+        if translation > minTranslationForSwipe && selectedTab > 0 {
+            if meal.sugars == 0 {
+                selectedTab = max(selectedTab - 1, 1)
+            } else {
+                selectedTab -= 1
+            }
+        } else if translation < -minTranslationForSwipe && selectedTab < numberOfTabs - 1 {
+            selectedTab += 1
         }
     }
 }

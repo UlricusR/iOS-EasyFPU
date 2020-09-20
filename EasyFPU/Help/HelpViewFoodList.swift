@@ -31,8 +31,17 @@ struct HelpViewFoodList: View {
                 Text("A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.")
             }.padding()
             
-            Text("In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen.").padding().foregroundColor(.red)
-            Text("Tapping the summary will open the Meal Details view.").padding()
+            Text("In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen.").padding()
+            
+            HStack {
+                Image(systemName: "square.and.arrow.up").foregroundColor(.accentColor)
+                Text("Tapping the export button in the summary will open the Meal Export view.")
+            }.padding()
+            
+            HStack {
+                Image(systemName: "info.circle").foregroundColor(.accentColor)
+                Text("Tapping the info icon in the summary will open the Meal Details view.")
+            }.padding()
         }
     }
 }

@@ -41,7 +41,8 @@
 "A green Plus icon indicates that the food item has not yet been selected." = "Ein grünes Plus-Zeichen zeigt an, dass das Essen noch nicht zu einer Mahlzeit hinzugefügt wurde.";
 "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "Ein rotes Kreuz zeigt an, dass das Essen ausgewählt wurde. Es wird nun bei der Berechnung der Gesamtmahlzeit berücksichtigt. Drücken Sie ein weiteres Mal kurz auf das Essen, um es wieder aus der Mahlzeit zu entfernen.";
 "In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen." = "Haben Sie mindestens ein Essen ausgewählt, werden die wichtigsten Nährwerte der Gesamtmahlzeit am unteren Rand der Ansicht in roter Schrift angezeigt.";
-"Tapping the summary will open the Meal Details view." = "Drücken Sie auf die Zusammenfassung der Nährwerte, um weitere Details zu sehen oder die Nährwerte nach Apple Health zu exportieren.";
+"Tapping the summary will open the Meal Details view." = "Drücken Sie auf die Zusammenfassung der Nährwerte, um weitere Details zu sehen.";
+"Tapping the export button in the summary will open the Meal Export view." = "Drücken Sie auf den Export-Knopf, um Ihre Mahlzeit nach Apple Health zu exportieren.";
 
 // Select Food Item help
 "Select Food Item" = "Essen auswählen";
@@ -119,13 +120,13 @@
 "Carbs per 100g" = "Kohlenhydrate pro 100g";
 "Calories per 100g" = "Kalorien pro 100g";
 "g" = "g";
-"g Carbs" = "g Kohlenhydrate";
+"g Carbs" = "g KH";
 "g Sugars" = "g Zucker";
-"Carbs" = "Kohlenhydrate";
+"Carbs" = "KH";
 "Sugars" = "Zucker";
-"g Extended Carbs" = "g verlängerte Kohlenhydrate";
+"g Extended Carbs" = "g verlängerte KH";
 "Thereof Sugars per 100g" = "Davon Zucker pro 100g";
-"Extended Carbs" = "Verlängerte Kohlenhydrate";
+"Extended Carbs" = "Verl. KH";
 "kcal" = "kcal";
 "g/FPU" = "g/FPE";
 "e-Carbs Factor" = "e-Carbs-Faktor";
@@ -147,16 +148,17 @@
 "Enter amount consumed" = "Gegessene Menge eingeben";
 "Select amount" = "Menge auswählen";
 "Cannot delete food item" = "Kann Essen nicht löschen";
-"Delay of Extended Carbs" = "Verzögerung der verlängerten Kohlenhydrate";
+"Delay of Extended Carbs" = "Verzögerung der verlängerten KH";
 
 // Meal preview
-"e-Carbs" = "Verlängerte KH";
-"Regular Carbs" = "Reguläre Kohlenhydrate";
+"e-Carbs" = "Verl. KH";
+"Regular Carbs" = "Reguläre KH";
 "How much?" = "Wieviel?";
 "When?" = "Wann?";
 "How long?" = "Wie lange?";
 "All at once" = "Alles auf einmal";
 "Now" = "Sofort";
+"For" = "Für";
 
 // Meal details
 "Included food items:" = "Bestehend aus:";

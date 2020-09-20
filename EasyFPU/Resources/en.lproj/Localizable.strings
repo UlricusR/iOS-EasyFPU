@@ -41,7 +41,8 @@
 "A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
 "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
 "In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen." = "In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen.";
-"Tapping the summary will open the Meal Details view." = "Tapping the summary will open the Meal Details view and let you export nutritional values to Apple Health.";
+"Tapping the export button in the summary will open the Meal Export view." = "Tapping the export button in the summary will open the Meal Export view.";
+"Tapping the summary will open the Meal Details view." = "Tapping the summary will open the Meal Details view.";
 
 // Select Food Item help
 "Select Food Item" = "Select Food Item";
@@ -157,6 +158,7 @@
 "How long?" = "How long?";
 "All at once" = "All at once";
 "Now" = "Now";
+"For" = "For";
 
 // Meal details
 "Included food items:" = "Included food items:";
