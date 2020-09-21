@@ -203,10 +203,10 @@ struct AbsorptionSchemeEditor: View {
                         
                         // Save new user settings
                         if !(
-                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.delayLong, UserSettings.UserDefaultsIntKey.absorptionTimeLongDelay), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.intervalLong, UserSettings.UserDefaultsIntKey.absorptionTimeLongInterval), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.delayMedium, UserSettings.UserDefaultsIntKey.absorptionTimeMediumDelay), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.intervalMedium, UserSettings.UserDefaultsIntKey.absorptionTimeMediumInterval), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayLong, UserSettings.UserDefaultsIntKey.absorptionTimeLongDelay), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalLong, UserSettings.UserDefaultsIntKey.absorptionTimeLongInterval), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayMedium, UserSettings.UserDefaultsIntKey.absorptionTimeMediumDelay), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalMedium, UserSettings.UserDefaultsIntKey.absorptionTimeMediumInterval), errorMessage: &self.errorMessage) &&
                             UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationMedium, UserSettings.UserDefaultsDoubleKey.absorptionTimeMediumDuration), errorMessage: &self.errorMessage) &&
                             UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage)
                         ) {

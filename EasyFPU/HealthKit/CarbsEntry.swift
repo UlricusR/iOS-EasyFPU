@@ -17,6 +17,8 @@ class CarbsEntry {
     var value: Double
     var date: Date
     
+    static var `default` = CarbsEntry(type: .carbs, value: 1.0, date: Date())
+    
     init(type: CarbsEntryType, value: Double, date: Date) {
         self.type = type
         self.value = value

@@ -102,4 +102,13 @@ class DataHelper {
             return errorMessage
         }
     }
+    
+    static func gcdRecursiveEuklid(_ m: Int, _ n: Int) -> Int {
+        let r: Int = m % n
+        if r != 0 {
+            return gcdRecursiveEuklid(n, r)
+        } else {
+            return n
+        }
+    }
 }
