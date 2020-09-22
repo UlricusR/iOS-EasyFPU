@@ -157,7 +157,8 @@
 "When?" = "When?";
 "How long?" = "How long?";
 "All at once" = "All at once";
-"Now" = "Now";
+"Now at" = "Now at";
+"min at" = "min at";
 "For" = "For";
 
 // Meal details

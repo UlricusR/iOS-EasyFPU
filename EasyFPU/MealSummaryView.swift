@@ -9,24 +9,10 @@
 import SwiftUI
 
 struct MealSummaryView: View {
+    @Binding var activeSheet: ActiveFoodListSheet
+    @Binding var showingFoodListSheet: Bool
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var meal: MealViewModel
-    var absorptionTimeAsString: String {
-        if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return NumberFormatter().string(from: NSNumber(value: meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
-        } else {
-            return "..."
-        }
-    }
-    var regularCarbsTimeAsString: String {
-        let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeMediumDelayInMinutes * 60))
-        return ChartBar.timeStyle.string(from: time)
-    }
-    var extendedCarbsTimeAsString: String {
-        let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeLongDelayInMinutes * 60))
-        return ChartBar.timeStyle.string(from: time)
-    }
-    
     @State private var showingSheet = false
     @State private var selectedTab: Int = 1
     private let minTranslationForSwipe: CGFloat = 50
@@ -37,9 +23,13 @@ struct MealSummaryView: View {
         
         HStack(alignment: .center) {
             Text("Total meal").font(.headline).multilineTextAlignment(.center)
-            NavigationLink(destination: MealDetail(absorptionScheme: self.absorptionScheme, meal: self.meal)) {
+            Button(action: {
+                self.activeSheet = ActiveFoodListSheet.mealDetails
+                self.showingFoodListSheet = true
+            }) {
                 Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor).padding([.leading, .trailing])
             }
+            
             Button(action: {
                 self.showingSheet = true
             }) {
@@ -50,30 +40,7 @@ struct MealSummaryView: View {
         TabView(selection: $selectedTab) {
             // Sugars if available
             if meal.sugars > 0 {
-                HStack {
-                    VStack(alignment: .center) {
-                        Image(systemName: "cube.fill")
-                        Text("Sugars").font(.headline).fontWeight(.bold).lineLimit(2)
-                    }
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.red)
-                    .padding(.trailing)
-                    
-                    VStack(alignment: .trailing) { // Questions
-                        Text("How much?")
-                        Text("When?")
-                        Text("How long?")
-                    }.foregroundColor(.red)
-                    
-                    VStack(alignment: .leading) { // Answers
-                        HStack { // How much?
-                            Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.sugars))!)
-                            Text("g")
-                        }
-                        Text("Now") // When?
-                        Text("All at once") // How long?
-                    }
-                }
+                MealSugarsView(meal: self.meal)
                 .lineLimit(1)
                 .tabItem {
                     Image(systemName: "cube")
@@ -85,40 +52,7 @@ struct MealSummaryView: View {
             }
             
             // Carbs
-            HStack {
-                VStack(alignment: .center) {
-                    Image(systemName: "hare.fill")
-                    Text("Regular Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
-                }
-                .multilineTextAlignment(.center)
-                .foregroundColor(.green)
-                .padding(.trailing)
-                
-                VStack(alignment: .trailing) { // Questions
-                    Text("How much?")
-                    Text("When?")
-                    Text("How long?")
-                }.foregroundColor(.green)
-                
-                VStack(alignment: .leading) { // Answers
-                    HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.getRegularCarbs()))!)
-                        Text("g")
-                    }
-                    HStack {
-                        Text("In")
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeMediumDelayInMinutes))!)
-                        Text("min")
-                        Text("-")
-                        Text(self.regularCarbsTimeAsString)
-                    }
-                    HStack {
-                        Text("For")
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeMediumDurationInHours))!)
-                        Text("h")
-                    }
-                }
-            }
+            MealCarbsView(meal: self.meal)
             .lineLimit(1)
             .tabItem {
                 Image(systemName: "hare")
@@ -129,40 +63,7 @@ struct MealSummaryView: View {
             }))
             
             // Extended Carbs
-            HStack {
-                VStack(alignment: .center) {
-                    Image(systemName: "tortoise.fill")
-                    Text("Extended Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
-                }
-                .multilineTextAlignment(.center)
-                .foregroundColor(.blue)
-                .padding(.trailing)
-                
-                VStack(alignment: .trailing) { // Questions
-                    Text("How much?")
-                    Text("When?")
-                    Text("How long?")
-                }.foregroundColor(.blue)
-                
-                VStack(alignment: .leading) { // Answers
-                    HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
-                        Text("g")
-                    }
-                    HStack {
-                        Text("In")
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelayInMinutes))!)
-                        Text("min")
-                        Text("-")
-                        Text(self.extendedCarbsTimeAsString)
-                    }
-                    HStack {
-                        Text("For")
-                        Text(self.absorptionTimeAsString)
-                        Text("h")
-                    }
-                }
-            }
+            MealECarbsView(meal: self.meal, absorptionScheme: self.absorptionScheme)
             .lineLimit(1)
             .tabItem {
                 Image(systemName: "tortoise")

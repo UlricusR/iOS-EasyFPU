@@ -123,10 +123,10 @@
 "g Carbs" = "g KH";
 "g Sugars" = "g Zucker";
 "Carbs" = "KH";
-"Sugars" = "Zucker";
+"Sugars" = "Zucker-KH";
 "g Extended Carbs" = "g verlängerte KH";
 "Thereof Sugars per 100g" = "Davon Zucker pro 100g";
-"Extended Carbs" = "Verl. KH";
+"Extended Carbs" = "Verlängerte Kohlenhydrate";
 "kcal" = "kcal";
 "g/FPU" = "g/FPE";
 "e-Carbs Factor" = "e-Carbs-Faktor";
@@ -157,7 +157,8 @@
 "When?" = "Wann?";
 "How long?" = "Wie lange?";
 "All at once" = "Alles auf einmal";
-"Now" = "Sofort";
+"Now at" = "Jetzt um";
+"min at" = "min um";
 "For" = "Für";
 
 // Meal details

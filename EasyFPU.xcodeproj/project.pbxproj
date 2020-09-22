@@ -63,6 +63,9 @@
 		1BDBE39C24FE384C00ED61F1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1BDBE39E24FE384C00ED61F1 /* InfoPlist.strings */; };
 		1BEE525524D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE525324D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift */; };
 		1BEE525624D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE525424D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift */; };
+		1BF1A15A251AA1F8001E561C /* MealSugarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A159251AA1F8001E561C /* MealSugarsView.swift */; };
+		1BF1A15D251AA2B2001E561C /* MealCarbsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A15C251AA2B2001E561C /* MealCarbsView.swift */; };
+		1BF1A160251AA336001E561C /* MealECarbsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A15F251AA336001E561C /* MealECarbsView.swift */; };
 		1BF8A4C024C21A52008634DF /* FoodItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF8A4BE24C21A52008634DF /* FoodItem+CoreDataClass.swift */; };
 		1BF8A4C124C21A52008634DF /* FoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */; };
 		1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */; };
@@ -130,6 +133,9 @@
 		1BDBE39F24FE385F00ED61F1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1BEE525324D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AbsorptionBlock+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BEE525424D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AbsorptionBlock+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1BF1A159251AA1F8001E561C /* MealSugarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealSugarsView.swift; sourceTree = "<group>"; };
+		1BF1A15C251AA2B2001E561C /* MealCarbsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCarbsView.swift; sourceTree = "<group>"; };
+		1BF1A15F251AA336001E561C /* MealECarbsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealECarbsView.swift; sourceTree = "<group>"; };
 		1BF8A4BE24C21A52008634DF /* FoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsRegimeCalculator.swift; sourceTree = "<group>"; };
@@ -181,6 +187,9 @@
 				1B377A6724FAA935005AC5C6 /* AboutView.swift */,
 				1B004A3324BA3035001E362A /* FoodList.swift */,
 				1B59810225164B2200EE4374 /* MealSummaryView.swift */,
+				1BF1A159251AA1F8001E561C /* MealSugarsView.swift */,
+				1BF1A15C251AA2B2001E561C /* MealCarbsView.swift */,
+				1BF1A15F251AA336001E561C /* MealECarbsView.swift */,
 				1B24AD6D24BE392100F3A100 /* FoodListSheets.swift */,
 				1B1CC90E24DC4F390014DD7D /* MenuView.swift */,
 				1B1CC91024DC57300014DD7D /* MenuViewSheets.swift */,
@@ -394,6 +403,8 @@
 				1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */,
 				1B004A2D24BA3035001E362A /* AppDelegate.swift in Sources */,
 				1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */,
+				1BF1A15A251AA1F8001E561C /* MealSugarsView.swift in Sources */,
+				1BF1A160251AA336001E561C /* MealECarbsView.swift in Sources */,
 				1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */,
 				1B68548824BC70ED005ABB8B /* FoodItemEditor.swift in Sources */,
 				1BF8A4C024C21A52008634DF /* FoodItem+CoreDataClass.swift in Sources */,
@@ -405,6 +416,7 @@
 				1B6867E524FD37F80057EC6A /* HelpViewMealDetails.swift in Sources */,
 				1B90D2DA24F7A8EB0059BFFA /* SearchView.swift in Sources */,
 				1B55E68E24C7804B00072217 /* MealViewModel.swift in Sources */,
+				1BF1A15D251AA2B2001E561C /* MealCarbsView.swift in Sources */,
 				1BAEE08D2500E21200B4891F /* KeyboardGuardian.swift in Sources */,
 				1B004A4D24BA3E7F001E362A /* AbsorptionScheme.swift in Sources */,
 				1B6B861A2517D1AC00ED10FE /* CarbsEntry.swift in Sources */,

@@ -9,11 +9,13 @@
 import SwiftUI
 
 struct MealDetail: View {
+    @Binding var isPresented: Bool
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var meal: MealViewModel
     private let helpScreen = HelpScreen.mealDetails
     @State var activeSheet = ActiveMealDetailSheet.help
     @State private var showingSheet = false
+    @State private var showIncludedFoodItems = false
     var absorptionTimeAsString: String {
         if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
             return NumberFormatter().string(from: NSNumber(value: meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
@@ -24,45 +26,47 @@ struct MealDetail: View {
     
     var body: some View {
         NavigationView {
-            VStack() {
+            VStack(alignment: .leading) {
                 VStack() {
-                    HStack {
-                        Text(NumberFormatter().string(from: NSNumber(value: self.meal.amount))!)
-                        Text("g")
-                        Text("Amount consumed")
+                    MealSugarsView(meal: self.meal)
+                    MealCarbsView(meal: self.meal).padding(.top)
+                    MealECarbsView(meal: self.meal, absorptionScheme: self.absorptionScheme).padding(.top)
+                }.padding()
+                
+                HStack() {
+                    Text("Included food items:").font(.headline)
+                    Spacer()
+                    Button(action: {
+                        withAnimation {
+                            self.showIncludedFoodItems.toggle()
+                        }
+                    }) {
+                        Image(systemName: "chevron.right.circle")
+                            .imageScale(.large)
+                            .rotationEffect(.degrees(showIncludedFoodItems ? 90 : 0))
+                            .scaleEffect(showIncludedFoodItems ? 1.5 : 1)
                     }
-                    
-                    HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.calories))!)
-                        Text("kcal")
-                        
-                        Text("|")
-                        
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.getRegularCarbs()))!)
-                        Text("g Carbs")
+                }.padding([.leading, .trailing])
+                
+                if showIncludedFoodItems {
+                    List {
+                        ForEach(meal.foodItems, id: \.self) { foodItem in
+                            MealItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundColorName: Color.accentColor)
+                        }
                     }
-                    
-                    HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.fpu))!)
-                        Text("FPU")
-                        
-                        Text("|")
-                        
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
-                        Text("g Extended Carbs")
-                    }
-                    
-                    HStack {
-                        Text(self.absorptionTimeAsString)
-                        Text("h Absorption Time")
-                        
-                        Text("|")
-                        
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelayInMinutes))!)
-                        Text("min")
-                        Text("Delay")
-                    }
-                }.padding().foregroundColor(.red)
+                    .animation(.easeInOut)
+                }
+                
+                Spacer()
+            }
+            .navigationBarTitle(NSLocalizedString(self.meal.name, comment: ""))
+            .navigationBarItems(leading: HStack {
+                Button(action: {
+                    self.activeSheet = .help
+                    self.showingSheet = true
+                }) {
+                    Image(systemName: "questionmark.circle").imageScale(.large)
+                }
                 
                 if HealthDataHelper.healthKitIsAvailable() {
                     Button(action: {
@@ -70,26 +74,15 @@ struct MealDetail: View {
                         self.showingSheet = true
                     }) {
                         Image(systemName: "square.and.arrow.up").imageScale(.large)
-                        Text("Export to Apple Health")
-                    }.padding([.leading, .trailing, .bottom])
+                    }.padding(.leading)
                 }
-                
-                List {
-                    Text("Included food items:").font(.headline)
-                    ForEach(meal.foodItems, id: \.self) { foodItem in
-                        MealItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundColorName: Color.accentColor)
-                    }
+            }, trailing:
+                Button(action: {
+                    self.isPresented = false
+                }) {
+                    Text("Done")
                 }
-                
-                Spacer()
-            }
-            .navigationBarTitle(NSLocalizedString(self.meal.name, comment: ""))
-            .navigationBarItems(trailing: Button(action: {
-                self.activeSheet = .help
-                self.showingSheet = true
-            }) {
-                Image(systemName: "questionmark.circle").imageScale(.large)
-            })
+            )
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(isPresented: self.$showingSheet) {

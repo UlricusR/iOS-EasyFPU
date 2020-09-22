@@ -96,7 +96,7 @@ struct FoodList: View {
                                 }
                                 
                                 if self.meal.amount > 0 {
-                                    MealSummaryView(absorptionScheme: self.absorptionScheme, meal: self.meal)
+                                    MealSummaryView(activeSheet: self.$activeSheet, showingFoodListSheet: self.$showingSheet, absorptionScheme: self.absorptionScheme, meal: self.meal)
                                 }
                             }
                             .navigationBarTitle("Food List")
@@ -124,7 +124,9 @@ struct FoodList: View {
                                 },
                                 trailing: HStack {
                                     Button(action: {
-                                        self.showFavoritesOnly.toggle()
+                                        withAnimation {
+                                            self.showFavoritesOnly.toggle()
+                                        }
                                     }) {
                                         if self.showFavoritesOnly {
                                             Image(systemName: "star.fill")

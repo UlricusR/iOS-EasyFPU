@@ -26,8 +26,8 @@ struct MealExportView: View {
             VStack(alignment: .leading) {
                 Text("Please choose the data to export:").padding()
                 
-                Toggle(isOn: $carbsRegimeCalculator.includeECarbs) {
-                    Text("Extended Carbs")
+                Toggle(isOn: $carbsRegimeCalculator.includeTotalMealSugars) {
+                    Text("Sugars")
                 }
                 .padding([.leading, .trailing, .top])
                 
@@ -36,9 +36,14 @@ struct MealExportView: View {
                 }
                 .padding([.leading, .trailing])
                 
+                Toggle(isOn: $carbsRegimeCalculator.includeECarbs) {
+                    Text("Extended Carbs")
+                }
+                .padding([.leading, .trailing])
+                
                 Toggle(isOn: $exportTotalMealCalories) {
                     Text("Total Meal Calories")
-                }.padding([.leading, .trailing, .bottom])
+                }.padding()
                 
                 Button(action: {
                     self.exportHealthSample()
