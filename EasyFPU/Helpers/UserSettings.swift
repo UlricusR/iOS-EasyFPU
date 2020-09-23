@@ -25,11 +25,14 @@ class UserSettings: ObservableObject {
     }
     
     enum UserDefaultsDoubleKey: String, CaseIterable {
+        case absorptionTimeSugarsDuration = "AbsorptionTimeSugarsDuration"
         case absorptionTimeCarbsDuration = "AbsorptionTimeCarbsDuration"
         case eCarbsFactor = "ECarbsFactor"
     }
     
     enum UserDefaultsIntKey: String, CaseIterable {
+        case absorptionTimeSugarsDelay = "AbsorptionTimeSugarsDelay"
+        case absorptionTimeSugarsInterval = "AbsorptionTimeSugarsInterval"
         case absorptionTimeCarbsDelay = "AbsorptionTimeCarbsDelay"
         case absorptionTimeCarbsInterval = "AbsorptionTimeCarbsInterval"
         case absorptionTimeECarbsDelay = "AbsorptionTimeECarbsDelay"
@@ -41,6 +44,9 @@ class UserSettings: ObservableObject {
     
     // MARK: - Dynamic user settings are treated here
     
+    @Published var absorptionTimeSugarsDelayInMinutes: Int
+    @Published var absorptionTimeSugarsIntervalInMinutes: Int
+    @Published var absorptionTimeSugarsDurationInHours: Double
     @Published var absorptionTimeCarbsDelayInMinutes: Int
     @Published var absorptionTimeCarbsIntervalInMinutes: Int
     @Published var absorptionTimeCarbsDurationInHours: Double
@@ -49,22 +55,31 @@ class UserSettings: ObservableObject {
     @Published var eCarbsFactor: Double
     
     static let shared = UserSettings(
-        absorptionTimeECarbsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault,
-        absorptionTimeECarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault,
+        absorptionTimeSugarsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeSugarsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault,
+        absorptionTimeSugarsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeSugarsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault,
+        absorptionTimeSugarsDurationInHours: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeSugarsDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault,
         absorptionTimeCarbsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeCarbsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault,
         absorptionTimeCarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeCarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeCarbsIntervalDefault,
         absorptionTimeCarbsDurationInHours: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeCarbsDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault,
+        absorptionTimeECarbsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault,
+        absorptionTimeECarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault,
         eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault
     )
     
     private init(
-        absorptionTimeECarbsDelayInMinutes: Int,
-        absorptionTimeECarbsIntervalInMinutes: Int,
+        absorptionTimeSugarsDelayInMinutes: Int,
+        absorptionTimeSugarsIntervalInMinutes: Int,
+        absorptionTimeSugarsDurationInHours: Double,
         absorptionTimeCarbsDelayInMinutes: Int,
         absorptionTimeCarbsIntervalInMinutes: Int,
         absorptionTimeCarbsDurationInHours: Double,
+        absorptionTimeECarbsDelayInMinutes: Int,
+        absorptionTimeECarbsIntervalInMinutes: Int,
         eCarbsFactor: Double
     ) {
+        self.absorptionTimeSugarsDelayInMinutes = absorptionTimeSugarsDelayInMinutes // in minutes
+        self.absorptionTimeSugarsIntervalInMinutes = absorptionTimeSugarsIntervalInMinutes // in minutes
+        self.absorptionTimeSugarsDurationInHours = absorptionTimeSugarsDurationInHours // in hours
         self.absorptionTimeCarbsDelayInMinutes = absorptionTimeCarbsDelayInMinutes // in minutes
         self.absorptionTimeCarbsIntervalInMinutes = absorptionTimeCarbsIntervalInMinutes // in minutes
         self.absorptionTimeCarbsDurationInHours = absorptionTimeCarbsDurationInHours // in hours

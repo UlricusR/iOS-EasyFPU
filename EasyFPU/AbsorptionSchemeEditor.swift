@@ -107,28 +107,26 @@ struct AbsorptionSchemeEditor: View {
                     }
                 }
                 
-                Section(header: Text("e-Carbs Factor")) {
-                    HStack {
-                        Text("e-Carbs Factor")
-                        TextField("e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
-                        Text("g/FPU")
-                    }
-                }
-                
-                Section(header: Text("Absorption Time Parameters for e-Carbs")) {
+                Section(header: Text("Absorption Time Parameters for Sugars")) {
                     HStack {
                         Text("Delay")
-                        TextField("Delay", text: $draftAbsorptionScheme.delayECarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        TextField("Delay", text: $draftAbsorptionScheme.delaySugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("Interval")
-                        TextField("Interval", text: $draftAbsorptionScheme.intervalECarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        TextField("Interval", text: $draftAbsorptionScheme.intervalSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
-                }
                     
+                    HStack {
+                        Text("Duration")
+                        TextField("Duration", text: $draftAbsorptionScheme.durationSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        Text("h")
+                    }
+                }
+                
                 Section(header: Text("Absorption Time Parameters for Carbs")) {
                     HStack {
                         Text("Delay")
@@ -149,6 +147,26 @@ struct AbsorptionSchemeEditor: View {
                     }
                 }
                 
+                Section(header: Text("Absorption Time Parameters for e-Carbs")) {
+                    HStack {
+                        Text("Delay")
+                        TextField("Delay", text: $draftAbsorptionScheme.delayECarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        Text("min")
+                    }
+                    
+                    HStack {
+                        Text("Interval")
+                        TextField("Interval", text: $draftAbsorptionScheme.intervalECarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        Text("min")
+                    }
+                    
+                    HStack {
+                        Text("e-Carbs Factor")
+                        TextField("e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        Text("g/FPU")
+                    }
+                }
+                    
                 // The reset button
                 Button(action: {
                     self.resetToDefaults()

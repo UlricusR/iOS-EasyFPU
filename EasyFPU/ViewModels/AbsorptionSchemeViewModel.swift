@@ -11,6 +11,47 @@ import Foundation
 class AbsorptionSchemeViewModel: ObservableObject {
     var absorptionBlocks: [AbsorptionBlockViewModel]
     
+    // Absorption block parameters for sugars
+    private(set) var delaySugars: Int = AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault
+    @Published var delaySugarsAsString = "" {
+        willSet {
+            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
+            switch result {
+            case .success(let value):
+                self.delaySugars = value
+            case .failure(let err):
+                debugPrint(DataHelper.getErrorMessage(from: err))
+                return
+            }
+        }
+    }
+    private(set) var intervalSugars: Int = AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault
+    @Published var intervalSugarsAsString = "" {
+        willSet {
+            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
+            switch result {
+            case .success(let value):
+                self.intervalSugars = value
+            case .failure(let err):
+                debugPrint(DataHelper.getErrorMessage(from: err))
+                return
+            }
+        }
+    }
+    private(set) var durationSugars: Double = AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault
+    @Published var durationSugarsAsString = "" {
+        willSet {
+            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
+            switch result {
+            case .success(let value):
+                self.durationSugars = value
+            case .failure(let err):
+                debugPrint(DataHelper.getErrorMessage(from: err))
+                return
+            }
+        }
+    }
+    
     // Absorption block parameters for carbs
     private(set) var delayCarbs: Int = AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault
     @Published var delayCarbsAsString = "" {
@@ -95,6 +136,9 @@ class AbsorptionSchemeViewModel: ObservableObject {
         }
     }
     
+    static let absorptionTimeSugarsDelayDefault: Int = 0 // minutes
+    static let absorptionTimeSugarsIntervalDefault: Int = 5 // minutes
+    static let absoprtionTimeSugarsDurationDefault: Double = 2 // hours
     static let absorptionTimeCarbsDelayDefault: Int = 5 // minutes
     static let absorptionTimeCarbsIntervalDefault: Int = 5 // minutes
     static let absoprtionTimeCarbsDurationDefault: Double = 3 // hours
@@ -103,6 +147,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
     static let eCarbsFactorDefault: Double = 10 // g e-carbs per FPU
     
     init(from cdAbsorptionScheme: AbsorptionScheme) {
+        // Absorption scheme
         self.absorptionBlocks = [AbsorptionBlockViewModel]()
         for absorptionBlock in cdAbsorptionScheme.absorptionBlocks {
             let newAbsorptionBlockViewModel = AbsorptionBlockViewModel(from: absorptionBlock)
@@ -111,6 +156,20 @@ class AbsorptionSchemeViewModel: ObservableObject {
             }
         }
         
+        // Sugars
+        let delaySugars = UserSettings.shared.absorptionTimeSugarsDelayInMinutes
+        self.delaySugars = delaySugars
+        self.delaySugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delaySugars))!
+        
+        let intervalSugars = UserSettings.shared.absorptionTimeSugarsIntervalInMinutes
+        self.intervalSugars = intervalSugars
+        self.intervalSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: intervalSugars))!
+        
+        let durationSugars = UserSettings.shared.absorptionTimeSugarsDurationInHours
+        self.durationSugars = durationSugars
+        self.durationSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: durationSugars))!
+        
+        // Carbs
         let delayCarbs = UserSettings.shared.absorptionTimeCarbsDelayInMinutes
         self.delayCarbs = delayCarbs
         self.delayCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delayCarbs))!
@@ -123,6 +182,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
         self.durationCarbs = durationCarbs
         self.durationCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: durationCarbs))!
         
+        // E-Carbs
         let delayECarbs = UserSettings.shared.absorptionTimeECarbsDelayInMinutes
         self.delayECarbs = delayECarbs
         self.delayECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delayECarbs))!

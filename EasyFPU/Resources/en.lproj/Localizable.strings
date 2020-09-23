@@ -201,7 +201,9 @@
 "Fatal error: Cannot convert numbers into string, please contact app developer" = "Fatal error: Cannot convert numbers into string, please contact app developer";
 "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer";
 "Reset to default" = "Reset to default";
-"Absorption Time Parameters" = "Absorption Time Parameters";
+"Absorption Time Parameters for Sugars" = "Absorption Time Parameters for Sugars";
+"Absorption Time Parameters for Carbs" = "Absorption Time Parameters for Carbs";
+"Absorption Time Parameters for e-Carbs" = "Absorption Time Parameters for e-Carbs";
 "Delay" = "Delay";
 "Interval" = "Interval";
 "min" = "min";
