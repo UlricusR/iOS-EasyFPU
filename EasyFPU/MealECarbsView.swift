@@ -19,7 +19,7 @@ struct MealECarbsView: View {
         }
     }
     var extendedCarbsTimeAsString: String {
-        let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeLongDelayInMinutes * 60))
+        let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
         return ChartBar.timeStyle.string(from: time)
     }
     
@@ -46,7 +46,7 @@ struct MealECarbsView: View {
                 }
                 HStack {
                     Text("In")
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelayInMinutes))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeECarbsDelayInMinutes))!)
                     Text("min at")
                     Text(self.extendedCarbsTimeAsString)
                 }

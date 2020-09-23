@@ -25,15 +25,15 @@ class UserSettings: ObservableObject {
     }
     
     enum UserDefaultsDoubleKey: String, CaseIterable {
-        case absorptionTimeMediumDuration = "AbsorptionTimeMediumDuration"
+        case absorptionTimeCarbsDuration = "AbsorptionTimeCarbsDuration"
         case eCarbsFactor = "ECarbsFactor"
     }
     
     enum UserDefaultsIntKey: String, CaseIterable {
-        case absorptionTimeMediumDelay = "AbsorptionTimeMediumDelay"
-        case absorptionTimeMediumInterval = "AbsorptionTimeMediumInterval"
-        case absorptionTimeLongDelay = "AbsorptionTimeLongDelay"
-        case absorptionTimeLongInterval = "AbsorptionTimeLongInterval"
+        case absorptionTimeCarbsDelay = "AbsorptionTimeCarbsDelay"
+        case absorptionTimeCarbsInterval = "AbsorptionTimeCarbsInterval"
+        case absorptionTimeECarbsDelay = "AbsorptionTimeECarbsDelay"
+        case absorptionTimeECarbsInterval = "AbsorptionTimeECarbsInterval"
     }
     
     // MARK: - The key store for syncing via iCloud
@@ -41,35 +41,35 @@ class UserSettings: ObservableObject {
     
     // MARK: - Dynamic user settings are treated here
     
-    @Published var absorptionTimeLongDelayInMinutes: Int
-    @Published var absorptionTimeLongIntervalInMinutes: Int
-    @Published var absorptionTimeMediumDelayInMinutes: Int
-    @Published var absorptionTimeMediumIntervalInMinutes: Int
-    @Published var absorptionTimeMediumDurationInHours: Double
+    @Published var absorptionTimeCarbsDelayInMinutes: Int
+    @Published var absorptionTimeCarbsIntervalInMinutes: Int
+    @Published var absorptionTimeCarbsDurationInHours: Double
+    @Published var absorptionTimeECarbsDelayInMinutes: Int
+    @Published var absorptionTimeECarbsIntervalInMinutes: Int
     @Published var eCarbsFactor: Double
     
     static let shared = UserSettings(
-        absorptionTimeLongDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault,
-        absorptionTimeLongIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault,
-        absorptionTimeMediumDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeMediumDelay) ?? AbsorptionSchemeViewModel.absorptionTimeMediumDelayDefault,
-        absorptionTimeMediumIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeMediumInterval) ?? AbsorptionSchemeViewModel.absorptionTimeMediumIntervalDefault,
-        absorptionTimeMediumDurationInHours: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeMediumDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeMediumDurationDefault,
+        absorptionTimeECarbsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault,
+        absorptionTimeECarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault,
+        absorptionTimeCarbsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeCarbsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault,
+        absorptionTimeCarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeCarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeCarbsIntervalDefault,
+        absorptionTimeCarbsDurationInHours: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeCarbsDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault,
         eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault
     )
     
     private init(
-        absorptionTimeLongDelayInMinutes: Int,
-        absorptionTimeLongIntervalInMinutes: Int,
-        absorptionTimeMediumDelayInMinutes: Int,
-        absorptionTimeMediumIntervalInMinutes: Int,
-        absorptionTimeMediumDurationInHours: Double,
+        absorptionTimeECarbsDelayInMinutes: Int,
+        absorptionTimeECarbsIntervalInMinutes: Int,
+        absorptionTimeCarbsDelayInMinutes: Int,
+        absorptionTimeCarbsIntervalInMinutes: Int,
+        absorptionTimeCarbsDurationInHours: Double,
         eCarbsFactor: Double
     ) {
-        self.absorptionTimeLongDelayInMinutes = absorptionTimeLongDelayInMinutes // in minutes
-        self.absorptionTimeLongIntervalInMinutes = absorptionTimeLongIntervalInMinutes // in minutes
-        self.absorptionTimeMediumDelayInMinutes = absorptionTimeMediumDelayInMinutes // in minutes
-        self.absorptionTimeMediumIntervalInMinutes = absorptionTimeMediumIntervalInMinutes // in minutes
-        self.absorptionTimeMediumDurationInHours = absorptionTimeMediumDurationInHours // in hours
+        self.absorptionTimeCarbsDelayInMinutes = absorptionTimeCarbsDelayInMinutes // in minutes
+        self.absorptionTimeCarbsIntervalInMinutes = absorptionTimeCarbsIntervalInMinutes // in minutes
+        self.absorptionTimeCarbsDurationInHours = absorptionTimeCarbsDurationInHours // in hours
+        self.absorptionTimeECarbsDelayInMinutes = absorptionTimeECarbsDelayInMinutes // in minutes
+        self.absorptionTimeECarbsIntervalInMinutes = absorptionTimeECarbsIntervalInMinutes // in minutes
         self.eCarbsFactor = eCarbsFactor
     }
     

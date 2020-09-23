@@ -82,14 +82,14 @@ class CarbsRegimeCalculator: ObservableObject {
         // Determine global start and end time
         self.globalStartTime = now // Start is always now, as we want to visualize the idle time before any carbs hit the body
         self.globalEndTime = max(now.addingTimeInterval(
-            includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeMediumDelayInMinutes) + UserSettings.shared.absorptionTimeMediumDurationInHours * 60) * 60 : 0 // either carbs start + duration or zero
+            includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeCarbsDelayInMinutes) + UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) * 60 : 0 // either carbs start + duration or zero
         ), now.addingTimeInterval(
-            includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeLongDelayInMinutes + absorptionTimeInMinutes) * 60) : 0 // either eCarbs start + duration or zero
+            includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + absorptionTimeInMinutes) * 60) : 0 // either eCarbs start + duration or zero
         ))
-        self.intervalInMinutes = DataHelper.gcdRecursiveEuklid(UserSettings.shared.absorptionTimeMediumIntervalInMinutes, UserSettings.shared.absorptionTimeLongIntervalInMinutes)
+        self.intervalInMinutes = DataHelper.gcdRecursiveEuklid(UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, UserSettings.shared.absorptionTimeECarbsIntervalInMinutes)
         
-        self.eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeLongDelayInMinutes * 60))
-        self.carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeMediumDelayInMinutes * 60))
+        self.eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
+        self.carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
         
         if includeSugars { calculateTotalMealSugars() }
         if includeTotalMealCarbs { calculateTotalMealCarbs() }
@@ -113,14 +113,14 @@ class CarbsRegimeCalculator: ObservableObject {
         // Determine global start and end time
         globalStartTime = now // Start is always now, as we want to visualize the idle time before any carbs hit the body
         globalEndTime = max(now.addingTimeInterval(
-            includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeMediumDelayInMinutes) + UserSettings.shared.absorptionTimeMediumDurationInHours * 60) * 60 : 0 // either carbs start + duration or zero
+            includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeCarbsDelayInMinutes) + UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) * 60 : 0 // either carbs start + duration or zero
         ), now.addingTimeInterval(
-            includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeLongDelayInMinutes + absorptionTimeInMinutes) * 60) : 0 // either eCarbs start + duration or zero
+            includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + absorptionTimeInMinutes) * 60) : 0 // either eCarbs start + duration or zero
         ))
-        intervalInMinutes = DataHelper.gcdRecursiveEuklid(UserSettings.shared.absorptionTimeMediumIntervalInMinutes, UserSettings.shared.absorptionTimeLongIntervalInMinutes)
+        intervalInMinutes = DataHelper.gcdRecursiveEuklid(UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, UserSettings.shared.absorptionTimeECarbsIntervalInMinutes)
         
-        carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeMediumDelayInMinutes * 60))
-        eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeLongDelayInMinutes * 60))
+        carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
+        eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
         
         if includeTotalMealSugars { calculateTotalMealSugars() }
         if includeTotalMealCarbs { calculateTotalMealCarbs() }
@@ -147,16 +147,16 @@ class CarbsRegimeCalculator: ObservableObject {
     private func calculateTotalMealCarbs() {
         if includeTotalMealCarbs {
             // Make sure to not go below 1 for number carb entries, otherwise we'd increase carbs amount in the next step
-            let numberOfCarbEntries = max(Int(UserSettings.shared.absorptionTimeMediumDurationInHours * 60) / UserSettings.shared.absorptionTimeMediumIntervalInMinutes, 1)
+            let numberOfCarbEntries = max(Int(UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) / UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, 1)
             let totalCarbs = meal.getRegularCarbs()
             calculateXCarbs(
                 xCarbsEntries: &self.carbsEntries,
                 numberOfXCarbsEntries: numberOfCarbEntries,
                 totalXCarbs: totalCarbs,
                 xCarbsStart: carbsStart,
-                xCarbsEnd: carbsStart.addingTimeInterval(UserSettings.shared.absorptionTimeMediumDurationInHours * 60 * 60),
+                xCarbsEnd: carbsStart.addingTimeInterval(UserSettings.shared.absorptionTimeCarbsDurationInHours * 60 * 60),
                 xCarbsType: .carbs,
-                timeIntervalInMinutes: UserSettings.shared.absorptionTimeMediumIntervalInMinutes
+                timeIntervalInMinutes: UserSettings.shared.absorptionTimeCarbsIntervalInMinutes
             )
         }
     }
@@ -164,7 +164,7 @@ class CarbsRegimeCalculator: ObservableObject {
     private func calculateECarbs() {
         if includeECarbs {
             // Make sure to not go below 1 for number carb entries, otherwise we'd increase e-carbs amount in the next step
-            let numberOfECarbEntries = max(absorptionTimeInMinutes / UserSettings.shared.absorptionTimeLongIntervalInMinutes, 1)
+            let numberOfECarbEntries = max(absorptionTimeInMinutes / UserSettings.shared.absorptionTimeECarbsIntervalInMinutes, 1)
             let totalECarbs = meal.fpus.getExtendedCarbs()
             calculateXCarbs(
                 xCarbsEntries: &self.eCarbsEntries,
@@ -173,7 +173,7 @@ class CarbsRegimeCalculator: ObservableObject {
                 xCarbsStart: eCarbsStart,
                 xCarbsEnd: eCarbsStart.addingTimeInterval(TimeInterval(absorptionTimeInMinutes * 60)),
                 xCarbsType: .eCarbs,
-                timeIntervalInMinutes: UserSettings.shared.absorptionTimeLongIntervalInMinutes
+                timeIntervalInMinutes: UserSettings.shared.absorptionTimeECarbsIntervalInMinutes
             )
         }
     }

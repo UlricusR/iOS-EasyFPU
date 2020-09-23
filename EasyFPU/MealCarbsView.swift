@@ -11,7 +11,7 @@ import SwiftUI
 struct MealCarbsView: View {
     var meal: MealViewModel
     var regularCarbsTimeAsString: String {
-        let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeMediumDelayInMinutes * 60))
+        let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
         return ChartBar.timeStyle.string(from: time)
     }
     
@@ -38,13 +38,13 @@ struct MealCarbsView: View {
                 }
                 HStack {
                     Text("In")
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeMediumDelayInMinutes))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeCarbsDelayInMinutes))!)
                     Text("min at")
                     Text(self.regularCarbsTimeAsString)
                 }
                 HStack {
                     Text("For")
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeMediumDurationInHours))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeCarbsDurationInHours))!)
                     Text("h")
                 }
             }

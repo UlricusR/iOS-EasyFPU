@@ -118,13 +118,13 @@ struct AbsorptionSchemeEditor: View {
                 Section(header: Text("Absorption Time Parameters for e-Carbs")) {
                     HStack {
                         Text("Delay")
-                        TextField("Delay", text: $draftAbsorptionScheme.delayLongAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        TextField("Delay", text: $draftAbsorptionScheme.delayECarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("Interval")
-                        TextField("Interval", text: $draftAbsorptionScheme.intervalLongAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        TextField("Interval", text: $draftAbsorptionScheme.intervalECarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                 }
@@ -132,19 +132,19 @@ struct AbsorptionSchemeEditor: View {
                 Section(header: Text("Absorption Time Parameters for Carbs")) {
                     HStack {
                         Text("Delay")
-                        TextField("Delay", text: $draftAbsorptionScheme.delayMediumAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        TextField("Delay", text: $draftAbsorptionScheme.delayCarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("Interval")
-                        TextField("Interval", text: $draftAbsorptionScheme.intervalMediumAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        TextField("Interval", text: $draftAbsorptionScheme.intervalCarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("Duration")
-                        TextField("Duration", text: $draftAbsorptionScheme.durationMediumAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        TextField("Duration", text: $draftAbsorptionScheme.durationCarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
                         Text("h")
                     }
                 }
@@ -203,21 +203,21 @@ struct AbsorptionSchemeEditor: View {
                         
                         // Save new user settings
                         if !(
-                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayLong, UserSettings.UserDefaultsIntKey.absorptionTimeLongDelay), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalLong, UserSettings.UserDefaultsIntKey.absorptionTimeLongInterval), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayMedium, UserSettings.UserDefaultsIntKey.absorptionTimeMediumDelay), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalMedium, UserSettings.UserDefaultsIntKey.absorptionTimeMediumInterval), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationMedium, UserSettings.UserDefaultsDoubleKey.absorptionTimeMediumDuration), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsDelay), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsInterval), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationCarbs, UserSettings.UserDefaultsDoubleKey.absorptionTimeCarbsDuration), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &self.errorMessage) &&
                             UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage)
                         ) {
                             self.showingAlert = true
                         } else {
                             // Set the dynamic user parameters and broadcast change
-                            UserSettings.shared.absorptionTimeLongDelayInMinutes = self.draftAbsorptionScheme.delayLong
-                            UserSettings.shared.absorptionTimeLongIntervalInMinutes = self.draftAbsorptionScheme.intervalLong
-                            UserSettings.shared.absorptionTimeMediumDelayInMinutes = self.draftAbsorptionScheme.delayMedium
-                            UserSettings.shared.absorptionTimeMediumIntervalInMinutes = self.draftAbsorptionScheme.intervalMedium
-                            UserSettings.shared.absorptionTimeMediumDurationInHours = self.draftAbsorptionScheme.durationMedium
+                            UserSettings.shared.absorptionTimeCarbsDelayInMinutes = self.draftAbsorptionScheme.delayCarbs
+                            UserSettings.shared.absorptionTimeCarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalCarbs
+                            UserSettings.shared.absorptionTimeCarbsDurationInHours = self.draftAbsorptionScheme.durationCarbs
+                            UserSettings.shared.absorptionTimeECarbsDelayInMinutes = self.draftAbsorptionScheme.delayECarbs
+                            UserSettings.shared.absorptionTimeECarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalECarbs
                             UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
                             UserSettings.shared.objectWillChange.send()
                             
@@ -277,13 +277,13 @@ struct AbsorptionSchemeEditor: View {
         }
         
         // Reset absorption time (for e-carbs) delay and interval
-        draftAbsorptionScheme.delayLongAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault))!
-        draftAbsorptionScheme.intervalLongAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault))!
+        draftAbsorptionScheme.delayECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault))!
+        draftAbsorptionScheme.intervalECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault))!
         
         // Reset absorption time (for carbs) delay and interval
-        draftAbsorptionScheme.delayMediumAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeMediumDelayDefault))!
-        draftAbsorptionScheme.intervalMediumAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeMediumIntervalDefault))!
-        draftAbsorptionScheme.durationMediumAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeMediumDurationDefault))!
+        draftAbsorptionScheme.delayCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault))!
+        draftAbsorptionScheme.intervalCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsIntervalDefault))!
+        draftAbsorptionScheme.durationCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault))!
         
         // Reset eCarbs factor
         draftAbsorptionScheme.eCarbsFactorAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.eCarbsFactorDefault))!
