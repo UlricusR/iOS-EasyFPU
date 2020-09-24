@@ -24,11 +24,11 @@ struct FoodList: View {
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     @ObservedObject var absorptionScheme = AbsorptionScheme()
     
-    @State var showingSheet = false
+    @ObservedObject var sheet = FoodListSheets()
+    
     @State var showingMenu = false
     @State var showingAlert = false
     @State var showActionSheet = false
-    @State var activeSheet = ActiveFoodListSheet.addFoodItem
     @State var errorMessage = ""
     @State var draftFoodItem = FoodItemViewModel(
         name: "",
@@ -96,7 +96,7 @@ struct FoodList: View {
                                 }
                                 
                                 if self.meal.amount > 0 {
-                                    MealSummaryView(activeSheet: self.$activeSheet, showingFoodListSheet: self.$showingSheet, absorptionScheme: self.absorptionScheme, meal: self.meal)
+                                    MealSummaryView(foodListSheet: self.sheet, absorptionScheme: self.absorptionScheme, meal: self.meal)
                                 }
                             }
                             .navigationBarTitle("Food List")
@@ -113,8 +113,7 @@ struct FoodList: View {
                                     
                                     Button(action: {
                                         withAnimation {
-                                            self.activeSheet = .help
-                                            self.showingSheet = true
+                                            self.sheet.state = .help
                                         }
                                     }) {
                                         Image(systemName: "questionmark.circle")
@@ -149,8 +148,7 @@ struct FoodList: View {
                                             sugarsPer100g: 0.0,
                                             amount: 0
                                         )
-                                        self.activeSheet = .addFoodItem
-                                        self.showingSheet = true
+                                        self.sheet.state = .addFoodItem
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .imageScale(.large)
@@ -160,17 +158,7 @@ struct FoodList: View {
                             )
                         }
                         .navigationViewStyle(StackNavigationViewStyle())
-                        .sheet(isPresented: self.$showingSheet) {
-                            FoodListSheets(
-                                activeSheet: self.activeSheet,
-                                helpScreen: self.helpScreen,
-                                isPresented: self.$showingSheet,
-                                draftFoodItem: self.draftFoodItem,
-                                absorptionScheme: self.absorptionScheme,
-                                meal: self.meal
-                            )
-                                .environment(\.managedObjectContext, self.managedObjectContext)
-                        }
+                        .sheet(isPresented: $sheet.isShowing, content: sheetContent)
                         .onAppear {
                             if self.absorptionScheme.absorptionBlocks.isEmpty {
                                 // Absorption scheme hasn't been loaded yet
@@ -321,6 +309,26 @@ struct FoodList: View {
         }
         withAnimation {
             self.showingMenu = false
+        }
+    }
+    
+    @ViewBuilder
+    private func sheetContent() -> some View {
+        if sheet.state != nil {
+            switch sheet.state! {
+            case .addFoodItem:
+                FoodItemEditor(
+                    isPresented: $sheet.isShowing,
+                    navigationBarTitle: NSLocalizedString("New food item", comment: ""),
+                    draftFoodItem: draftFoodItem
+                ).environment(\.managedObjectContext, managedObjectContext)
+            case .mealDetails:
+                MealDetail(isPresented: $sheet.isShowing, absorptionScheme: self.absorptionScheme, meal: self.meal)
+            case .help:
+                HelpView(isPresented: $sheet.isShowing, helpScreen: helpScreen)
+            }
+        } else {
+            EmptyView()
         }
     }
 }
