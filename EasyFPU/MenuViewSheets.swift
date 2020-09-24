@@ -7,44 +7,15 @@
 //
 
 import SwiftUI
-import MobileCoreServices
 
-enum ActiveMenuViewSheet {
-    case editAbsorptionScheme, pickFileToImport, pickExportDirectory, about, disclaimer
-}
+import Foundation
 
-struct MenuViewSheets: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
-    var activeSheet: ActiveMenuViewSheet
-    @Binding var isPresented: Bool
-    var draftAbsorptionScheme: AbsorptionSchemeViewModel
-    var absorptionScheme: AbsorptionScheme
-    var filePicked: (URL) -> ()
-    var exportDirectory: (URL) -> ()
-    
-    var body: some View {
-        switch activeSheet {
-        case .editAbsorptionScheme:
-            return AnyView(
-                AbsorptionSchemeEditor(isPresented: self.$isPresented, draftAbsorptionScheme: self.draftAbsorptionScheme, editedAbsorptionScheme: absorptionScheme)
-                    .environment(\.managedObjectContext, managedObjectContext)
-            )
-        case .pickFileToImport:
-            return AnyView(
-                FilePickerView(callback: filePicked, documentTypes: [kUTTypeText as String])
-            )
-        case .pickExportDirectory:
-            return AnyView(
-                FilePickerView(callback: exportDirectory, documentTypes: [kUTTypeFolder as String])
-            )
-        case .about:
-            return AnyView(
-                AboutView(isPresented: self.$isPresented)
-            )
-        case .disclaimer:
-            return AnyView(
-                DisclaimerView(isDisplayed: self.$isPresented)
-            )
-        }
+class MenuViewSheets: SheetState<MenuViewSheets.State> {
+    enum State {
+        case editAbsorptionScheme
+        case pickFileToImport
+        case pickExportDirectory
+        case about
+        case disclaimer
     }
 }
