@@ -48,6 +48,13 @@ struct AbsorptionSchemeEditor: View {
                         }
                         .onDelete(perform: deleteAbsorptionBlock)
                     }
+                    
+                    // The reset button
+                    Button(action: {
+                        self.resetAbsorptionSchemeToDefaults()
+                    }) {
+                        Text("Reset to default")
+                    }
                 }
                 
                 // The absorption block add/edit form
@@ -56,6 +63,7 @@ struct AbsorptionSchemeEditor: View {
                         TextField("Max. FPUs", text: $newMaxFpu).keyboardType(.decimalPad)
                         Text("FPU -")
                         TextField("Absorption time", text: $newAbsorptionTime).keyboardType(.decimalPad)
+                        Text("h")
                         Button(action: {
                             if self.newAbsorptionBlockId == nil { // This is a new absorption block
                                 if let newAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, errorMessage: &self.errorMessage) {
@@ -107,6 +115,7 @@ struct AbsorptionSchemeEditor: View {
                     }
                 }
                 
+                // Sugars
                 Section(header: Text("Absorption Time Parameters for Sugars")) {
                     HStack {
                         Text("Delay")
@@ -125,8 +134,16 @@ struct AbsorptionSchemeEditor: View {
                         TextField("Duration", text: $draftAbsorptionScheme.durationSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
                         Text("h")
                     }
+                    
+                    // The reset button
+                    Button(action: {
+                        self.resetSugarsToDefaults()
+                    }) {
+                        Text("Reset to default")
+                    }
                 }
                 
+                // Carbs
                 Section(header: Text("Absorption Time Parameters for Carbs")) {
                     HStack {
                         Text("Delay")
@@ -145,8 +162,16 @@ struct AbsorptionSchemeEditor: View {
                         TextField("Duration", text: $draftAbsorptionScheme.durationCarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
                         Text("h")
                     }
+                    
+                    // The reset button
+                    Button(action: {
+                        self.resetCarbsToDefaults()
+                    }) {
+                        Text("Reset to default")
+                    }
                 }
                 
+                // e-Carbs
                 Section(header: Text("Absorption Time Parameters for e-Carbs")) {
                     HStack {
                         Text("Delay")
@@ -165,91 +190,97 @@ struct AbsorptionSchemeEditor: View {
                         TextField("e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
                         Text("g/FPU")
                     }
-                }
                     
-                // The reset button
-                Button(action: {
-                    self.resetToDefaults()
-                }) {
-                    Text("Reset to default")
-                }
-                    
-                // Navigation bar
-                .navigationBarTitle(Text("Absorption scheme"))
-                .navigationBarItems(
-                    leading: HStack {
-                        Button(action: {
-                            self.isPresented = false
-                        }) {
-                            Text("Cancel")
-                        }
-                        
-                        Button(action: {
-                            self.showingScreen = true
-                        }) {
-                            Image(systemName: "questionmark.circle").imageScale(.large)
-                        }.padding()
-                    },
-                    
-                    trailing: Button(action: {
-                        // Update absorption block
-                        for absorptionBlock in self.draftAbsorptionScheme.absorptionBlocks {
-                            // Check if it's an existing core data entry
-                            if absorptionBlock.cdAbsorptionBlock == nil { // This is a new absorption block
-                                let newCdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
-                                absorptionBlock.cdAbsorptionBlock = newCdAbsorptionBlock
-                                let _ = absorptionBlock.updateCdAbsorptionBlock()
-                                self.editedAbsorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
-                            } else { // This is an existing absorption block, so just update values
-                                let _ = absorptionBlock.updateCdAbsorptionBlock()
-                            }
-                        }
-                        
-                        // Remove deleted absorption blocks
-                        for absorptionBlockToBeDeleted in self.absorptionBlocksToBeDeleted {
-                            if absorptionBlockToBeDeleted.cdAbsorptionBlock != nil {
-                                self.editedAbsorptionScheme.removeFromAbsorptionBlocks(absorptionBlockToBeDeleted: absorptionBlockToBeDeleted.cdAbsorptionBlock!)
-                                self.managedObjectContext.delete(absorptionBlockToBeDeleted.cdAbsorptionBlock!)
-                            }
-                        }
-                        
-                        // Reset typical amounts to be deleted
-                        self.absorptionBlocksToBeDeleted.removeAll()
-                        
-                        // Save new absorption blocks
-                        try? AppDelegate.viewContext.save()
-                        
-                        // Save new user settings
-                        if !(
-                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsDelay), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsInterval), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationCarbs, UserSettings.UserDefaultsDoubleKey.absorptionTimeCarbsDuration), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage)
-                        ) {
-                            self.showingAlert = true
-                        } else {
-                            // Set the dynamic user parameters and broadcast change
-                            UserSettings.shared.absorptionTimeCarbsDelayInMinutes = self.draftAbsorptionScheme.delayCarbs
-                            UserSettings.shared.absorptionTimeCarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalCarbs
-                            UserSettings.shared.absorptionTimeCarbsDurationInHours = self.draftAbsorptionScheme.durationCarbs
-                            UserSettings.shared.absorptionTimeECarbsDelayInMinutes = self.draftAbsorptionScheme.delayECarbs
-                            UserSettings.shared.absorptionTimeECarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalECarbs
-                            UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
-                            UserSettings.shared.objectWillChange.send()
-                            
-                            // Close sheet
-                            self.isPresented = false
-                        }
+                    // The reset button
+                    Button(action: {
+                        self.resetECarbsToDefaults()
                     }) {
-                        // Quit edit mode
-                        Text("Done")
+                        Text("Reset to default")
                     }
-                )
+                }
             }
             .padding(.bottom, keyboardGuardian.currentHeight)
             .animation(.easeInOut(duration: 0.16))
+            
+            // Navigation bar
+            .navigationBarTitle(Text("Absorption scheme"))
+            .navigationBarItems(
+                leading: HStack {
+                    Button(action: {
+                        self.isPresented = false
+                    }) {
+                        Text("Cancel")
+                    }
+                    
+                    Button(action: {
+                        self.showingScreen = true
+                    }) {
+                        Image(systemName: "questionmark.circle").imageScale(.large)
+                    }.padding()
+                },
+                
+                trailing: Button(action: {
+                    // Update absorption block
+                    for absorptionBlock in self.draftAbsorptionScheme.absorptionBlocks {
+                        // Check if it's an existing core data entry
+                        if absorptionBlock.cdAbsorptionBlock == nil { // This is a new absorption block
+                            let newCdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
+                            absorptionBlock.cdAbsorptionBlock = newCdAbsorptionBlock
+                            let _ = absorptionBlock.updateCdAbsorptionBlock()
+                            self.editedAbsorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
+                        } else { // This is an existing absorption block, so just update values
+                            let _ = absorptionBlock.updateCdAbsorptionBlock()
+                        }
+                    }
+                    
+                    // Remove deleted absorption blocks
+                    for absorptionBlockToBeDeleted in self.absorptionBlocksToBeDeleted {
+                        if absorptionBlockToBeDeleted.cdAbsorptionBlock != nil {
+                            self.editedAbsorptionScheme.removeFromAbsorptionBlocks(absorptionBlockToBeDeleted: absorptionBlockToBeDeleted.cdAbsorptionBlock!)
+                            self.managedObjectContext.delete(absorptionBlockToBeDeleted.cdAbsorptionBlock!)
+                        }
+                    }
+                    
+                    // Reset typical amounts to be deleted
+                    self.absorptionBlocksToBeDeleted.removeAll()
+                    
+                    // Save new absorption blocks
+                    try? AppDelegate.viewContext.save()
+                    
+                    // Save new user settings
+                    if !(
+                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delaySugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsDelay), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalSugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsInterval), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationSugars, UserSettings.UserDefaultsDoubleKey.absorptionTimeSugarsDuration), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsDelay), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsInterval), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationCarbs, UserSettings.UserDefaultsDoubleKey.absorptionTimeCarbsDuration), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage)
+                    ) {
+                        self.showingAlert = true
+                    } else {
+                        // Set the dynamic user parameters and broadcast change
+                        UserSettings.shared.absorptionTimeSugarsDelayInMinutes = self.draftAbsorptionScheme.delaySugars
+                        UserSettings.shared.absorptionTimeSugarsIntervalInMinutes = self.draftAbsorptionScheme.intervalSugars
+                        UserSettings.shared.absorptionTimeSugarsDurationInHours = self.draftAbsorptionScheme.durationSugars
+                        UserSettings.shared.absorptionTimeCarbsDelayInMinutes = self.draftAbsorptionScheme.delayCarbs
+                        UserSettings.shared.absorptionTimeCarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalCarbs
+                        UserSettings.shared.absorptionTimeCarbsDurationInHours = self.draftAbsorptionScheme.durationCarbs
+                        UserSettings.shared.absorptionTimeECarbsDelayInMinutes = self.draftAbsorptionScheme.delayECarbs
+                        UserSettings.shared.absorptionTimeECarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalECarbs
+                        UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
+                        UserSettings.shared.objectWillChange.send()
+                        
+                        // Close sheet
+                        self.isPresented = false
+                    }
+                }) {
+                    // Quit edit mode
+                    Text("Done")
+                }
+            )
         }
         .navigationViewStyle(StackNavigationViewStyle())
             
@@ -281,7 +312,7 @@ struct AbsorptionSchemeEditor: View {
         }
     }
     
-    func resetToDefaults() {
+    func resetAbsorptionSchemeToDefaults() {
         // Reset absorption blocks
         guard let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) else {
             self.showingAlert = true
@@ -294,14 +325,34 @@ struct AbsorptionSchemeEditor: View {
             let _ = draftAbsorptionScheme.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock), errorMessage: &errorMessage)
         }
         
-        // Reset absorption time (for e-carbs) delay and interval
-        draftAbsorptionScheme.delayECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault))!
-        draftAbsorptionScheme.intervalECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault))!
+        // Notify change
+        draftAbsorptionScheme.objectWillChange.send()
+    }
+    
+    func resetSugarsToDefaults() {
+        // Reset absorption time (for sugars) delay, interval and duration
+        draftAbsorptionScheme.delaySugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault))!
+        draftAbsorptionScheme.intervalSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault))!
+        draftAbsorptionScheme.durationSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault))!
         
-        // Reset absorption time (for carbs) delay and interval
+        // Notify change
+        draftAbsorptionScheme.objectWillChange.send()
+    }
+     
+    func resetCarbsToDefaults() {
+        // Reset absorption time (for carbs) delay, interval and duration
         draftAbsorptionScheme.delayCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault))!
         draftAbsorptionScheme.intervalCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsIntervalDefault))!
         draftAbsorptionScheme.durationCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault))!
+        
+        // Notify change
+        draftAbsorptionScheme.objectWillChange.send()
+    }
+     
+    func resetECarbsToDefaults() {
+        // Reset absorption time (for e-carbs) delay and interval
+        draftAbsorptionScheme.delayECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault))!
+        draftAbsorptionScheme.intervalECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault))!
         
         // Reset eCarbs factor
         draftAbsorptionScheme.eCarbsFactorAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.eCarbsFactorDefault))!

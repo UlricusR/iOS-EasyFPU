@@ -184,6 +184,7 @@
 
 // Absorption scheme editor
 "Absorption scheme" = "Absorptionsschema";
+"Absorption Blocks" = "Absorptionsblöcke";
 "Tap to edit, swipe left to delete" = "Zum Bearbeiten antippen, zum Löschen nach links wischen";
 "New absorption block:" = "Neuer Absorptionsblock:";
 "Edit absorption block:" = "Absorptionsblock bearbeiten:";
