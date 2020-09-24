@@ -6,34 +6,11 @@
 //  Copyright © 2020 Ulrich Rüth. All rights reserved.
 //
 
-import SwiftUI
+import Foundation
 
-enum ActiveFoodItemViewSheet {
-    case editFoodItem, selectFoodItem
-}
-
-struct FoodItemViewSheets: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
-    var activeSheet: ActiveFoodItemViewSheet
-    @Binding var isPresented: Bool
-    var draftFoodItem: FoodItemViewModel
-    var editedFoodItem: FoodItem
-    
-    var body: some View {
-        switch activeSheet {
-        case .editFoodItem:
-            return AnyView(
-                FoodItemEditor(
-                    isPresented: $isPresented,
-                    navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
-                    draftFoodItem: draftFoodItem,
-                    editedFoodItem: editedFoodItem
-                ).environment(\.managedObjectContext, managedObjectContext)
-            )
-        case .selectFoodItem:
-            return AnyView(
-                FoodItemSelector(isPresented: $isPresented, draftFoodItem: draftFoodItem, editedFoodItem: editedFoodItem)
-            )
-        }
+class FoodItemViewSheets: SheetState<FoodItemViewSheets.State> {
+    enum State {
+        case editFoodItem
+        case selectFoodItem
     }
 }

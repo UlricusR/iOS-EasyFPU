@@ -6,8 +6,6 @@
 //  Copyright © 2020 Ulrich Rüth. All rights reserved.
 //
 
-import SwiftUI
-
 import Foundation
 
 class MenuViewSheets: SheetState<MenuViewSheets.State> {
