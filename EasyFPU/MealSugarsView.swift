@@ -10,6 +10,10 @@ import SwiftUI
 
 struct MealSugarsView: View {
     var meal: MealViewModel
+    var sugarsTimeAsString: String {
+        let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeSugarsDelayInMinutes * 60))
+        return ChartBar.timeStyle.string(from: time)
+    }
     
     var body: some View {
         HStack {
@@ -32,11 +36,17 @@ struct MealSugarsView: View {
                     Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.sugars))!)
                     Text("g Carbs")
                 }
-                HStack { // When?
-                    Text("Now at")
-                    Text(ChartBar.timeStyle.string(from: Date()))
+                HStack {
+                    Text("In")
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeSugarsDelayInMinutes))!)
+                    Text("min at")
+                    Text(self.sugarsTimeAsString)
                 }
-                Text("All at once") // How long?
+                HStack {
+                    Text("For")
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeSugarsDurationInHours))!)
+                    Text("h")
+                }
             }
         }
     }

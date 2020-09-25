@@ -34,14 +34,18 @@ class CarbsRegimeCalculator: ObservableObject {
     }
     var meal: MealViewModel
     var absorptionTimeInMinutes: Int
-    @Published var carbsRegime: CarbsRegime = CarbsRegime.default
     
-    var now: Date
-    var eCarbsStart: Date
-    var carbsStart: Date
-    private var globalStartTime: Date
-    private var globalEndTime: Date
-    private var intervalInMinutes: Int
+    
+    // Parameters that change every time the carbs regime is changed by the user (e.g. include sugars, exclude carbs, etc.)
+    // We set these to default values, but need give them proper values in the initializer / in the setParameters function
+    var now = Date()
+    private var globalStartTime = Date()
+    private var globalEndTime = Date()
+    private var intervalInMinutes: Int = 0
+    var sugarsStart = Date()
+    var carbsStart = Date()
+    var eCarbsStart = Date()
+    @Published var carbsRegime: CarbsRegime = CarbsRegime.default
     
     // MARK: - Variables required for fitting the chart
     
@@ -73,31 +77,12 @@ class CarbsRegimeCalculator: ObservableObject {
         self.eCarbsEntries = [Date: CarbsEntry]()
         self.meal = meal
         self.includeTotalMealSugars = includeSugars
-        self.includeECarbs = includeECarbs
         self.includeTotalMealCarbs = includeTotalMealCarbs
+        self.includeECarbs = includeECarbs
         self.absorptionTimeInMinutes = absorptionTimeInHours * 60
         
-        self.now = Date()
-        
-        // Determine global start and end time
-        self.globalStartTime = now // Start is always now, as we want to visualize the idle time before any carbs hit the body
-        self.globalEndTime = max(now.addingTimeInterval(
-            includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeCarbsDelayInMinutes) + UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) * 60 : 0 // either carbs start + duration or zero
-        ), now.addingTimeInterval(
-            includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + absorptionTimeInMinutes) * 60) : 0 // either eCarbs start + duration or zero
-        ))
-        self.intervalInMinutes = DataHelper.gcdRecursiveEuklid(UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, UserSettings.shared.absorptionTimeECarbsIntervalInMinutes)
-        
-        self.eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
-        self.carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
-        
-        if includeSugars { calculateTotalMealSugars() }
-        if includeTotalMealCarbs { calculateTotalMealCarbs() }
-        if includeECarbs { calculateECarbs() }
-        
-        // Then fit the chart bars
-        fitCarbChartBars()
-        carbsRegime = CarbsRegime(globalStartTime: self.globalStartTime, globalEndTime: self.globalEndTime, intervalInMinutes: self.intervalInMinutes, sugarsEntries: self.sugarsEntries, carbsEntries: self.carbsEntries, eCarbsEntries: self.eCarbsEntries)
+        // Determine parameters
+        self.setParameters()
     }
     
     // MARK: - General functions
@@ -108,27 +93,9 @@ class CarbsRegimeCalculator: ObservableObject {
         sugarsEntries.removeAll()
         carbsEntries.removeAll()
         eCarbsEntries.removeAll()
-        now = Date()
         
-        // Determine global start and end time
-        globalStartTime = now // Start is always now, as we want to visualize the idle time before any carbs hit the body
-        globalEndTime = max(now.addingTimeInterval(
-            includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeCarbsDelayInMinutes) + UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) * 60 : 0 // either carbs start + duration or zero
-        ), now.addingTimeInterval(
-            includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + absorptionTimeInMinutes) * 60) : 0 // either eCarbs start + duration or zero
-        ))
-        intervalInMinutes = DataHelper.gcdRecursiveEuklid(UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, UserSettings.shared.absorptionTimeECarbsIntervalInMinutes)
-        
-        carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
-        eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
-        
-        if includeTotalMealSugars { calculateTotalMealSugars() }
-        if includeTotalMealCarbs { calculateTotalMealCarbs() }
-        if includeECarbs { calculateECarbs() }
-        
-        // Then fit the chart bars
-        fitCarbChartBars()
-        carbsRegime = CarbsRegime(globalStartTime: self.globalStartTime, globalEndTime: self.globalEndTime, intervalInMinutes: self.intervalInMinutes, sugarsEntries: self.sugarsEntries, carbsEntries: self.carbsEntries, eCarbsEntries: self.eCarbsEntries)
+        // Determine parameters
+        setParameters()
         
         self.objectWillChange.send()
         self.carbsRegime.objectWillChange.send()
@@ -138,9 +105,18 @@ class CarbsRegimeCalculator: ObservableObject {
     
     private func calculateTotalMealSugars() {
         if includeTotalMealSugars {
-            let entries = generateEntries(amount: meal.sugars, time: now, type: .sugars)
-            self.hkObjects.append(entries.hkObject)
-            sugarsEntries[now] = entries.carbsEntry
+            // Make sure to not go below 1 for number sugars entries, otherwise we'd increase sugars amount in the next step
+            let numberOfSugarsEntries = max(Int(UserSettings.shared.absorptionTimeSugarsDurationInHours * 60) / UserSettings.shared.absorptionTimeSugarsIntervalInMinutes, 1)
+            let totalSugars = meal.sugars
+            calculateXCarbs(
+                xCarbsEntries: &self.sugarsEntries,
+                numberOfXCarbsEntries: numberOfSugarsEntries,
+                totalXCarbs: totalSugars,
+                xCarbsStart: sugarsStart,
+                xCarbsEnd: sugarsStart.addingTimeInterval(UserSettings.shared.absorptionTimeSugarsDurationInHours * 60 * 60),
+                xCarbsType: .sugars,
+                timeIntervalInMinutes: UserSettings.shared.absorptionTimeSugarsIntervalInMinutes
+            )
         }
     }
     
@@ -207,6 +183,31 @@ class CarbsRegimeCalculator: ObservableObject {
         let hkObject = HealthDataHelper.processQuantitySample(value: amount, unit: HealthDataHelper.unitCarbs, start: time, end: time, sampleType: HealthDataHelper.objectTypeCarbs)
         let xCarbsEntry = CarbsEntry(type: type, value: amount, date: time)
         return (hkObject, xCarbsEntry)
+    }
+    
+    private func setParameters() {
+        now = Date()
+        
+        // Determine global start and end time
+        globalStartTime = now // Start is always now, as we want to visualize the idle time before any carbs hit the body
+        globalEndTime = max(
+            now.addingTimeInterval(includeTotalMealSugars ? (Double(UserSettings.shared.absorptionTimeSugarsDelayInMinutes) + UserSettings.shared.absorptionTimeSugarsDurationInHours * 60) * 60 : 0), // either sugars start + duration or zero
+            now.addingTimeInterval(includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeCarbsDelayInMinutes) + UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) * 60 : 0), // either carbs start + duration or zero
+            now.addingTimeInterval(includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + absorptionTimeInMinutes) * 60) : 0) // either eCarbs start + duration or zero
+        )
+        intervalInMinutes = DataHelper.gcd([UserSettings.shared.absorptionTimeSugarsIntervalInMinutes, UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, UserSettings.shared.absorptionTimeECarbsIntervalInMinutes])
+        
+        sugarsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeSugarsDelayInMinutes * 60))
+        carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
+        eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
+        
+        if includeTotalMealSugars { calculateTotalMealSugars() }
+        if includeTotalMealCarbs { calculateTotalMealCarbs() }
+        if includeECarbs { calculateECarbs() }
+        
+        // Then fit the chart bars
+        fitCarbChartBars()
+        carbsRegime = CarbsRegime(globalStartTime: self.globalStartTime, globalEndTime: self.globalEndTime, intervalInMinutes: self.intervalInMinutes, sugarsEntries: self.sugarsEntries, carbsEntries: self.carbsEntries, eCarbsEntries: self.eCarbsEntries)
     }
     
     // MARK: - Functions for fitting the chart
