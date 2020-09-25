@@ -12,6 +12,7 @@ class CarbsRegime: ObservableObject {
     var globalStartTime: Date
     var globalEndTime: Date
     var intervalInMinutes: Int
+    var maxTotalCarbs: Double = 0
     @Published var entries = [Date: [CarbsEntry]]()
     
     static var `default` = CarbsRegime(globalStartTime: Date(), globalEndTime: Date().addingTimeInterval(60*60), intervalInMinutes: 5, sugarsEntries: [Date(): CarbsEntry.default], carbsEntries: [Date(): CarbsEntry.default], eCarbsEntries: [Date(): CarbsEntry.default])
@@ -39,10 +40,10 @@ class CarbsRegime: ObservableObject {
         repeat {
             var timeSlotHasEntry = false
             
-            // Identify (in this order) sugars, carbs and e-carbs for the given time
-            let sugarsIndex = sugarsTimes.firstIndex(where: { checkTimeInterval(entryTime: $0, actualTime: time, intervalInMinutes: intervalInMinutes) })
-            if sugarsIndex != nil {
-                addToCarbsRegime(time: time, entry: sugarsEntries[sugarsTimes[sugarsIndex!]]!)
+            // Identify (in this order) e-carbs, carbs and sugars for the given time
+            let eCarbsIndex = eCarbsTimes.firstIndex(where: { checkTimeInterval(entryTime: $0, actualTime: time, intervalInMinutes: intervalInMinutes) })
+            if eCarbsIndex != nil {
+                addToCarbsRegime(time: time, entry: eCarbsEntries[eCarbsTimes[eCarbsIndex!]]!)
                 timeSlotHasEntry = true
             }
             let carbsIndex = carbsTimes.firstIndex(where: { checkTimeInterval(entryTime: $0, actualTime: time, intervalInMinutes: intervalInMinutes) })
@@ -50,15 +51,16 @@ class CarbsRegime: ObservableObject {
                 addToCarbsRegime(time: time, entry: carbsEntries[carbsTimes[carbsIndex!]]!)
                 timeSlotHasEntry = true
             }
-            let eCarbsIndex = eCarbsTimes.firstIndex(where: { checkTimeInterval(entryTime: $0, actualTime: time, intervalInMinutes: intervalInMinutes) })
-            if eCarbsIndex != nil {
-                addToCarbsRegime(time: time, entry: eCarbsEntries[eCarbsTimes[eCarbsIndex!]]!)
+            let sugarsIndex = sugarsTimes.firstIndex(where: { checkTimeInterval(entryTime: $0, actualTime: time, intervalInMinutes: intervalInMinutes) })
+            if sugarsIndex != nil {
+                addToCarbsRegime(time: time, entry: sugarsEntries[sugarsTimes[sugarsIndex!]]!)
                 timeSlotHasEntry = true
             }
             if !timeSlotHasEntry {
                 // No entry for this timeslot, so make it an empty time slot by adding an empty array
                 entries[time] = [CarbsEntry]()
             }
+            maxTotalCarbs = max(maxTotalCarbs, getTotalCarbs(time: time))
             
             // Append the time interval
             time = time.addingTimeInterval(TimeInterval(intervalInMinutes * 60))
@@ -77,5 +79,15 @@ class CarbsRegime: ObservableObject {
         } else {
             entries[time]!.append(entry)
         }
+    }
+    
+    private func getTotalCarbs(time: Date) -> Double {
+        var totalCarbs = 0.0
+        if entries[time] != nil {
+            for entry in entries[time]! {
+                totalCarbs += entry.value
+            }
+        }
+        return totalCarbs
     }
 }

@@ -22,6 +22,7 @@ struct MealECarbsView: View {
         let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
         return ChartBar.timeStyle.string(from: time)
     }
+    static var color = Color.blue
     
     var body: some View {
         HStack {
@@ -30,14 +31,14 @@ struct MealECarbsView: View {
                 Text("e-Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
-            .foregroundColor(.blue)
+            .foregroundColor(MealECarbsView.color)
             .padding(.trailing)
             
             VStack(alignment: .trailing) { // Questions
                 Text("How much?")
                 Text("When?")
                 Text("How long?")
-            }.foregroundColor(.blue)
+            }.foregroundColor(MealECarbsView.color)
             
             VStack(alignment: .leading) { // Answers
                 HStack {

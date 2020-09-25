@@ -14,6 +14,7 @@ struct MealSugarsView: View {
         let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeSugarsDelayInMinutes * 60))
         return ChartBar.timeStyle.string(from: time)
     }
+    static let color = Color.red
     
     var body: some View {
         HStack {
@@ -22,14 +23,14 @@ struct MealSugarsView: View {
                 Text("Sugars").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
-            .foregroundColor(.red)
+            .foregroundColor(MealSugarsView.color)
             .padding(.trailing)
             
             VStack(alignment: .trailing) { // Questions
                 Text("How much?")
                 Text("When?")
                 Text("How long?")
-            }.foregroundColor(.red)
+            }.foregroundColor(MealSugarsView.color)
             
             VStack(alignment: .leading) { // Answers
                 HStack { // How much?

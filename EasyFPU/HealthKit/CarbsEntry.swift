@@ -12,7 +12,7 @@ enum CarbsEntryType {
     case sugars, carbs, eCarbs
 }
 
-class CarbsEntry {
+class CarbsEntry: Hashable {
     var type: CarbsEntryType
     var value: Double
     var date: Date
@@ -23,5 +23,17 @@ class CarbsEntry {
         self.type = type
         self.value = value
         self.date = date
+    }
+    
+    static func == (lhs: CarbsEntry, rhs: CarbsEntry) -> Bool {
+        if lhs.type != rhs.type { return false }
+        if lhs.date != rhs.date { return false }
+        return lhs.value == rhs.value
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(type)
+        hasher.combine(date)
+        hasher.combine(value)
     }
 }

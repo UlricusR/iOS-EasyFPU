@@ -48,13 +48,16 @@ struct MealExportView: View {
                 Button(action: {
                     self.exportHealthSample()
                 }) {
-                    Text("Export")
-                }.padding()
+                    Image(systemName: "square.and.arrow.up")
+                    Text("Export").fontWeight(.bold)
+                }
+                .multilineTextAlignment(.center)
+                .padding()
                 
                 // The carbs preview
                 if !carbsRegimeCalculator.hkObjects.isEmpty {
                     Text("Preview of exported carbs in g").padding([.top, .leading, .trailing])
-                    HealthExportPreview(carbsRegimeCalculator: self.carbsRegimeCalculator, carbsRegime: self.carbsRegimeCalculator.carbsRegime)
+                    HealthExportPreview(carbsRegime: self.carbsRegimeCalculator.carbsRegime)
                 }
                 
                 Spacer()
@@ -68,11 +71,12 @@ struct MealExportView: View {
                 },
                 trailing: Button(action: {
                     // Store UserDefaults
-                    if
-                        !(UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &self.errorMessage))
-                    {
+                    if !(
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealSugars, UserSettings.UserDefaultsBoolKey.exportTotalMealSugars), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &self.errorMessage)
+                    ){
                         // Something went terribly wrong - inform user
                         self.showingAlert = true
                     } else {

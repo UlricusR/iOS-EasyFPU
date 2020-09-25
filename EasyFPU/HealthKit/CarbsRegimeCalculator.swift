@@ -47,17 +47,6 @@ class CarbsRegimeCalculator: ObservableObject {
     var eCarbsStart = Date()
     @Published var carbsRegime: CarbsRegime = CarbsRegime.default
     
-    // MARK: - Variables required for fitting the chart
-    
-    var requiresBarSplitting = false
-    var maxCarbsWithoutSplitting = 0.0 // The amount of carbs above which splitting of the bar is required
-    var regularMultiplier = 0.0
-    var appliedMultiplier = 0.0
-    var theoreticalMaxBarHeight = 0.0
-    
-    let previewHeight = 120.0
-    private let barMinHeight = 20.0
-    
     // MARK: - Static variables / constants
     
     static let `default` = CarbsRegimeCalculator(
@@ -102,6 +91,30 @@ class CarbsRegimeCalculator: ObservableObject {
     }
     
     // MARK: - Functions for calculating the HealthKit information
+    
+    private func setParameters() {
+        now = Date()
+        
+        // Determine global start and end time
+        globalStartTime = now // Start is always now, as we want to visualize the idle time before any carbs hit the body
+        globalEndTime = max(
+            now.addingTimeInterval(includeTotalMealSugars ? (Double(UserSettings.shared.absorptionTimeSugarsDelayInMinutes) + UserSettings.shared.absorptionTimeSugarsDurationInHours * 60) * 60 : 0), // either sugars start + duration or zero
+            now.addingTimeInterval(includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeCarbsDelayInMinutes) + UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) * 60 : 0), // either carbs start + duration or zero
+            now.addingTimeInterval(includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + absorptionTimeInMinutes) * 60) : 0) // either eCarbs start + duration or zero
+        )
+        intervalInMinutes = DataHelper.gcd([UserSettings.shared.absorptionTimeSugarsIntervalInMinutes, UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, UserSettings.shared.absorptionTimeECarbsIntervalInMinutes])
+        
+        sugarsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeSugarsDelayInMinutes * 60))
+        carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
+        eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
+        
+        if includeTotalMealSugars { calculateTotalMealSugars() }
+        if includeTotalMealCarbs { calculateTotalMealCarbs() }
+        if includeECarbs { calculateECarbs() }
+        
+        // Then fit the chart bars
+        carbsRegime = CarbsRegime(globalStartTime: self.globalStartTime, globalEndTime: self.globalEndTime, intervalInMinutes: self.intervalInMinutes, sugarsEntries: self.sugarsEntries, carbsEntries: self.carbsEntries, eCarbsEntries: self.eCarbsEntries)
+    }
     
     private func calculateTotalMealSugars() {
         if includeTotalMealSugars {
@@ -172,7 +185,6 @@ class CarbsRegimeCalculator: ObservableObject {
         // Now determine the final amount of e-carbs and generate the final entry
         let finalAmountOfXCarbs = totalXCarbs - totalCarbs
         if finalAmountOfXCarbs > 0 {
-            time = time.addingTimeInterval(TimeInterval(timeIntervalInMinutes * 60))
             let entries = generateEntries(amount: finalAmountOfXCarbs, time: time, type: xCarbsType)
             self.hkObjects.append(entries.hkObject)
             xCarbsEntries[time] = entries.carbsEntry
@@ -183,84 +195,5 @@ class CarbsRegimeCalculator: ObservableObject {
         let hkObject = HealthDataHelper.processQuantitySample(value: amount, unit: HealthDataHelper.unitCarbs, start: time, end: time, sampleType: HealthDataHelper.objectTypeCarbs)
         let xCarbsEntry = CarbsEntry(type: type, value: amount, date: time)
         return (hkObject, xCarbsEntry)
-    }
-    
-    private func setParameters() {
-        now = Date()
-        
-        // Determine global start and end time
-        globalStartTime = now // Start is always now, as we want to visualize the idle time before any carbs hit the body
-        globalEndTime = max(
-            now.addingTimeInterval(includeTotalMealSugars ? (Double(UserSettings.shared.absorptionTimeSugarsDelayInMinutes) + UserSettings.shared.absorptionTimeSugarsDurationInHours * 60) * 60 : 0), // either sugars start + duration or zero
-            now.addingTimeInterval(includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeCarbsDelayInMinutes) + UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) * 60 : 0), // either carbs start + duration or zero
-            now.addingTimeInterval(includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + absorptionTimeInMinutes) * 60) : 0) // either eCarbs start + duration or zero
-        )
-        intervalInMinutes = DataHelper.gcd([UserSettings.shared.absorptionTimeSugarsIntervalInMinutes, UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, UserSettings.shared.absorptionTimeECarbsIntervalInMinutes])
-        
-        sugarsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeSugarsDelayInMinutes * 60))
-        carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
-        eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
-        
-        if includeTotalMealSugars { calculateTotalMealSugars() }
-        if includeTotalMealCarbs { calculateTotalMealCarbs() }
-        if includeECarbs { calculateECarbs() }
-        
-        // Then fit the chart bars
-        fitCarbChartBars()
-        carbsRegime = CarbsRegime(globalStartTime: self.globalStartTime, globalEndTime: self.globalEndTime, intervalInMinutes: self.intervalInMinutes, sugarsEntries: self.sugarsEntries, carbsEntries: self.carbsEntries, eCarbsEntries: self.eCarbsEntries)
-    }
-    
-    // MARK: - Functions for fitting the chart
-    
-    func fitCarbChartBars() {
-        if includeTotalMealCarbs || includeECarbs || includeTotalMealSugars { // We only need this if carbs are selected
-            let minMaxCarbs = getMinMaxCarbs()
-            regularMultiplier = previewHeight / minMaxCarbs.max
-            
-            if minMaxCarbs.min * regularMultiplier < barMinHeight {
-                // We need to split some bars
-                requiresBarSplitting = true
-                theoreticalMaxBarHeight = regularMultiplier * minMaxCarbs.max
-                maxCarbsWithoutSplitting = previewHeight / barMinHeight
-                appliedMultiplier = barMinHeight / minMaxCarbs.min
-            } else {
-                requiresBarSplitting = false
-                theoreticalMaxBarHeight = regularMultiplier * minMaxCarbs.min
-                maxCarbsWithoutSplitting = minMaxCarbs.max
-                appliedMultiplier = regularMultiplier
-            }
-        }
-    }
-    
-    private func getMinMaxCarbs() -> (min: Double, max: Double) {
-        var minDouble = 0.0
-        var maxDouble = 0.0
-        
-        if includeTotalMealSugars {
-            for entry in sugarsEntries.values {
-                minDouble = minDouble == 0 ? entry.value : min(minDouble, entry.value)
-                maxDouble = max(maxDouble, entry.value)
-            }
-        }
-        
-        if includeTotalMealCarbs {
-            for entry in carbsEntries.values {
-                minDouble = minDouble == 0 ? entry.value : min(minDouble, entry.value)
-                maxDouble = max(maxDouble, entry.value)
-            }
-        }
-        
-        if includeECarbs {
-            for entry in eCarbsEntries.values {
-                minDouble = minDouble == 0 ? entry.value : min(minDouble, entry.value)
-                maxDouble = max(maxDouble, entry.value)
-            }
-        }
-        
-        return (minDouble, maxDouble)
-    }
-    
-    func getSplitBarHeight(carbs: Double) -> Double {
-        previewHeight - (theoreticalMaxBarHeight - carbs * regularMultiplier)
     }
 }

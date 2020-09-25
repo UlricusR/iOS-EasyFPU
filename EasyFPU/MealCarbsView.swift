@@ -14,6 +14,7 @@ struct MealCarbsView: View {
         let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
         return ChartBar.timeStyle.string(from: time)
     }
+    static let color = Color.green
     
     var body: some View {
         HStack {
@@ -22,14 +23,14 @@ struct MealCarbsView: View {
                 Text("Regular Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
-            .foregroundColor(.green)
+            .foregroundColor(MealCarbsView.color)
             .padding(.trailing)
             
             VStack(alignment: .trailing) { // Questions
                 Text("How much?")
                 Text("When?")
                 Text("How long?")
-            }.foregroundColor(.green)
+            }.foregroundColor(MealCarbsView.color)
             
             VStack(alignment: .leading) { // Answers
                 HStack {
