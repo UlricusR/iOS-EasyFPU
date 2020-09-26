@@ -98,7 +98,6 @@ struct ChartBar: View {
                             Text(formatValue(value: entries![0].value))
                                 .font(.footnote)
                                 .rotationEffect(.degrees(-90))
-                                .offset(y: multiplier * entries![0].value <= 40 ? 0 : 40)
                                 .zIndex(1)
                             
                             // The entry
