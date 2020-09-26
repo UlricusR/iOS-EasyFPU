@@ -249,8 +249,12 @@ struct FoodList: View {
     
     private func importJSON(_ url: URL) {
         debugPrint("Trying to import following file: \(url)")
-        guard let jsonData = try? Data(contentsOf: url) else {
-            errorMessage = NSLocalizedString("Unable to open URL: ", comment: "") + url.absoluteString
+        var jsonData: Data
+        do {
+            jsonData = try Data(contentsOf: url)
+        } catch {
+            debugPrint(error.localizedDescription)
+            errorMessage = error.localizedDescription
             showingAlert = true
             return
         }
