@@ -40,9 +40,12 @@
 "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed.";
 "A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
 "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
-"In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen." = "In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen.";
+"In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:" = "In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:";
+"Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.";
+"Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.";
+"Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.";
 "Tapping the export button in the summary will open the Meal Export view." = "Tapping the export button in the summary will open the Meal Export view.";
-"Tapping the summary will open the Meal Details view." = "Tapping the summary will open the Meal Details view.";
+"Tapping the info icon in the summary will open the Meal Details view." = "Tapping the info icon in the summary will open the Meal Details view.";
 
 // Select Food Item help
 "Select Food Item" = "Select Food Item";
@@ -69,15 +72,11 @@
 
 // Meal Details help
 "Meal Details" = "Meal Details";
-"This view displays the details of your meal." = "This view displays the details of your meal.";
-"In the upper part, printed in red, you see the nutritional values of the total meal. This includes:" = "In the upper part, printed in red, you see the nutritional values of the total meal. This includes:";
+"This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid. It displays the same information as the Meal Summary on the Food List view, plus - on request - the details about all selected food items." = "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid. It displays the same information as the Meal Summary on the Food List view, plus - on request - the details about all selected food items.";
+"For each of the three carbs type, the same set of information is displayed:" = "For each of the three carbs type, the same set of information is displayed:";
 "- The total amount consumed in grams" = "- The total amount consumed in grams";
 "- The total energy consumed in kcal" = "- The total energy consumed in kcal";
 "- The total amount of carbs consumed in grams" = "- The total amount of carbs consumed in grams";
-"- The amount of Food Protein Units" = "- The amount of Food Protein Units";
-"- The corresponding amount of extended carbs in grams" = "- The corresponding amount of extended carbs in grams";
-"- The corresponding absorption time" = "- The corresponding absorption time";
-"- The recommended delay for the extended carbs to start" = "- The recommended delay for the extended carbs to start";
 "You may export the extended carbs to the Apple Health app" = "You may export the extended carbs to the Apple Health app, if Apple Health is available on your device.";
 "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above.";
 

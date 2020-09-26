@@ -40,9 +40,13 @@
 "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "Sobald Ihre Essensliste ein oder mehrere Essen beinhaltet, können Sie eine Mahlzeit zusammenstellen. Drücken Sie dazu kurz auf ein Essen. Dies öffnet den Dialog zur Eingabe der gegessenen Menge.";
 "A green Plus icon indicates that the food item has not yet been selected." = "Ein grünes Plus-Zeichen zeigt an, dass das Essen noch nicht zu einer Mahlzeit hinzugefügt wurde.";
 "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "Ein rotes Kreuz zeigt an, dass das Essen ausgewählt wurde. Es wird nun bei der Berechnung der Gesamtmahlzeit berücksichtigt. Drücken Sie ein weiteres Mal kurz auf das Essen, um es wieder aus der Mahlzeit zu entfernen.";
-"In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen." = "Haben Sie mindestens ein Essen ausgewählt, werden die wichtigsten Nährwerte der Gesamtmahlzeit am unteren Rand der Ansicht in roter Schrift angezeigt.";
+"In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:" = "Haben Sie mindestens ein Essen ausgewählt, werden die Informationen zu den drei Kohlenhydrat-Type - schnelle Kohlenhydrate aus Zucker, reguläre Kohlenhydrate und verlängerte Kohlenhydrate - im unteren Bereich angezeigt:";
+"Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Kohlenhydrate von Zucker werden in der Regel sofort absorbiert. Sie können die Parameter im Absorptionsschema-Dialog anpassen.";
+"Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Reguläre Kohlenhydrate werden langsamer als Zucker verdaut. Sie können die entsprechenden Parameter ebenfalls im Absorptionsschema-Dialog anpassen.";
+"Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Verlängerte Kohlenhydrate stammen aus der Verdauung von Fett und Proteinen (und sind eigentlich keine Kohlenhydrate). Daher kann ihre Absorptionszeit spät starten und sehr lange andauern.";
 "Tapping the summary will open the Meal Details view." = "Drücken Sie auf die Zusammenfassung der Nährwerte, um weitere Details zu sehen.";
 "Tapping the export button in the summary will open the Meal Export view." = "Drücken Sie auf den Export-Knopf, um Ihre Mahlzeit nach Apple Health zu exportieren.";
+"Tapping the info icon in the summary will open the Meal Details view." = "Drücken Sie auf das Info-Icon, um weitere Details zu sehen.";
 
 // Select Food Item help
 "Select Food Item" = "Essen auswählen";
@@ -69,15 +73,11 @@
 
 // Meal Details help
 "Meal Details" = "Details zur Mahlzeit";
-"This view displays the details of your meal." = "Diese Ansicht zeigt die Details Ihrer Gesamtmahlzeit.";
-"In the upper part, printed in red, you see the nutritional values of the total meal. This includes:" = "Im oberen Teil werden in roter Schrift die Nährwerte Ihrer Gesamtmahlzeit angezeigt. Diese sind:";
-"- The total amount consumed in grams" = "- Die in Summe gegessene Menge";
-"- The total energy consumed in kcal" = "- Der gesamte Energiegehalt in kcal";
-"- The total amount of carbs consumed in grams" = "- Der Gesamtanteil an Kohlenhydraten in Gramm";
-"- The amount of Food Protein Units" = "- Die Fett-Protein-Einheiten";
-"- The corresponding amount of extended carbs in grams" = "- Die zugehörigen verlängerten Kohlenhydrate in Gramm";
-"- The corresponding absorption time" = "- Die entsprechende Absorptionszeit";
-"- The recommended delay for the extended carbs to start" = "- Die empfohlene Verzögerung der Wirksamkeit der verlängerten Kohlenhydrate";
+"This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid. It displays the same information as the Meal Summary on the Food List view, plus - on request - the details about all selected food items." = "Diese Ansicht stellt die Details über Ihre Mahlzeit so dar, dass sie leicht als Screenshot z.B. an Ihr Kind gesendet werden können. Es werden die gleichen Informationen wie bereits in der Zusammenfassung der Mahlzeit am Ende der Essensliste angezeigt, zusätzlich - auf Wunsch - die einzelnen Essensbestandteile.";
+"For each of the three carbs type, the same set of information is displayed:" = "Für die drei Kohlenhydrat-Arten werden jeweils die gleichen Informationen dargestellt:";
+"- How much? - The total amount of carbs of that type" = "- Wieviel? - Die Gesamtmenge an Kohlenhydraten dieser Art";
+"- When? - The time when these carbs start to impact your blood glucose level" = "- Wann? - Der Zeitpunkt, ab dem diese Art von Kohlenhydraten Ihren Blutzuckerspiegel beeinflusst";
+"- How long? - The time interval during which these carbs will be absorbed, impacting your blood glucose level" = "- Wie lange? - Die Zeitspanne, während der diese Kohlenhydrate absorbiert werden und damit Ihren Blutzuckerspiegel beeinflussen";
 "You may export the extended carbs to the Apple Health app" = "Sie können die verlängerten Kohlenhydrate in die Apple Health App exportieren, wenn Apple Health auf Ihrem Gerät zur Verfügung steht.";
 "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Unter der Gesamtmahlzeit werden die gleichen Werte für die individuellen Essen dargestellt, die zur Berechnung der Gesamtmahlzeit herangezogen wurden.";
 
