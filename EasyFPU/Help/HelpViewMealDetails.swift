@@ -11,18 +11,14 @@ import SwiftUI
 struct HelpViewMealDetails: View {
     var body: some View {
         VStack(alignment: .leading) {
-            Text("This view displays the details of your meal.").padding()
+            Text("This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid. It displays the same information as the Meal Summary on the Food List view, plus - on request - the details about all selected food items.").padding()
             
-            Text("In the upper part, printed in red, you see the nutritional values of the total meal. This includes:").padding().foregroundColor(.red)
+            Text("For each of the three carbs type, the same set of information is displayed:").padding()
             
             Group {
-                Text("- The total amount consumed in grams").padding([.leading, .trailing])
-                Text("- The total energy consumed in kcal").padding([.leading, .trailing])
-                Text("- The total amount of carbs consumed in grams").padding([.leading, .trailing])
-                Text("- The amount of Food Protein Units").padding([.leading, .trailing])
-                Text("- The corresponding amount of extended carbs in grams").padding([.leading, .trailing])
-                Text("- The corresponding absorption time").padding([.leading, .trailing])
-                Text("- The recommended delay for the extended carbs to start").padding([.leading, .trailing, .top])
+                Text("- How much? - The total amount of carbs of that type").padding([.leading, .trailing])
+                Text("- When? - The time when these carbs start to impact your blood glucose level").padding([.leading, .trailing])
+                Text("- How long? - The time interval during which these carbs will be absorbed, impacting your blood glucose level").padding([.leading, .trailing])
             }
             
             HStack {

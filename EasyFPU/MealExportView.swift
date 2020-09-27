@@ -13,7 +13,7 @@ struct MealExportView: View {
     @Binding var isPresented: Bool
     var meal: MealViewModel
     var absorptionScheme: AbsorptionScheme
-    @ObservedObject var carbsEntries = CarbsEntries.default
+    @ObservedObject var carbsRegimeCalculator = CarbsRegimeCalculator.default
     @State var showingSheet = false
     @State var showingAlert = false
     @State var errorMessage = ""
@@ -26,30 +26,40 @@ struct MealExportView: View {
             VStack(alignment: .leading) {
                 Text("Please choose the data to export:").padding()
                 
-                Toggle(isOn: $carbsEntries.includeECarbs) {
-                    Text("Extended Carbs")
+                if UserSettings.shared.treatSugarsSeparately {
+                    Toggle(isOn: $carbsRegimeCalculator.includeTotalMealSugars) {
+                        Text("Sugars")
+                    }
+                    .padding([.leading, .trailing])
                 }
-                .padding([.leading, .trailing, .top])
                 
-                Toggle(isOn: $carbsEntries.includeTotalMealCarbs) {
-                    Text("Total Meal Carbs")
+                Toggle(isOn: $carbsRegimeCalculator.includeTotalMealCarbs) {
+                    Text("Regular Carbs")
+                }
+                .padding([.leading, .trailing])
+                
+                Toggle(isOn: $carbsRegimeCalculator.includeECarbs) {
+                    Text("Extended Carbs")
                 }
                 .padding([.leading, .trailing])
                 
                 Toggle(isOn: $exportTotalMealCalories) {
                     Text("Total Meal Calories")
-                }.padding([.leading, .trailing, .bottom])
+                }.padding()
                 
                 Button(action: {
                     self.exportHealthSample()
                 }) {
-                    Text("Export")
-                }.padding()
+                    Image(systemName: "square.and.arrow.up")
+                    Text("Export").fontWeight(.bold)
+                }
+                .multilineTextAlignment(.center)
+                .padding()
                 
                 // The carbs preview
-                if !carbsEntries.hkObjects.isEmpty {
+                if !carbsRegimeCalculator.hkObjects.isEmpty {
                     Text("Preview of exported carbs in g").padding([.top, .leading, .trailing])
-                    HealthExportPreview(carbsEntries: self.carbsEntries).padding()
+                    HealthExportPreview(carbsRegime: self.carbsRegimeCalculator.carbsRegime)
                 }
                 
                 Spacer()
@@ -63,11 +73,12 @@ struct MealExportView: View {
                 },
                 trailing: Button(action: {
                     // Store UserDefaults
-                    if
-                        !(UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsEntries.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsEntries.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &self.errorMessage))
-                    {
+                    if !(
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealSugars, UserSettings.UserDefaultsBoolKey.exportTotalMealSugars), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &self.errorMessage)
+                    ){
                         // Something went terribly wrong - inform user
                         self.showingAlert = true
                     } else {
@@ -101,14 +112,14 @@ struct MealExportView: View {
             showingAlert = true
             return
         }
-        self.carbsEntries.meal = meal
-        self.carbsEntries.absorptionTimeInMinutes = Double(absorptionTimeInHours) * 60.0
-        self.carbsEntries.recalculate()
+        self.carbsRegimeCalculator.meal = meal
+        self.carbsRegimeCalculator.absorptionTimeInMinutes = absorptionTimeInHours * 60
+        self.carbsRegimeCalculator.recalculate()
     }
     
     private func exportHealthSample() {
         var hkObjects = [HKObject]()
-        hkObjects.append(contentsOf: carbsEntries.hkObjects)
+        hkObjects.append(contentsOf: carbsRegimeCalculator.hkObjects)
         if exportTotalMealCalories {
             let caloriesObject = HealthDataHelper.processQuantitySample(value: meal.calories, unit: HealthDataHelper.unitCalories, start: Date(), end: Date(), sampleType: HealthDataHelper.objectTypeCalories)
             hkObjects.append(caloriesObject)

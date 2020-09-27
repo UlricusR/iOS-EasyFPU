@@ -37,11 +37,11 @@ struct FoodItemSelector: View {
                         // Buttons to ease input
                         HStack {
                             Spacer()
-                            NumberButton(number: 100, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 6)
-                            NumberButton(number: 50, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 6)
-                            NumberButton(number: 10, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 6)
-                            NumberButton(number: 5, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 6)
-                            NumberButton(number: 1, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 6)
+                            NumberButton(number: 100, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 50, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 10, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 5, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 1, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 7)
                             Spacer()
                         }
                         

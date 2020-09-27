@@ -33,85 +33,6 @@
 "Documentation on rueth.info" = "Documentation on rueth.info";
 "Home-Link" = "https://rueth.info/index.php/en/easyfpu-for-ios";
 
-// Food List help
-"The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
-"The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food.";
-"To add a new food item, tap on the large Plus button in the top right corner to add a new food item." = "To add a new food item, tap on the large Plus button in the top right corner to add a new food item.";
-"As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed.";
-"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
-"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
-"In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen." = "In case you have selected one or more food items, the most important nutritional values of the total meal will be summarized in red on the bottom of the screen.";
-"Tapping the summary will open the Meal Details view." = "Tapping the summary will open the Meal Details view and let you export nutritional values to Apple Health.";
-
-// Select Food Item help
-"Select Food Item" = "Select Food Item";
-"You may enter the consumed amount in three different ways." = "You may enter the consumed amount in three different ways.";
-"1. You directly enter it in the text field." = "1. You directly enter it in the text field.";
-"2. You use the green number fields to add to the amount already displayed in the text field." = "2. You use the green number fields to add to the amount already displayed in the text field.";
-"3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value." = "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value.";
-"You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment." = "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment.";
-"Save the typical amount by confirming with the green plus." = "Save the typical amount by confirming with the green plus.";
-"Use the food item editor to maintain existing typical amounts." = "Use the food item editor to maintain existing typical amounts.";
-
-// Food Item Editor help
-"Edit Food Item" = "Edit Food Item";
-"This dialog allows you to edit a food item." = "This dialog allows you to edit a food item.";
-"All fields are mandatory, but you may leave away typical amounts." = "All fields are mandatory, but you may leave away typical amounts.";
-"Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal.";
-"To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button.";
-"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button.";
-"Swipe left to remove a typical amount." = "Swipe left or hit the small red X to remove a typical amount.";
-"A good source for nutritional values (calories and carbs per 100g) is:" = "A good source for nutritional values (calories and carbs per 100g) is:";
-"Link-text-to-nutritional-values" = "Nutrition value";
-"Link-URL-to-nutritional-values" = "https://www.nutritionvalue.org/";
-"Delete the food item by tapping the link on the bottom of the view." = "Delete the food item by tapping the link on the bottom of the view.";
-
-// Meal Details help
-"Meal Details" = "Meal Details";
-"This view displays the details of your meal." = "This view displays the details of your meal.";
-"In the upper part, printed in red, you see the nutritional values of the total meal. This includes:" = "In the upper part, printed in red, you see the nutritional values of the total meal. This includes:";
-"- The total amount consumed in grams" = "- The total amount consumed in grams";
-"- The total energy consumed in kcal" = "- The total energy consumed in kcal";
-"- The total amount of carbs consumed in grams" = "- The total amount of carbs consumed in grams";
-"- The amount of Food Protein Units" = "- The amount of Food Protein Units";
-"- The corresponding amount of extended carbs in grams" = "- The corresponding amount of extended carbs in grams";
-"- The corresponding absorption time" = "- The corresponding absorption time";
-"- The recommended delay for the extended carbs to start" = "- The recommended delay for the extended carbs to start";
-"You may export the extended carbs to the Apple Health app" = "You may export the extended carbs to the Apple Health app, if Apple Health is available on your device.";
-"Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above.";
-
-// Absorption scheme help
-"Edit Absorption Scheme" = "Edit Absorption Scheme";
-"The absorption scheme defines, which absorption time is proposed for a given amount of FPUs. The pre-defined absorption scheme matches today‘s recommendations from nutrition science and is as follows:" = "The absorption scheme defines, which absorption time is proposed for a given amount of FPUs. The pre-defined absorption scheme matches today‘s recommendations from nutrition science and is as follows:";
-"1 FPU (= 10g extended carbs): 3 hours absorption time" = "1 FPU (= 10g extended carbs): 3 hours absorption time";
-"2 FPUs (= 20g extended carbs): 4 hours absorption time" = "2 FPUs (= 20g extended carbs): 4 hours absorption time";
-"3 FPUs (= 30g extended carbs): 5 hours absorption time" = "3 FPUs (= 30g extended carbs): 5 hours absorption time";
-"4 FPUs (= 40g extended carbs): 6 hours absorption time" = "4 FPUs (= 40g extended carbs): 6 hours absorption time";
-"6 FPUs (= 60g extended carbs) and more: 8 hours absorption time" = "6 FPUs (= 60g extended carbs) and more: 8 hours absorption time";
-"The calculation logic is as follows:" = "The calculation logic is as follows:";
-"Step 1: Calculation of the total calories, e.g. for 72g Chicken McNuggets (249 kcal per 100g): 72g * 249 kcal / 100g = 179 kcal" = "Step 1: Calculation of the total calories, e.g. for 72g Chicken McNuggets (249 kcal per 100g): 72g * 249 kcal / 100g = 179 kcal";
-"Step 2: Calculation of the calories caused by carbs (4 kcal per 1g of carbs), e.g. for 72g Chicken McNuggets (17g carbs per 100g): 72g * 17gCarbs / 100g * 4 kcal/gCarbs = 49 kcal" = "Step 2: Calculation of the calories caused by carbs (4 kcal per 1g of carbs), e.g. for 72g Chicken McNuggets (17g carbs per 100g): 72g * 17gCarbs / 100g * 4 kcal/gCarbs = 49 kcal";
-"Step 3: Substract the calories caused by carbs from the total calories, e.g.: 179 kcal - 49 kcal = 130 kcal" = "Step 3: Substract the calories caused by carbs from the total calories, e.g.: 179 kcal - 49 kcal = 130 kcal";
-"Step 4: As 100 kcal represent 1 FPU, this results in 1.3 FPUs respectively 13g of extended carbs." = "Step 4: As 100 kcal represent 1 FPU, this results in 1.3 FPUs respectively 13g of extended carbs.";
-"Step 5: The FPUs will be rounded, in our example to 1 FPU, and the absorption time will be looked up, in our example 3 hours." = "Step 5: The FPUs will be rounded, in our example to 1 FPU, and the absorption time will be looked up, in our example 3 hours.";
-"Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above." = "Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above.";
-"Furthermore you may modify the delay for the extended carbs, i.e. the time your body will need to digest your meal before the extended carbs from fat and protein start to be effective. Recommendation and default is 90 minutes." = "Furthermore you may modify the delay for the extended carbs, i.e. the time your body will need to digest your meal before the extended carbs from fat and protein start to be effective. Recommendation and default is 90 minutes.";
-"Finally, the interval parameter will be used to determine the time interval between each extended carb entry in Apple Health. Default is 10 minutes. Please see the help pages of the meal export view for further details." = "Finally, the interval parameter will be used to determine the time interval between each extended carb entry in Apple Health. Default is 10 minutes. Please see the help pages of the meal export view for further details.";
-
-// Health export help
-"You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles.";
-"The following data are available for export:" = "The following data are available for export:";
-"- Extended Carbs" = "- Extended Carbs";
-"- Total Meal Carbs" = "- Total Meal Carbs";
-"- Total Meal Calories" = "- Total Meal Calories";
-"Important information for Loop users:" = "Important information for Loop users:";
-"- It is recommended to only export Extended Carbs" = "- It is recommended to only export Extended Carbs";
-"- If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings." = "- If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings.";
-"How are the Extended Carbs exported?" = "How are the Extended Carbs exported?";
-"- The number of e-carb entries is determined by dividing the absorption time (e.g. 5 hours) by the interval (e.g. 10 minutes, see Absorption Scheme view), i.e. 5 hours / 10 minutes = 30" = "- The number of e-carb entries is determined by dividing the absorption time (e.g. 5 hours) by the interval (e.g. 10 minutes, see Absorption Scheme view), i.e. 5 hours / 10 minutes = 30";
-"- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g" = "- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g";
-"- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)" = "- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)";
-
 // Food List
 "Food List" = "Food List";
 "Name" = "Name";
@@ -120,10 +41,16 @@
 "Calories per 100g" = "Calories per 100g";
 "g" = "g";
 "g Carbs" = "g Carbs";
+"g Regular Carbs" = "g Regular Carbs";
+"g Sugars" = "g Sugars";
 "Carbs" = "Carbs";
+"Sugars" = "Sugars";
+"Thereof Sugars per 100g" = "Thereof Sugars per 100g";
 "g Extended Carbs" = "g Extended Carbs";
 "Extended Carbs" = "Extended Carbs";
 "kcal" = "kcal";
+"g/FPU" = "g/FPU";
+"e-Carbs Factor" = "e-Carbs Faktor";
 "New food item" = "New food item";
 "Edit food item" = "Edit food item";
 "Nutritional values per 100g:" = "Nutritional values per 100g:";
@@ -144,8 +71,18 @@
 "Cannot delete food item" = "Cannot delete food item";
 "Delay of Extended Carbs" = "Delay of Extended Carbs";
 
+// Meal preview
+"e-Carbs" = "e-Carbs";
+"Regular Carbs" = "Regular Carbs";
+"How much?" = "How much?";
+"When?" = "When?";
+"How long?" = "How long?";
+"min at" = "min at";
+"min for" = "min for";
+"For" = "For";
+
 // Meal details
-"Included food items:" = "Included food items:";
+"Further details" = "Further details";
 "Export to Apple Health" = "Export to Apple Health";
 
 // Food item editor
@@ -162,9 +99,12 @@
 "Value must not be negative" = "Value must not be negative";
 "Value must not be zero or negative" = "Value must not be zero or negative";
 "Delete food item" = "Delete food item";
+"Sugars exceed carbs" = "Sugars exceed carbs";
+"Thereof" = "Thereof";
 
 // Absorption scheme editor
 "Absorption scheme" = "Absorption scheme";
+"Absorption Blocks" = "Absorption Blocks";
 "Tap to edit, swipe left to delete" = "Tap to edit, swipe left to delete";
 "New absorption block:" = "New absorption block:";
 "Edit absorption block:" = "Edit absorption block:";
@@ -182,10 +122,13 @@
 "Fatal error: Cannot convert numbers into string, please contact app developer" = "Fatal error: Cannot convert numbers into string, please contact app developer";
 "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer";
 "Reset to default" = "Reset to default";
-"Absorption Time Parameters" = "Absorption Time Parameters";
+"Absorption Time Parameters for Sugars" = "Absorption Time Parameters for Sugars";
+"Absorption Time Parameters for Carbs" = "Absorption Time Parameters for Carbs";
+"Absorption Time Parameters for e-Carbs" = "Absorption Time Parameters for e-Carbs";
 "Delay" = "Delay";
 "Interval" = "Interval";
 "min" = "min";
+"Treat sugars separately" = "Treat sugars separately";
 
 // Menu actions
 "Import from JSON" = "Import (format: JSON)";
@@ -222,3 +165,84 @@
 "Please select at least one entry to export" = "Please select at least one entry to export";
 "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks";
 "Preview of exported carbs in g" = "Preview of exported carbs in g";
+
+// Food List help
+"The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
+"The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food.";
+"To add a new food item, tap on the large Plus button in the top right corner to add a new food item." = "To add a new food item, tap on the large Plus button in the top right corner to add a new food item.";
+"As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed.";
+"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
+"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
+"In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:" = "In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:";
+"Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.";
+"Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.";
+"Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.";
+"Tapping the export button in the summary will open the Meal Export view." = "Tapping the export button in the summary will open the Meal Export view.";
+"Tapping the info icon in the summary will open the Meal Details view." = "Tapping the info icon in the summary will open the Meal Details view.";
+
+// Select Food Item help
+"Select Food Item" = "Select Food Item";
+"You may enter the consumed amount in three different ways." = "You may enter the consumed amount in three different ways.";
+"1. You directly enter it in the text field." = "1. You directly enter it in the text field.";
+"2. You use the green number fields to add to the amount already displayed in the text field." = "2. You use the green number fields to add to the amount already displayed in the text field.";
+"3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value." = "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value.";
+"You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment." = "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment.";
+"Save the typical amount by confirming with the green plus." = "Save the typical amount by confirming with the green plus.";
+"Use the food item editor to maintain existing typical amounts." = "Use the food item editor to maintain existing typical amounts.";
+
+// Food Item Editor help
+"Edit Food Item" = "Edit Food Item";
+"This dialog allows you to edit a food item." = "This dialog allows you to edit a food item.";
+"All fields are mandatory, but you may leave away typical amounts." = "All fields are mandatory, but you may leave away typical amounts.";
+"Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal.";
+"To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button.";
+"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button.";
+"Swipe left to remove a typical amount." = "Swipe left or hit the small red X to remove a typical amount.";
+"A good source for nutritional values (calories and carbs per 100g) is:" = "A good source for nutritional values (calories and carbs per 100g) is:";
+"Link-text-to-nutritional-values" = "Nutrition value";
+"Link-URL-to-nutritional-values" = "https://www.nutritionvalue.org/";
+"Delete the food item by tapping the link on the bottom of the view." = "Delete the food item by tapping the link on the bottom of the view.";
+
+// Meal Details help
+"Meal Details" = "Meal Details";
+"This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid. It displays the same information as the Meal Summary on the Food List view, plus - on request - the details about all selected food items." = "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid. It displays the same information as the Meal Summary on the Food List view, plus - on request - the details about all selected food items.";
+"For each of the three carbs type, the same set of information is displayed:" = "For each of the three carbs type, the same set of information is displayed:";
+"- The total amount consumed in grams" = "- The total amount consumed in grams";
+"- The total energy consumed in kcal" = "- The total energy consumed in kcal";
+"- The total amount of carbs consumed in grams" = "- The total amount of carbs consumed in grams";
+"You may export the extended carbs to the Apple Health app" = "You may export sugars, regular carbs, extended carbs and calories to the Apple Health app, if Apple Health is available on your device.";
+"Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Below the total meal details, further details as well as a list of the individual food items considered in the calculation are displayed on request.";
+
+// Absorption scheme help
+"Edit Absorption Scheme" = "Edit Absorption Scheme";
+"The absorption scheme defines, which absorption time is proposed for a given amount of FPUs. The pre-defined absorption scheme matches today‘s recommendations from nutrition science and is as follows:" = "The absorption scheme defines, which absorption time is proposed for a given amount of FPUs. The pre-defined absorption scheme matches today‘s recommendations from nutrition science and is as follows:";
+"1 FPU (= 10g extended carbs): 3 hours absorption time" = "1 FPU (= 10g extended carbs): 3 hours absorption time";
+"2 FPUs (= 20g extended carbs): 4 hours absorption time" = "2 FPUs (= 20g extended carbs): 4 hours absorption time";
+"3 FPUs (= 30g extended carbs): 5 hours absorption time" = "3 FPUs (= 30g extended carbs): 5 hours absorption time";
+"4 FPUs (= 40g extended carbs): 6 hours absorption time" = "4 FPUs (= 40g extended carbs): 6 hours absorption time";
+"6 FPUs (= 60g extended carbs) and more: 8 hours absorption time" = "6 FPUs (= 60g extended carbs) and more: 8 hours absorption time";
+"The calculation logic is as follows:" = "The calculation logic is as follows:";
+"Step 1: Calculation of the total calories, e.g. for 72g Chicken McNuggets (249 kcal per 100g): 72g * 249 kcal / 100g = 179 kcal" = "Step 1: Calculation of the total calories, e.g. for 72g Chicken McNuggets (249 kcal per 100g): 72g * 249 kcal / 100g = 179 kcal";
+"Step 2: Calculation of the calories caused by carbs (4 kcal per 1g of carbs), e.g. for 72g Chicken McNuggets (17g carbs per 100g): 72g * 17gCarbs / 100g * 4 kcal/gCarbs = 49 kcal" = "Step 2: Calculation of the calories caused by carbs (4 kcal per 1g of carbs), e.g. for 72g Chicken McNuggets (17g carbs per 100g): 72g * 17gCarbs / 100g * 4 kcal/gCarbs = 49 kcal";
+"Step 3: Substract the calories caused by carbs from the total calories, e.g.: 179 kcal - 49 kcal = 130 kcal" = "Step 3: Substract the calories caused by carbs from the total calories, e.g.: 179 kcal - 49 kcal = 130 kcal";
+"Step 4: As 100 kcal represent 1 FPU, this results in 1.3 FPUs respectively 13g of extended carbs." = "Step 4: As 100 kcal represent 1 FPU, this results in 1.3 FPUs respectively 13g of extended carbs.";
+"Step 5: The FPUs will be rounded, in our example to 1 FPU, and the absorption time will be looked up, in our example 3 hours." = "Step 5: The FPUs will be rounded, in our example to 1 FPU, and the absorption time will be looked up, in our example 3 hours.";
+"Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above." = "Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above.";
+"Furthermore you may modify the delay for the extended carbs, i.e. the time your body will need to digest your meal before the extended carbs from fat and protein start to be effective. Recommendation and default is 90 minutes." = "Furthermore you may modify the delay for the extended carbs, i.e. the time your body will need to digest your meal before the extended carbs from fat and protein start to be effective. Recommendation and default is 90 minutes.";
+"Finally, the interval parameter will be used to determine the time interval between each extended carb entry in Apple Health. Default is 10 minutes. Please see the help pages of the meal export view for further details." = "Finally, the interval parameter will be used to determine the time interval between each extended carb entry in Apple Health. Default is 10 minutes. Please see the help pages of the meal export view for further details.";
+
+// Health export help
+"You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles.";
+"The following data are available for export:" = "The following data are available for export:";
+"- Sugars (if set in the Absorption Scheme editor)" = "- Sugars (if set in the Absorption Scheme editor)";
+"- Extended Carbs" = "- Extended Carbs";
+"- Regular Carbs" = "- Regular Carbs";
+"- Total Meal Calories" = "- Total Meal Calories";
+"Important information for Loop users:" = "Important information for Loop users:";
+"If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings." = "If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings.";
+"How are the Extended Carbs exported?" = "How are the Extended Carbs exported?";
+"- The number of e-carb entries is determined by dividing the absorption time (e.g. 5 hours) by the interval (e.g. 10 minutes, see Absorption Scheme view), i.e. 5 hours / 10 minutes = 30" = "- The number of e-carb entries is determined by dividing the absorption time (e.g. 5 hours) by the interval (e.g. 10 minutes, see Absorption Scheme view), i.e. 5 hours / 10 minutes = 30";
+"- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g" = "- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g";
+"- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)" = "- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)";
+"Similar calculations are done for sugars and regular carbs." = "Similar calculations are done for sugars and regular carbs.";
+"The graph visualizes how these data are exported." = "The graph visualizes how these data are exported.";

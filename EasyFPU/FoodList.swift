@@ -23,24 +23,19 @@ struct FoodList: View {
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     @ObservedObject var absorptionScheme = AbsorptionScheme()
-    var absorptionTimeAsString: String {
-        if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return NumberFormatter().string(from: NSNumber(value: meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
-        } else {
-            return "..."
-        }
-    }
-    @State var showingSheet = false
+    
+    @ObservedObject var sheet = FoodListSheets()
+    
     @State var showingMenu = false
     @State var showingAlert = false
     @State var showActionSheet = false
-    @State var activeSheet = ActiveFoodListSheet.addFoodItem
     @State var errorMessage = ""
     @State var draftFoodItem = FoodItemViewModel(
         name: "",
         favorite: false,
         caloriesPer100g: 0.0,
         carbsPer100g: 0.0,
+        sugarsPer100g: 0.0,
         amount: 0
     )
     @State var foodItemsToBeImported: [FoodItemViewModel]?
@@ -101,51 +96,7 @@ struct FoodList: View {
                                 }
                                 
                                 if self.meal.amount > 0 {
-                                    NavigationLink(destination: MealDetail(absorptionScheme: self.absorptionScheme, meal: self.meal)) {
-                                        VStack {
-                                            Divider()
-                                            
-                                            HStack(alignment: .center) {
-                                                Text("Total meal").font(.headline).multilineTextAlignment(.center)
-                                                Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor)
-                                            }
-                                            
-                                            HStack {
-                                                VStack {
-                                                    HStack {
-                                                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
-                                                        Text("g")
-                                                    }
-                                                    Text("Carbs").font(.caption).multilineTextAlignment(.center)
-                                                }
-                                                
-                                                VStack {
-                                                    HStack {
-                                                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
-                                                        Text("g")
-                                                    }
-                                                    Text("Extended Carbs").font(.caption).multilineTextAlignment(.center)
-                                                }
-                                                
-                                                VStack {
-                                                    HStack {
-                                                        Text(self.absorptionTimeAsString)
-                                                        Text("h")
-                                                    }
-                                                    Text("Absorption Time").font(.caption).multilineTextAlignment(.center)
-                                                }
-                                            }
-                                            
-                                            HStack {
-                                                Text(DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelay))!)
-                                                Text("min")
-                                            }.padding(.top)
-                                            Text("Delay of Extended Carbs").font(.caption).multilineTextAlignment(.center)
-                                        }
-                                        .animation(.easeInOut)
-                                        .padding([.leading, .trailing])
-                                        .foregroundColor(.red)
-                                    }
+                                    MealSummaryView(foodListSheet: self.sheet, absorptionScheme: self.absorptionScheme, meal: self.meal)
                                 }
                             }
                             .navigationBarTitle("Food List")
@@ -162,8 +113,7 @@ struct FoodList: View {
                                     
                                     Button(action: {
                                         withAnimation {
-                                            self.activeSheet = .help
-                                            self.showingSheet = true
+                                            self.sheet.state = .help
                                         }
                                     }) {
                                         Image(systemName: "questionmark.circle")
@@ -173,7 +123,9 @@ struct FoodList: View {
                                 },
                                 trailing: HStack {
                                     Button(action: {
-                                        self.showFavoritesOnly.toggle()
+                                        withAnimation {
+                                            self.showFavoritesOnly.toggle()
+                                        }
                                     }) {
                                         if self.showFavoritesOnly {
                                             Image(systemName: "star.fill")
@@ -193,10 +145,10 @@ struct FoodList: View {
                                             favorite: false,
                                             caloriesPer100g: 0.0,
                                             carbsPer100g: 0.0,
+                                            sugarsPer100g: 0.0,
                                             amount: 0
                                         )
-                                        self.activeSheet = .addFoodItem
-                                        self.showingSheet = true
+                                        self.sheet.state = .addFoodItem
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .imageScale(.large)
@@ -206,17 +158,7 @@ struct FoodList: View {
                             )
                         }
                         .navigationViewStyle(StackNavigationViewStyle())
-                        .sheet(isPresented: self.$showingSheet) {
-                            FoodListSheets(
-                                activeSheet: self.activeSheet,
-                                helpScreen: self.helpScreen,
-                                isPresented: self.$showingSheet,
-                                draftFoodItem: self.draftFoodItem,
-                                absorptionScheme: self.absorptionScheme,
-                                meal: self.meal
-                            )
-                                .environment(\.managedObjectContext, self.managedObjectContext)
-                        }
+                        .sheet(isPresented: $sheet.isShowing, content: sheetContent)
                         .onAppear {
                             if self.absorptionScheme.absorptionBlocks.isEmpty {
                                 // Absorption scheme hasn't been loaded yet
@@ -307,8 +249,12 @@ struct FoodList: View {
     
     private func importJSON(_ url: URL) {
         debugPrint("Trying to import following file: \(url)")
-        guard let jsonData = try? Data(contentsOf: url) else {
-            errorMessage = NSLocalizedString("Unable to open URL: ", comment: "") + url.absoluteString
+        var jsonData: Data
+        do {
+            jsonData = try Data(contentsOf: url)
+        } catch {
+            debugPrint(error.localizedDescription)
+            errorMessage = error.localizedDescription
             showingAlert = true
             return
         }
@@ -367,6 +313,26 @@ struct FoodList: View {
         }
         withAnimation {
             self.showingMenu = false
+        }
+    }
+    
+    @ViewBuilder
+    private func sheetContent() -> some View {
+        if sheet.state != nil {
+            switch sheet.state! {
+            case .addFoodItem:
+                FoodItemEditor(
+                    isPresented: $sheet.isShowing,
+                    navigationBarTitle: NSLocalizedString("New food item", comment: ""),
+                    draftFoodItem: draftFoodItem
+                ).environment(\.managedObjectContext, managedObjectContext)
+            case .mealDetails:
+                MealDetail(isPresented: $sheet.isShowing, absorptionScheme: self.absorptionScheme, meal: self.meal)
+            case .help:
+                HelpView(isPresented: $sheet.isShowing, helpScreen: helpScreen)
+            }
+        } else {
+            EmptyView()
         }
     }
 }

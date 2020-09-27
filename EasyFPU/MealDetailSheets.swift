@@ -6,30 +6,11 @@
 //  Copyright © 2020 Ulrich Rüth. All rights reserved.
 //
 
-import SwiftUI
+import Foundation
 
-enum ActiveMealDetailSheet {
-    case help, exportToHealth
-}
-
-struct MealDetailSheet: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
-    var activeSheet: ActiveMealDetailSheet
-    @Binding var isPresented: Bool
-    var meal: MealViewModel
-    var absorptionScheme: AbsorptionScheme
-    var helpScreen: HelpScreen
-    
-    var body: some View {
-        switch activeSheet {
-        case .help:
-            return AnyView(
-                HelpView(isPresented: self.$isPresented, helpScreen: self.helpScreen)
-            )
-        case .exportToHealth:
-            return AnyView(
-                MealExportView(isPresented: self.$isPresented, meal: meal, absorptionScheme: absorptionScheme)
-            )
-        }
+class MealDetailSheets: SheetState<MealDetailSheets.State> {
+    enum State {
+        case help
+        case exportToHealth
     }
 }

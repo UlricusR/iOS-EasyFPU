@@ -12,8 +12,7 @@ struct FoodItemView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var absorptionScheme: AbsorptionScheme
     @ObservedObject var foodItem: FoodItemViewModel
-    @State private var showingSheet = false
-    @State var activeSheet = ActiveFoodItemViewSheet.selectFoodItem
+    @ObservedObject var sheet = FoodItemViewSheets()
     
     var body: some View {
         VStack {
@@ -42,8 +41,18 @@ struct FoodItemView: View {
 
                 Text("|").foregroundColor(.gray)
 
-                Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.carbsPer100g))!).font(.caption).foregroundColor(.gray)
-                Text("g Carbs").font(.caption).foregroundColor(.gray)
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.carbsPer100g))!).font(.caption).foregroundColor(.gray)
+                        Text("g Carbs").font(.caption).foregroundColor(.gray)
+                    }
+                    
+                    HStack {
+                        Text("Thereof").font(.caption).foregroundColor(.gray)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.sugarsPer100g))!).font(.caption).foregroundColor(.gray)
+                        Text("g Sugars").font(.caption).foregroundColor(.gray)
+                    }
+                }
             }
         }
         .onTapGesture {
@@ -52,22 +61,36 @@ struct FoodItemView: View {
                 self.foodItem.cdFoodItem?.amount = 0
                 try? AppDelegate.viewContext.save()
             } else {
-                self.activeSheet = .selectFoodItem
-                self.showingSheet = true
+                self.sheet.state = .selectFoodItem
             }
         }
         .onLongPressGesture {
             // Edit food item
-            self.activeSheet = .editFoodItem
-            self.showingSheet = true
+            self.sheet.state = .editFoodItem
         }
-        .sheet(isPresented: $showingSheet) {
-            if self.foodItem.cdFoodItem != nil {
-                FoodItemViewSheets(activeSheet: self.activeSheet, isPresented: self.$showingSheet, draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!)
-                    .environment(\.managedObjectContext, self.managedObjectContext)
-            } else {
-                Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
+        .sheet(isPresented: $sheet.isShowing, content: sheetContent)
+    }
+    
+    @ViewBuilder
+    private func sheetContent() -> some View {
+        if sheet.state != nil {
+            switch sheet.state! {
+            case .editFoodItem:
+                if self.foodItem.cdFoodItem != nil {
+                    FoodItemEditor(
+                        isPresented: $sheet.isShowing,
+                        navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
+                        draftFoodItem: self.foodItem,
+                        editedFoodItem: self.foodItem.cdFoodItem!
+                    ).environment(\.managedObjectContext, managedObjectContext)
+                } else {
+                    Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
+                }
+            case .selectFoodItem:
+                FoodItemSelector(isPresented: $sheet.isShowing, draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!)
             }
+        } else {
+            EmptyView()
         }
     }
 }

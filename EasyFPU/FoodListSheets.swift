@@ -6,35 +6,12 @@
 //  Copyright © 2020 Ulrich Rüth. All rights reserved.
 //
 
-import SwiftUI
+import Foundation
 
-enum ActiveFoodListSheet {
-    case addFoodItem, help
-}
-
-struct FoodListSheets: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
-    var activeSheet: ActiveFoodListSheet
-    var helpScreen: HelpScreen
-    @Binding var isPresented: Bool
-    var draftFoodItem: FoodItemViewModel
-    var absorptionScheme: AbsorptionScheme
-    var meal: MealViewModel
-    
-    var body: some View {
-        switch activeSheet {
-        case .addFoodItem:
-            return AnyView(
-                FoodItemEditor(
-                    isPresented: self.$isPresented,
-                    navigationBarTitle: NSLocalizedString("New food item", comment: ""),
-                    draftFoodItem: self.draftFoodItem
-                ).environment(\.managedObjectContext, managedObjectContext)
-            )
-        case .help:
-            return AnyView(
-                HelpView(isPresented: $isPresented, helpScreen: helpScreen)
-            )
-        }
+class FoodListSheets: SheetState<FoodListSheets.State> {
+    enum State {
+        case addFoodItem
+        case mealDetails
+        case help
     }
 }

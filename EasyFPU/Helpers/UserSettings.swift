@@ -13,18 +13,31 @@ class UserSettings: ObservableObject {
     enum UserDefaultsType {
         case bool(Bool, UserSettings.UserDefaultsBoolKey)
         case double(Double, UserSettings.UserDefaultsDoubleKey)
+        case int(Int, UserSettings.UserDefaultsIntKey)
     }
     
     enum UserDefaultsBoolKey: String, CaseIterable {
         case disclaimerAccepted = "DisclaimerAccepted"
         case exportECarbs = "ExportECarbs"
         case exportTotalMealCarbs = "ExportTotalMealCarbs"
+        case exportTotalMealSugars = "ExportTotalMealSugars"
         case exportTotalMealCalories = "ExportTotalMealCalories"
+        case treatSugarsSeparately = "TreatSugarsSeparately"
     }
     
     enum UserDefaultsDoubleKey: String, CaseIterable {
-        case absorptionTimeLongDelay = "AbsorptionTimeLongDelay"
-        case absorptionTimeLongInterval = "AbsorptionTimeLongInterval"
+        case absorptionTimeSugarsDuration = "AbsorptionTimeSugarsDuration"
+        case absorptionTimeCarbsDuration = "AbsorptionTimeCarbsDuration"
+        case eCarbsFactor = "ECarbsFactor"
+    }
+    
+    enum UserDefaultsIntKey: String, CaseIterable {
+        case absorptionTimeSugarsDelay = "AbsorptionTimeSugarsDelay"
+        case absorptionTimeSugarsInterval = "AbsorptionTimeSugarsInterval"
+        case absorptionTimeCarbsDelay = "AbsorptionTimeCarbsDelay"
+        case absorptionTimeCarbsInterval = "AbsorptionTimeCarbsInterval"
+        case absorptionTimeECarbsDelay = "AbsorptionTimeECarbsDelay"
+        case absorptionTimeECarbsInterval = "AbsorptionTimeECarbsInterval"
     }
     
     // MARK: - The key store for syncing via iCloud
@@ -32,17 +45,52 @@ class UserSettings: ObservableObject {
     
     // MARK: - Dynamic user settings are treated here
     
-    @Published var absorptionTimeLongDelay: Double
-    @Published var absorptionTimeLongInterval: Double
+    @Published var absorptionTimeSugarsDelayInMinutes: Int
+    @Published var absorptionTimeSugarsIntervalInMinutes: Int
+    @Published var absorptionTimeSugarsDurationInHours: Double
+    @Published var absorptionTimeCarbsDelayInMinutes: Int
+    @Published var absorptionTimeCarbsIntervalInMinutes: Int
+    @Published var absorptionTimeCarbsDurationInHours: Double
+    @Published var absorptionTimeECarbsDelayInMinutes: Int
+    @Published var absorptionTimeECarbsIntervalInMinutes: Int
+    @Published var eCarbsFactor: Double
+    @Published var treatSugarsSeparately: Bool
     
     static let shared = UserSettings(
-        absorptionTimeLongDelay: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeLongDelay) ?? AbsorptionSchemeViewModel.absorptionTimeLongDelayDefault,
-        absorptionTimeLongInterval: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeLongInterval) ?? AbsorptionSchemeViewModel.absorptionTimeLongIntervalDefault
+        absorptionTimeSugarsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeSugarsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault,
+        absorptionTimeSugarsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeSugarsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault,
+        absorptionTimeSugarsDurationInHours: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeSugarsDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault,
+        absorptionTimeCarbsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeCarbsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault,
+        absorptionTimeCarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeCarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeCarbsIntervalDefault,
+        absorptionTimeCarbsDurationInHours: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeCarbsDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault,
+        absorptionTimeECarbsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault,
+        absorptionTimeECarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault,
+        eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault,
+        treatSugarsSeparately: UserSettings.getValue(for: UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault
     )
     
-    private init(absorptionTimeLongDelay: Double, absorptionTimeLongInterval: Double) {
-        self.absorptionTimeLongDelay = absorptionTimeLongDelay
-        self.absorptionTimeLongInterval = absorptionTimeLongInterval
+    private init(
+        absorptionTimeSugarsDelayInMinutes: Int,
+        absorptionTimeSugarsIntervalInMinutes: Int,
+        absorptionTimeSugarsDurationInHours: Double,
+        absorptionTimeCarbsDelayInMinutes: Int,
+        absorptionTimeCarbsIntervalInMinutes: Int,
+        absorptionTimeCarbsDurationInHours: Double,
+        absorptionTimeECarbsDelayInMinutes: Int,
+        absorptionTimeECarbsIntervalInMinutes: Int,
+        eCarbsFactor: Double,
+        treatSugarsSeparately: Bool
+    ) {
+        self.absorptionTimeSugarsDelayInMinutes = absorptionTimeSugarsDelayInMinutes // in minutes
+        self.absorptionTimeSugarsIntervalInMinutes = absorptionTimeSugarsIntervalInMinutes // in minutes
+        self.absorptionTimeSugarsDurationInHours = absorptionTimeSugarsDurationInHours // in hours
+        self.absorptionTimeCarbsDelayInMinutes = absorptionTimeCarbsDelayInMinutes // in minutes
+        self.absorptionTimeCarbsIntervalInMinutes = absorptionTimeCarbsIntervalInMinutes // in minutes
+        self.absorptionTimeCarbsDurationInHours = absorptionTimeCarbsDurationInHours // in hours
+        self.absorptionTimeECarbsDelayInMinutes = absorptionTimeECarbsDelayInMinutes // in minutes
+        self.absorptionTimeECarbsIntervalInMinutes = absorptionTimeECarbsIntervalInMinutes // in minutes
+        self.eCarbsFactor = eCarbsFactor
+        self.treatSugarsSeparately = treatSugarsSeparately
     }
     
     // MARK: - Static helper functions
@@ -61,6 +109,12 @@ class UserSettings: ObservableObject {
                 return false
             }
             UserSettings.keyStore.set(value, forKey: key.rawValue)
+        case .int(let value, let key):
+            if !UserDefaultsIntKey.allCases.contains(key) {
+                errorMessage = NSLocalizedString("Fatal error, please inform app developer: Cannot store parameter: ", comment: "") + key.rawValue
+                return false
+            }
+            UserSettings.keyStore.set(value, forKey: key.rawValue)
         }
         
         // Synchronize
@@ -74,5 +128,9 @@ class UserSettings: ObservableObject {
     
     static func getValue(for key: UserDefaultsDoubleKey) -> Double? {
         UserSettings.keyStore.object(forKey: key.rawValue) == nil ? nil : UserSettings.keyStore.double(forKey: key.rawValue)
+    }
+    
+    static func getValue(for key: UserDefaultsIntKey) -> Int? {
+        UserSettings.keyStore.object(forKey: key.rawValue) == nil ? nil : Int(UserSettings.keyStore.longLong(forKey: key.rawValue))
     }
 }

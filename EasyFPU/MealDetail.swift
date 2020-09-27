@@ -9,11 +9,12 @@
 import SwiftUI
 
 struct MealDetail: View {
+    @Binding var isPresented: Bool
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var meal: MealViewModel
     private let helpScreen = HelpScreen.mealDetails
-    @State var activeSheet = ActiveMealDetailSheet.help
-    @State private var showingSheet = false
+    @ObservedObject var sheet = MealDetailSheets()
+    @State private var showDetails = false
     var absorptionTimeAsString: String {
         if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
             return NumberFormatter().string(from: NSNumber(value: meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
@@ -24,76 +25,98 @@ struct MealDetail: View {
     
     var body: some View {
         NavigationView {
-            VStack() {
+            VStack(alignment: .leading) {
                 VStack() {
-                    HStack {
-                        Text(NumberFormatter().string(from: NSNumber(value: self.meal.amount))!)
-                        Text("g")
-                        Text("Amount consumed")
-                    }
-                    
-                    HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.calories))!)
-                        Text("kcal")
-                        
-                        Text("|")
-                        
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.carbs))!)
-                        Text("g Carbs")
-                    }
-                    
-                    HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.fpu))!)
-                        Text("FPU")
-                        
-                        Text("|")
-                        
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
-                        Text("g Extended Carbs")
-                    }
-                    
-                    HStack {
-                        Text(self.absorptionTimeAsString)
-                        Text("h Absorption Time")
-                        
-                        Text("|")
-                        
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: UserSettings.shared.absorptionTimeLongDelay))!)
-                        Text("min")
-                        Text("Delay")
-                    }
-                }.padding().foregroundColor(.red)
+                    if UserSettings.shared.treatSugarsSeparately { MealSugarsView(meal: self.meal) }
+                    MealCarbsView(meal: self.meal).padding(.top)
+                    MealECarbsView(meal: self.meal, absorptionScheme: self.absorptionScheme).padding(.top)
+                }.padding()
                 
-                if HealthDataHelper.healthKitIsAvailable() {
+                HStack() {
+                    Text("Further details").font(.headline)
+                    Spacer()
                     Button(action: {
-                        self.activeSheet = .exportToHealth
-                        self.showingSheet = true
+                        withAnimation {
+                            self.showDetails.toggle()
+                        }
                     }) {
-                        Image(systemName: "square.and.arrow.up").imageScale(.large)
-                        Text("Export to Apple Health")
-                    }.padding([.leading, .trailing, .bottom])
-                }
-                
-                List {
-                    Text("Included food items:").font(.headline)
-                    ForEach(meal.foodItems, id: \.self) { foodItem in
-                        MealItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundColorName: Color.accentColor)
+                        Image(systemName: "chevron.right.circle")
+                            .imageScale(.large)
+                            .rotationEffect(.degrees(showDetails ? 90 : 0))
+                            .scaleEffect(showDetails ? 1.5 : 1)
                     }
+                }.padding([.leading, .trailing])
+                
+                if showDetails {
+                    List {
+                        // Futher details
+                        VStack(alignment: .leading) {
+                            // Amount and name
+                            HStack {
+                                Text(String(meal.amount))
+                                Text("g")
+                                Text(NSLocalizedString(meal.name, comment: ""))
+                            }.foregroundColor(Color.accentColor)
+                            // Calories
+                            HStack {
+                                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: meal.calories))!)
+                                Text("kcal")
+                            }.font(.caption)
+                            // FPU
+                            HStack {
+                                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: meal.fpus.fpu))!)
+                                Text("FPU")
+                            }.font(.caption)
+                        }
+                        
+                        // Food items
+                        ForEach(meal.foodItems, id: \.self) { foodItem in
+                            MealItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundColorName: Color.accentColor)
+                        }
+                    }
+                    .animation(.easeInOut)
                 }
                 
                 Spacer()
             }
             .navigationBarTitle(NSLocalizedString(self.meal.name, comment: ""))
-            .navigationBarItems(trailing: Button(action: {
-                self.activeSheet = .help
-                self.showingSheet = true
-            }) {
-                Image(systemName: "questionmark.circle").imageScale(.large)
-            })
+            .navigationBarItems(leading: HStack {
+                Button(action: {
+                    self.sheet.state = .help
+                }) {
+                    Image(systemName: "questionmark.circle").imageScale(.large)
+                }
+                
+                if HealthDataHelper.healthKitIsAvailable() {
+                    Button(action: {
+                        self.sheet.state = .exportToHealth
+                    }) {
+                        Image(systemName: "square.and.arrow.up").imageScale(.large)
+                    }.padding(.leading)
+                }
+            }, trailing:
+                Button(action: {
+                    self.isPresented = false
+                }) {
+                    Text("Done")
+                }
+            )
         }
         .navigationViewStyle(StackNavigationViewStyle())
-        .sheet(isPresented: self.$showingSheet) {
-            MealDetailSheet(activeSheet: self.activeSheet, isPresented: self.$showingSheet, meal: self.meal, absorptionScheme: self.absorptionScheme, helpScreen: self.helpScreen)
+        .sheet(isPresented: $sheet.isShowing, content: sheetContent)
+    }
+    
+    @ViewBuilder
+    private func sheetContent() -> some View {
+        if sheet.state != nil {
+            switch sheet.state! {
+            case .help:
+                HelpView(isPresented: $sheet.isShowing, helpScreen: self.helpScreen)
+            case .exportToHealth:
+                MealExportView(isPresented: $sheet.isShowing, meal: meal, absorptionScheme: absorptionScheme)
+            }
+        } else {
+            EmptyView()
         }
     }
 }

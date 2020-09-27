@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import MobileCoreServices
 
 struct MenuView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -14,8 +15,7 @@ struct MenuView: View {
     var absorptionScheme: AbsorptionScheme
     var filePicked: (URL) -> ()
     var exportDirectory: (URL) -> ()
-    @State var activeSheet = ActiveMenuViewSheet.editAbsorptionScheme
-    @State var showingSheet = false
+    @ObservedObject var sheet = MenuViewSheets()
     @State var showingAlert = false
     @State var alertMessage = ""
     
@@ -23,8 +23,7 @@ struct MenuView: View {
         VStack(alignment: .leading) {
             // Absorption Scheme
             Button(action: {
-                self.activeSheet = ActiveMenuViewSheet.editAbsorptionScheme
-                self.showingSheet = true
+                self.sheet.state = .editAbsorptionScheme
             }) {
                 Text("Absorption scheme")
             }
@@ -33,8 +32,7 @@ struct MenuView: View {
             
             // Import
             Button(action: {
-                self.activeSheet = ActiveMenuViewSheet.pickFileToImport
-                self.showingSheet = true
+                self.sheet.state = .pickFileToImport
             }) {
                 Text("Import from JSON")
             }
@@ -43,8 +41,7 @@ struct MenuView: View {
             
             // Export
             Button(action: {
-                self.activeSheet = ActiveMenuViewSheet.pickExportDirectory
-                self.showingSheet = true
+                self.sheet.state = .pickExportDirectory
             }) {
                 Text("Export to JSON")
             }
@@ -53,8 +50,7 @@ struct MenuView: View {
             
             // About
             Button(action: {
-                self.activeSheet = ActiveMenuViewSheet.about
-                self.showingSheet = true
+                self.sheet.state = .about
             }) {
                 Text("About")
             }
@@ -63,8 +59,7 @@ struct MenuView: View {
             
             // Disclaimer
             Button(action: {
-                self.activeSheet = ActiveMenuViewSheet.disclaimer
-                self.showingSheet = true
+                self.sheet.state = .disclaimer
             }) {
                 Text("Disclaimer")
             }
@@ -86,23 +81,34 @@ struct MenuView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(red: 32/255, green: 32/255, blue: 32/255))
         .edgesIgnoringSafeArea(.all)
-        .sheet(isPresented: self.$showingSheet) {
-            MenuViewSheets(
-                activeSheet: self.activeSheet,
-                isPresented: self.$showingSheet,
-                draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme),
-                absorptionScheme: self.absorptionScheme,
-                filePicked: self.filePicked,
-                exportDirectory: self.exportDirectory
-            )
-            .environment(\.managedObjectContext, self.managedObjectContext)
-        }
+        .sheet(isPresented: self.$sheet.isShowing, content: sheetContent)
         .alert(isPresented: self.$showingAlert) {
             Alert(
                 title: Text("Notice"),
                 message: Text(self.alertMessage),
                 dismissButton: .default(Text("OK"))
             )
+        }
+    }
+    
+    @ViewBuilder
+    private func sheetContent() -> some View {
+        if sheet.state != nil {
+            switch sheet.state! {
+            case .editAbsorptionScheme:
+                AbsorptionSchemeEditor(isPresented: $sheet.isShowing, draftAbsorptionScheme: self.draftAbsorptionScheme, editedAbsorptionScheme: absorptionScheme)
+                        .environment(\.managedObjectContext, managedObjectContext)
+            case .pickFileToImport:
+                FilePickerView(callback: filePicked, documentTypes: [kUTTypeText as String])
+            case .pickExportDirectory:
+                FilePickerView(callback: exportDirectory, documentTypes: [kUTTypeFolder as String])
+            case .about:
+                AboutView(isPresented: $sheet.isShowing)
+            case .disclaimer:
+                DisclaimerView(isDisplayed: $sheet.isShowing)
+            }
+        } else {
+            EmptyView()
         }
     }
 }

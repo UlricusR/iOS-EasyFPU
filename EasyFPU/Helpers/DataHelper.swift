@@ -102,4 +102,19 @@ class DataHelper {
             return errorMessage
         }
     }
+    
+    static func gcd(_ numbers: [Int]) -> Int {
+        var result = 0
+        for element in numbers {
+            result = gcd(result, element)
+            if result == 1 { return 1 }
+        }
+        
+        return result
+    }
+    
+    static func gcd(_ a: Int, _ b: Int) -> Int {
+        if a == 0 { return b }
+        return gcd(b % a, a)
+    }
 }
