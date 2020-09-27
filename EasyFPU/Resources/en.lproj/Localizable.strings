@@ -210,8 +210,8 @@
 "- The total amount consumed in grams" = "- The total amount consumed in grams";
 "- The total energy consumed in kcal" = "- The total energy consumed in kcal";
 "- The total amount of carbs consumed in grams" = "- The total amount of carbs consumed in grams";
-"You may export the extended carbs to the Apple Health app" = "You may export the extended carbs to the Apple Health app, if Apple Health is available on your device.";
-"Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above.";
+"You may export the extended carbs to the Apple Health app" = "You may export sugars, regular carbs, extended carbs and calories to the Apple Health app, if Apple Health is available on your device.";
+"Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Below the total meal details, further details as well as a list of the individual food items considered in the calculation are displayed on request.";
 
 // Absorption scheme help
 "Edit Absorption Scheme" = "Edit Absorption Scheme";
@@ -234,14 +234,15 @@
 // Health export help
 "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles.";
 "The following data are available for export:" = "The following data are available for export:";
+"- Sugars (if set in the Absorption Scheme editor)" = "- Sugars (if set in the Absorption Scheme editor)";
 "- Extended Carbs" = "- Extended Carbs";
-"- Total Meal Carbs" = "- Total Meal Carbs";
+"- Regular Carbs" = "- Regular Carbs";
 "- Total Meal Calories" = "- Total Meal Calories";
 "Important information for Loop users:" = "Important information for Loop users:";
-"- It is recommended to only export Extended Carbs" = "- It is recommended to only export Extended Carbs";
-"- If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings." = "- If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings.";
+"If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings." = "If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings.";
 "How are the Extended Carbs exported?" = "How are the Extended Carbs exported?";
 "- The number of e-carb entries is determined by dividing the absorption time (e.g. 5 hours) by the interval (e.g. 10 minutes, see Absorption Scheme view), i.e. 5 hours / 10 minutes = 30" = "- The number of e-carb entries is determined by dividing the absorption time (e.g. 5 hours) by the interval (e.g. 10 minutes, see Absorption Scheme view), i.e. 5 hours / 10 minutes = 30";
 "- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g" = "- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g";
 "- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)" = "- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)";
-
+"Similar calculations are done for sugars and regular carbs." = "Similar calculations are done for sugars and regular carbs.";
+"The graph visualizes how these data are exported." = "The graph visualizes how these data are exported.";

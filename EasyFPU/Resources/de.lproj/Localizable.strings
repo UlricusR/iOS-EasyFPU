@@ -212,8 +212,8 @@
 "- How much? - The total amount of carbs of that type" = "- Wieviel? - Die Gesamtmenge an Kohlenhydraten dieser Art";
 "- When? - The time when these carbs start to impact your blood glucose level" = "- Wann? - Der Zeitpunkt, ab dem diese Art von Kohlenhydraten Ihren Blutzuckerspiegel beeinflusst";
 "- How long? - The time interval during which these carbs will be absorbed, impacting your blood glucose level" = "- Wie lange? - Die Zeitspanne, während der diese Kohlenhydrate absorbiert werden und damit Ihren Blutzuckerspiegel beeinflussen";
-"You may export the extended carbs to the Apple Health app" = "Sie können die verlängerten Kohlenhydrate in die Apple Health App exportieren, wenn Apple Health auf Ihrem Gerät zur Verfügung steht.";
-"Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Unter der Gesamtmahlzeit werden die gleichen Werte für die individuellen Essen dargestellt, die zur Berechnung der Gesamtmahlzeit herangezogen wurden.";
+"You may export the extended carbs to the Apple Health app" = "Sie können die Kohlenhydrate aus Zucker, die regulären Kohlenhydrate, die verlängerten Kohlenhydrate und die Kalorien in die Apple Health App exportieren, wenn Apple Health auf Ihrem Gerät zur Verfügung steht.";
+"Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Auf Anforderung werden unter der Gesamtmahlzeit weitere Details sowie die der Berechnung der Gesamtmahlzeit zugrundeliegenden Essen dargestellt.";
 
 // Absorption scheme help
 "Edit Absorption Scheme" = "Absorptionsschema";
@@ -236,14 +236,15 @@
 // Health export help
 "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "Sie können Nährwerte nach Apple Health exportieren. Wählen Sie die entsprechenden Daten mit den Auswahlknöpfen aus.";
 "The following data are available for export:" = "Folgende Daten stehen zum Export zur Verfügung:";
+"- Sugars (if set in the Absorption Scheme editor)" = "- Kohlenhydrate aus Zucker (falls im Absorptionsschema-Dialog ausgewählt)";
+"- Regular Carbs" = "- Reguläre Kohlenhydrate";
 "- Extended Carbs" = "- Verlängerte Kohlenhydrate";
-"- Total Meal Carbs" = "- Kohlenhydrate der Gesamtmahlzeit";
-"- Total Meal Calories" = "Kalorien der Gesamtmahlzeit";
+"- Total Meal Calories" = "- Kalorien der Gesamtmahlzeit";
 "Important information for Loop users:" = "Wichtige Hinweise für Loop-Nutzer:";
-"- It is recommended to only export Extended Carbs" = "- Es wird empfohlen, nur die verlängerten Kohlenhydrate zu exportieren";
-"- If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings." = "Wenn Loop diese Kohlenhydrate in seiner Berechnung berücksichtigen soll, stellen Sie in den Einstellungen von Health sicher, dass Loop Kohlenhydrat-Daten aus Apple Health lesen darf";
+"If you want Loop to consider these carbs, make sure that it is allowed to read carbs from Apple Health in the Health settings." = "Wenn Loop diese Kohlenhydrate in seiner Berechnung berücksichtigen soll, stellen Sie in den Einstellungen von Health sicher, dass Loop Kohlenhydrat-Daten aus Apple Health lesen darf";
 "How are the Extended Carbs exported?" = "Wie werden die verlängerten Kohlenhydrate (e-Carbs) exportiert?";
 "- The number of e-carb entries is determined by dividing the absorption time (e.g. 5 hours) by the interval (e.g. 10 minutes, see Absorption Scheme view), i.e. 5 hours / 10 minutes = 30" = "- Die Anzahl der e-Carbs-Einträge wird berechnet, indem die Absorptionszeit (z.B. 5 Stunden) durch die Intervallzeit (z.B. 10 Minuten, siehe Absorptionsschema-Ansicht) geteilt wird, also: 5 Stunden / 10 Minuten = 30";
 "- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g" = "- Die e-Carbs-Menge pro Eintrag wird berechnet, die e-Carbs der Mahlzeit (z.B. 60 g) durch die Anzahl der Einträge (z.B. 30) geteilt wird, also: 60 g / 30 = 2 g";
 "- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)" = "- Für jeden dieser Einträge wird ein Apple Health Datensatz generiert und nach Apple Health exportiert, beginnend mit der aktuellen Zeit plus die eingestellte Verzögerung (Voreinstellung: 90 Minuten; siehe Absorptionsschema-Ansicht) und mit den eingestellten Zeit-Intervall (Voreinstellung: 10 Minuten; siehe Absorptionsschema-Ansicht)";
-
+"Similar calculations are done for sugars and regular carbs." = "Analoge Berechnungen werden für Zucker- und reguläre Kohlenhydrate durchgeführt.";
+"The graph visualizes how these data are exported." = "Der Graph zeigt an, wie diese Daten exportiert werden.";

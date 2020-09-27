@@ -26,13 +26,15 @@ struct MealExportView: View {
             VStack(alignment: .leading) {
                 Text("Please choose the data to export:").padding()
                 
-                Toggle(isOn: $carbsRegimeCalculator.includeTotalMealSugars) {
-                    Text("Sugars")
+                if UserSettings.shared.treatSugarsSeparately {
+                    Toggle(isOn: $carbsRegimeCalculator.includeTotalMealSugars) {
+                        Text("Sugars")
+                    }
+                    .padding([.leading, .trailing])
                 }
-                .padding([.leading, .trailing, .top])
                 
                 Toggle(isOn: $carbsRegimeCalculator.includeTotalMealCarbs) {
-                    Text("Total Meal Carbs")
+                    Text("Regular Carbs")
                 }
                 .padding([.leading, .trailing])
                 

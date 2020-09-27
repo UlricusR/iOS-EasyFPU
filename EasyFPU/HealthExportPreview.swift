@@ -47,10 +47,12 @@ struct HealthExportPreview: View {
             
             // The legend
             HStack {
-                Rectangle()
-                    .fill(MealSugarsView.color)
-                    .frame(width: 15, height: 15)
-                Text("Sugars")
+                if UserSettings.shared.treatSugarsSeparately {
+                    Rectangle()
+                        .fill(MealSugarsView.color)
+                        .frame(width: 15, height: 15)
+                    Text("Sugars")
+                }
                 
                 Rectangle()
                     .fill(MealCarbsView.color)
