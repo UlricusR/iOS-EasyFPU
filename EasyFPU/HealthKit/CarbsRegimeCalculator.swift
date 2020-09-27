@@ -120,7 +120,7 @@ class CarbsRegimeCalculator: ObservableObject {
         if includeTotalMealSugars {
             // Make sure to not go below 1 for number sugars entries, otherwise we'd increase sugars amount in the next step
             let numberOfSugarsEntries = max(Int(UserSettings.shared.absorptionTimeSugarsDurationInHours * 60) / UserSettings.shared.absorptionTimeSugarsIntervalInMinutes, 1)
-            let totalSugars = meal.sugars
+            let totalSugars = meal.getSugars(when: UserSettings.shared.treatSugarsSeparately)
             calculateXCarbs(
                 xCarbsEntries: &self.sugarsEntries,
                 numberOfXCarbsEntries: numberOfSugarsEntries,
@@ -137,7 +137,7 @@ class CarbsRegimeCalculator: ObservableObject {
         if includeTotalMealCarbs {
             // Make sure to not go below 1 for number carb entries, otherwise we'd increase carbs amount in the next step
             let numberOfCarbEntries = max(Int(UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) / UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, 1)
-            let totalCarbs = meal.getRegularCarbs()
+            let totalCarbs = meal.getRegularCarbs(when: UserSettings.shared.treatSugarsSeparately)
             calculateXCarbs(
                 xCarbsEntries: &self.carbsEntries,
                 numberOfXCarbsEntries: numberOfCarbEntries,

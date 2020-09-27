@@ -212,15 +212,23 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
     }
     
     func getCalories() -> Double {
-        Double(self.amount) * self.caloriesPer100g / 100
+        Double(self.amount) / 100 * self.caloriesPer100g
     }
     
-    func getRegularCarbs() -> Double {
-        Double(self.amount) * self.carbsPer100g / 100 - getSugars()
+    func getCarbsInclSugars() -> Double {
+        Double(self.amount) / 100 * self.carbsPer100g
     }
     
-    func getSugars() -> Double {
-        Double(self.amount) * self.sugarsPer100g / 100
+    func getSugarsOnly() -> Double {
+        Double(self.amount) / 100 * self.sugarsPer100g
+    }
+    
+    func getRegularCarbs(when treatSugarsSeparately: Bool) -> Double {
+        Double(self.amount) / 100 * (treatSugarsSeparately ? (self.carbsPer100g - self.sugarsPer100g) : self.carbsPer100g)
+    }
+    
+    func getSugars(when treatSugarsSeparately: Bool) -> Double {
+        Double(self.amount) / 100 * (treatSugarsSeparately ? self.sugarsPer100g : 0)
     }
     
     func getFPU() -> FPU {

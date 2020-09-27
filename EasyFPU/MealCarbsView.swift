@@ -34,7 +34,7 @@ struct MealCarbsView: View {
             
             VStack(alignment: .leading) { // Answers
                 HStack {
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.getRegularCarbs()))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.getRegularCarbs(when: UserSettings.shared.treatSugarsSeparately)))!)
                     Text("g Carbs")
                 }
                 HStack {

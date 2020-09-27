@@ -12,7 +12,7 @@ class MealViewModel {
     var name: String
     var calories: Double = 0.0
     private var carbs: Double = 0.0
-    var sugars: Double = 0.0
+    private var sugars: Double = 0.0
     var amount: Int = 0
     var fpus: FPU = FPU(fpu: 0.0)
     var foodItems = [FoodItemViewModel]()
@@ -27,13 +27,25 @@ class MealViewModel {
         foodItems.append(foodItem)
         let tempFPUs = fpus.fpu
         calories += foodItem.getCalories()
-        carbs += foodItem.getRegularCarbs()
-        sugars += foodItem.getSugars()
-        amount += Int(foodItem.amount)
+        carbs += foodItem.getCarbsInclSugars()
+        sugars += foodItem.getSugarsOnly()
+        amount += foodItem.amount
         fpus = FPU(fpu: tempFPUs + foodItem.getFPU().fpu)
     }
     
-    func getRegularCarbs() -> Double {
-        carbs - sugars
+    func getCarbsInclSugars() -> Double {
+        self.carbs
+    }
+    
+    func getSugarsOnly() -> Double {
+        self.sugars
+    }
+    
+    func getRegularCarbs(when treatSugarsSeparately: Bool) -> Double {
+        treatSugarsSeparately ? self.carbs - self.sugars : self.carbs
+    }
+    
+    func getSugars(when treatSugarsSeparately: Bool) -> Double {
+        treatSugarsSeparately ? self.sugars : 0
     }
 }

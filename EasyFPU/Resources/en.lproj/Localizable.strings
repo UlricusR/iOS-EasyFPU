@@ -33,6 +33,139 @@
 "Documentation on rueth.info" = "Documentation on rueth.info";
 "Home-Link" = "https://rueth.info/index.php/en/easyfpu-for-ios";
 
+// Food List
+"Food List" = "Food List";
+"Name" = "Name";
+"Favorite" = "Favorite";
+"Carbs per 100g" = "Carbs per 100g";
+"Calories per 100g" = "Calories per 100g";
+"g" = "g";
+"g Carbs" = "g Carbs";
+"g Regular Carbs" = "g Regular Carbs";
+"g Sugars" = "g Sugars";
+"Carbs" = "Carbs";
+"Sugars" = "Sugars";
+"Thereof Sugars per 100g" = "Thereof Sugars per 100g";
+"g Extended Carbs" = "g Extended Carbs";
+"Extended Carbs" = "Extended Carbs";
+"kcal" = "kcal";
+"g/FPU" = "g/FPU";
+"e-Carbs Factor" = "e-Carbs Faktor";
+"New food item" = "New food item";
+"Edit food item" = "Edit food item";
+"Nutritional values per 100g:" = "Nutritional values per 100g:";
+"Nutritional values for" = "Nutritional values for";
+"Amount" = "Amount";
+"Amount consumed" = "Amount consumed";
+"h Absorption Time" = "h Absorption Time";
+"Absorption Time" = "Absorption Time";
+"Total nutritional values" = "Total nutritional values";
+"Total meal" = "Total meal";
+"Typical amount" = "Typical amount";
+"Typical amounts:" = "Typical amounts:";
+"Add to typical amounts" = "Add to typical amounts";
+"Comment" = "Comment";
+"Enter amount consumed or select typical amount" = "Enter amount consumed or select typical amount";
+"Enter amount consumed" = "Enter amount consumed";
+"Select amount" = "Select amount";
+"Cannot delete food item" = "Cannot delete food item";
+"Delay of Extended Carbs" = "Delay of Extended Carbs";
+
+// Meal preview
+"e-Carbs" = "e-Carbs";
+"Regular Carbs" = "Regular Carbs";
+"How much?" = "How much?";
+"When?" = "When?";
+"How long?" = "How long?";
+"min at" = "min at";
+"min for" = "min for";
+"For" = "For";
+
+// Meal details
+"Further details" = "Further details";
+"Export to Apple Health" = "Export to Apple Health";
+
+// Food item editor
+"Carbs: " = "Carbs: ";
+"Calories: " = "Calories: ";
+"Amount: " = "Amount: ";
+"Data alert" = "Data alert";
+"Name must not be empty" = "Name must not be empty";
+"Calories not a valid number or negative" = "Calories not a valid number or negative";
+"Carbs not a valid number or negative" = "Carbs not a valid number or negative";
+"Calories from carbs (4 kcal per gram) exceed total calories" = "Calories from carbs (4 kcal per gram) exceed total calories";
+"Amount not a valid number or negative" = "Amount not a valid number or negative";
+"Value not a number" = "Value not a number";
+"Value must not be negative" = "Value must not be negative";
+"Value must not be zero or negative" = "Value must not be zero or negative";
+"Delete food item" = "Delete food item";
+"Sugars exceed carbs" = "Sugars exceed carbs";
+"Thereof" = "Thereof";
+
+// Absorption scheme editor
+"Absorption scheme" = "Absorption scheme";
+"Absorption Blocks" = "Absorption Blocks";
+"Tap to edit, swipe left to delete" = "Tap to edit, swipe left to delete";
+"New absorption block:" = "New absorption block:";
+"Edit absorption block:" = "Edit absorption block:";
+"Max. FPUs" = "Max. FPUs";
+"Absorption time" = "Absorption time";
+"FPU -" = "FPU -";
+"h" = "h";
+"Cannot find absorption block: " = "Cannot find absorption block: ";
+"Maximum FPU value already exists" = "Maximum FPU value already exists";
+"Absorption time is equals or larger than the one of the following absorption block" = "Absorption time is equals or larger than the one of the following absorption block";
+"Absorption time is equals or less than the one of the block before" = "Absorption time is equals or less than the one of the block before";
+"Absorption time must be between previous and following block" = "Absorption time must be between previous and following block";
+"At least one absorption block required" = "At least one absorption block required";
+"Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fatal error: Cannot determine absorption block index, please inform the app developer";
+"Fatal error: Cannot convert numbers into string, please contact app developer" = "Fatal error: Cannot convert numbers into string, please contact app developer";
+"Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer";
+"Reset to default" = "Reset to default";
+"Absorption Time Parameters for Sugars" = "Absorption Time Parameters for Sugars";
+"Absorption Time Parameters for Carbs" = "Absorption Time Parameters for Carbs";
+"Absorption Time Parameters for e-Carbs" = "Absorption Time Parameters for e-Carbs";
+"Delay" = "Delay";
+"Interval" = "Interval";
+"min" = "min";
+"Treat sugars separately" = "Treat sugars separately";
+
+// Menu actions
+"Import from JSON" = "Import (format: JSON)";
+"Export to JSON" = "Export (format: JSON)";
+"Successfully exported food list to: " = "Successfully exported food list to: ";
+"Failed to export food list to: " = "Failed to export food list to: ";
+"Successfully imported food list" = "Successfully imported food list";
+"Failed to import food list" = "Failed to import food list";
+"Notice" = "Notice";
+"Import food list" = "Import food list";
+"Please select" = "Please select";
+"Replace" = "Replace";
+"Append" = "Add";
+"Unable to open URL: " = "Unable to open URL: ";
+"Failed to decode due to missing key " = "Failed to decode due to missing key ";
+"Failed to decode due to type mismatch - " = "Failed to decode due to type mismatch - ";
+"Failed to decode due to missing value - " = "Failed to decode due to missing value - ";
+"Failed to decode because it appears to be invalid JSON" = "Failed to decode because it appears to be invalid JSON";
+"Failed to decode - " = "Failed to decode - ";
+"Help on the Web" = "Help on the Web";
+
+// Health kit helper
+"Cannot write data: HealthKit seem not to be available on your device." = "Cannot write data: HealthKit seem not to be available on your device.";
+"Cannot save data to Health: " = "Cannot save data to Health: ";
+"Unspecified error" = "Unspecified error";
+"Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings.";
+"Successfully exported data to Health" = "Successfully exported data to Health";
+"Export to Health" = "Export to Health";
+"Export" = "Export to Apple Health";
+"Error requesting authorization to write to Health: " = "Error requesting authorization to write to Health: ";
+"Please choose the data to export:" = "Please choose the data to export:";
+"Total Meal Carbs" = "Total Meal Carbs";
+"Total Meal Calories" = "Total Meal Calories";
+"Please select at least one entry to export" = "Please select at least one entry to export";
+"Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks";
+"Preview of exported carbs in g" = "Preview of exported carbs in g";
+
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
 "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food.";
@@ -112,132 +245,3 @@
 "- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g" = "- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g";
 "- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)" = "- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)";
 
-// Food List
-"Food List" = "Food List";
-"Name" = "Name";
-"Favorite" = "Favorite";
-"Carbs per 100g" = "Carbs per 100g";
-"Calories per 100g" = "Calories per 100g";
-"g" = "g";
-"g Carbs" = "g Carbs";
-"g Sugars" = "g Sugars";
-"Carbs" = "Carbs";
-"Sugars" = "Sugars";
-"Thereof Sugars per 100g" = "Thereof Sugars per 100g";
-"g Extended Carbs" = "g Extended Carbs";
-"Extended Carbs" = "Extended Carbs";
-"kcal" = "kcal";
-"g/FPU" = "g/FPU";
-"e-Carbs Factor" = "e-Carbs Faktor";
-"New food item" = "New food item";
-"Edit food item" = "Edit food item";
-"Nutritional values per 100g:" = "Nutritional values per 100g:";
-"Nutritional values for" = "Nutritional values for";
-"Amount" = "Amount";
-"Amount consumed" = "Amount consumed";
-"h Absorption Time" = "h Absorption Time";
-"Absorption Time" = "Absorption Time";
-"Total nutritional values" = "Total nutritional values";
-"Total meal" = "Total meal";
-"Typical amount" = "Typical amount";
-"Typical amounts:" = "Typical amounts:";
-"Add to typical amounts" = "Add to typical amounts";
-"Comment" = "Comment";
-"Enter amount consumed or select typical amount" = "Enter amount consumed or select typical amount";
-"Enter amount consumed" = "Enter amount consumed";
-"Select amount" = "Select amount";
-"Cannot delete food item" = "Cannot delete food item";
-"Delay of Extended Carbs" = "Delay of Extended Carbs";
-
-// Meal preview
-"e-Carbs" = "e-Carbs";
-"Regular Carbs" = "Regular Carbs";
-"How much?" = "How much?";
-"When?" = "When?";
-"How long?" = "How long?";
-"min at" = "min at";
-"For" = "For";
-
-// Meal details
-"Included food items:" = "Included food items:";
-"Export to Apple Health" = "Export to Apple Health";
-
-// Food item editor
-"Carbs: " = "Carbs: ";
-"Calories: " = "Calories: ";
-"Amount: " = "Amount: ";
-"Data alert" = "Data alert";
-"Name must not be empty" = "Name must not be empty";
-"Calories not a valid number or negative" = "Calories not a valid number or negative";
-"Carbs not a valid number or negative" = "Carbs not a valid number or negative";
-"Calories from carbs (4 kcal per gram) exceed total calories" = "Calories from carbs (4 kcal per gram) exceed total calories";
-"Amount not a valid number or negative" = "Amount not a valid number or negative";
-"Value not a number" = "Value not a number";
-"Value must not be negative" = "Value must not be negative";
-"Value must not be zero or negative" = "Value must not be zero or negative";
-"Delete food item" = "Delete food item";
-"Sugars exceed carbs" = "Sugars exceed carbs";
-"Thereof" = "Thereof";
-
-// Absorption scheme editor
-"Absorption scheme" = "Absorption scheme";
-"Absorption Blocks" = "Absorption Blocks";
-"Tap to edit, swipe left to delete" = "Tap to edit, swipe left to delete";
-"New absorption block:" = "New absorption block:";
-"Edit absorption block:" = "Edit absorption block:";
-"Max. FPUs" = "Max. FPUs";
-"Absorption time" = "Absorption time";
-"FPU -" = "FPU -";
-"h" = "h";
-"Cannot find absorption block: " = "Cannot find absorption block: ";
-"Maximum FPU value already exists" = "Maximum FPU value already exists";
-"Absorption time is equals or larger than the one of the following absorption block" = "Absorption time is equals or larger than the one of the following absorption block";
-"Absorption time is equals or less than the one of the block before" = "Absorption time is equals or less than the one of the block before";
-"Absorption time must be between previous and following block" = "Absorption time must be between previous and following block";
-"At least one absorption block required" = "At least one absorption block required";
-"Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fatal error: Cannot determine absorption block index, please inform the app developer";
-"Fatal error: Cannot convert numbers into string, please contact app developer" = "Fatal error: Cannot convert numbers into string, please contact app developer";
-"Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer";
-"Reset to default" = "Reset to default";
-"Absorption Time Parameters for Sugars" = "Absorption Time Parameters for Sugars";
-"Absorption Time Parameters for Carbs" = "Absorption Time Parameters for Carbs";
-"Absorption Time Parameters for e-Carbs" = "Absorption Time Parameters for e-Carbs";
-"Delay" = "Delay";
-"Interval" = "Interval";
-"min" = "min";
-
-// Menu actions
-"Import from JSON" = "Import (format: JSON)";
-"Export to JSON" = "Export (format: JSON)";
-"Successfully exported food list to: " = "Successfully exported food list to: ";
-"Failed to export food list to: " = "Failed to export food list to: ";
-"Successfully imported food list" = "Successfully imported food list";
-"Failed to import food list" = "Failed to import food list";
-"Notice" = "Notice";
-"Import food list" = "Import food list";
-"Please select" = "Please select";
-"Replace" = "Replace";
-"Append" = "Add";
-"Unable to open URL: " = "Unable to open URL: ";
-"Failed to decode due to missing key " = "Failed to decode due to missing key ";
-"Failed to decode due to type mismatch - " = "Failed to decode due to type mismatch - ";
-"Failed to decode due to missing value - " = "Failed to decode due to missing value - ";
-"Failed to decode because it appears to be invalid JSON" = "Failed to decode because it appears to be invalid JSON";
-"Failed to decode - " = "Failed to decode - ";
-"Help on the Web" = "Help on the Web";
-
-// Health kit helper
-"Cannot write data: HealthKit seem not to be available on your device." = "Cannot write data: HealthKit seem not to be available on your device.";
-"Cannot save data to Health: " = "Cannot save data to Health: ";
-"Unspecified error" = "Unspecified error";
-"Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings.";
-"Successfully exported data to Health" = "Successfully exported data to Health";
-"Export to Health" = "Export to Health";
-"Export" = "Export to Apple Health";
-"Error requesting authorization to write to Health: " = "Error requesting authorization to write to Health: ";
-"Please choose the data to export:" = "Please choose the data to export:";
-"Total Meal Carbs" = "Total Meal Carbs";
-"Total Meal Calories" = "Total Meal Calories";
-"Please select at least one entry to export" = "Please select at least one entry to export";
-"Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks";
-"Preview of exported carbs in g" = "Preview of exported carbs in g";

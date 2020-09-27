@@ -14,7 +14,7 @@ struct MealDetail: View {
     var meal: MealViewModel
     private let helpScreen = HelpScreen.mealDetails
     @ObservedObject var sheet = MealDetailSheets()
-    @State private var showIncludedFoodItems = false
+    @State private var showDetails = false
     var absorptionTimeAsString: String {
         if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
             return NumberFormatter().string(from: NSNumber(value: meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
@@ -27,28 +27,49 @@ struct MealDetail: View {
         NavigationView {
             VStack(alignment: .leading) {
                 VStack() {
-                    MealSugarsView(meal: self.meal)
+                    if UserSettings.shared.treatSugarsSeparately { MealSugarsView(meal: self.meal) }
                     MealCarbsView(meal: self.meal).padding(.top)
                     MealECarbsView(meal: self.meal, absorptionScheme: self.absorptionScheme).padding(.top)
                 }.padding()
                 
                 HStack() {
-                    Text("Included food items:").font(.headline)
+                    Text("Further details").font(.headline)
                     Spacer()
                     Button(action: {
                         withAnimation {
-                            self.showIncludedFoodItems.toggle()
+                            self.showDetails.toggle()
                         }
                     }) {
                         Image(systemName: "chevron.right.circle")
                             .imageScale(.large)
-                            .rotationEffect(.degrees(showIncludedFoodItems ? 90 : 0))
-                            .scaleEffect(showIncludedFoodItems ? 1.5 : 1)
+                            .rotationEffect(.degrees(showDetails ? 90 : 0))
+                            .scaleEffect(showDetails ? 1.5 : 1)
                     }
                 }.padding([.leading, .trailing])
                 
-                if showIncludedFoodItems {
+                if showDetails {
                     List {
+                        // Futher details
+                        VStack(alignment: .leading) {
+                            // Amount and name
+                            HStack {
+                                Text(String(meal.amount))
+                                Text("g")
+                                Text(NSLocalizedString(meal.name, comment: ""))
+                            }.foregroundColor(Color.accentColor)
+                            // Calories
+                            HStack {
+                                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: meal.calories))!)
+                                Text("kcal")
+                            }.font(.caption)
+                            // FPU
+                            HStack {
+                                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: meal.fpus.fpu))!)
+                                Text("FPU")
+                            }.font(.caption)
+                        }
+                        
+                        // Food items
                         ForEach(meal.foodItems, id: \.self) { foodItem in
                             MealItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundColorName: Color.accentColor)
                         }

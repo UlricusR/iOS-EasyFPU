@@ -115,29 +115,33 @@ struct AbsorptionSchemeEditor: View {
                 
                 // Sugars
                 Section(header: Text("Absorption Time Parameters for Sugars")) {
-                    HStack {
-                        Text("Delay")
-                        TextField("Delay", text: $draftAbsorptionScheme.delaySugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
-                        Text("min")
-                    }
+                    Toggle("Treat sugars separately", isOn: $draftAbsorptionScheme.treatSugarsSeparately)
                     
-                    HStack {
-                        Text("Interval")
-                        TextField("Interval", text: $draftAbsorptionScheme.intervalSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
-                        Text("min")
-                    }
-                    
-                    HStack {
-                        Text("Duration")
-                        TextField("Duration", text: $draftAbsorptionScheme.durationSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
-                        Text("h")
-                    }
-                    
-                    // The reset button
-                    Button(action: {
-                        self.resetSugarsToDefaults()
-                    }) {
-                        Text("Reset to default")
+                    if draftAbsorptionScheme.treatSugarsSeparately {
+                        HStack {
+                            Text("Delay")
+                            TextField("Delay", text: $draftAbsorptionScheme.delaySugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                            Text("min")
+                        }
+                        
+                        HStack {
+                            Text("Interval")
+                            TextField("Interval", text: $draftAbsorptionScheme.intervalSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                            Text("min")
+                        }
+                        
+                        HStack {
+                            Text("Duration")
+                            TextField("Duration", text: $draftAbsorptionScheme.durationSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                            Text("h")
+                        }
+                        
+                        // The reset button
+                        Button(action: {
+                            self.resetSugarsToDefaults()
+                        }) {
+                            Text("Reset to default")
+                        }
                     }
                 }
                 
@@ -254,7 +258,8 @@ struct AbsorptionSchemeEditor: View {
                         UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationCarbs, UserSettings.UserDefaultsDoubleKey.absorptionTimeCarbsDuration), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage)
+                        UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &self.errorMessage)
                     ) {
                         self.showingAlert = true
                     } else {
@@ -268,6 +273,7 @@ struct AbsorptionSchemeEditor: View {
                         UserSettings.shared.absorptionTimeECarbsDelayInMinutes = self.draftAbsorptionScheme.delayECarbs
                         UserSettings.shared.absorptionTimeECarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalECarbs
                         UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
+                        UserSettings.shared.treatSugarsSeparately = self.draftAbsorptionScheme.treatSugarsSeparately
                         UserSettings.shared.objectWillChange.send()
                         
                         // Close sheet

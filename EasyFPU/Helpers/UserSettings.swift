@@ -22,6 +22,7 @@ class UserSettings: ObservableObject {
         case exportTotalMealCarbs = "ExportTotalMealCarbs"
         case exportTotalMealSugars = "ExportTotalMealSugars"
         case exportTotalMealCalories = "ExportTotalMealCalories"
+        case treatSugarsSeparately = "TreatSugarsSeparately"
     }
     
     enum UserDefaultsDoubleKey: String, CaseIterable {
@@ -53,6 +54,7 @@ class UserSettings: ObservableObject {
     @Published var absorptionTimeECarbsDelayInMinutes: Int
     @Published var absorptionTimeECarbsIntervalInMinutes: Int
     @Published var eCarbsFactor: Double
+    @Published var treatSugarsSeparately: Bool
     
     static let shared = UserSettings(
         absorptionTimeSugarsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeSugarsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault,
@@ -63,7 +65,8 @@ class UserSettings: ObservableObject {
         absorptionTimeCarbsDurationInHours: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeCarbsDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault,
         absorptionTimeECarbsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault,
         absorptionTimeECarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault,
-        eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault
+        eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault,
+        treatSugarsSeparately: UserSettings.getValue(for: UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault
     )
     
     private init(
@@ -75,7 +78,8 @@ class UserSettings: ObservableObject {
         absorptionTimeCarbsDurationInHours: Double,
         absorptionTimeECarbsDelayInMinutes: Int,
         absorptionTimeECarbsIntervalInMinutes: Int,
-        eCarbsFactor: Double
+        eCarbsFactor: Double,
+        treatSugarsSeparately: Bool
     ) {
         self.absorptionTimeSugarsDelayInMinutes = absorptionTimeSugarsDelayInMinutes // in minutes
         self.absorptionTimeSugarsIntervalInMinutes = absorptionTimeSugarsIntervalInMinutes // in minutes
@@ -86,6 +90,7 @@ class UserSettings: ObservableObject {
         self.absorptionTimeECarbsDelayInMinutes = absorptionTimeECarbsDelayInMinutes // in minutes
         self.absorptionTimeECarbsIntervalInMinutes = absorptionTimeECarbsIntervalInMinutes // in minutes
         self.eCarbsFactor = eCarbsFactor
+        self.treatSugarsSeparately = treatSugarsSeparately
     }
     
     // MARK: - Static helper functions

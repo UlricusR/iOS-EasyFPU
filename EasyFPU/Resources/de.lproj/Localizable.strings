@@ -33,6 +33,140 @@
 "Documentation on rueth.info" = "Dokumentation auf rueth.info";
 "Home-Link" = "https://rueth.info/index.php/de/easyfpe-fuer-ios";
 
+// Food List
+"Food List" = "Essensliste";
+"Name" = "Name";
+"Favorite" = "Lieblingsessen";
+"Carbs per 100g" = "Kohlenhydrate pro 100g";
+"Calories per 100g" = "Kalorien pro 100g";
+"g" = "g";
+"g Carbs" = "g KH";
+"g Regular Carbs" = "g reguläre KH";
+"g Sugars" = "g Zucker";
+"Carbs" = "KH";
+"Sugars" = "Zucker-KH";
+"g Extended Carbs" = "g verlängerte KH";
+"Thereof Sugars per 100g" = "Davon Zucker pro 100g";
+"Extended Carbs" = "Verlängerte Kohlenhydrate";
+"kcal" = "kcal";
+"g/FPU" = "g/FPE";
+"e-Carbs Factor" = "e-Carbs-Faktor";
+"New food item" = "Neues Essen";
+"Edit food item" = "Essen bearbeiten";
+"Nutritional values per 100g:" = "Nährwerte pro 100g:";
+"Nutritional values for" = "Nährwerte für";
+"Amount consumed" = "Gegessene Menge";
+"Amount" = "Menge";
+"h Absorption Time" = "h Absorptionszeit";
+"Absorption Time" = "Absorptionszeit";
+"Total nutritional values" = "Gesamt-Nährwerte";
+"Total meal" = "Gesamtmahlzeit";
+"Typical amount" = "Typische Menge";
+"Typical amounts:" = "Typische Mengen:";
+"Add to typical amounts" = "Zu typischen Mengen hinzufügen";
+"Comment" = "Kommentar";
+"Enter amount consumed or select typical amount" = "Gegessene Menge eingeben oder typische Menge auswählen";
+"Enter amount consumed" = "Gegessene Menge eingeben";
+"Select amount" = "Menge auswählen";
+"Cannot delete food item" = "Kann Essen nicht löschen";
+"Delay of Extended Carbs" = "Verzögerung der verlängerten KH";
+
+// Meal preview
+"e-Carbs" = "Verl. KH";
+"Regular Carbs" = "Reguläre KH";
+"How much?" = "Wieviel?";
+"When?" = "Wann?";
+"How long?" = "Wie lange?";
+"min at" = "min um";
+"min for" = "min für";
+"For" = "Für";
+
+// Meal details
+"Further details" = "Mehr Details";
+"Export to Apple Health" = "Nach Apple Health exportieren";
+
+// Food item editor
+"Carbs: " = "Kohlenhydrate: ";
+"Calories: " = "Kalorien: ";
+"Amount: " = "Menge: ";
+"Data alert" = "Eingabefehler";
+"Name must not be empty" = "Name darf nicht leer sein";
+"Calories not a valid number or negative" = "Kalorien sind keine gültige Zahl oder negativ";
+"Carbs not a valid number or negative" = "Kohlenhydrate sind keine gültige Zahl oder negativ";
+"Calories from carbs (4 kcal per gram) exceed total calories" = "Kalorien aus Kohlenhydraten (ca. 4 kcal pro Gramm) übersteigen Gesamtkalorien";
+"Amount not a valid number or negative" = "Menge keine gültige Zahl oder negativ";
+"Value not a number" = "Ungültiger Wert";
+"Value must not be negative" = "Wert darf nicht negativ sein";
+"Value must not be zero or negative" = "Wert darf nicht negativ oder null sein";
+"Delete food item" = "Dieses Essen löschen";
+"Sugars exceed carbs" = "Zucker übersteigt Kohlenhydrate";
+"Thereof" = "Davon";
+
+// Absorption scheme editor
+"Absorption scheme" = "Absorptionsschema";
+"Absorption Blocks" = "Absorptionsblöcke";
+"Tap to edit, swipe left to delete" = "Zum Bearbeiten antippen, zum Löschen nach links wischen";
+"New absorption block:" = "Neuer Absorptionsblock:";
+"Edit absorption block:" = "Absorptionsblock bearbeiten:";
+"Absorption blocks:" = "Absorptionsblöcke:";
+"Max. FPUs" = "Max. FPE";
+"Absorption time" = "Absorptionszeit";
+"FPU -" = "FPE -";
+"h" = "h";
+"Cannot find absorption block: " = "Kann Absorptionsblock nicht finden: ";
+"Maximum FPU value already exists" = "Maximaler FPE-Wert existiert bereits";
+"Absorption time is equals or larger than the one of the following absorption block" = "Absorptionszeit is gleich oder größer als die des nachfolgenden Absorptionsblocks";
+"Absorption time is equals or less than the one of the block before" = "Absorptionszeit ist gleich oder kleiner als die des vorherigen Blocks";
+"Absorption time must be between previous and following block" = "Absorptionszeit muss zwischen vorherigem und nachfolgendem Block liegen";
+"At least one absorption block required" = "Mindestens ein Absorptionsblock benötigt";
+"Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fataler Fehler: Kann Absorptionsblock-Index nicht festlegen, bitte informieren Sie den App-Entwickler";
+"Fatal error: Cannot convert numbers into string, please contact app developer" = "Fataler Fehler: Kann Zahlen nicht in String umwandeln, bitte informieren Sie den App-Entwickler";
+"Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fataler Fehler: Konnte das CoreData FoodItem nicht finden, bitte informieren Sie den App-Entwickler";
+"Reset to default" = "Auf Voreinstellungen zurücksetzen";
+"Absorption Time Parameters for Sugars" = "Absorptionsparameter für Zucker-KH";
+"Absorption Time Parameters for Carbs" = "Absorptionsparameter für reguläre KH";
+"Absorption Time Parameters for e-Carbs" = "Absorptionsparameter für verlängerte KH";
+"Delay" = "Verzögerung";
+"Interval" = "Intervall";
+"min" = "min";
+"Treat sugars separately" = "KH aus Zucker separat behandeln";
+
+// Menu actions
+"Import from JSON" = "Importieren (Format: JSON)";
+"Export to JSON" = "Exportieren (Format: JSON)";
+"Successfully exported food list to: " = "Essensliste erfolgreich exportiert nach: ";
+"Failed to export food list to: " = "Konnte Essensliste nicht exportieren nach: ";
+"Successfully imported food list" = "Essensliste erfolgreich importiert";
+"Failed to import food list" = "Konnte Essensliste nicht importieren";
+"Notice" = "Hinweis";
+"Import food list" = "Essensliste importieren";
+"Please select" = "Bitte auswählen";
+"Replace" = "Ersetzen";
+"Append" = "Anhängen";
+"Unable to open URL: " = "Kann folgende URL nicht öffnen: ";
+"Failed to decode due to missing key " = "Konnte nicht entschlüsseln wegen fehlendem Schlüssel ";
+"Failed to decode due to type mismatch - " = "Konnte nicht entschlüsseln wegen Typfehler - ";
+"Failed to decode due to missing value - " = "Konnte nicht entschlüsseln wegen fehlendem Wert - ";
+"Failed to decode because it appears to be invalid JSON" = "Ungültige JSON-Datei";
+"Failed to decode - " = "Konnte nicht entschlüsseln - ";
+"Help on the Web" = "Hilfe im Web";
+
+// Health kit helper
+"Cannot write data: HealthKit seem not to be available on your device." = "Kann keine Daten schreiben: HealthKit scheint auf Ihrem Gerät nicht zur Verfügung zu stehen.";
+"Cannot save data to Health: " = "Kann keine Daten in Health schreiben: ";
+"Unspecified error" = "Unspezifischer Fehler";
+"Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Kann keine Daten in Health schreiben: Bitte geben Sie EasyFPE in den Einstellungen die Berechtigung, in Health zu schreiben.";
+"Successfully exported data to Health" = "Daten wurden erfolgreich nach Health exportiert";
+"Export to Health" = "Health-Export";
+"Export" = "Nach Apple Health exportieren";
+"Error requesting authorization to write to Health: " = "Fehler beim Anfordern der Berechtigung, in Health zu schreiben: ";
+"Please choose the data to export:" = "Bitte wählen Sie die zu exportierenden Daten:";
+"Total Meal Carbs" = "Kohlenhydrate Gesamtmahlzeit";
+"Total Meal Calories" = "Kalorien Gesamtmahlzeit";
+"Please select at least one entry to export" = "Bitte mindestens einen Eintrag zum Export auswählen";
+"Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fataler Fehler, kann Daten nicht exportieren, bitte den App-Entwickler informieren: Absorptionsschema hat keine Absorptionsblöcke";
+"Preview of exported carbs in g" = "Vorschau der exportierten Kohlenhydrate in g";
+
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";
 "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "Die Essensliste ist absichtlich leer, denn jeder hat eigene FPE-relevante Lieblingsessen.";
@@ -113,133 +247,3 @@
 "- The e-carbs amount per entry is determined by dividing the meal's e-carbs (e.g. 60 g) by the number of e-carb entries (e.g. 30), i.e. 60 g / 30 = 2 g" = "- Die e-Carbs-Menge pro Eintrag wird berechnet, die e-Carbs der Mahlzeit (z.B. 60 g) durch die Anzahl der Einträge (z.B. 30) geteilt wird, also: 60 g / 30 = 2 g";
 "- For each of these e-carb entries, an Apple Health record is created and exported to Apple Health with, starting at the current time plus the configured delay (default: 90 minutes; see Absorption Scheme view) and with the configured time interval (default: 10 minutes; see Absorption Scheme view)" = "- Für jeden dieser Einträge wird ein Apple Health Datensatz generiert und nach Apple Health exportiert, beginnend mit der aktuellen Zeit plus die eingestellte Verzögerung (Voreinstellung: 90 Minuten; siehe Absorptionsschema-Ansicht) und mit den eingestellten Zeit-Intervall (Voreinstellung: 10 Minuten; siehe Absorptionsschema-Ansicht)";
 
-// Food List
-"Food List" = "Essensliste";
-"Name" = "Name";
-"Favorite" = "Lieblingsessen";
-"Carbs per 100g" = "Kohlenhydrate pro 100g";
-"Calories per 100g" = "Kalorien pro 100g";
-"g" = "g";
-"g Carbs" = "g KH";
-"g Sugars" = "g Zucker";
-"Carbs" = "KH";
-"Sugars" = "Zucker-KH";
-"g Extended Carbs" = "g verlängerte KH";
-"Thereof Sugars per 100g" = "Davon Zucker pro 100g";
-"Extended Carbs" = "Verlängerte Kohlenhydrate";
-"kcal" = "kcal";
-"g/FPU" = "g/FPE";
-"e-Carbs Factor" = "e-Carbs-Faktor";
-"New food item" = "Neues Essen";
-"Edit food item" = "Essen bearbeiten";
-"Nutritional values per 100g:" = "Nährwerte pro 100g:";
-"Nutritional values for" = "Nährwerte für";
-"Amount consumed" = "Gegessene Menge";
-"Amount" = "Menge";
-"h Absorption Time" = "h Absorptionszeit";
-"Absorption Time" = "Absorptionszeit";
-"Total nutritional values" = "Gesamt-Nährwerte";
-"Total meal" = "Gesamtmahlzeit";
-"Typical amount" = "Typische Menge";
-"Typical amounts:" = "Typische Mengen:";
-"Add to typical amounts" = "Zu typischen Mengen hinzufügen";
-"Comment" = "Kommentar";
-"Enter amount consumed or select typical amount" = "Gegessene Menge eingeben oder typische Menge auswählen";
-"Enter amount consumed" = "Gegessene Menge eingeben";
-"Select amount" = "Menge auswählen";
-"Cannot delete food item" = "Kann Essen nicht löschen";
-"Delay of Extended Carbs" = "Verzögerung der verlängerten KH";
-
-// Meal preview
-"e-Carbs" = "Verl. KH";
-"Regular Carbs" = "Reguläre KH";
-"How much?" = "Wieviel?";
-"When?" = "Wann?";
-"How long?" = "Wie lange?";
-"min at" = "min um";
-"For" = "Für";
-
-// Meal details
-"Included food items:" = "Bestehend aus:";
-"Export to Apple Health" = "Nach Apple Health exportieren";
-
-// Food item editor
-"Carbs: " = "Kohlenhydrate: ";
-"Calories: " = "Kalorien: ";
-"Amount: " = "Menge: ";
-"Data alert" = "Eingabefehler";
-"Name must not be empty" = "Name darf nicht leer sein";
-"Calories not a valid number or negative" = "Kalorien sind keine gültige Zahl oder negativ";
-"Carbs not a valid number or negative" = "Kohlenhydrate sind keine gültige Zahl oder negativ";
-"Calories from carbs (4 kcal per gram) exceed total calories" = "Kalorien aus Kohlenhydraten (ca. 4 kcal pro Gramm) übersteigen Gesamtkalorien";
-"Amount not a valid number or negative" = "Menge keine gültige Zahl oder negativ";
-"Value not a number" = "Ungültiger Wert";
-"Value must not be negative" = "Wert darf nicht negativ sein";
-"Value must not be zero or negative" = "Wert darf nicht negativ oder null sein";
-"Delete food item" = "Dieses Essen löschen";
-"Sugars exceed carbs" = "Zucker übersteigt Kohlenhydrate";
-"Thereof" = "Davon";
-
-// Absorption scheme editor
-"Absorption scheme" = "Absorptionsschema";
-"Absorption Blocks" = "Absorptionsblöcke";
-"Tap to edit, swipe left to delete" = "Zum Bearbeiten antippen, zum Löschen nach links wischen";
-"New absorption block:" = "Neuer Absorptionsblock:";
-"Edit absorption block:" = "Absorptionsblock bearbeiten:";
-"Absorption blocks:" = "Absorptionsblöcke:";
-"Max. FPUs" = "Max. FPE";
-"Absorption time" = "Absorptionszeit";
-"FPU -" = "FPE -";
-"h" = "h";
-"Cannot find absorption block: " = "Kann Absorptionsblock nicht finden: ";
-"Maximum FPU value already exists" = "Maximaler FPE-Wert existiert bereits";
-"Absorption time is equals or larger than the one of the following absorption block" = "Absorptionszeit is gleich oder größer als die des nachfolgenden Absorptionsblocks";
-"Absorption time is equals or less than the one of the block before" = "Absorptionszeit ist gleich oder kleiner als die des vorherigen Blocks";
-"Absorption time must be between previous and following block" = "Absorptionszeit muss zwischen vorherigem und nachfolgendem Block liegen";
-"At least one absorption block required" = "Mindestens ein Absorptionsblock benötigt";
-"Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fataler Fehler: Kann Absorptionsblock-Index nicht festlegen, bitte informieren Sie den App-Entwickler";
-"Fatal error: Cannot convert numbers into string, please contact app developer" = "Fataler Fehler: Kann Zahlen nicht in String umwandeln, bitte informieren Sie den App-Entwickler";
-"Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fataler Fehler: Konnte das CoreData FoodItem nicht finden, bitte informieren Sie den App-Entwickler";
-"Reset to default" = "Auf Voreinstellungen zurücksetzen";
-"Absorption Time Parameters for Sugars" = "Absorptionsparameter für Zucker-KH";
-"Absorption Time Parameters for Carbs" = "Absorptionsparameter für reguläre KH";
-"Absorption Time Parameters for e-Carbs" = "Absorptionsparameter für verlängerte KH";
-"Delay" = "Verzögerung";
-"Interval" = "Intervall";
-"min" = "min";
-
-// Menu actions
-"Import from JSON" = "Importieren (Format: JSON)";
-"Export to JSON" = "Exportieren (Format: JSON)";
-"Successfully exported food list to: " = "Essensliste erfolgreich exportiert nach: ";
-"Failed to export food list to: " = "Konnte Essensliste nicht exportieren nach: ";
-"Successfully imported food list" = "Essensliste erfolgreich importiert";
-"Failed to import food list" = "Konnte Essensliste nicht importieren";
-"Notice" = "Hinweis";
-"Import food list" = "Essensliste importieren";
-"Please select" = "Bitte auswählen";
-"Replace" = "Ersetzen";
-"Append" = "Anhängen";
-"Unable to open URL: " = "Kann folgende URL nicht öffnen: ";
-"Failed to decode due to missing key " = "Konnte nicht entschlüsseln wegen fehlendem Schlüssel ";
-"Failed to decode due to type mismatch - " = "Konnte nicht entschlüsseln wegen Typfehler - ";
-"Failed to decode due to missing value - " = "Konnte nicht entschlüsseln wegen fehlendem Wert - ";
-"Failed to decode because it appears to be invalid JSON" = "Ungültige JSON-Datei";
-"Failed to decode - " = "Konnte nicht entschlüsseln - ";
-"Help on the Web" = "Hilfe im Web";
-
-// Health kit helper
-"Cannot write data: HealthKit seem not to be available on your device." = "Kann keine Daten schreiben: HealthKit scheint auf Ihrem Gerät nicht zur Verfügung zu stehen.";
-"Cannot save data to Health: " = "Kann keine Daten in Health schreiben: ";
-"Unspecified error" = "Unspezifischer Fehler";
-"Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Kann keine Daten in Health schreiben: Bitte geben Sie EasyFPE in den Einstellungen die Berechtigung, in Health zu schreiben.";
-"Successfully exported data to Health" = "Daten wurden erfolgreich nach Health exportiert";
-"Export to Health" = "Health-Export";
-"Export" = "Nach Apple Health exportieren";
-"Error requesting authorization to write to Health: " = "Fehler beim Anfordern der Berechtigung, in Health zu schreiben: ";
-"Please choose the data to export:" = "Bitte wählen Sie die zu exportierenden Daten:";
-"Total Meal Carbs" = "Kohlenhydrate Gesamtmahlzeit";
-"Total Meal Calories" = "Kalorien Gesamtmahlzeit";
-"Please select at least one entry to export" = "Bitte mindestens einen Eintrag zum Export auswählen";
-"Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fataler Fehler, kann Daten nicht exportieren, bitte den App-Entwickler informieren: Absorptionsschema hat keine Absorptionsblöcke";
-"Preview of exported carbs in g" = "Vorschau der exportierten Kohlenhydrate in g";

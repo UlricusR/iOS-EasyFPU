@@ -26,35 +26,54 @@ struct MealItemView: View {
         VStack(alignment: .leading) {
             // Amount and name
             HStack {
-                Text(String(foodItem.amount)).font(fontSizeName)
-                Text("g").font(fontSizeName)
-                Text(foodItem.name).font(fontSizeName)
-            }.foregroundColor(foregroundColorName)
+                Text(String(foodItem.amount))
+                Text("g")
+                Text(foodItem.name)
+            }.font(fontSizeName).foregroundColor(foregroundColorName)
+            
             // Calories
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getCalories()))!).font(fontSizeDetails)
-                Text("kcal").font(fontSizeDetails)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getCalories()))!)
+                Text("kcal")
+            }.font(fontSizeDetails)
+            
+            // Sugars
+            if UserSettings.shared.treatSugarsSeparately {
+                HStack {
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getSugars(when: UserSettings.shared.treatSugarsSeparately)))!)
+                    Text("g Sugars")
+                    Text("in")
+                    Text(String(UserSettings.shared.absorptionTimeSugarsDelayInMinutes))
+                    Text("min for")
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeSugarsDurationInHours))!)
+                    Text("h")
+                }.font(fontSizeDetails)
             }
-            // Carbs
+            
+            // Regular Carbs
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getRegularCarbs()))!).font(fontSizeDetails)
-                Text("g Carbs").font(fontSizeDetails)
-            }
-            // FPU
-            HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().fpu))!).font(fontSizeDetails)
-                Text("FPU").font(fontSizeDetails)
-            }
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getRegularCarbs(when: UserSettings.shared.treatSugarsSeparately)))!)
+                Text("g Regular Carbs")
+                Text("in")
+                Text(String(UserSettings.shared.absorptionTimeCarbsDelayInMinutes))
+                Text("min for")
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeCarbsDurationInHours))!)
+                Text("h")
+            }.font(fontSizeDetails)
+            
             // Extended carbs
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().getExtendedCarbs()))!).font(fontSizeDetails)
-                Text("g Extended Carbs").font(fontSizeDetails)
-            }
-            // Absorption time
-            HStack {
-                Text(self.absorptionTimeAsString).font(fontSizeDetails)
-                Text("h Absorption Time").font(fontSizeDetails)
-            }
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().fpu))!)
+                Text("FPU")
+                Text("/")
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().getExtendedCarbs()))!)
+                Text("g Extended Carbs")
+                Text("in")
+                Text(String(UserSettings.shared.absorptionTimeECarbsDelayInMinutes))
+                Text("min for")
+                Text(self.absorptionTimeAsString)
+                Text("h")
+            }.font(fontSizeDetails)
         }
     }
 }

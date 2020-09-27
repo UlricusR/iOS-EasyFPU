@@ -37,7 +37,7 @@ struct MealSummaryView: View {
         
         TabView(selection: $selectedTab) {
             // Sugars if available
-            if meal.sugars > 0 {
+            if meal.getSugars(when: UserSettings.shared.treatSugarsSeparately) > 0 {
                 MealSugarsView(meal: self.meal)
                 .lineLimit(1)
                 .tabItem {
@@ -80,7 +80,7 @@ struct MealSummaryView: View {
     
     private func handleSwipe(translation: CGFloat) {
         if translation > minTranslationForSwipe && selectedTab > 0 {
-            if meal.sugars == 0 {
+            if meal.getSugars(when: UserSettings.shared.treatSugarsSeparately) == 0 {
                 selectedTab = max(selectedTab - 1, 1)
             } else {
                 selectedTab -= 1

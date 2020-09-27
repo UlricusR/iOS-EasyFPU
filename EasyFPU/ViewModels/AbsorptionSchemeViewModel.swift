@@ -136,6 +136,9 @@ class AbsorptionSchemeViewModel: ObservableObject {
         }
     }
     
+    // Treat sugars separately
+    @Published var treatSugarsSeparately: Bool = AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault
+    
     static let absorptionTimeSugarsDelayDefault: Int = 0 // minutes
     static let absorptionTimeSugarsIntervalDefault: Int = 5 // minutes
     static let absoprtionTimeSugarsDurationDefault: Double = 2 // hours
@@ -145,6 +148,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
     static let absorptionTimeECarbsDelayDefault: Int = 90 // minutes
     static let absorptionTimeECarbsIntervalDefault: Int = 10 // minutes
     static let eCarbsFactorDefault: Double = 10 // g e-carbs per FPU
+    static let treatSugarsSeparatelyDefault: Bool = true
     
     init(from cdAbsorptionScheme: AbsorptionScheme) {
         // Absorption scheme
@@ -194,6 +198,8 @@ class AbsorptionSchemeViewModel: ObservableObject {
         let eCarbsFactor = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault
         self.eCarbsFactor = eCarbsFactor
         self.eCarbsFactorAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: eCarbsFactor))!
+        
+        self.treatSugarsSeparately = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault
     }
     
     func add(newAbsorptionBlock: AbsorptionBlockViewModel, errorMessage: inout String) -> Bool {
