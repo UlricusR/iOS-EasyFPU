@@ -28,8 +28,7 @@ struct FoodItemSelector: View {
                     Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text("Enter amount consumed") : Text("Enter amount consumed or select typical amount")) {
                         HStack {
                             Text("Amount consumed")
-                            TextField("Amount consumed", text: self.$draftFoodItem.amountAsString)
-                                .keyboardType(.numberPad)
+                            CustomTextField(titleKey: "Amount consumed", text: self.$draftFoodItem.amountAsString, keyboardType: .numberPad)
                                 .multilineTextAlignment(.trailing)
                             Text("g")
                         }
@@ -49,7 +48,7 @@ struct FoodItemSelector: View {
                         if self.addToTypicalAmounts {
                             // User wants to add amount to typical amounts, so comment is required
                             HStack {
-                                TextField("Comment", text: self.$newTypicalAmountComment)
+                                CustomTextField(titleKey: "Comment", text: self.$newTypicalAmountComment, keyboardType: .default)
                                 Button(action: {
                                     self.addTypicalAmount()
                                 }) {

@@ -48,7 +48,7 @@ struct FoodItemEditor: View {
                 Form {
                     Section {
                         // Name
-                        TextField("Name", text: $draftFoodItem.name)
+                        CustomTextField(titleKey: "Name", text: $draftFoodItem.name, keyboardType: .default)
                         
                         // Favorite
                         Toggle("Favorite", isOn: $draftFoodItem.favorite)
@@ -57,31 +57,28 @@ struct FoodItemEditor: View {
                     Section(header: Text("Nutritional values per 100g:")) {
                         // Calories
                         HStack {
-                            TextField("Calories per 100g", text: $draftFoodItem.caloriesPer100gAsString)
-                                .keyboardType(.decimalPad)
+                            CustomTextField(titleKey: "Calories per 100g", text: $draftFoodItem.caloriesPer100gAsString, keyboardType: .decimalPad)
                             Text("kcal")
                         }
                         
                         // Carbs
                         HStack {
-                            TextField("Carbs per 100g", text: $draftFoodItem.carbsPer100gAsString)
-                                .keyboardType(.decimalPad)
+                            CustomTextField(titleKey: "Carbs per 100g", text: $draftFoodItem.carbsPer100gAsString, keyboardType: .decimalPad)
                             Text("g Carbs")
                         }
                         
                         // Sugars
                         HStack {
-                            TextField("Thereof Sugars per 100g", text: $draftFoodItem.sugarsPer100gAsString)
-                                .keyboardType(.decimalPad)
+                            CustomTextField(titleKey: "Thereof Sugars per 100g", text: $draftFoodItem.sugarsPer100gAsString, keyboardType: .decimalPad)
                             Text("g Sugars")
                         }
                     }
                     
                     Section(header: Text("Typical amounts:")) {
                         HStack {
-                            TextField("Amount", text: $newTypicalAmount).keyboardType(.decimalPad)
+                            CustomTextField(titleKey: "Amount", text: $newTypicalAmount, keyboardType: .decimalPad)
                             Text("g")
-                            TextField("Comment", text: $newTypicalAmountComment)
+                            CustomTextField(titleKey: "Comment", text: $newTypicalAmountComment, keyboardType: .default)
                             Button(action: {
                                 self.addTypicalAmount()
                             }) {
