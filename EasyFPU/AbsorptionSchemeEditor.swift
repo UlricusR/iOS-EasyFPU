@@ -58,9 +58,9 @@ struct AbsorptionSchemeEditor: View {
                 // The absorption block add/edit form
                 Section(header: self.updateButton ? Text("Edit absorption block:") : Text("New absorption block:")) {
                     HStack {
-                        TextField("Max. FPUs", text: $newMaxFpu).keyboardType(.decimalPad)
+                        CustomTextField(titleKey: "Max. FPUs", text: $newMaxFpu, keyboardType: .decimalPad)
                         Text("FPU -")
-                        TextField("Absorption time", text: $newAbsorptionTime).keyboardType(.decimalPad)
+                        CustomTextField(titleKey: "Absorption time", text: $newAbsorptionTime, keyboardType: .decimalPad)
                         Text("h")
                         Button(action: {
                             if self.newAbsorptionBlockId == nil { // This is a new absorption block
@@ -120,19 +120,19 @@ struct AbsorptionSchemeEditor: View {
                     if draftAbsorptionScheme.treatSugarsSeparately {
                         HStack {
                             Text("Delay")
-                            TextField("Delay", text: $draftAbsorptionScheme.delaySugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                            CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delaySugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                             Text("min")
                         }
                         
                         HStack {
                             Text("Interval")
-                            TextField("Interval", text: $draftAbsorptionScheme.intervalSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                            CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalSugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                             Text("min")
                         }
                         
                         HStack {
                             Text("Duration")
-                            TextField("Duration", text: $draftAbsorptionScheme.durationSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                            CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationSugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                             Text("h")
                         }
                         
@@ -149,19 +149,19 @@ struct AbsorptionSchemeEditor: View {
                 Section(header: Text("Absorption Time Parameters for Carbs")) {
                     HStack {
                         Text("Delay")
-                        TextField("Delay", text: $draftAbsorptionScheme.delayCarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("Interval")
-                        TextField("Interval", text: $draftAbsorptionScheme.intervalCarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("Duration")
-                        TextField("Duration", text: $draftAbsorptionScheme.durationCarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("h")
                     }
                     
@@ -177,19 +177,19 @@ struct AbsorptionSchemeEditor: View {
                 Section(header: Text("Absorption Time Parameters for e-Carbs")) {
                     HStack {
                         Text("Delay")
-                        TextField("Delay", text: $draftAbsorptionScheme.delayECarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayECarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("Interval")
-                        TextField("Interval", text: $draftAbsorptionScheme.intervalECarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalECarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("e-Carbs Factor")
-                        TextField("e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("g/FPU")
                     }
                     
@@ -362,5 +362,20 @@ struct AbsorptionSchemeEditor: View {
         
         // Notify change
         draftAbsorptionScheme.objectWillChange.send()
+    }
+}
+
+struct CustomTextField: View {
+    var titleKey: String
+    @Binding var text: String
+    var keyboardType: UIKeyboardType
+    
+    var body: some View {
+        if #available(iOS 14.0, *) {
+            return AnyView(TextField(titleKey, text: $text).ignoresSafeArea(.keyboard, edges: .bottom).keyboardType(keyboardType))
+        } else {
+            // Fallback on earlier versions
+            return AnyView(TextField(titleKey, text: $text).keyboardType(keyboardType))
+        }
     }
 }
