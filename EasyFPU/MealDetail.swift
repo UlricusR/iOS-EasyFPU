@@ -9,11 +9,11 @@
 import SwiftUI
 
 struct MealDetail: View {
-    @Binding var isPresented: Bool
+    @Environment(\.presentationMode) var presentation
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var meal: MealViewModel
     private let helpScreen = HelpScreen.mealDetails
-    @ObservedObject var sheet = MealDetailSheets()
+    @State var activeSheet: MealDetailSheets.State?
     @State private var showDetails = false
     var absorptionTimeAsString: String {
         if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
@@ -82,41 +82,39 @@ struct MealDetail: View {
             .navigationBarTitle(NSLocalizedString(self.meal.name, comment: ""))
             .navigationBarItems(leading: HStack {
                 Button(action: {
-                    self.sheet.state = .help
+                    activeSheet = .help
                 }) {
                     Image(systemName: "questionmark.circle").imageScale(.large)
                 }
                 
                 if HealthDataHelper.healthKitIsAvailable() {
                     Button(action: {
-                        self.sheet.state = .exportToHealth
+                        activeSheet = .exportToHealth
                     }) {
                         Image(systemName: "square.and.arrow.up").imageScale(.large)
                     }.padding(.leading)
                 }
             }, trailing:
                 Button(action: {
-                    self.isPresented = false
+                    presentation.wrappedValue.dismiss()
                 }) {
                     Text("Done")
                 }
             )
         }
         .navigationViewStyle(StackNavigationViewStyle())
-        .sheet(isPresented: $sheet.isShowing, content: sheetContent)
+        .sheet(item: $activeSheet) {
+            sheetContent($0)
+        }
     }
     
     @ViewBuilder
-    private func sheetContent() -> some View {
-        if sheet.state != nil {
-            switch sheet.state! {
-            case .help:
-                HelpView(isPresented: $sheet.isShowing, helpScreen: self.helpScreen)
-            case .exportToHealth:
-                MealExportView(isPresented: $sheet.isShowing, meal: meal, absorptionScheme: absorptionScheme)
-            }
-        } else {
-            EmptyView()
+    private func sheetContent(_ state: MealDetailSheets.State) -> some View {
+        switch state {
+        case .help:
+            HelpView(helpScreen: self.helpScreen)
+        case .exportToHealth:
+            MealExportView(meal: meal, absorptionScheme: absorptionScheme)
         }
     }
 }

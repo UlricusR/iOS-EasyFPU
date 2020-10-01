@@ -11,7 +11,7 @@ import Combine
 
 struct FoodItemEditor: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Binding var isPresented: Bool
+    @Environment(\.presentationMode) var presentation
     var navigationBarTitle: String
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem? // Working copy of the food item
@@ -87,38 +87,40 @@ struct FoodItemEditor: View {
                         }
                     }
                     
-                    Section(footer: Text("Tap to edit")) {
-                        ForEach(self.typicalAmounts, id: \.self) { typicalAmount in
-                            HStack {
+                    if self.typicalAmounts.count > 0 {
+                        Section(footer: Text("Tap to edit")) {
+                            ForEach(self.typicalAmounts, id: \.self) { typicalAmount in
                                 HStack {
-                                    Text(typicalAmount.amountAsString)
-                                    Text("g")
-                                    Text(typicalAmount.comment)
-                                }
-                                .onTapGesture {
-                                    self.newTypicalAmount = typicalAmount.amountAsString
-                                    self.newTypicalAmountComment = typicalAmount.comment
-                                    self.newTypicalAmountId = typicalAmount.id
-                                    self.updateButton = true
-                                }
-                                
-                                Spacer()
-                                Button(action: {
-                                    // First clear edit fields if filled
-                                    if self.updateButton {
-                                        self.newTypicalAmount = ""
-                                        self.newTypicalAmountComment = ""
-                                        self.newTypicalAmountId = nil
-                                        self.updateButton.toggle()
+                                    HStack {
+                                        Text(typicalAmount.amountAsString)
+                                        Text("g")
+                                        Text(typicalAmount.comment)
+                                    }
+                                    .onTapGesture {
+                                        self.newTypicalAmount = typicalAmount.amountAsString
+                                        self.newTypicalAmountComment = typicalAmount.comment
+                                        self.newTypicalAmountId = typicalAmount.id
+                                        self.updateButton = true
                                     }
                                     
-                                    // Then delete typical amount
-                                    self.deleteTypicalAmount(typicalAmount)
-                                }) {
-                                    Image(systemName: "xmark.circle").foregroundColor(.red)
+                                    Spacer()
+                                    Button(action: {
+                                        // First clear edit fields if filled
+                                        if self.updateButton {
+                                            self.newTypicalAmount = ""
+                                            self.newTypicalAmountComment = ""
+                                            self.newTypicalAmountId = nil
+                                            self.updateButton.toggle()
+                                        }
+                                        
+                                        // Then delete typical amount
+                                        self.deleteTypicalAmount(typicalAmount)
+                                    }) {
+                                        Image(systemName: "xmark.circle").foregroundColor(.red)
+                                    }
                                 }
-                            }
-                        }.onDelete(perform: deleteTypicalAmount)
+                            }.onDelete(perform: deleteTypicalAmount)
+                        }
                     }
                     
                     // Delete food item (only when editing an existing food item)
@@ -126,7 +128,7 @@ struct FoodItemEditor: View {
                         Section {
                             Button(action: {
                                 // First close the sheet
-                                self.isPresented = false
+                                presentation.wrappedValue.dismiss()
                                 
                                 // Then delete all related typical amounts
                                 for typicalAmount in self.typicalAmounts {
@@ -159,7 +161,7 @@ struct FoodItemEditor: View {
                 leading: HStack {
                     Button(action: {
                         // First quit edit mode
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                         
                         // Then undo the changes made to typical amounts
                         for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
@@ -240,7 +242,7 @@ struct FoodItemEditor: View {
                         try? AppDelegate.viewContext.save()
                         
                         // Quit edit mode
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     } else { // Invalid data, display alert
                         // Evaluate error
                         switch error {
@@ -286,7 +288,7 @@ struct FoodItemEditor: View {
             )
         }
         .sheet(isPresented: self.$showingSheet) {
-            HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
+            HelpView(helpScreen: self.helpScreen)
         }
         .onAppear() {
             self.oldName = self.draftFoodItem.name

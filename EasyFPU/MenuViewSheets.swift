@@ -8,12 +8,14 @@
 
 import Foundation
 
-class MenuViewSheets: SheetState<MenuViewSheets.State> {
-    enum State {
+class MenuViewSheets {
+    enum State: Identifiable {
         case editAbsorptionScheme
         case pickFileToImport
         case pickExportDirectory
         case about
         case disclaimer
+        
+        var id: State { self }
     }
 }

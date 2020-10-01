@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MealSummaryView: View {
-    @ObservedObject var foodListSheet: FoodListSheets
+    @Binding var activeFoodListSheet: FoodListSheets.State?
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var meal: MealViewModel
     @State private var showingSheet = false
@@ -23,7 +23,7 @@ struct MealSummaryView: View {
         HStack(alignment: .center) {
             Text("Total meal").font(.headline).multilineTextAlignment(.center)
             Button(action: {
-                foodListSheet.state = .mealDetails
+                activeFoodListSheet = .mealDetails
             }) {
                 Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor).padding([.leading, .trailing])
             }
@@ -74,7 +74,7 @@ struct MealSummaryView: View {
         .frame(height: 120)
         .padding([.leading, .trailing])
         .sheet(isPresented: self.$showingSheet) {
-            MealExportView(isPresented: self.$showingSheet, meal: self.meal, absorptionScheme: self.absorptionScheme)
+            MealExportView(meal: self.meal, absorptionScheme: self.absorptionScheme)
         }
     }
     

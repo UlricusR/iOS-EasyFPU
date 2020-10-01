@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct AbsorptionSchemeEditor: View {
-    @Binding var isPresented: Bool
     @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var editedAbsorptionScheme: AbsorptionScheme
     @State private var newMaxFpu: String = ""
@@ -22,6 +21,7 @@ struct AbsorptionSchemeEditor: View {
     @State private var showingScreen = false
     private let helpScreen = HelpScreen.absorptionSchemeEditor
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.presentationMode) var presentation
     
     var body: some View {
         NavigationView {
@@ -208,7 +208,7 @@ struct AbsorptionSchemeEditor: View {
             .navigationBarItems(
                 leading: HStack {
                     Button(action: {
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     }) {
                         Text("Cancel")
                     }
@@ -277,7 +277,7 @@ struct AbsorptionSchemeEditor: View {
                         UserSettings.shared.objectWillChange.send()
                         
                         // Close sheet
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     }
                 }) {
                     // Quit edit mode
@@ -296,7 +296,7 @@ struct AbsorptionSchemeEditor: View {
             )
         }
         .sheet(isPresented: self.$showingScreen) {
-            HelpView(isPresented: self.$showingScreen, helpScreen: self.helpScreen)
+            HelpView(helpScreen: self.helpScreen)
         }
     }
     

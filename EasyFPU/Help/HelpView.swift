@@ -18,7 +18,7 @@ enum HelpScreen: String {
 }
 
 struct HelpView: View {
-    @Binding var isPresented: Bool
+    @Environment(\.presentationMode) var presentation
     var helpScreen: HelpScreen
     
     var body: some View {
@@ -41,7 +41,7 @@ struct HelpView: View {
             }
             .navigationBarTitle(NSLocalizedString(self.helpScreen.rawValue, comment: ""))
             .navigationBarItems(trailing: Button(action: {
-                self.isPresented = false
+                presentation.wrappedValue.dismiss()
             }) {
                 Text("Done")
             })

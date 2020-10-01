@@ -10,7 +10,7 @@ import SwiftUI
 
 struct FoodItemSelector: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Binding var isPresented: Bool
+    @Environment(\.presentationMode) var presentation
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem
     @State private var showingAlert = false
@@ -87,7 +87,7 @@ struct FoodItemSelector: View {
                 leading: HStack {
                     Button(action: {
                         // Do nothing, just quit edit mode, as food item hasn't been modified
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     }) {
                         Text("Cancel")
                     }
@@ -113,7 +113,7 @@ struct FoodItemSelector: View {
                         try? AppDelegate.viewContext.save()
                         
                         // Quit edit mode
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     case .failure(let err):
                         // Display alert and stay in edit mode
                         self.errorMessage = DataHelper.getErrorMessage(from: err)
@@ -133,7 +133,7 @@ struct FoodItemSelector: View {
             )
         }
         .sheet(isPresented: self.$showingSheet) {
-            HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
+            HelpView(helpScreen: self.helpScreen)
         }
     }
     

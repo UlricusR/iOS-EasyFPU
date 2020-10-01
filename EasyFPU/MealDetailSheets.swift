@@ -8,9 +8,11 @@
 
 import Foundation
 
-class MealDetailSheets: SheetState<MealDetailSheets.State> {
-    enum State {
+class MealDetailSheets {
+    enum State: Identifiable {
         case help
         case exportToHealth
+        
+        var id: State { self }
     }
 }

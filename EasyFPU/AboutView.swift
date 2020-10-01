@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AboutView: View {
-    @Binding var isPresented: Bool
+    @Environment(\.presentationMode) var presentation
     
     var body: some View {
         NavigationView {
@@ -24,7 +24,7 @@ struct AboutView: View {
             }
             .navigationBarTitle(Text("About this app"))
             .navigationBarItems(trailing: Button(action: {
-                self.isPresented = false
+                presentation.wrappedValue.dismiss()
             }) {
                 Text("Done")
             })

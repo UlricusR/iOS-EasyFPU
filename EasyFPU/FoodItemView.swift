@@ -12,7 +12,7 @@ struct FoodItemView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var absorptionScheme: AbsorptionScheme
     @ObservedObject var foodItem: FoodItemViewModel
-    @ObservedObject var sheet = FoodItemViewSheets()
+    @State var activeSheet: FoodItemViewSheets.State?
     
     var body: some View {
         VStack {
@@ -61,36 +61,33 @@ struct FoodItemView: View {
                 self.foodItem.cdFoodItem?.amount = 0
                 try? AppDelegate.viewContext.save()
             } else {
-                self.sheet.state = .selectFoodItem
+                activeSheet = .selectFoodItem
             }
         }
         .onLongPressGesture {
             // Edit food item
-            self.sheet.state = .editFoodItem
+            activeSheet = .editFoodItem
         }
-        .sheet(isPresented: $sheet.isShowing, content: sheetContent)
+        .sheet(item: $activeSheet) {
+            sheetContent($0)
+        }
     }
     
     @ViewBuilder
-    private func sheetContent() -> some View {
-        if sheet.state != nil {
-            switch sheet.state! {
-            case .editFoodItem:
-                if self.foodItem.cdFoodItem != nil {
-                    FoodItemEditor(
-                        isPresented: $sheet.isShowing,
-                        navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
-                        draftFoodItem: self.foodItem,
-                        editedFoodItem: self.foodItem.cdFoodItem!
-                    ).environment(\.managedObjectContext, managedObjectContext)
-                } else {
-                    Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
-                }
-            case .selectFoodItem:
-                FoodItemSelector(isPresented: $sheet.isShowing, draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!)
+    private func sheetContent(_ state: FoodItemViewSheets.State) -> some View {
+        switch state {
+        case .editFoodItem:
+            if self.foodItem.cdFoodItem != nil {
+                FoodItemEditor(
+                    navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
+                    draftFoodItem: self.foodItem,
+                    editedFoodItem: self.foodItem.cdFoodItem!
+                ).environment(\.managedObjectContext, managedObjectContext)
+            } else {
+                Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
             }
-        } else {
-            EmptyView()
+        case .selectFoodItem:
+            FoodItemSelector(draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!)
         }
     }
 }

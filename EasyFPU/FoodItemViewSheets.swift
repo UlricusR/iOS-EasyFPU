@@ -8,9 +8,11 @@
 
 import Foundation
 
-class FoodItemViewSheets: SheetState<FoodItemViewSheets.State> {
-    enum State {
+class FoodItemViewSheets {
+    enum State: Identifiable {
         case editFoodItem
         case selectFoodItem
+        
+        var id: State { self }
     }
 }
