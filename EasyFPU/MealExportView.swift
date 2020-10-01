@@ -10,7 +10,7 @@ import SwiftUI
 import HealthKit
 
 struct MealExportView: View {
-    @Binding var isPresented: Bool
+    @Environment(\.presentationMode) var presentation
     var meal: MealViewModel
     var absorptionScheme: AbsorptionScheme
     @ObservedObject var carbsRegimeCalculator = CarbsRegimeCalculator.default
@@ -83,7 +83,7 @@ struct MealExportView: View {
                         self.showingAlert = true
                     } else {
                         // Close sheet
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     }
                 }) {
                     Text("Done")
@@ -102,7 +102,7 @@ struct MealExportView: View {
             )
         }
         .sheet(isPresented: self.$showingSheet) {
-            HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
+            HelpView(helpScreen: self.helpScreen)
         }
     }
     

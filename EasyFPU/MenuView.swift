@@ -15,15 +15,15 @@ struct MenuView: View {
     var absorptionScheme: AbsorptionScheme
     var filePicked: (URL) -> ()
     var exportDirectory: (URL) -> ()
-    @ObservedObject var sheet = MenuViewSheets()
-    @State var showingAlert = false
-    @State var alertMessage = ""
+    @State private var activeSheet: MenuViewSheets.State?
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
     
     var body: some View {
         VStack(alignment: .leading) {
             // Absorption Scheme
             Button(action: {
-                self.sheet.state = .editAbsorptionScheme
+                activeSheet = .editAbsorptionScheme
             }) {
                 Text("Absorption scheme")
             }
@@ -32,7 +32,7 @@ struct MenuView: View {
             
             // Import
             Button(action: {
-                self.sheet.state = .pickFileToImport
+                activeSheet = .pickFileToImport
             }) {
                 Text("Import from JSON")
             }
@@ -41,7 +41,7 @@ struct MenuView: View {
             
             // Export
             Button(action: {
-                self.sheet.state = .pickExportDirectory
+                activeSheet = .pickExportDirectory
             }) {
                 Text("Export to JSON")
             }
@@ -50,7 +50,7 @@ struct MenuView: View {
             
             // About
             Button(action: {
-                self.sheet.state = .about
+                activeSheet = .about
             }) {
                 Text("About")
             }
@@ -59,7 +59,7 @@ struct MenuView: View {
             
             // Disclaimer
             Button(action: {
-                self.sheet.state = .disclaimer
+                activeSheet = .disclaimer
             }) {
                 Text("Disclaimer")
             }
@@ -81,7 +81,9 @@ struct MenuView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(red: 32/255, green: 32/255, blue: 32/255))
         .edgesIgnoringSafeArea(.all)
-        .sheet(isPresented: self.$sheet.isShowing, content: sheetContent)
+        .sheet(item: $activeSheet) {
+            sheetContent($0)
+        }
         .alert(isPresented: self.$showingAlert) {
             Alert(
                 title: Text("Notice"),
@@ -92,23 +94,19 @@ struct MenuView: View {
     }
     
     @ViewBuilder
-    private func sheetContent() -> some View {
-        if sheet.state != nil {
-            switch sheet.state! {
-            case .editAbsorptionScheme:
-                AbsorptionSchemeEditor(isPresented: $sheet.isShowing, draftAbsorptionScheme: self.draftAbsorptionScheme, editedAbsorptionScheme: absorptionScheme)
-                        .environment(\.managedObjectContext, managedObjectContext)
-            case .pickFileToImport:
-                FilePickerView(callback: filePicked, documentTypes: [kUTTypeText as String])
-            case .pickExportDirectory:
-                FilePickerView(callback: exportDirectory, documentTypes: [kUTTypeFolder as String])
-            case .about:
-                AboutView(isPresented: $sheet.isShowing)
-            case .disclaimer:
-                DisclaimerView(isDisplayed: $sheet.isShowing)
-            }
-        } else {
-            EmptyView()
+    private func sheetContent(_ state: MenuViewSheets.State) -> some View {
+        switch state {
+        case .editAbsorptionScheme:
+            AbsorptionSchemeEditor(draftAbsorptionScheme: self.draftAbsorptionScheme, editedAbsorptionScheme: absorptionScheme)
+                    .environment(\.managedObjectContext, managedObjectContext)
+        case .pickFileToImport:
+            FilePickerView(callback: filePicked, documentTypes: [kUTTypeText as String])
+        case .pickExportDirectory:
+            FilePickerView(callback: exportDirectory, documentTypes: [kUTTypeFolder as String])
+        case .about:
+            AboutView()
+        case .disclaimer:
+            DisclaimerView()
         }
     }
 }

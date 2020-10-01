@@ -11,7 +11,7 @@ import Combine
 
 struct FoodItemEditor: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Binding var isPresented: Bool
+    @Environment(\.presentationMode) var presentation
     var navigationBarTitle: String
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem? // Working copy of the food item
@@ -48,7 +48,7 @@ struct FoodItemEditor: View {
                 Form {
                     Section {
                         // Name
-                        TextField("Name", text: $draftFoodItem.name)
+                        CustomTextField(titleKey: "Name", text: $draftFoodItem.name, keyboardType: .default)
                         
                         // Favorite
                         Toggle("Favorite", isOn: $draftFoodItem.favorite)
@@ -57,31 +57,28 @@ struct FoodItemEditor: View {
                     Section(header: Text("Nutritional values per 100g:")) {
                         // Calories
                         HStack {
-                            TextField("Calories per 100g", text: $draftFoodItem.caloriesPer100gAsString)
-                                .keyboardType(.decimalPad)
+                            CustomTextField(titleKey: "Calories per 100g", text: $draftFoodItem.caloriesPer100gAsString, keyboardType: .decimalPad)
                             Text("kcal")
                         }
                         
                         // Carbs
                         HStack {
-                            TextField("Carbs per 100g", text: $draftFoodItem.carbsPer100gAsString)
-                                .keyboardType(.decimalPad)
+                            CustomTextField(titleKey: "Carbs per 100g", text: $draftFoodItem.carbsPer100gAsString, keyboardType: .decimalPad)
                             Text("g Carbs")
                         }
                         
                         // Sugars
                         HStack {
-                            TextField("Thereof Sugars per 100g", text: $draftFoodItem.sugarsPer100gAsString)
-                                .keyboardType(.decimalPad)
+                            CustomTextField(titleKey: "Thereof Sugars per 100g", text: $draftFoodItem.sugarsPer100gAsString, keyboardType: .decimalPad)
                             Text("g Sugars")
                         }
                     }
                     
                     Section(header: Text("Typical amounts:")) {
                         HStack {
-                            TextField("Amount", text: $newTypicalAmount).keyboardType(.decimalPad)
+                            CustomTextField(titleKey: "Amount", text: $newTypicalAmount, keyboardType: .decimalPad)
                             Text("g")
-                            TextField("Comment", text: $newTypicalAmountComment)
+                            CustomTextField(titleKey: "Comment", text: $newTypicalAmountComment, keyboardType: .default)
                             Button(action: {
                                 self.addTypicalAmount()
                             }) {
@@ -90,38 +87,40 @@ struct FoodItemEditor: View {
                         }
                     }
                     
-                    Section(footer: Text("Tap to edit")) {
-                        ForEach(self.typicalAmounts, id: \.self) { typicalAmount in
-                            HStack {
+                    if self.typicalAmounts.count > 0 {
+                        Section(footer: Text("Tap to edit")) {
+                            ForEach(self.typicalAmounts, id: \.self) { typicalAmount in
                                 HStack {
-                                    Text(typicalAmount.amountAsString)
-                                    Text("g")
-                                    Text(typicalAmount.comment)
-                                }
-                                .onTapGesture {
-                                    self.newTypicalAmount = typicalAmount.amountAsString
-                                    self.newTypicalAmountComment = typicalAmount.comment
-                                    self.newTypicalAmountId = typicalAmount.id
-                                    self.updateButton = true
-                                }
-                                
-                                Spacer()
-                                Button(action: {
-                                    // First clear edit fields if filled
-                                    if self.updateButton {
-                                        self.newTypicalAmount = ""
-                                        self.newTypicalAmountComment = ""
-                                        self.newTypicalAmountId = nil
-                                        self.updateButton.toggle()
+                                    HStack {
+                                        Text(typicalAmount.amountAsString)
+                                        Text("g")
+                                        Text(typicalAmount.comment)
+                                    }
+                                    .onTapGesture {
+                                        self.newTypicalAmount = typicalAmount.amountAsString
+                                        self.newTypicalAmountComment = typicalAmount.comment
+                                        self.newTypicalAmountId = typicalAmount.id
+                                        self.updateButton = true
                                     }
                                     
-                                    // Then delete typical amount
-                                    self.deleteTypicalAmount(typicalAmount)
-                                }) {
-                                    Image(systemName: "xmark.circle").foregroundColor(.red)
+                                    Spacer()
+                                    Button(action: {
+                                        // First clear edit fields if filled
+                                        if self.updateButton {
+                                            self.newTypicalAmount = ""
+                                            self.newTypicalAmountComment = ""
+                                            self.newTypicalAmountId = nil
+                                            self.updateButton.toggle()
+                                        }
+                                        
+                                        // Then delete typical amount
+                                        self.deleteTypicalAmount(typicalAmount)
+                                    }) {
+                                        Image(systemName: "xmark.circle").foregroundColor(.red)
+                                    }
                                 }
-                            }
-                        }.onDelete(perform: deleteTypicalAmount)
+                            }.onDelete(perform: deleteTypicalAmount)
+                        }
                     }
                     
                     // Delete food item (only when editing an existing food item)
@@ -129,7 +128,7 @@ struct FoodItemEditor: View {
                         Section {
                             Button(action: {
                                 // First close the sheet
-                                self.isPresented = false
+                                presentation.wrappedValue.dismiss()
                                 
                                 // Then delete all related typical amounts
                                 for typicalAmount in self.typicalAmounts {
@@ -162,7 +161,7 @@ struct FoodItemEditor: View {
                 leading: HStack {
                     Button(action: {
                         // First quit edit mode
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                         
                         // Then undo the changes made to typical amounts
                         for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
@@ -243,7 +242,7 @@ struct FoodItemEditor: View {
                         try? AppDelegate.viewContext.save()
                         
                         // Quit edit mode
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     } else { // Invalid data, display alert
                         // Evaluate error
                         switch error {
@@ -289,7 +288,7 @@ struct FoodItemEditor: View {
             )
         }
         .sheet(isPresented: self.$showingSheet) {
-            HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
+            HelpView(helpScreen: self.helpScreen)
         }
         .onAppear() {
             self.oldName = self.draftFoodItem.name

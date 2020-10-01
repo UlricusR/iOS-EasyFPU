@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct AbsorptionSchemeEditor: View {
-    @Binding var isPresented: Bool
     @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var editedAbsorptionScheme: AbsorptionScheme
     @State private var newMaxFpu: String = ""
@@ -22,6 +21,7 @@ struct AbsorptionSchemeEditor: View {
     @State private var showingScreen = false
     private let helpScreen = HelpScreen.absorptionSchemeEditor
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.presentationMode) var presentation
     
     var body: some View {
         NavigationView {
@@ -58,9 +58,9 @@ struct AbsorptionSchemeEditor: View {
                 // The absorption block add/edit form
                 Section(header: self.updateButton ? Text("Edit absorption block:") : Text("New absorption block:")) {
                     HStack {
-                        TextField("Max. FPUs", text: $newMaxFpu).keyboardType(.decimalPad)
+                        CustomTextField(titleKey: "Max. FPUs", text: $newMaxFpu, keyboardType: .decimalPad)
                         Text("FPU -")
-                        TextField("Absorption time", text: $newAbsorptionTime).keyboardType(.decimalPad)
+                        CustomTextField(titleKey: "Absorption time", text: $newAbsorptionTime, keyboardType: .decimalPad)
                         Text("h")
                         Button(action: {
                             if self.newAbsorptionBlockId == nil { // This is a new absorption block
@@ -120,19 +120,19 @@ struct AbsorptionSchemeEditor: View {
                     if draftAbsorptionScheme.treatSugarsSeparately {
                         HStack {
                             Text("Delay")
-                            TextField("Delay", text: $draftAbsorptionScheme.delaySugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                            CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delaySugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                             Text("min")
                         }
                         
                         HStack {
                             Text("Interval")
-                            TextField("Interval", text: $draftAbsorptionScheme.intervalSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                            CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalSugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                             Text("min")
                         }
                         
                         HStack {
                             Text("Duration")
-                            TextField("Duration", text: $draftAbsorptionScheme.durationSugarsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                            CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationSugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                             Text("h")
                         }
                         
@@ -149,19 +149,19 @@ struct AbsorptionSchemeEditor: View {
                 Section(header: Text("Absorption Time Parameters for Carbs")) {
                     HStack {
                         Text("Delay")
-                        TextField("Delay", text: $draftAbsorptionScheme.delayCarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("Interval")
-                        TextField("Interval", text: $draftAbsorptionScheme.intervalCarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("Duration")
-                        TextField("Duration", text: $draftAbsorptionScheme.durationCarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("h")
                     }
                     
@@ -177,19 +177,19 @@ struct AbsorptionSchemeEditor: View {
                 Section(header: Text("Absorption Time Parameters for e-Carbs")) {
                     HStack {
                         Text("Delay")
-                        TextField("Delay", text: $draftAbsorptionScheme.delayECarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayECarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("Interval")
-                        TextField("Interval", text: $draftAbsorptionScheme.intervalECarbsAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalECarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("min")
                     }
                     
                     HStack {
                         Text("e-Carbs Factor")
-                        TextField("e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString).keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        CustomTextField(titleKey: "e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
                         Text("g/FPU")
                     }
                     
@@ -208,7 +208,7 @@ struct AbsorptionSchemeEditor: View {
             .navigationBarItems(
                 leading: HStack {
                     Button(action: {
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     }) {
                         Text("Cancel")
                     }
@@ -277,7 +277,7 @@ struct AbsorptionSchemeEditor: View {
                         UserSettings.shared.objectWillChange.send()
                         
                         // Close sheet
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     }
                 }) {
                     // Quit edit mode
@@ -296,7 +296,7 @@ struct AbsorptionSchemeEditor: View {
             )
         }
         .sheet(isPresented: self.$showingScreen) {
-            HelpView(isPresented: self.$showingScreen, helpScreen: self.helpScreen)
+            HelpView(helpScreen: self.helpScreen)
         }
     }
     

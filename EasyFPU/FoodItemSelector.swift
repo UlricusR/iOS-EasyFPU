@@ -10,7 +10,7 @@ import SwiftUI
 
 struct FoodItemSelector: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Binding var isPresented: Bool
+    @Environment(\.presentationMode) var presentation
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem
     @State private var showingAlert = false
@@ -28,8 +28,7 @@ struct FoodItemSelector: View {
                     Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text("Enter amount consumed") : Text("Enter amount consumed or select typical amount")) {
                         HStack {
                             Text("Amount consumed")
-                            TextField("Amount consumed", text: self.$draftFoodItem.amountAsString)
-                                .keyboardType(.numberPad)
+                            CustomTextField(titleKey: "Amount consumed", text: self.$draftFoodItem.amountAsString, keyboardType: .numberPad)
                                 .multilineTextAlignment(.trailing)
                             Text("g")
                         }
@@ -49,7 +48,7 @@ struct FoodItemSelector: View {
                         if self.addToTypicalAmounts {
                             // User wants to add amount to typical amounts, so comment is required
                             HStack {
-                                TextField("Comment", text: self.$newTypicalAmountComment)
+                                CustomTextField(titleKey: "Comment", text: self.$newTypicalAmountComment, keyboardType: .default)
                                 Button(action: {
                                     self.addTypicalAmount()
                                 }) {
@@ -88,7 +87,7 @@ struct FoodItemSelector: View {
                 leading: HStack {
                     Button(action: {
                         // Do nothing, just quit edit mode, as food item hasn't been modified
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     }) {
                         Text("Cancel")
                     }
@@ -114,7 +113,7 @@ struct FoodItemSelector: View {
                         try? AppDelegate.viewContext.save()
                         
                         // Quit edit mode
-                        self.isPresented = false
+                        presentation.wrappedValue.dismiss()
                     case .failure(let err):
                         // Display alert and stay in edit mode
                         self.errorMessage = DataHelper.getErrorMessage(from: err)
@@ -134,7 +133,7 @@ struct FoodItemSelector: View {
             )
         }
         .sheet(isPresented: self.$showingSheet) {
-            HelpView(isPresented: self.$showingSheet, helpScreen: self.helpScreen)
+            HelpView(helpScreen: self.helpScreen)
         }
     }
     

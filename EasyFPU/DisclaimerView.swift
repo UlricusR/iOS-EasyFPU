@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct DisclaimerView: View {
-    @Binding var isDisplayed: Bool
     @State private var alertTitle = ""
     @State private var alertMessage = ""
     @State private var showingAlert = false
+    @Environment(\.presentationMode) var presentation
     
     var body: some View {
         NavigationView {
@@ -50,7 +50,7 @@ struct DisclaimerView: View {
                         self.alertMessage = settingsError
                         self.showingAlert = true
                     }
-                    self.isDisplayed = false
+                    presentation.wrappedValue.dismiss()
                 }) {
                     Text("Accept")
                 }
