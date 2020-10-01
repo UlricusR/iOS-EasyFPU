@@ -251,6 +251,17 @@ struct FoodList: View {
     
     private func importJSON(_ url: URL) {
         debugPrint("Trying to import following file: \(url)")
+        
+        // Make sure we can access file
+        guard url.startAccessingSecurityScopedResource() else {
+            debugPrint("Failed to access \(url)")
+            errorMessage = "Failed to access \(url)"
+            showingAlert = true
+            return
+        }
+        defer { url.stopAccessingSecurityScopedResource() }
+        
+        // Read data
         var jsonData: Data
         do {
             jsonData = try Data(contentsOf: url)
@@ -261,6 +272,7 @@ struct FoodList: View {
             return
         }
         
+        // Decode JSON
         let decoder = JSONDecoder()
         
         do {
@@ -285,6 +297,16 @@ struct FoodList: View {
     }
     
     private func exportJSON(_ url: URL) {
+        // Make sure we can access file
+        guard url.startAccessingSecurityScopedResource() else {
+            debugPrint("Failed to access \(url)")
+            errorMessage = "Failed to access \(url)"
+            showingAlert = true
+            return
+        }
+        defer { url.stopAccessingSecurityScopedResource() }
+        
+        // Write file
         var fileName = ""
         if DataHelper.exportFoodItems(url, fileName: &fileName) {
             errorMessage = NSLocalizedString("Successfully exported food list to: ", comment: "") + fileName
