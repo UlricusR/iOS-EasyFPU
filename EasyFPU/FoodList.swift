@@ -23,6 +23,7 @@ struct FoodList: View {
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     @ObservedObject var absorptionScheme = AbsorptionScheme()
+    @ObservedObject var userSettings = UserSettings.shared
     
     @State private var activeSheet: FoodListSheets.State?
     
@@ -42,7 +43,6 @@ struct FoodList: View {
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
-    @State private var disclaimerViewIsDisplayed = !(UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.disclaimerAccepted) ?? false)
     private let helpScreen = HelpScreen.foodList
 
     var filteredFoodItems: [FoodItemViewModel] {
@@ -73,7 +73,7 @@ struct FoodList: View {
             }
         }
         
-        if self.disclaimerViewIsDisplayed {
+        if !userSettings.disclaimerAccepted {
             return AnyView(
                 DisclaimerView()
             )

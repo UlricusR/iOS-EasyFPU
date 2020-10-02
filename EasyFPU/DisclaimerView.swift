@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct DisclaimerView: View {
+    @Environment(\.presentationMode) var presentation
     @State private var alertTitle = ""
     @State private var alertMessage = ""
     @State private var showingAlert = false
-    @Environment(\.presentationMode) var presentation
     
     var body: some View {
         NavigationView {
@@ -50,6 +50,12 @@ struct DisclaimerView: View {
                         self.alertMessage = settingsError
                         self.showingAlert = true
                     }
+                    
+                    // Set dynamic variable and broadcast change in UserSettings
+                    UserSettings.shared.disclaimerAccepted = true
+                    UserSettings.shared.objectWillChange.send()
+                    
+                    // Dismiss sheet (if this is a sheet)
                     presentation.wrappedValue.dismiss()
                 }) {
                     Text("Accept")

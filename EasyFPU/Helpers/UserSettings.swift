@@ -44,7 +44,7 @@ class UserSettings: ObservableObject {
     private static var keyStore = NSUbiquitousKeyValueStore()
     
     // MARK: - Dynamic user settings are treated here
-    
+    @Published var disclaimerAccepted: Bool
     @Published var absorptionTimeSugarsDelayInMinutes: Int
     @Published var absorptionTimeSugarsIntervalInMinutes: Int
     @Published var absorptionTimeSugarsDurationInHours: Double
@@ -57,6 +57,7 @@ class UserSettings: ObservableObject {
     @Published var treatSugarsSeparately: Bool
     
     static let shared = UserSettings(
+        disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
         absorptionTimeSugarsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeSugarsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault,
         absorptionTimeSugarsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeSugarsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault,
         absorptionTimeSugarsDurationInHours: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeSugarsDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault,
@@ -70,6 +71,7 @@ class UserSettings: ObservableObject {
     )
     
     private init(
+        disclaimerAccepted: Bool,
         absorptionTimeSugarsDelayInMinutes: Int,
         absorptionTimeSugarsIntervalInMinutes: Int,
         absorptionTimeSugarsDurationInHours: Double,
@@ -81,6 +83,7 @@ class UserSettings: ObservableObject {
         eCarbsFactor: Double,
         treatSugarsSeparately: Bool
     ) {
+        self.disclaimerAccepted = disclaimerAccepted
         self.absorptionTimeSugarsDelayInMinutes = absorptionTimeSugarsDelayInMinutes // in minutes
         self.absorptionTimeSugarsIntervalInMinutes = absorptionTimeSugarsIntervalInMinutes // in minutes
         self.absorptionTimeSugarsDurationInHours = absorptionTimeSugarsDurationInHours // in hours
