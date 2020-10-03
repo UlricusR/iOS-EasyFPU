@@ -48,4 +48,14 @@ class MealViewModel {
     func getSugars(when treatSugarsSeparately: Bool) -> Double {
         treatSugarsSeparately ? self.sugars : 0
     }
+    
+    func clear() {
+        for foodItem in foodItems {
+            foodItem.amountAsString = "0"
+            foodItem.cdFoodItem?.amount = 0
+            try? AppDelegate.viewContext.save()
+            
+            UserSettings.shared.mealDelayInMinutes = 0
+        }
+    }
 }
