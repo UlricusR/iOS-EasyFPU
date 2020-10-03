@@ -13,6 +13,7 @@ struct MealExportView: View {
     @Environment(\.presentationMode) var presentation
     var meal: MealViewModel
     var absorptionScheme: AbsorptionScheme
+    @ObservedObject var userSettings = UserSettings.shared
     @ObservedObject var carbsRegimeCalculator = CarbsRegimeCalculator.default
     @State var showingSheet = false
     @State var showingAlert = false
@@ -26,7 +27,7 @@ struct MealExportView: View {
             VStack(alignment: .leading) {
                 Text("Please choose the data to export:").padding()
                 
-                if UserSettings.shared.treatSugarsSeparately {
+                if userSettings.treatSugarsSeparately {
                     Toggle(isOn: $carbsRegimeCalculator.includeTotalMealSugars) {
                         Text("Sugars")
                     }
@@ -49,11 +50,15 @@ struct MealExportView: View {
                 
                 HStack {
                     Stepper("Delay until meal", onIncrement: {
-                        carbsRegimeCalculator.mealDelayInMinutes += 5
+                        userSettings.mealDelayInMinutes += 5
+                        userSettings.objectWillChange.send()
+                        carbsRegimeCalculator.recalculate()
                     }, onDecrement: {
-                        carbsRegimeCalculator.mealDelayInMinutes = max(carbsRegimeCalculator.mealDelayInMinutes - 5, 0)
+                        userSettings.mealDelayInMinutes = max(userSettings.mealDelayInMinutes - 5, 0)
+                        userSettings.objectWillChange.send()
+                        carbsRegimeCalculator.recalculate()
                     })
-                    Text(String(carbsRegimeCalculator.mealDelayInMinutes))
+                    Text(String(userSettings.mealDelayInMinutes))
                     Text("min")
                 }.padding()
                 

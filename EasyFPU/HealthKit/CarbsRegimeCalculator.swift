@@ -32,11 +32,6 @@ class CarbsRegimeCalculator: ObservableObject {
             recalculate()
         }
     }
-    @Published var mealDelayInMinutes: Int = 0 {
-        didSet {
-            recalculate()
-        }
-    }
     var meal: MealViewModel
     var absorptionTimeInMinutes: Int
     
@@ -58,13 +53,12 @@ class CarbsRegimeCalculator: ObservableObject {
         absorptionTimeInHours: 5,
         includeSugars: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealSugars) ?? false,
         includeTotalMealCarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false,
-        includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true,
-        mealDelayInMinutes: 0
+        includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true
     )
     
     // MARK: - Initializers
     
-    init(meal: MealViewModel, absorptionTimeInHours: Int, includeSugars: Bool, includeTotalMealCarbs: Bool, includeECarbs: Bool, mealDelayInMinutes: Int) {
+    init(meal: MealViewModel, absorptionTimeInHours: Int, includeSugars: Bool, includeTotalMealCarbs: Bool, includeECarbs: Bool) {
         self.hkObjects = [HKObject]()
         self.sugarsEntries = [Date: CarbsEntry]()
         self.carbsEntries = [Date: CarbsEntry]()
@@ -74,7 +68,6 @@ class CarbsRegimeCalculator: ObservableObject {
         self.includeTotalMealCarbs = includeTotalMealCarbs
         self.includeECarbs = includeECarbs
         self.absorptionTimeInMinutes = absorptionTimeInHours * 60
-        self.mealDelayInMinutes = mealDelayInMinutes
         
         // Determine parameters
         self.setParameters()
@@ -100,7 +93,7 @@ class CarbsRegimeCalculator: ObservableObject {
     
     private func setParameters() {
         now = Date()
-        let mealStartTime = now.addingTimeInterval(TimeInterval(mealDelayInMinutes * 60))
+        let mealStartTime = now.addingTimeInterval(TimeInterval(UserSettings.shared.mealDelayInMinutes * 60))
         
         // Determine global start and end time
         globalStartTime = now // Start is always now, as we want to visualize the idle time before any carbs hit the body

@@ -55,6 +55,7 @@ class UserSettings: ObservableObject {
     @Published var absorptionTimeECarbsIntervalInMinutes: Int
     @Published var eCarbsFactor: Double
     @Published var treatSugarsSeparately: Bool
+    @Published var mealDelayInMinutes: Int = 0
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
