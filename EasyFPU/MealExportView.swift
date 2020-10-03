@@ -45,6 +45,16 @@ struct MealExportView: View {
                 
                 Toggle(isOn: $exportTotalMealCalories) {
                     Text("Total Meal Calories")
+                }.padding([.leading, .trailing, .top])
+                
+                HStack {
+                    Stepper("Delay until meal", onIncrement: {
+                        carbsRegimeCalculator.mealDelayInMinutes += 5
+                    }, onDecrement: {
+                        carbsRegimeCalculator.mealDelayInMinutes = max(carbsRegimeCalculator.mealDelayInMinutes - 5, 0)
+                    })
+                    Text(String(carbsRegimeCalculator.mealDelayInMinutes))
+                    Text("min")
                 }.padding()
                 
                 Button(action: {

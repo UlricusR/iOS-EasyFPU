@@ -166,6 +166,7 @@
 "Please select at least one entry to export" = "Bitte mindestens einen Eintrag zum Export auswählen";
 "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fataler Fehler, kann Daten nicht exportieren, bitte den App-Entwickler informieren: Absorptionsschema hat keine Absorptionsblöcke";
 "Preview of exported carbs in g" = "Vorschau der exportierten Kohlenhydrate in g";
+"Delay until meal" = "Verzögerung bis zur Mahlzeit";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";

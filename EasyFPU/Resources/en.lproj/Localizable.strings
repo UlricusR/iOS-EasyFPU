@@ -165,6 +165,7 @@
 "Please select at least one entry to export" = "Please select at least one entry to export";
 "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks";
 "Preview of exported carbs in g" = "Preview of exported carbs in g";
+"Delay until meal" = "Delay until meal";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";

@@ -32,9 +32,13 @@ class CarbsRegimeCalculator: ObservableObject {
             recalculate()
         }
     }
+    @Published var mealDelayInMinutes: Int = 0 {
+        didSet {
+            recalculate()
+        }
+    }
     var meal: MealViewModel
     var absorptionTimeInMinutes: Int
-    
     
     // Parameters that change every time the carbs regime is changed by the user (e.g. include sugars, exclude carbs, etc.)
     // We set these to default values, but need give them proper values in the initializer / in the setParameters function
@@ -54,12 +58,13 @@ class CarbsRegimeCalculator: ObservableObject {
         absorptionTimeInHours: 5,
         includeSugars: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealSugars) ?? false,
         includeTotalMealCarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false,
-        includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true
+        includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true,
+        mealDelayInMinutes: 0
     )
     
     // MARK: - Initializers
     
-    init(meal: MealViewModel, absorptionTimeInHours: Int, includeSugars: Bool, includeTotalMealCarbs: Bool, includeECarbs: Bool) {
+    init(meal: MealViewModel, absorptionTimeInHours: Int, includeSugars: Bool, includeTotalMealCarbs: Bool, includeECarbs: Bool, mealDelayInMinutes: Int) {
         self.hkObjects = [HKObject]()
         self.sugarsEntries = [Date: CarbsEntry]()
         self.carbsEntries = [Date: CarbsEntry]()
@@ -69,6 +74,7 @@ class CarbsRegimeCalculator: ObservableObject {
         self.includeTotalMealCarbs = includeTotalMealCarbs
         self.includeECarbs = includeECarbs
         self.absorptionTimeInMinutes = absorptionTimeInHours * 60
+        self.mealDelayInMinutes = mealDelayInMinutes
         
         // Determine parameters
         self.setParameters()
@@ -94,19 +100,20 @@ class CarbsRegimeCalculator: ObservableObject {
     
     private func setParameters() {
         now = Date()
+        let mealStartTime = now.addingTimeInterval(TimeInterval(mealDelayInMinutes * 60))
         
         // Determine global start and end time
         globalStartTime = now // Start is always now, as we want to visualize the idle time before any carbs hit the body
         globalEndTime = max(
-            now.addingTimeInterval(includeTotalMealSugars ? (Double(UserSettings.shared.absorptionTimeSugarsDelayInMinutes) + UserSettings.shared.absorptionTimeSugarsDurationInHours * 60) * 60 : 0), // either sugars start + duration or zero
-            now.addingTimeInterval(includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeCarbsDelayInMinutes) + UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) * 60 : 0), // either carbs start + duration or zero
-            now.addingTimeInterval(includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + absorptionTimeInMinutes) * 60) : 0) // either eCarbs start + duration or zero
+            mealStartTime.addingTimeInterval(includeTotalMealSugars ? (Double(UserSettings.shared.absorptionTimeSugarsDelayInMinutes) + UserSettings.shared.absorptionTimeSugarsDurationInHours * 60) * 60 : 0), // either sugars start + duration or zero
+            mealStartTime.addingTimeInterval(includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeCarbsDelayInMinutes) + UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) * 60 : 0), // either carbs start + duration or zero
+            mealStartTime.addingTimeInterval(includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + absorptionTimeInMinutes) * 60) : 0) // either eCarbs start + duration or zero
         )
         intervalInMinutes = DataHelper.gcd([UserSettings.shared.absorptionTimeSugarsIntervalInMinutes, UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, UserSettings.shared.absorptionTimeECarbsIntervalInMinutes])
         
-        sugarsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeSugarsDelayInMinutes * 60))
-        carbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
-        eCarbsStart = now.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
+        sugarsStart = mealStartTime.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeSugarsDelayInMinutes * 60))
+        carbsStart = mealStartTime.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
+        eCarbsStart = mealStartTime.addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeECarbsDelayInMinutes * 60))
         
         if includeTotalMealSugars { calculateTotalMealSugars() }
         if includeTotalMealCarbs { calculateTotalMealCarbs() }
