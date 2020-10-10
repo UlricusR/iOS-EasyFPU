@@ -53,9 +53,9 @@ class MealViewModel {
         for foodItem in foodItems {
             foodItem.amountAsString = "0"
             foodItem.cdFoodItem?.amount = 0
-            try? AppDelegate.viewContext.save()
             
             UserSettings.shared.mealDelayInMinutes = 0
         }
+        try? AppDelegate.viewContext.save()
     }
 }
