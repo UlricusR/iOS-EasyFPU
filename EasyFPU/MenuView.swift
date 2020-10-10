@@ -25,7 +25,7 @@ struct MenuView: View {
             Button(action: {
                 activeSheet = .editAbsorptionScheme
             }) {
-                Text("Absorption scheme")
+                Text("Settings")
             }
             .foregroundColor(.gray)
             .padding(.top, 50)
@@ -97,7 +97,7 @@ struct MenuView: View {
     private func sheetContent(_ state: MenuViewSheets.State) -> some View {
         switch state {
         case .editAbsorptionScheme:
-            AbsorptionSchemeEditor(draftAbsorptionScheme: self.draftAbsorptionScheme, editedAbsorptionScheme: absorptionScheme)
+            SettingsEditor(draftAbsorptionScheme: self.draftAbsorptionScheme, editedAbsorptionScheme: absorptionScheme)
                     .environment(\.managedObjectContext, managedObjectContext)
         case .pickFileToImport:
             FilePickerView(callback: filePicked, documentTypes: [kUTTypeText as String])

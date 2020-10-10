@@ -10,8 +10,9 @@ import SwiftUI
 
 struct MealCarbsView: View {
     var meal: MealViewModel
+    @ObservedObject var userSettings = UserSettings.shared
     var regularCarbsTimeAsString: String {
-        let time = Date().addingTimeInterval(TimeInterval(UserSettings.shared.absorptionTimeCarbsDelayInMinutes * 60))
+        let time = Date().addingTimeInterval(TimeInterval((userSettings.absorptionTimeCarbsDelayInMinutes + userSettings.mealDelayInMinutes) * 60))
         return ChartBar.timeStyle.string(from: time)
     }
     static let color = Color.green
@@ -34,12 +35,12 @@ struct MealCarbsView: View {
             
             VStack(alignment: .leading) { // Answers
                 HStack {
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.getRegularCarbs(when: UserSettings.shared.treatSugarsSeparately)))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.getRegularCarbs(when: userSettings.treatSugarsSeparately)))!)
                     Text("g Carbs")
                 }
                 HStack {
                     Text("In")
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeCarbsDelayInMinutes))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: userSettings.absorptionTimeCarbsDelayInMinutes + userSettings.mealDelayInMinutes))!)
                     Text("min at")
                     Text(self.regularCarbsTimeAsString)
                 }

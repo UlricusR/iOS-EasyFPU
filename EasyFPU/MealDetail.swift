@@ -12,6 +12,7 @@ struct MealDetail: View {
     @Environment(\.presentationMode) var presentation
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var meal: MealViewModel
+    @ObservedObject var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
     @State var activeSheet: MealDetailSheets.State?
     @State private var showDetails = false
@@ -27,7 +28,21 @@ struct MealDetail: View {
         NavigationView {
             VStack(alignment: .leading) {
                 VStack() {
-                    if UserSettings.shared.treatSugarsSeparately { MealSugarsView(meal: self.meal) }
+                    // The meal delay stepper
+                    HStack {
+                        Stepper("Delay until meal", onIncrement: {
+                            userSettings.mealDelayInMinutes += 5
+                            userSettings.objectWillChange.send()
+                        }, onDecrement: {
+                            userSettings.mealDelayInMinutes = max(userSettings.mealDelayInMinutes - 5, 0)
+                            userSettings.objectWillChange.send()
+                        })
+                        Text(String(userSettings.mealDelayInMinutes))
+                        Text("min")
+                    }.padding()
+                    
+                    // The carbs views
+                    if userSettings.treatSugarsSeparately { MealSugarsView(meal: self.meal) }
                     MealCarbsView(meal: self.meal).padding(.top)
                     MealECarbsView(meal: self.meal, absorptionScheme: self.absorptionScheme).padding(.top)
                 }.padding()

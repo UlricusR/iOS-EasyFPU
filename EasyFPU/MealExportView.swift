@@ -13,10 +13,13 @@ struct MealExportView: View {
     @Environment(\.presentationMode) var presentation
     var meal: MealViewModel
     var absorptionScheme: AbsorptionScheme
+    @ObservedObject var userSettings = UserSettings.shared
     @ObservedObject var carbsRegimeCalculator = CarbsRegimeCalculator.default
     @State var showingSheet = false
     @State var showingAlert = false
     @State var errorMessage = ""
+    @State var showingExportWarning = false
+    @State var alertMessages = [String]()
     private let helpScreen = HelpScreen.mealExport
     
     @State var exportTotalMealCalories = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCalories) ?? false
@@ -26,7 +29,7 @@ struct MealExportView: View {
             VStack(alignment: .leading) {
                 Text("Please choose the data to export:").padding()
                 
-                if UserSettings.shared.treatSugarsSeparately {
+                if userSettings.treatSugarsSeparately {
                     Toggle(isOn: $carbsRegimeCalculator.includeTotalMealSugars) {
                         Text("Sugars")
                     }
@@ -45,10 +48,24 @@ struct MealExportView: View {
                 
                 Toggle(isOn: $exportTotalMealCalories) {
                     Text("Total Meal Calories")
+                }.padding([.leading, .trailing, .top])
+                
+                HStack {
+                    Stepper("Delay until meal", onIncrement: {
+                        userSettings.mealDelayInMinutes += 5
+                        userSettings.objectWillChange.send()
+                        carbsRegimeCalculator.recalculate()
+                    }, onDecrement: {
+                        userSettings.mealDelayInMinutes = max(userSettings.mealDelayInMinutes - 5, 0)
+                        userSettings.objectWillChange.send()
+                        carbsRegimeCalculator.recalculate()
+                    })
+                    Text(String(userSettings.mealDelayInMinutes))
+                    Text("min")
                 }.padding()
                 
                 Button(action: {
-                    self.exportHealthSample()
+                    self.prepareHealthSampleExport()
                 }) {
                     Image(systemName: "square.and.arrow.up")
                     Text("Export").fontWeight(.bold)
@@ -104,6 +121,15 @@ struct MealExportView: View {
         .sheet(isPresented: self.$showingSheet) {
             HelpView(helpScreen: self.helpScreen)
         }
+        .actionSheet(isPresented: $showingExportWarning) {
+            ActionSheet(title: Text("Warning"), message: Text(getExportWarningText()), buttons: [
+                .default(Text("Export anyway")) {
+                    alertMessages.removeAll()
+                    exportHealthSample()
+                },
+                .cancel()
+            ])
+        }
     }
     
     private func processHealthSample() {
@@ -115,6 +141,19 @@ struct MealExportView: View {
         self.carbsRegimeCalculator.meal = meal
         self.carbsRegimeCalculator.absorptionTimeInMinutes = absorptionTimeInHours * 60
         self.carbsRegimeCalculator.recalculate()
+    }
+    
+    private func prepareHealthSampleExport() {
+        // Check for recent exports
+        if carbsRegimeCalculator.includeTotalMealSugars { checkForRecentExports(of: UserSettings.UserDefaultsDateKey.lastSugarsExport) }
+        if carbsRegimeCalculator.includeTotalMealCarbs { checkForRecentExports(of: UserSettings.UserDefaultsDateKey.lastCarbsExport) }
+        if carbsRegimeCalculator.includeECarbs { checkForRecentExports(of: UserSettings.UserDefaultsDateKey.lastECarbsExport) }
+        if exportTotalMealCalories { checkForRecentExports(of: UserSettings.UserDefaultsDateKey.lastCaloriesExport) }
+        if alertMessages.count > 0 {
+            showingExportWarning = true
+        } else {
+            exportHealthSample()
+        }
     }
     
     private func exportHealthSample() {
@@ -133,6 +172,7 @@ struct MealExportView: View {
                         self.errorMessage += error != nil ? error!.localizedDescription : NSLocalizedString("Unspecified error", comment: "")
                         self.showingAlert = true
                     } else {
+                        self.setLatestExportDates()
                         self.errorMessage = NSLocalizedString("Successfully exported data to Health", comment: "")
                         self.showingAlert = true
                     }
@@ -144,6 +184,40 @@ struct MealExportView: View {
                     self.errorMessage = NSLocalizedString("Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings.", comment: "")
                 }
                 self.showingAlert = true
+            }
+        }
+    }
+    
+    private func checkForRecentExports(of settingsKey: UserSettings.UserDefaultsDateKey) {
+        guard let lastDataExport = UserSettings.getValue(for: settingsKey) else { return }
+        if carbsRegimeCalculator.now.timeIntervalSinceReferenceDate - lastDataExport.timeIntervalSinceReferenceDate <= TimeInterval(userSettings.alertPeriodAfterExportInMinutes * 60) {
+            alertMessages.append(NSLocalizedString(settingsKey.rawValue, comment: ""))
+        }
+    }
+    
+    private func getExportWarningText() -> String {
+        NSLocalizedString("You have exported the following data less than ", comment: "") + "\(userSettings.alertPeriodAfterExportInMinutes)" + NSLocalizedString(" minutes ago: ", comment: "") + alertMessages.joined(separator: ", ")
+    }
+    
+    private func setLatestExportDates() {
+        if exportTotalMealCalories {
+            if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastCaloriesExport), errorMessage: &errorMessage) {
+                showingAlert = true
+            }
+        }
+        if carbsRegimeCalculator.includeTotalMealSugars {
+            if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastSugarsExport), errorMessage: &errorMessage) {
+                showingAlert = true
+            }
+        }
+        if carbsRegimeCalculator.includeTotalMealCarbs {
+            if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastCarbsExport), errorMessage: &errorMessage) {
+                showingAlert = true
+            }
+        }
+        if carbsRegimeCalculator.includeECarbs {
+            if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastECarbsExport), errorMessage: &errorMessage) {
+                showingAlert = true
             }
         }
     }

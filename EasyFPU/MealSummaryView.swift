@@ -21,7 +21,14 @@ struct MealSummaryView: View {
         Divider()
         
         HStack(alignment: .center) {
+            Button(action: {
+                meal.clear()
+            }) {
+                Image(systemName: "xmark.circle").foregroundColor(.red).imageScale(.large).padding([.leading, .trailing])
+            }
+            
             Text("Total meal").font(.headline).multilineTextAlignment(.center)
+            
             Button(action: {
                 activeFoodListSheet = .mealDetails
             }) {
