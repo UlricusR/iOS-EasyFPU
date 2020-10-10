@@ -23,6 +23,8 @@ struct MealSummaryView: View {
         HStack(alignment: .center) {
             Button(action: {
                 meal.clear()
+                UserSettings.shared.mealDelayInMinutes = 0
+                UserSettings.shared.objectWillChange.send()
             }) {
                 Image(systemName: "xmark.circle").foregroundColor(.red).imageScale(.large).padding([.leading, .trailing])
             }
