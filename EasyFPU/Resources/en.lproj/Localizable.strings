@@ -129,8 +129,11 @@
 "Interval" = "Interval";
 "min" = "min";
 "Treat sugars separately" = "Treat sugars separately";
+"Other Parameters" = "Other Parameters";
+"Alert duration between exports" = "Alert duration between exports";
 
 // Menu actions
+"Settings" = "Settings";
 "Import from JSON" = "Import (format: JSON)";
 "Export to JSON" = "Export (format: JSON)";
 "Successfully exported food list to: " = "Successfully exported food list to: ";
@@ -166,6 +169,14 @@
 "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks";
 "Preview of exported carbs in g" = "Preview of exported carbs in g";
 "Delay until meal" = "Meal starts in";
+"LastSugarsExport" = "sugars";
+"LastCarbsExport" = "carbs";
+"LastECarbsExport" = "e-carbs";
+"LastCaloriesExport" = "calories";
+"Warning" = "Warning";
+"You have exported the following data less than " = "You have exported the following data less than ";
+" minutes ago: " = " minutes ago: ";
+"Export anyway" = "Export anyway";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";

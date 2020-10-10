@@ -130,8 +130,11 @@
 "Interval" = "Intervall";
 "min" = "min";
 "Treat sugars separately" = "KH aus Zucker separat behandeln";
+"Other Parameters" = "Andere Einstellungen";
+"Alert duration between exports" = "Hinweis-Dauer zwischen Exporten";
 
 // Menu actions
+"Settings" = "Einstellungen";
 "Import from JSON" = "Importieren (Format: JSON)";
 "Export to JSON" = "Exportieren (Format: JSON)";
 "Successfully exported food list to: " = "Essensliste erfolgreich exportiert nach: ";
@@ -167,6 +170,14 @@
 "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fataler Fehler, kann Daten nicht exportieren, bitte den App-Entwickler informieren: Absorptionsschema hat keine Absorptionsblöcke";
 "Preview of exported carbs in g" = "Vorschau der exportierten Kohlenhydrate in g";
 "Delay until meal" = "Mahlzeit beginnt in";
+"LastSugarsExport" = "Zucker";
+"LastCarbsExport" = "reguläre Kohlenhydrate";
+"LastECarbsExport" = "verlängerte Kohlenhydrate";
+"LastCaloriesExport" = "Kalorien";
+"Warning" = "Achtung!";
+"You have exported the following data less than " = "Sie haben folgende Daten vor weniger als ";
+" minutes ago: " = " Minuten exportiert: ";
+"Export anyway" = "Trotzdem exportieren";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";

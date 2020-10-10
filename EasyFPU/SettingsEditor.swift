@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct AbsorptionSchemeEditor: View {
+struct SettingsEditor: View {
     @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var editedAbsorptionScheme: AbsorptionScheme
     @State private var newMaxFpu: String = ""
@@ -200,11 +200,26 @@ struct AbsorptionSchemeEditor: View {
                         Text("Reset to default")
                     }
                 }
+                
+                // Other settings
+                Section(header: Text("Other Parameters")) {
+                    HStack {
+                        Stepper("Alert duration between exports", onIncrement: {
+                            UserSettings.shared.alertPeriodAfterExportInMinutes += 5
+                            UserSettings.shared.objectWillChange.send()
+                        }, onDecrement: {
+                            UserSettings.shared.alertPeriodAfterExportInMinutes = max(UserSettings.shared.alertPeriodAfterExportInMinutes - 5, 0)
+                            UserSettings.shared.objectWillChange.send()
+                        })
+                        Text(String(UserSettings.shared.alertPeriodAfterExportInMinutes))
+                        Text("min")
+                    }
+                }
             }
             .animation(.easeInOut(duration: 0.16))
             
             // Navigation bar
-            .navigationBarTitle(Text("Absorption scheme"))
+            .navigationBarTitle(Text("Settings"))
             .navigationBarItems(
                 leading: HStack {
                     Button(action: {

@@ -14,6 +14,7 @@ class UserSettings: ObservableObject {
         case bool(Bool, UserSettings.UserDefaultsBoolKey)
         case double(Double, UserSettings.UserDefaultsDoubleKey)
         case int(Int, UserSettings.UserDefaultsIntKey)
+        case date(Date, UserSettings.UserDefaultsDateKey)
     }
     
     enum UserDefaultsBoolKey: String, CaseIterable {
@@ -40,6 +41,13 @@ class UserSettings: ObservableObject {
         case absorptionTimeECarbsInterval = "AbsorptionTimeECarbsInterval"
     }
     
+    enum UserDefaultsDateKey: String, CaseIterable {
+        case lastSugarsExport = "LastSugarsExport"
+        case lastCarbsExport = "LastCarbsExport"
+        case lastECarbsExport = "LastECarbsExport"
+        case lastCaloriesExport = "LastCaloriesExport"
+    }
+    
     // MARK: - The key store for syncing via iCloud
     private static var keyStore = NSUbiquitousKeyValueStore()
     
@@ -56,6 +64,7 @@ class UserSettings: ObservableObject {
     @Published var eCarbsFactor: Double
     @Published var treatSugarsSeparately: Bool
     @Published var mealDelayInMinutes: Int = 0
+    @Published var alertPeriodAfterExportInMinutes: Int = 15
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
@@ -119,6 +128,12 @@ class UserSettings: ObservableObject {
                 return false
             }
             UserSettings.keyStore.set(value, forKey: key.rawValue)
+        case .date(let value, let key):
+            if !UserDefaultsDateKey.allCases.contains(key) {
+                errorMessage = NSLocalizedString("Fatal error, please inform app developer: Cannot store parameter: ", comment: "") + key.rawValue
+                return false
+            }
+            UserSettings.keyStore.set(value, forKey: key.rawValue)
         }
         
         // Synchronize
@@ -136,5 +151,9 @@ class UserSettings: ObservableObject {
     
     static func getValue(for key: UserDefaultsIntKey) -> Int? {
         UserSettings.keyStore.object(forKey: key.rawValue) == nil ? nil : Int(UserSettings.keyStore.longLong(forKey: key.rawValue))
+    }
+    
+    static func getValue(for key: UserDefaultsDateKey) -> Date? {
+        UserSettings.keyStore.object(forKey: key.rawValue) == nil ? nil : UserSettings.keyStore.object(forKey: key.rawValue) as? Date
     }
 }
