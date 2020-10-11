@@ -7,6 +7,7 @@
 */
 "CFBundleDisplayName" = "EasyFPE";
 "NSDocumentsFolderUsageDescription" = "EasyFPE nutzt Ihren Dokumenten-Ordner, um die Essensliste im JSON-Format zu exportieren oder zu importieren.";
+"NSFaceIDUsageDescription" = "Vermeidung von versehentlichem Export von Kohlenhydraten und/oder Kalorien nach Apple Health";
 "NSHealthUpdateUsageDescription" = "EasyFPE nutzt HealthKit, um verlängerte Kohlenhydrate, Gesamtmahlzeit-Kohlenhydrate und Gesamtmahlzeit-Kalorien in der Health-App speichern zu können (nur auf Anforderung durch den Benutzer)";
 "NSHealthShareUsageDescription" = "EasyFPE nutzt HealthKit, um verlängerte Kohlenhydrate, Gesamtmahlzeit-Kohlenhydrate und Gesamtmahlzeit-Kalorien in der Health-App speichern zu können (nur auf Anforderung durch den Benutzer)";
 

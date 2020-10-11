@@ -8,6 +8,7 @@
 
 import SwiftUI
 import HealthKit
+import LocalAuthentication
 
 struct MealExportView: View {
     @Environment(\.presentationMode) var presentation
@@ -125,7 +126,7 @@ struct MealExportView: View {
             ActionSheet(title: Text("Warning"), message: Text(getExportWarningText()), buttons: [
                 .default(Text("Export anyway")) {
                     alertMessages.removeAll()
-                    exportHealthSample()
+                    authenticate()
                 },
                 .cancel()
             ])
@@ -152,7 +153,7 @@ struct MealExportView: View {
         if alertMessages.count > 0 {
             showingExportWarning = true
         } else {
-            exportHealthSample()
+            authenticate()
         }
     }
     
@@ -219,6 +220,39 @@ struct MealExportView: View {
             if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastECarbsExport), errorMessage: &errorMessage) {
                 showingAlert = true
             }
+        }
+    }
+    
+    private func authenticate() {
+        let context = LAContext()
+        var error: NSError?
+        
+        // Check whether biometric authentication is possible
+        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
+            // It's possible, so go ahead and use it
+            let reason = NSLocalizedString("NSFaceIDUsageDescription", comment: "")
+            
+            context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { success, authenticationError in
+                // Authentication has now completed
+                DispatchQueue.main.async {
+                    if success {
+                        // Authentication successful
+                        self.exportHealthSample()
+                    } else {
+                        // There was a problem
+                        if authenticationError != nil {
+                            self.errorMessage = authenticationError!.localizedDescription
+                        } else {
+                            self.errorMessage = NSLocalizedString("Authentication error, nothing was exported", comment: "")
+                        }
+                        self.showingAlert = true
+                    }
+                }
+            }
+        } else {
+            // No authentication possible
+            self.errorMessage = NSLocalizedString("Authentication error, nothing was exported", comment: "")
+            self.showingAlert = true
         }
     }
 }

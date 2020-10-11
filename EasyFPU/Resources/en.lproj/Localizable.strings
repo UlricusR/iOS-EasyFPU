@@ -31,7 +31,7 @@
 "About this app" = "About this app";
 "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal.";
 "Documentation on rueth.info" = "Documentation on rueth.info";
-"Home-Link" = "https://rueth.info/index.php/en/easyfpu-for-ios";
+"Home-Link" = "https://rueth.info/index.php/en/easyfpu/easyfpu-for-ios";
 
 // Food List
 "Food List" = "Food List";
@@ -153,7 +153,7 @@
 "Failed to decode - " = "Failed to decode - ";
 "Help on the Web" = "Help on the Web";
 
-// Health kit helper
+// Meal export
 "Cannot write data: HealthKit seem not to be available on your device." = "Cannot write data: HealthKit seem not to be available on your device.";
 "Cannot save data to Health: " = "Cannot save data to Health: ";
 "Unspecified error" = "Unspecified error";
@@ -177,6 +177,8 @@
 "You have exported the following data less than " = "You have exported the following data less than ";
 " minutes ago: " = " minutes ago: ";
 "Export anyway" = "Export anyway";
+"NSFaceIDUsageDescription" = "Avoid accidential export of carbs and/or calories to Apple Health";
+"Authentication error, nothing was exported" = "Authentication error, nothing was exported";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
