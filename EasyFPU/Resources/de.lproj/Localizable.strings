@@ -154,7 +154,7 @@
 "Failed to decode - " = "Konnte nicht entschlüsseln - ";
 "Help on the Web" = "Hilfe im Web";
 
-// Health kit helper
+// Meal export
 "Cannot write data: HealthKit seem not to be available on your device." = "Kann keine Daten schreiben: HealthKit scheint auf Ihrem Gerät nicht zur Verfügung zu stehen.";
 "Cannot save data to Health: " = "Kann keine Daten in Health schreiben: ";
 "Unspecified error" = "Unspezifischer Fehler";
@@ -178,6 +178,8 @@
 "You have exported the following data less than " = "Sie haben folgende Daten vor weniger als ";
 " minutes ago: " = " Minuten exportiert: ";
 "Export anyway" = "Trotzdem exportieren";
+"NSFaceIDUsageDescription" = "Vermeidung von versehentlichem Export von Kohlenhydraten und/oder Kalorien nach Apple Health";
+"Authentication error, nothing was exported" = "Authentifizierungsfehler, kein Export möglich";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";
