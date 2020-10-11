@@ -49,18 +49,18 @@ struct HealthExportPreview: View {
             HStack {
                 if UserSettings.shared.treatSugarsSeparately {
                     Rectangle()
-                        .fill(MealSugarsView.color)
+                        .fill(Color(MealSugarsView.color))
                         .frame(width: 15, height: 15)
                     Text("Sugars")
                 }
                 
                 Rectangle()
-                    .fill(MealCarbsView.color)
+                    .fill(Color(MealCarbsView.color))
                     .frame(width: 15, height: 15)
                 Text("Regular Carbs")
                 
                 Rectangle()
-                    .fill(MealECarbsView.color)
+                    .fill(Color(MealECarbsView.color))
                     .frame(width: 15, height: 15)
                 Text("e-Carbs")
             }.font(.caption)
@@ -140,11 +140,11 @@ struct ChartBar: View {
     private func getBarColor(carbsEntryType: CarbsEntryType) -> Color {
         switch carbsEntryType {
         case .sugars:
-            return MealSugarsView.color
+            return Color(MealSugarsView.color)
         case .carbs:
-            return MealCarbsView.color
+            return Color(MealCarbsView.color)
         case .eCarbs:
-            return MealECarbsView.color
+            return Color(MealECarbsView.color)
         }
     }
     
