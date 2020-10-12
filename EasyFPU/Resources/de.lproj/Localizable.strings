@@ -180,6 +180,7 @@
 "Export anyway" = "Trotzdem exportieren";
 "NSFaceIDUsageDescription" = "Vermeidung von versehentlichem Export von Kohlenhydraten und/oder Kalorien nach Apple Health";
 "Authentication error, nothing was exported" = "Authentifizierungsfehler, kein Export möglich";
+"Carbs in g" = "Kohlenhydrate in g";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";

@@ -21,7 +21,7 @@ struct MealECarbsView: View {
     @ObservedObject var userSettings = UserSettings.shared
     var extendedCarbsTimeAsString: String {
         let time = Date().addingTimeInterval(TimeInterval((userSettings.absorptionTimeECarbsDelayInMinutes + userSettings.mealDelayInMinutes) * 60))
-        return ChartBar.timeStyle.string(from: time)
+        return HealthExportCarbsPreviewChart.timeStyle.string(from: time)
     }
     static var color = UIColor.blue
     

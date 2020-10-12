@@ -13,7 +13,7 @@ struct MealSugarsView: View {
     @ObservedObject var userSettings = UserSettings.shared
     var sugarsTimeAsString: String {
         let time = Date().addingTimeInterval(TimeInterval((userSettings.absorptionTimeSugarsDelayInMinutes + userSettings.mealDelayInMinutes) * 60))
-        return ChartBar.timeStyle.string(from: time)
+        return HealthExportCarbsPreviewChart.timeStyle.string(from: time)
     }
     static let color = UIColor.red
     

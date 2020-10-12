@@ -77,7 +77,6 @@ struct MealExportView: View {
                 // The carbs preview
                 if !carbsRegimeCalculator.hkObjects.isEmpty {
                     Text("Preview of exported carbs in g").padding([.top, .leading, .trailing])
-                    //HealthExportPreview(carbsRegime: self.carbsRegimeCalculator.carbsRegime)
                     HealthExportCarbsPreviewChart(carbsRegime: self.carbsRegimeCalculator.carbsRegime)
                 }
                 

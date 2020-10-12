@@ -179,6 +179,7 @@
 "Export anyway" = "Export anyway";
 "NSFaceIDUsageDescription" = "Avoid accidential export of carbs and/or calories to Apple Health";
 "Authentication error, nothing was exported" = "Authentication error, nothing was exported";
+"Carbs in g" = "Carbs in g";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
