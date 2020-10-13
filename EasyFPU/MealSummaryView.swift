@@ -37,10 +37,12 @@ struct MealSummaryView: View {
                 Image(systemName: "info.circle").imageScale(.large).foregroundColor(.accentColor).padding([.leading, .trailing])
             }
             
-            Button(action: {
-                self.showingSheet = true
-            }) {
-                Image(systemName: "square.and.arrow.up").imageScale(.large).foregroundColor(.accentColor)
+            if HealthDataHelper.healthKitIsAvailable() {
+                Button(action: {
+                    self.showingSheet = true
+                }) {
+                    Image(systemName: "square.and.arrow.up").imageScale(.large).foregroundColor(.accentColor)
+                }
             }
         }
         
