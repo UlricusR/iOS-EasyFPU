@@ -50,6 +50,11 @@ struct HelpViewFoodList: View {
                 }.padding()
                 
                 HStack {
+                    Image(systemName: "xmark.circle").foregroundColor(.red)
+                    Text("Tapping the red X icon in the meal summary will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero.")
+                }.padding()
+                
+                HStack {
                     Image(systemName: "square.and.arrow.up").foregroundColor(.accentColor)
                     Text("Tapping the export button in the summary will open the Meal Export view.")
                 }.padding()
