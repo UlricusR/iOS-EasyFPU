@@ -27,12 +27,10 @@ struct HealthExportCarbsPreviewChart: UIViewRepresentable {
         }
         return xAxisLabels
     }
-    var xScale: CGFloat {
-        /*let scalingFactor = 0.05
-        let maxXScale = 1.5
-        let xScale = Double(timeKeys.count) * scalingFactor
-        return CGFloat(min(xScale, maxXScale))*/
-        return 1.2
+    let minXRange: Double = 10
+    var initialXAxisRange: Double {
+        let range = carbsRegime.timeOfFirstEntry.timeIntervalSince(carbsRegime.globalStartTime) / 60 / Double(carbsRegime.intervalInMinutes) + 2.0
+        return max(minXRange, range)
     }
     
     static var timeStyle: DateFormatter {
@@ -60,29 +58,50 @@ struct HealthExportCarbsPreviewChart: UIViewRepresentable {
     func makeUIView(context: Context) -> BarChartView {
         let chart = BarChartView()
         
-        // Fit scale
-        chart.zoom(scaleX: xScale, scaleY: 1, x: 1, y: 1)
-        
         // Format axis
         chart.xAxis.valueFormatter = IndexAxisValueFormatter(values: xAxisLabels)
         let yAxisFormatter = YAxisFormatter()
         chart.leftAxis.valueFormatter = yAxisFormatter
         chart.rightAxis.valueFormatter = yAxisFormatter
         
-        // Animate
-        chart.animate(xAxisDuration: 0.5)
-        chart.animate(yAxisDuration: 0.5)
+        // We only want scaling in x, not in y
+        chart.scaleXEnabled = true
+        chart.scaleYEnabled = false
+        
+        // Text if no data
+        chart.noDataText = NSLocalizedString("No data selected", comment: "")
+        
+        // Draw values inside bars
+        chart.drawValueAboveBarEnabled = false
         
         // Add initial data
         chart.data = addData()
+        
+        // Modify the view - this needs to be done _after_ having set the data!!!
+        chart.setVisibleXRange(minXRange: minXRange, maxXRange: Double(timeKeys.count))
+        
+        // Set the initial axis range to show at least the first non-zero entry + two further ones, but not less than 10
+        chart.xAxis.axisRange = initialXAxisRange
+        
+        // The chart is done - return it
         return chart
     }
     
     func updateUIView(_ uiView: BarChartView, context: Context) {
+        // Clear all values and add new ones
         uiView.barData?.clearValues()
         uiView.data = addData()
-        uiView.zoom(scaleX: xScale, scaleY: 1, x: 1, y: 1)
-        uiView.data?.notifyDataChanged()
+        
+        // Re-format x axis
+        uiView.xAxis.valueFormatter = IndexAxisValueFormatter(values: xAxisLabels)
+        
+        // Modify the view - this needs to be done _after_ having set the data!!!
+        uiView.setVisibleXRange(minXRange: minXRange, maxXRange: Double(timeKeys.count))
+        
+        // Set the initial axis range to show at least the first non-zero entry + two further ones, but not less than 10
+        uiView.xAxis.axisRange = initialXAxisRange
+        
+        // Notify change
         uiView.notifyDataSetChanged()
     }
     
@@ -91,9 +110,7 @@ struct HealthExportCarbsPreviewChart: UIViewRepresentable {
         var dataEntries = [BarChartDataEntry]()
         for index in 0..<timeKeys.count {
             let dataEntry = prepareData(index: index)
-            if dataEntry.positiveSum > 0 {
-                dataEntries.append(dataEntry)
-            }
+            dataEntries.append(dataEntry)
         }
         
         // Create data set
@@ -102,13 +119,15 @@ struct HealthExportCarbsPreviewChart: UIViewRepresentable {
         // Style data set
         dataSet.colors = [MealSugarsView.color, MealCarbsView.color, MealECarbsView.color]
         dataSet.stackLabels = [
-            NSLocalizedString("Sugars", comment: ""),
-            NSLocalizedString("Regular Carbs", comment: ""),
-            NSLocalizedString("e-Carbs", comment: "")
+            NSLocalizedString("Sugars_short", comment: ""),
+            NSLocalizedString("Carbs_short", comment: ""),
+            NSLocalizedString("eCarbs_short", comment: "")
         ]
         
+        // Format data
+        dataSet.valueFormatter = BarValueFormatter()
         
-        // Return data set
+        // Return data
         return BarChartData(dataSet: dataSet)
     }
     
@@ -141,5 +160,11 @@ struct HealthExportCarbsPreviewChart: UIViewRepresentable {
 class YAxisFormatter: IAxisValueFormatter {
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         DataHelper.doubleFormatter(numberOfDigits: value >= 100 ? 0 : (value >= 10 ? 1 : 2)).string(from: NSNumber(value: value))!
+    }
+}
+
+class BarValueFormatter: IValueFormatter {
+    func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int, viewPortHandler: ViewPortHandler?) -> String {
+        value == 0.0 ? "" : DataHelper.doubleFormatter(numberOfDigits: value >= 100 ? 0 : (value >= 10 ? 1 : 2)).string(from: NSNumber(value: value))!
     }
 }
