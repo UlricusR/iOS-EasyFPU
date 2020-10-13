@@ -8,10 +8,9 @@
 
 // Disclaimer
 "Disclaimer" = "Haftungsausschluss";
-"Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!" = "Die Anwendung der von dieser App berechneten Ernährungsdaten im Rahmen einer Insulintherapie kann zu hohen oder niedrigen Blutzuckerwerten führen. Anwendung auf eigene Gefahr!";
+"Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!" = "Die Anwendung der von dieser App berechneten Ernährungsdaten im Rahmen einer Insulintherapie kann zu hohen oder niedrigen Blutzuckerwerten führen. Durch Akzeptieren dieses Haftungsausschlusses bestätigen Sie, dass Sie die Interaktion von EasyFPE mit Loop via Apple Health verstanden haben, nachzulesen auf der Webseite der Autors. Sie bestätigen ebenfalls die Anwendung dieser App auf eigene Gefahr!";
 "Please consult your medical doctor before modifying your diabetes therapy and applying Fat Protein Units." = "Bitte konsultieren Sie Ihren Diabetologen, bevor Sie Ihre Insulintherapie anpassen und mit Fett-Protein-Einheiten arbeiten.";
-"Read more here!" = "Mehr über die Hintergründe erfahren!";
-"FPU-Link" = "https://www.diabetes-praxis-muenster.de/wp-content/uploads/05_Ernaehrung_Fette_Proteine.pdf";
+"Read more here!" = "Mehr über die Hintergründe auf der Webseite des Autors!";
 "Declining will not let you continue to use the app." = "Bei Ablehnung werden Sie die App nicht weiter nutzen können.";
 "You need to accept the disclaimer to continue." = "Sie müssen dem Haftungsausschluss zustimmen, um fortfahren zu können.";
 "Accept" = "Zustimmen";

@@ -22,7 +22,7 @@ struct DisclaimerView: View {
                 Text("Read more here!")
                 .padding().foregroundColor(.accentColor)
                 .onTapGesture {
-                    UIApplication.shared.open(URL(string: NSLocalizedString("FPU-Link", comment: ""))!)
+                    UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
                 }
                 
                 Text("Declining will not let you continue to use the app.").padding()
@@ -39,10 +39,6 @@ struct DisclaimerView: View {
                         // Display alert
                         self.alertTitle = "Disclaimer"
                         self.alertMessage = "You need to accept the disclaimer to continue."
-                        
-                        // Set dynamic variable and broadcast change in UserSettings, as user could just swipe away disclaimer sheet
-                        UserSettings.shared.disclaimerAccepted = false
-                        UserSettings.shared.objectWillChange.send()
                     }
                     self.showingAlert = true
                 }) {
@@ -59,9 +55,6 @@ struct DisclaimerView: View {
                     // Set dynamic variable and broadcast change in UserSettings
                     UserSettings.shared.disclaimerAccepted = true
                     UserSettings.shared.objectWillChange.send()
-                    
-                    // Dismiss sheet (if this is a sheet)
-                    presentation.wrappedValue.dismiss()
                 }) {
                     Text("Accept")
                 }

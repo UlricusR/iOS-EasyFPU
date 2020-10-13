@@ -30,7 +30,6 @@
 		1B3CEB9B24D32D38001D64DA /* SettingsEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9A24D32D38001D64DA /* SettingsEditor.swift */; };
 		1B3CEB9D24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */; };
 		1B3EEB1025334A0C004C110A /* Pods_EasyFPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */; };
-		1B3EEB1125334A0C004C110A /* Pods_EasyFPU.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1B3EEB16253368B3004C110A /* HealthExportCarbsPreviewChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */; };
 		1B55E68E24C7804B00072217 /* MealViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B55E68D24C7804B00072217 /* MealViewModel.swift */; };
 		1B59810325164B2200EE4374 /* MealSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B59810225164B2200EE4374 /* MealSummaryView.swift */; };
@@ -73,20 +72,6 @@
 		1BF8A4C124C21A52008634DF /* FoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */; };
 		1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		1B3EEB1225334A0C004C110A /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				1B3EEB1125334A0C004C110A /* Pods_EasyFPU.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1B004A2924BA3035001E362A /* EasyFPU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasyFPU.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -359,7 +344,6 @@
 				1B004A2624BA3035001E362A /* Frameworks */,
 				1B004A2724BA3035001E362A /* Resources */,
 				678E44126022C15D99320AD4 /* [CP] Embed Pods Frameworks */,
-				1B3EEB1225334A0C004C110A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

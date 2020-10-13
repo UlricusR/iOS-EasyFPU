@@ -14,7 +14,6 @@ class MenuViewSheets {
         case pickFileToImport
         case pickExportDirectory
         case about
-        case disclaimer
         
         var id: State { self }
     }

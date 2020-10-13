@@ -11,6 +11,7 @@ import MobileCoreServices
 
 struct MenuView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Binding var isPresented: Bool
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var absorptionScheme: AbsorptionScheme
     var filePicked: (URL) -> ()
@@ -59,7 +60,16 @@ struct MenuView: View {
             
             // Disclaimer
             Button(action: {
-                activeSheet = .disclaimer
+                if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &alertMessage) {
+                    self.showingAlert = true
+                }
+                
+                // Close menu
+                self.isPresented = false
+                
+                // Display disclaimer
+                UserSettings.shared.disclaimerAccepted = false
+                UserSettings.shared.objectWillChange.send()
             }) {
                 Text("Disclaimer")
             }
@@ -105,8 +115,6 @@ struct MenuView: View {
             FilePickerView(callback: exportDirectory, documentTypes: [kUTTypeFolder as String])
         case .about:
             AboutView()
-        case .disclaimer:
-            DisclaimerView()
         }
     }
 }

@@ -195,7 +195,7 @@ struct FoodList: View {
                         .disabled(self.showingMenu ? true : false)
                         
                         if self.showingMenu {
-                            MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON, exportDirectory: self.exportJSON)
+                            MenuView(isPresented: $showingMenu, draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON, exportDirectory: self.exportJSON)
                                 .frame(width: geometry.size.width/2)
                                 .transition(.move(edge: .leading))
                         }

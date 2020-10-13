@@ -8,10 +8,9 @@
 
 // Disclaimer
 "Disclaimer" = "Disclaimer";
-"Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!" = "Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!";
+"Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!" = "Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. By accepting this disclaimer, you confirm that you have understood the interaction of EasyFPU and Loop via Apple Health, which is in detail documented on the author's website. You also acknowledge you use this app at your own risk!";
 "Please consult your medical doctor before modifying your diabetes therapy and applying Fat Protein Units." = "Please consult your medical doctor before modifying your diabetes therapy and applying Fat Protein Units.";
-"Read more here!" = "Read more here!";
-"FPU-Link" = "https://www.practicaldiabetes.com/article/fat-protein-counting-type-1-diabetes/";
+"Read more here!" = "Read more on the website of the author!";
 "Declining will not let you continue to use the app." = "Declining will not let you continue to use the app.";
 "You need to accept the disclaimer to continue." = "You need to accept the disclaimer to continue.";
 "Accept" = "Accept";
