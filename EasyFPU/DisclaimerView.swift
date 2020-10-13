@@ -36,8 +36,13 @@ struct DisclaimerView: View {
                         self.alertTitle = "Notice"
                         self.alertMessage = settingsError
                     } else {
+                        // Display alert
                         self.alertTitle = "Disclaimer"
                         self.alertMessage = "You need to accept the disclaimer to continue."
+                        
+                        // Set dynamic variable and broadcast change in UserSettings, as user could just swipe away disclaimer sheet
+                        UserSettings.shared.disclaimerAccepted = false
+                        UserSettings.shared.objectWillChange.send()
                     }
                     self.showingAlert = true
                 }) {
