@@ -13,6 +13,8 @@ struct HelpViewMealDetails: View {
         VStack(alignment: .leading) {
             Text("This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid. It displays the same information as the Meal Summary on the Food List view, plus - on request - the details about all selected food items.").padding()
             
+            Text("With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal.").padding()
+            
             Text("For each of the three carbs type, the same set of information is displayed:").padding()
             
             Group {

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -29,6 +29,9 @@
 		1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */; };
 		1B3CEB9B24D32D38001D64DA /* SettingsEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9A24D32D38001D64DA /* SettingsEditor.swift */; };
 		1B3CEB9D24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */; };
+		1B3EEB1025334A0C004C110A /* Pods_EasyFPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */; };
+		1B3EEB1125334A0C004C110A /* Pods_EasyFPU.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1B3EEB16253368B3004C110A /* HealthExportCarbsPreviewChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */; };
 		1B55E68E24C7804B00072217 /* MealViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B55E68D24C7804B00072217 /* MealViewModel.swift */; };
 		1B59810325164B2200EE4374 /* MealSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B59810225164B2200EE4374 /* MealSummaryView.swift */; };
 		1B6106BB24D93346001F2284 /* DataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6106BA24D93346001F2284 /* DataHelper.swift */; };
@@ -41,7 +44,6 @@
 		1B6867E524FD37F80057EC6A /* HelpViewMealDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6867E424FD37F80057EC6A /* HelpViewMealDetails.swift */; };
 		1B6867E724FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6867E624FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift */; };
 		1B6B861A2517D1AC00ED10FE /* CarbsEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B86192517D1AC00ED10FE /* CarbsEntry.swift */; };
-		1B7318C0250A2BA3008BAA41 /* HealthExportPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7318BF250A2BA3008BAA41 /* HealthExportPreview.swift */; };
 		1B870FC124C9A32E00183C9F /* MealDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B870FC024C9A32E00183C9F /* MealDetail.swift */; };
 		1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */; };
 		1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */; };
@@ -72,6 +74,20 @@
 		1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		1B3EEB1225334A0C004C110A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1B3EEB1125334A0C004C110A /* Pods_EasyFPU.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		1B004A2924BA3035001E362A /* EasyFPU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasyFPU.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B004A2C24BA3035001E362A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -98,6 +114,7 @@
 		1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbsorptionBlockViewModel.swift; sourceTree = "<group>"; };
 		1B3CEB9A24D32D38001D64DA /* SettingsEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditor.swift; sourceTree = "<group>"; };
 		1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionSchemeViewModel.swift; sourceTree = "<group>"; };
+		1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthExportCarbsPreviewChart.swift; sourceTree = "<group>"; };
 		1B55E68D24C7804B00072217 /* MealViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealViewModel.swift; sourceTree = "<group>"; };
 		1B59810225164B2200EE4374 /* MealSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealSummaryView.swift; sourceTree = "<group>"; };
 		1B6106BA24D93346001F2284 /* DataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataHelper.swift; sourceTree = "<group>"; };
@@ -111,7 +128,6 @@
 		1B6867E424FD37F80057EC6A /* HelpViewMealDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewMealDetails.swift; sourceTree = "<group>"; };
 		1B6867E624FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewAbsorptionSchemeEditor.swift; sourceTree = "<group>"; };
 		1B6B86192517D1AC00ED10FE /* CarbsEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsEntry.swift; sourceTree = "<group>"; };
-		1B7318BF250A2BA3008BAA41 /* HealthExportPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthExportPreview.swift; sourceTree = "<group>"; };
 		1B870FC024C9A32E00183C9F /* MealDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetail.swift; sourceTree = "<group>"; };
 		1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewModel.swift; sourceTree = "<group>"; };
 		1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmountViewModel.swift; sourceTree = "<group>"; };
@@ -141,6 +157,9 @@
 		1BF8A4BE24C21A52008634DF /* FoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsRegimeCalculator.swift; sourceTree = "<group>"; };
+		2CE0A6239381CBD7B93933F9 /* Pods-EasyFPU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EasyFPU.release.xcconfig"; path = "Target Support Files/Pods-EasyFPU/Pods-EasyFPU.release.xcconfig"; sourceTree = "<group>"; };
+		7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EasyFPU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA50480835A2B36F0BC9C947 /* Pods-EasyFPU.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EasyFPU.debug.xcconfig"; path = "Target Support Files/Pods-EasyFPU/Pods-EasyFPU.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +169,7 @@
 			files = (
 				1B004A4624BA338A001E362A /* CloudKit.framework in Frameworks */,
 				1BAEE0862500C5FB00B4891F /* HealthKit.framework in Frameworks */,
+				1B3EEB1025334A0C004C110A /* Pods_EasyFPU.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,6 +182,7 @@
 				1B004A2B24BA3035001E362A /* EasyFPU */,
 				1B004A2A24BA3035001E362A /* Products */,
 				1B004A4424BA338A001E362A /* Frameworks */,
+				BABA6DB766EB131AE23C7102 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -203,7 +224,7 @@
 				1BA963E12507E03000375650 /* MealDetailSheets.swift */,
 				1BA963DF2507DFC200375650 /* MealExportView.swift */,
 				1BAF937D253333F700C4D75B /* MealExportViewActionSheets.swift */,
-				1B7318BF250A2BA3008BAA41 /* HealthExportPreview.swift */,
+				1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */,
 				1B90D2DD24F7BAB40059BFFA /* MealItemView.swift */,
 				1B3CEB9A24D32D38001D64DA /* SettingsEditor.swift */,
 				1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */,
@@ -231,6 +252,7 @@
 			children = (
 				1BAEE0852500C5FB00B4891F /* HealthKit.framework */,
 				1B004A4524BA338A001E362A /* CloudKit.framework */,
+				7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -316,6 +338,15 @@
 			path = HealthKit;
 			sourceTree = "<group>";
 		};
+		BABA6DB766EB131AE23C7102 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CA50480835A2B36F0BC9C947 /* Pods-EasyFPU.debug.xcconfig */,
+				2CE0A6239381CBD7B93933F9 /* Pods-EasyFPU.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -323,9 +354,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1B004A4024BA3038001E362A /* Build configuration list for PBXNativeTarget "EasyFPU" */;
 			buildPhases = (
+				EDE6D7DAFA28DD11B51B9738 /* [CP] Check Pods Manifest.lock */,
 				1B004A2524BA3035001E362A /* Sources */,
 				1B004A2624BA3035001E362A /* Frameworks */,
 				1B004A2724BA3035001E362A /* Resources */,
+				678E44126022C15D99320AD4 /* [CP] Embed Pods Frameworks */,
+				1B3EEB1225334A0C004C110A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -387,6 +421,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		678E44126022C15D99320AD4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-EasyFPU/Pods-EasyFPU-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-EasyFPU/Pods-EasyFPU-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-EasyFPU/Pods-EasyFPU-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EDE6D7DAFA28DD11B51B9738 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-EasyFPU-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1B004A2524BA3035001E362A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -426,9 +502,9 @@
 				1B004A3224BA3035001E362A /* EasyFPU.xcdatamodeld in Sources */,
 				1B24AD6C24BE38E800F3A100 /* FoodItemSelector.swift in Sources */,
 				1B0CE2BA250663B5008B04E3 /* HealthDataHelper.swift in Sources */,
+				1B3EEB16253368B3004C110A /* HealthExportCarbsPreviewChart.swift in Sources */,
 				1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */,
 				1BA040CA24BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift in Sources */,
-				1B7318C0250A2BA3008BAA41 /* HealthExportPreview.swift in Sources */,
 				1BA040CB24BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift in Sources */,
 				1B6867E724FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift in Sources */,
 				1B004A4F24BA3EF1001E362A /* AbsorptionBlockFromJson.swift in Sources */,
@@ -594,6 +670,7 @@
 		};
 		1B004A4124BA3038001E362A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA50480835A2B36F0BC9C947 /* Pods-EasyFPU.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -618,6 +695,7 @@
 		};
 		1B004A4224BA3038001E362A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2CE0A6239381CBD7B93933F9 /* Pods-EasyFPU.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
