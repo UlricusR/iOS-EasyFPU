@@ -126,6 +126,7 @@
 "Absorption Time Parameters for Carbs" = "Absorption Time Parameters for Carbs";
 "Absorption Time Parameters for e-Carbs" = "Absorption Time Parameters for e-Carbs";
 "Delay" = "Delay";
+"Duration" = "Duration";
 "Interval" = "Interval";
 "min" = "min";
 "Treat sugars separately" = "Treat sugars separately";

@@ -26,6 +26,94 @@ struct SettingsEditor: View {
     var body: some View {
         NavigationView {
             Form {
+                // Sugars
+                Section(header: Text("Absorption Time Parameters for Sugars")) {
+                    Toggle("Treat sugars separately", isOn: $draftAbsorptionScheme.treatSugarsSeparately)
+                    
+                    if draftAbsorptionScheme.treatSugarsSeparately {
+                        HStack {
+                            Text("Delay")
+                            CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delaySugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
+                            Text("min")
+                        }
+                        
+                        HStack {
+                            Text("Duration")
+                            CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationSugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
+                            Text("h")
+                        }
+                        
+                        HStack {
+                            Text("Interval")
+                            CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalSugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
+                            Text("min")
+                        }
+                        
+                        // The reset button
+                        Button(action: {
+                            self.resetSugarsToDefaults()
+                        }) {
+                            Text("Reset to default")
+                        }
+                    }
+                }
+                
+                // Carbs
+                Section(header: Text("Absorption Time Parameters for Carbs")) {
+                    HStack {
+                        Text("Delay")
+                        CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
+                        Text("min")
+                    }
+                    
+                    HStack {
+                        Text("Duration")
+                        CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
+                        Text("h")
+                    }
+                    
+                    HStack {
+                        Text("Interval")
+                        CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
+                        Text("min")
+                    }
+                    
+                    // The reset button
+                    Button(action: {
+                        self.resetCarbsToDefaults()
+                    }) {
+                        Text("Reset to default")
+                    }
+                }
+                
+                // e-Carbs
+                Section(header: Text("Absorption Time Parameters for e-Carbs")) {
+                    HStack {
+                        Text("Delay")
+                        CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayECarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
+                        Text("min")
+                    }
+                    
+                    HStack {
+                        Text("e-Carbs Factor")
+                        CustomTextField(titleKey: "e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
+                        Text("g/FPU")
+                    }
+                    
+                    HStack {
+                        Text("Interval")
+                        CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalECarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
+                        Text("min")
+                    }
+                    
+                    // The reset button
+                    Button(action: {
+                        self.resetECarbsToDefaults()
+                    }) {
+                        Text("Reset to default")
+                    }
+                }
+                
                 Section(header: Text("Absorption Blocks")) {
                     // The list of absorption blocks
                     List {
@@ -110,94 +198,6 @@ struct SettingsEditor: View {
                         }) {
                             Image(systemName: self.updateButton ? "checkmark.circle" : "plus.circle").foregroundColor(self.updateButton ? .yellow : .green)
                         }
-                    }
-                }
-                
-                // Sugars
-                Section(header: Text("Absorption Time Parameters for Sugars")) {
-                    Toggle("Treat sugars separately", isOn: $draftAbsorptionScheme.treatSugarsSeparately)
-                    
-                    if draftAbsorptionScheme.treatSugarsSeparately {
-                        HStack {
-                            Text("Delay")
-                            CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delaySugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
-                            Text("min")
-                        }
-                        
-                        HStack {
-                            Text("Interval")
-                            CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalSugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
-                            Text("min")
-                        }
-                        
-                        HStack {
-                            Text("Duration")
-                            CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationSugarsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
-                            Text("h")
-                        }
-                        
-                        // The reset button
-                        Button(action: {
-                            self.resetSugarsToDefaults()
-                        }) {
-                            Text("Reset to default")
-                        }
-                    }
-                }
-                
-                // Carbs
-                Section(header: Text("Absorption Time Parameters for Carbs")) {
-                    HStack {
-                        Text("Delay")
-                        CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
-                        Text("min")
-                    }
-                    
-                    HStack {
-                        Text("Interval")
-                        CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
-                        Text("min")
-                    }
-                    
-                    HStack {
-                        Text("Duration")
-                        CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationCarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
-                        Text("h")
-                    }
-                    
-                    // The reset button
-                    Button(action: {
-                        self.resetCarbsToDefaults()
-                    }) {
-                        Text("Reset to default")
-                    }
-                }
-                
-                // e-Carbs
-                Section(header: Text("Absorption Time Parameters for e-Carbs")) {
-                    HStack {
-                        Text("Delay")
-                        CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayECarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
-                        Text("min")
-                    }
-                    
-                    HStack {
-                        Text("Interval")
-                        CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalECarbsAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
-                        Text("min")
-                    }
-                    
-                    HStack {
-                        Text("e-Carbs Factor")
-                        CustomTextField(titleKey: "e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString, keyboardType: .numberPad).multilineTextAlignment(.trailing)
-                        Text("g/FPU")
-                    }
-                    
-                    // The reset button
-                    Button(action: {
-                        self.resetECarbsToDefaults()
-                    }) {
-                        Text("Reset to default")
                     }
                 }
                 

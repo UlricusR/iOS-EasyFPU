@@ -127,6 +127,7 @@
 "Absorption Time Parameters for Carbs" = "Absorptionsparameter für reguläre KH";
 "Absorption Time Parameters for e-Carbs" = "Absorptionsparameter für verlängerte KH";
 "Delay" = "Verzögerung";
+"Duration" = "Dauer";
 "Interval" = "Intervall";
 "min" = "min";
 "Treat sugars separately" = "KH aus Zucker separat behandeln";
