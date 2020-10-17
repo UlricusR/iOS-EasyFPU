@@ -28,7 +28,9 @@
 // About
 "About" = "About";
 "About this app" = "About this app";
-"Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal.";
+"Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "An iOS app - mainly for Type 1 Diabetes patients - to ease the calculation of sugars, regular carbs, extended carbs from fat-protein-units (FPUs) and their matching absorption times - synchronized across all your iOS devices via iCloud (optional).";
+"It's free and open-source, so I'll never ask you for money. If you like this app, you can..." = "It's free and open-source, so I'll never ask you for money. If you like this app, you can...";
+"Buy-me-a-coffee-link" = "https://www.buymeacoffee.com/ulricus";
 "Documentation on rueth.info" = "Documentation on rueth.info";
 "Home-Link" = "https://rueth.info/index.php/en/easyfpu/easyfpu-for-ios";
 

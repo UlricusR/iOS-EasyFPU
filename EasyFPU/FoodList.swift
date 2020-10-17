@@ -99,6 +99,7 @@ struct FoodList: View {
                                     MealSummaryView(activeFoodListSheet: self.$activeSheet, absorptionScheme: self.absorptionScheme, meal: self.meal)
                                 }
                             }
+                            .disabled(self.showingMenu ? true : false)
                             .navigationBarTitle("Food List")
                             .navigationBarItems(
                                 leading: HStack {
@@ -107,7 +108,7 @@ struct FoodList: View {
                                             self.showingMenu.toggle()
                                         }
                                     }) {
-                                        Image(systemName: "line.horizontal.3")
+                                        Image(systemName: self.showingMenu ? "xmark" : "line.horizontal.3")
                                         .imageScale(.large)
                                     }
                                     
@@ -119,7 +120,7 @@ struct FoodList: View {
                                         Image(systemName: "questionmark.circle")
                                         .imageScale(.large)
                                         .padding()
-                                    }
+                                    }.disabled(self.showingMenu ? true : false)
                                 },
                                 trailing: HStack {
                                     Button(action: {
@@ -136,7 +137,7 @@ struct FoodList: View {
                                             .foregroundColor(Color.gray)
                                             .padding()
                                         }
-                                    }
+                                    }.disabled(self.showingMenu ? true : false)
                                     
                                     Button(action: {
                                         // Add new food item
@@ -153,7 +154,7 @@ struct FoodList: View {
                                         Image(systemName: "plus.circle")
                                             .imageScale(.large)
                                             .foregroundColor(.green)
-                                    }
+                                    }.disabled(self.showingMenu ? true : false)
                                 }
                             )
                         }
@@ -192,7 +193,6 @@ struct FoodList: View {
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .offset(x: self.showingMenu ? geometry.size.width/2 : 0)
-                        .disabled(self.showingMenu ? true : false)
                         
                         if self.showingMenu {
                             MenuView(isPresented: $showingMenu, draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON, exportDirectory: self.exportJSON)
