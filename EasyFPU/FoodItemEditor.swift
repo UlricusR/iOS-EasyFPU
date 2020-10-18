@@ -50,6 +50,14 @@ struct FoodItemEditor: View {
                         // Name
                         CustomTextField(titleKey: "Name", text: $draftFoodItem.name, keyboardType: .default)
                         
+                        // Search button
+                        Button(action: {
+                            let foodDatabase = OpenFoodFacts(countrycode: .de)
+                            foodDatabase.get("4104420016125")
+                        }) {
+                            Text("Search")
+                        }
+                        
                         // Favorite
                         Toggle("Favorite", isOn: $draftFoodItem.favorite)
                     }

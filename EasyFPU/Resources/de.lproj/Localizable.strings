@@ -188,6 +188,13 @@
 "Carbs in g" = "Kohlenhydrate in g";
 "No data selected" = "No data selected";
 
+// Food Database
+"No product found" = "Kein Produkt gefunden";
+"No nutriments found" = "Keine Nährwerte gefunden";
+"Entry has no name" = "Eintrag hat keinen Namen";
+"Entry has no calories per 100g" = "Eintrag hat keine Kalorien pro 100g";
+"Entry has no carbs per 100g" = "Eintrag hat keine Kohlenhydrate pro 100g";
+
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";
 "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "Die Essensliste ist absichtlich leer, denn jeder hat eigene FPE-relevante Lieblingsessen.";

@@ -187,6 +187,13 @@
 "Carbs in g" = "Carbs in g";
 "No data selected" = "No data selected";
 
+// Food Database
+"No product found" = "No product found";
+"No nutriments found" = "No nutriments found";
+"Entry has no name" = "Entry has no name";
+"Entry has no calories per 100g" = "Entry has no calories per 100g";
+"Entry has no carbs per 100g" = "Entry has no carbs per 100g";
+
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
 "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food.";
