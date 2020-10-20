@@ -102,6 +102,7 @@
 "Delete food item" = "Dieses Essen löschen";
 "Sugars exceed carbs" = "Zucker übersteigt Kohlenhydrate";
 "Thereof" = "Davon";
+"Search term must not be empty" = "Suchbegriff darf nicht leer sein";
 
 // Absorption scheme editor
 "Absorption scheme" = "Absorptionsschema";
@@ -192,8 +193,14 @@
 "No product found" = "Kein Produkt gefunden";
 "No nutriments found" = "Keine Nährwerte gefunden";
 "Entry has no name" = "Eintrag hat keinen Namen";
+"Entry has no code" = "Eintrag hat keinen Code";
 "Entry has no calories per 100g" = "Eintrag hat keine Kalorien pro 100g";
 "Entry has no carbs per 100g" = "Eintrag hat keine Kohlenhydrate pro 100g";
+"Food Database Search" = "Essensdatenbank-Suche";
+"Select" = "Übernehmen";
+"No search results (yet)" = "(Noch) keine Suchergebnisse";
+"Nothing selected" = "Nichts ausgewählt";
+"- No name -" = "- Kein Name -";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";

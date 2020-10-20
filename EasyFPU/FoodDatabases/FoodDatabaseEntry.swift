@@ -12,7 +12,7 @@ struct FoodDatabaseEntry {
     var productName: String
     var caloriesPer100g: Double
     var carbsPer100g: Double
-    var source: FoodDatabase
+    var source: OpenFoodFacts
     var sourceId: String
     
     var sugarsPer100g: Double?

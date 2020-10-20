@@ -102,6 +102,7 @@
 "Delete food item" = "Delete food item";
 "Sugars exceed carbs" = "Sugars exceed carbs";
 "Thereof" = "Thereof";
+"Search term must not be empty" = "Search term must not be empty";
 
 // Absorption scheme editor
 "Absorption scheme" = "Absorption scheme";
@@ -191,8 +192,14 @@
 "No product found" = "No product found";
 "No nutriments found" = "No nutriments found";
 "Entry has no name" = "Entry has no name";
+"Entry has no code" = "Entry has no code";
 "Entry has no calories per 100g" = "Entry has no calories per 100g";
 "Entry has no carbs per 100g" = "Entry has no carbs per 100g";
+"Food Database Search" = "Food Database Search";
+"Select" = "Select";
+"No search results (yet)" = "No search results (yet)";
+"Nothing selected" = "Nothing selected";
+"- No name -" = "- No name -";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";

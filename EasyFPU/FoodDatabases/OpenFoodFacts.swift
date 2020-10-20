@@ -8,8 +8,10 @@
 
 import Foundation
 
-class OpenFoodFacts: ObservableObject, FoodDatabase {
+class OpenFoodFacts: ObservableObject {
     @Published var foodDatabaseEntry: FoodDatabaseEntry?
+    @Published var searchResults = [OpenFoodFactsProduct]()
+    @Published var errorMessage: String?
     private var countrycode: String
     private let languagecode = "en"
     private let userAgent = "EasyFPU - iOS - Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)"
@@ -31,92 +33,111 @@ class OpenFoodFacts: ObservableObject, FoodDatabase {
         self.countrycode = countrycode.rawValue
     }
     
-    func search(for name: String) -> [String] {
-        let matchingEntries = [String]()
-        return matchingEntries
-    }
-    
-    func get(_ id: String) {
-        let urlString = "https://\(countrycode)-\(languagecode).openfoodfacts.org/api/v0/product/\(id).json?fields=\(productFields.joined(separator: ","))"
-        let session = URLSession.shared
-        let url = URL(string: urlString)!
-        var request = URLRequest(url: url)
-        request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
+    func search(for term: String) {
+        guard let urlSearchTerm = term.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            errorMessage = NSLocalizedString("Unable to convert your search string into a valid URL", comment: "")
+            return
+        }
+        let urlString = "https://\(countrycode)-\(languagecode).openfoodfacts.org/cgi/search.pl?action=process&search_terms=\(urlSearchTerm)&sort_by=unique_scans_n&json=true"
+        let request = prepareRequest(urlString)
         
+        let session = URLSession.shared
         session.dataTask(with: request, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
+            guard error == nil else {
+                debugPrint(error!.localizedDescription)
+                self.errorMessage = error!.localizedDescription
+                return
+            }
+            
             if let data = data {
                 do {
-                    let openFoodFactsObject = try JSONDecoder().decode(OpenFoodFactsObject.self, from: data)
-                    self.foodDatabaseEntry = try openFoodFactsObject.fill(foodDatabase: self, id: id)
-                    self.objectWillChange.send()
+                    let openFoodFactsSearchResult = try JSONDecoder().decode(OpenFoodFactsSearchResult.self, from: data)
+                    guard let products = openFoodFactsSearchResult.products else {
+                        throw FoodDatabaseError.noSearchResults
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self.searchResults = products
+                        self.objectWillChange.send()
+                    }
                 } catch {
-                    print(error)
+                    DispatchQueue.main.async {
+                        self.errorMessage = error.localizedDescription
+                        self.objectWillChange.send()
+                    }
                 }
             }
         }).resume()
     }
+    
+    func prepare(_ id: String) {
+        let urlString = "https://\(countrycode)-\(languagecode).openfoodfacts.org/api/v0/product/\(id).json?fields=\(productFields.joined(separator: ","))"
+        let request = prepareRequest(urlString)
+        
+        let session = URLSession.shared
+        session.dataTask(with: request, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
+            if let data = data {
+                do {
+                    let openFoodFactsObject = try JSONDecoder().decode(OpenFoodFactsObject.self, from: data)
+                    
+                    // Check if there's a product
+                    guard let product = openFoodFactsObject.product else {
+                        throw FoodDatabaseError.incompleteData(NSLocalizedString("No product found", comment: ""))
+                    }
+                    
+                    // Fill the FoodDatabaseEntry
+                    DispatchQueue.main.async {
+                        do {
+                            self.foodDatabaseEntry = try product.fill(foodDatabase: self)
+                            self.objectWillChange.send()
+                        } catch FoodDatabaseError.incompleteData(let errorMessage) {
+                            self.errorMessage = errorMessage
+                        } catch {
+                            self.errorMessage = error.localizedDescription
+                        }
+                    }
+                } catch {
+                    debugPrint(error.localizedDescription)
+                    DispatchQueue.main.async {
+                        self.errorMessage = error.localizedDescription
+                        self.objectWillChange.send()
+                    }
+                }
+            }
+        }).resume()
+    }
+    
+    private func prepareRequest(_ urlString: String) -> URLRequest {
+        let url = URL(string: urlString)!
+        var request = URLRequest(url: url)
+        request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
+        return request
+    }
 }
 
-struct OpenFoodFactsObject: Decodable, FoodDatabaseObject {
-    var code: String?
-    var status: Int?
+struct OpenFoodFactsObject: Decodable {
     var product: OpenFoodFactsProduct?
-    var statusVerbose: String?
     
     enum CodingKeys: String, CodingKey {
-        case code
-        case status
         case product
-        case statusVerbose = "status_verbose"
-    }
-    
-    func fill(foodDatabase: FoodDatabase, id: String) throws -> FoodDatabaseEntry {
-        // First address the mandatory values
-        guard let product = self.product else {
-            throw FoodDatabaseError.incompleteData(NSLocalizedString("No product found", comment: ""))
-        }
-        
-        guard let productName = product.productName else {
-            throw FoodDatabaseError.incompleteData(NSLocalizedString("Entry has no name", comment: ""))
-        }
-        
-        let caloriesPer100g = try product.getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.caloriesPer100g)
-        let carbsPer100g = try product.getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.carbsPer100g)
-        
-        var foodDatabaseEntry = FoodDatabaseEntry(
-            productName: productName,
-            caloriesPer100g: caloriesPer100g,
-            carbsPer100g: carbsPer100g,
-            source: foodDatabase,
-            sourceId: id
-        )
-        
-        // Append optional values if available
-        if let sugarsPer100g = try? product.getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.sugarsPer100g) {
-            foodDatabaseEntry.sugarsPer100g = sugarsPer100g
-        }
-        
-        if product.genericName != nil {
-            foodDatabaseEntry.genericName = product.genericName!
-        }
-        
-        if product.brands != nil {
-            foodDatabaseEntry.brand = product.brands!
-        }
-        
-        // Return the resulting entry
-        return foodDatabaseEntry
     }
 }
 
-struct OpenFoodFactsProduct: Decodable {
+struct OpenFoodFactsSearchResult: Decodable {
+    var products: [OpenFoodFactsProduct]?
+    
+    enum CodingKeys: String, CodingKey {
+        case products
+    }
+}
+
+struct OpenFoodFactsProduct: Decodable, Hashable {
+    var id = UUID()
+    var code: String?
     var productName: String?
     var brands: String?
     var genericName: String?
     var nutriments: Nutriments?
-    var netWeightValue: Double?
-    var netWeightUnit: String?
-    var servingQuanity: Double?
     var imageThumbUrl: String?
     var imageFrontSmallUrl: String?
     var imageFrontUrl: String?
@@ -125,16 +146,13 @@ struct OpenFoodFactsProduct: Decodable {
     var imageNutritionUrl: String?
     var imageIngredientsThumbUrl: String?
     var imageSmallUrl: String?
-    var lastModifiedInSecondsSince01Jan1970: Int? // UNIX timestamp format: Seconds since Jan 1st 1970
     
     enum CodingKeys: String, CodingKey, CaseIterable {
+        case code = "code"
         case productName = "product_name"
         case brands = "brands"
         case genericName = "generic_name"
         case nutriments = "nutriments"
-        case netWeightValue = "net_weight_value"
-        case netWeightUnit = "net_weight_unit"
-        case servingQuanity = "serving_quantity"
         case imageThumbUrl = "image_thumb_url"
         case imageFrontSmallUrl = "image_front_small_url"
         case imageFrontUrl = "image_front_url"
@@ -143,7 +161,6 @@ struct OpenFoodFactsProduct: Decodable {
         case imageNutritionUrl = "image_nutrition_url"
         case imageIngredientsThumbUrl = "image_ingredients_thumb_url"
         case imageSmallUrl = "image_small_url"
-        case lastModifiedInSecondsSince01Jan1970 = "last_modified_t"
     }
     
     enum DecodingError: Error {
@@ -185,33 +202,78 @@ struct OpenFoodFactsProduct: Decodable {
         case sugarsPer100g = "sugars_100g"
     }
     
+    static func == (lhs: OpenFoodFactsProduct, rhs: OpenFoodFactsProduct) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    func fill(foodDatabase: OpenFoodFacts) throws -> FoodDatabaseEntry {
+        // First address the mandatory values
+        guard let productName = productName else {
+            throw FoodDatabaseError.incompleteData(NSLocalizedString("Entry has no name", comment: ""))
+        }
+        
+        guard let code = code else {
+            throw FoodDatabaseError.incompleteData(NSLocalizedString("Entry has no code", comment: ""))
+        }
+        
+        let caloriesPer100g = try getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.caloriesPer100g)
+        let carbsPer100g = try getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.carbsPer100g)
+        
+        var foodDatabaseEntry = FoodDatabaseEntry(
+            productName: productName,
+            caloriesPer100g: caloriesPer100g,
+            carbsPer100g: carbsPer100g,
+            source: foodDatabase,
+            sourceId: code
+        )
+        
+        // Append optional values if available
+        if let sugarsPer100g = try? getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.sugarsPer100g) {
+            foodDatabaseEntry.sugarsPer100g = sugarsPer100g
+        }
+        
+        if genericName != nil {
+            foodDatabaseEntry.genericName = genericName!
+        }
+        
+        if brands != nil {
+            foodDatabaseEntry.brand = brands!
+        }
+        
+        // Return the resulting entry
+        return foodDatabaseEntry
+    }
+    
     func getNutrimentsDoubleValue(key: NutrimentsKey) throws -> Double {
         guard let value = nutriments?[key.rawValue] else {
-            throw FoodDatabaseError.typeError("Key not found: \(key.rawValue)")
+            throw FoodDatabaseError.incompleteData("Key not found: \(key.rawValue)")
         }
         
         switch value {
         case .number(let number):
             return number
-        default:
-            throw FoodDatabaseError.typeError("Wrong data type for key \(key.rawValue): Expected Double")
+        case .string(let string):
+            guard let doubleFromString = Double(string) else {
+                throw FoodDatabaseError.typeError("Wrong data type for key \(key.rawValue): Expected Double")
+            }
+            return doubleFromString
         }
     }
     
     func getNutrimentsStringValue(key: NutrimentsKey) throws -> String {
-        guard let nutriments = nutriments else {
-            throw FoodDatabaseError.incompleteData(NSLocalizedString("No nutriments found", comment: ""))
-        }
-        
-        guard let value = nutriments[key.rawValue] else {
-            throw FoodDatabaseError.typeError("Key not found: \(key.rawValue)")
+        guard let value = nutriments?[key.rawValue] else {
+            throw FoodDatabaseError.incompleteData("Key not found: \(key.rawValue)")
         }
         
         switch value {
         case .string(let string):
             return string
-        default:
-            throw FoodDatabaseError.typeError("Wrong data type for key \(key.rawValue): Expected String")
+        case .number(let number):
+            return String(number)
         }
     }
     

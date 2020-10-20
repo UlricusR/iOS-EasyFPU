@@ -8,16 +8,10 @@
 
 import Foundation
 
-protocol FoodDatabase {
-    func search(for name: String) -> [String]
-    func get(_ id: String)
-}
-
-protocol FoodDatabaseObject {
-    func fill(foodDatabase: FoodDatabase, id: String) throws -> FoodDatabaseEntry
-}
-
 enum FoodDatabaseError: Error {
     case incompleteData(String)
     case typeError(String)
+    case noSearchResults
+    case networkError(String)
+    case inputError(String)
 }

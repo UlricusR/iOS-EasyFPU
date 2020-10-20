@@ -15,8 +15,9 @@ struct FoodItemEditor: View {
     var navigationBarTitle: String
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem? // Working copy of the food item
+    @ObservedObject var foodDatabase = OpenFoodFacts(countrycode: OpenFoodFacts.CountryCodes.de)
     @State var errorMessage: String = ""
-    @State private var showingSheet = false;
+    @State var activeSheet: FoodItemEditorSheets.State?
     
     @State var showingAlert = false
     @FetchRequest(
@@ -47,15 +48,27 @@ struct FoodItemEditor: View {
             VStack {
                 Form {
                     Section {
-                        // Name
-                        CustomTextField(titleKey: "Name", text: $draftFoodItem.name, keyboardType: .default)
-                        
-                        // Search button
-                        Button(action: {
-                            let foodDatabase = OpenFoodFacts(countrycode: .de)
-                            foodDatabase.get("4104420016125")
-                        }) {
-                            Text("Search")
+                        HStack {
+                            // Name
+                            CustomTextField(titleKey: "Name", text: $draftFoodItem.name, keyboardType: .default)
+                            
+                            // Search and Scan buttons
+                            Button(action: {
+                                if draftFoodItem.name.isEmpty {
+                                    self.errorMessage = NSLocalizedString("Search term must not be empty", comment: "")
+                                    self.showingAlert = true
+                                } else {
+                                    activeSheet = .search
+                                }
+                            }) {
+                                Image(systemName: "magnifyingglass").imageScale(.large)
+                            }
+                            
+                            Button(action: {
+                                // TODO
+                            }) {
+                                Image(systemName: "barcode.viewfinder").imageScale(.large)
+                            }
                         }
                         
                         // Favorite
@@ -181,7 +194,7 @@ struct FoodItemEditor: View {
                     }
                     
                     Button(action: {
-                        self.showingSheet = true
+                        activeSheet = .help
                     }) {
                         Image(systemName: "questionmark.circle").imageScale(.large)
                     }.padding()
@@ -295,8 +308,8 @@ struct FoodItemEditor: View {
                 dismissButton: .default(Text("OK"))
             )
         }
-        .sheet(isPresented: self.$showingSheet) {
-            HelpView(helpScreen: self.helpScreen)
+        .sheet(item: $activeSheet) {
+            sheetContent($0)
         }
         .onAppear() {
             self.oldName = self.draftFoodItem.name
@@ -369,6 +382,16 @@ struct FoodItemEditor: View {
             
             // Broadcast changed object
             self.draftFoodItem.objectWillChange.send()
+        }
+    }
+    
+    @ViewBuilder
+    private func sheetContent(_ state: FoodItemEditorSheets.State) -> some View {
+        switch state {
+        case .help:
+            HelpView(helpScreen: self.helpScreen)
+        case .search:
+            FoodSearch(foodDatabase: self.foodDatabase, draftFoodItem: self.draftFoodItem)
         }
     }
 }
