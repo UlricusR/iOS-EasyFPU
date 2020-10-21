@@ -211,6 +211,33 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         self.amountAsString = amountAsString
     }
     
+    func fill(with foodDatabaseEntry: OpenFoodFactsProduct) throws {
+        guard let productName = foodDatabaseEntry.productName else {
+            throw FoodDatabaseError.incompleteData(NSLocalizedString("Entry has no name", comment: ""))
+        }
+        
+        let caloriesPer100g = try foodDatabaseEntry.getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.caloriesPer100g)
+        let carbsPer100g = try foodDatabaseEntry.getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.carbsPer100g)
+        let sugarsPer100g = try? foodDatabaseEntry.getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.sugarsPer100g)
+        
+        // Modify the values of the FoodItemViewModel
+        self.name = productName
+        if foodDatabaseEntry.brands != nil {
+            self.name += " (\(foodDatabaseEntry.brands!))"
+        }
+        
+        guard
+            let caloriesAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g)),
+            let carbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g)),
+            let sugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: sugarsPer100g ?? 0))
+        else {
+            throw InvalidNumberError.inputError(NSLocalizedString("Fatal error: Cannot convert numbers into string, please contact app developer", comment: ""))
+        }
+        self.caloriesPer100gAsString = caloriesAsString
+        self.carbsPer100gAsString = carbsAsString
+        self.sugarsPer100gAsString = sugarsAsString
+    }
+    
     func getCalories() -> Double {
         Double(self.amount) / 100 * self.caloriesPer100g
     }

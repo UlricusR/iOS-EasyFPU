@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Combine
+import CodeScanner
 
 struct FoodItemEditor: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -62,13 +63,13 @@ struct FoodItemEditor: View {
                                 }
                             }) {
                                 Image(systemName: "magnifyingglass").imageScale(.large)
-                            }
+                            }.buttonStyle(BorderlessButtonStyle())
                             
                             Button(action: {
-                                // TODO
+                                activeSheet = .scan
                             }) {
                                 Image(systemName: "barcode.viewfinder").imageScale(.large)
-                            }
+                            }.buttonStyle(BorderlessButtonStyle())
                         }
                         
                         // Favorite
@@ -385,6 +386,20 @@ struct FoodItemEditor: View {
         }
     }
     
+    private func handleScan(result: Result<String, CodeScannerView.ScanError>) {
+        // Dismiss Code Scanner
+        self.activeSheet = nil
+        
+        switch result {
+        case .success(let barcode):
+            foodDatabase.prepare(barcode)
+            self.activeSheet = .foodPreview
+        case .failure(let error):
+            errorMessage = NSLocalizedString("Error scanning food: ", comment: "") + error.localizedDescription
+            showingAlert = true
+        }
+    }
+    
     @ViewBuilder
     private func sheetContent(_ state: FoodItemEditorSheets.State) -> some View {
         switch state {
@@ -392,6 +407,10 @@ struct FoodItemEditor: View {
             HelpView(helpScreen: self.helpScreen)
         case .search:
             FoodSearch(foodDatabase: self.foodDatabase, draftFoodItem: self.draftFoodItem)
+        case .scan:
+            CodeScannerView(codeTypes: [.ean13], simulatedData: "4101530002123", completion: self.handleScan)
+        case .foodPreview:
+            FoodPreview(foodDatabase: foodDatabase, draftFoodItem: draftFoodItem)
         }
     }
 }

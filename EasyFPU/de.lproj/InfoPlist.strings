@@ -10,4 +10,4 @@
 "NSFaceIDUsageDescription" = "Vermeidung von versehentlichem Export von Kohlenhydraten und/oder Kalorien nach Apple Health";
 "NSHealthUpdateUsageDescription" = "EasyFPE nutzt HealthKit, um verlängerte Kohlenhydrate, Gesamtmahlzeit-Kohlenhydrate und Gesamtmahlzeit-Kalorien in der Health-App speichern zu können (nur auf Anforderung durch den Benutzer)";
 "NSHealthShareUsageDescription" = "EasyFPE nutzt HealthKit, um verlängerte Kohlenhydrate, Gesamtmahlzeit-Kohlenhydrate und Gesamtmahlzeit-Kalorien in der Health-App speichern zu können (nur auf Anforderung durch den Benutzer)";
-
+"NSCameraUsageDescription" = "EasyFPE möchte Barcodes von Lebensmitteln scannen";

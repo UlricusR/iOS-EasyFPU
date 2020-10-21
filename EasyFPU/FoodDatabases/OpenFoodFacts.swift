@@ -9,7 +9,7 @@
 import Foundation
 
 class OpenFoodFacts: ObservableObject {
-    @Published var foodDatabaseEntry: FoodDatabaseEntry?
+    @Published var foodDatabaseEntry: OpenFoodFactsProduct?
     @Published var searchResults = [OpenFoodFactsProduct]()
     @Published var errorMessage: String?
     private var countrycode: String
@@ -34,7 +34,7 @@ class OpenFoodFacts: ObservableObject {
     }
     
     func search(for term: String) {
-        guard let urlSearchTerm = term.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+        guard let urlSearchTerm = term.trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             errorMessage = NSLocalizedString("Unable to convert your search string into a valid URL", comment: "")
             return
         }
@@ -58,12 +58,11 @@ class OpenFoodFacts: ObservableObject {
                     
                     DispatchQueue.main.async {
                         self.searchResults = products
-                        self.objectWillChange.send()
                     }
                 } catch {
+                    debugPrint(error.localizedDescription)
                     DispatchQueue.main.async {
                         self.errorMessage = error.localizedDescription
-                        self.objectWillChange.send()
                     }
                 }
             }
@@ -87,20 +86,20 @@ class OpenFoodFacts: ObservableObject {
                     
                     // Fill the FoodDatabaseEntry
                     DispatchQueue.main.async {
+                        self.foodDatabaseEntry = product
+                        /*
                         do {
                             self.foodDatabaseEntry = try product.fill(foodDatabase: self)
-                            self.objectWillChange.send()
                         } catch FoodDatabaseError.incompleteData(let errorMessage) {
                             self.errorMessage = errorMessage
                         } catch {
                             self.errorMessage = error.localizedDescription
-                        }
+                        }*/
                     }
                 } catch {
                     debugPrint(error.localizedDescription)
                     DispatchQueue.main.async {
                         self.errorMessage = error.localizedDescription
-                        self.objectWillChange.send()
                     }
                 }
             }
@@ -131,7 +130,7 @@ struct OpenFoodFactsSearchResult: Decodable {
     }
 }
 
-struct OpenFoodFactsProduct: Decodable, Hashable {
+struct OpenFoodFactsProduct: Decodable, Hashable, Identifiable {
     var id = UUID()
     var code: String?
     var productName: String?
@@ -179,7 +178,7 @@ struct OpenFoodFactsProduct: Decodable, Hashable {
                 self = .number(number)
                 return
             } catch {
-                print(error)
+                // Empty by design, we just want to catch the try to decode as number
             }
             
             // Try to decode as String
@@ -189,7 +188,7 @@ struct OpenFoodFactsProduct: Decodable, Hashable {
                 self = .string(string)
                 return
             } catch {
-                print(error)
+                // Empty by design, we just want to catch the try to decode as string
             }
             
             throw DecodingError.corruptedData
@@ -201,15 +200,7 @@ struct OpenFoodFactsProduct: Decodable, Hashable {
         case carbsPer100g = "carbohydrates_100g"
         case sugarsPer100g = "sugars_100g"
     }
-    
-    static func == (lhs: OpenFoodFactsProduct, rhs: OpenFoodFactsProduct) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
+    /*
     func fill(foodDatabase: OpenFoodFacts) throws -> FoodDatabaseEntry {
         // First address the mandatory values
         guard let productName = productName else {
@@ -246,7 +237,7 @@ struct OpenFoodFactsProduct: Decodable, Hashable {
         
         // Return the resulting entry
         return foodDatabaseEntry
-    }
+    }*/
     
     func getNutrimentsDoubleValue(key: NutrimentsKey) throws -> Double {
         guard let value = nutriments?[key.rawValue] else {
@@ -275,6 +266,14 @@ struct OpenFoodFactsProduct: Decodable, Hashable {
         case .number(let number):
             return String(number)
         }
+    }
+    
+    static func == (lhs: OpenFoodFactsProduct, rhs: OpenFoodFactsProduct) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
     typealias Nutriments = [String: ValueType]

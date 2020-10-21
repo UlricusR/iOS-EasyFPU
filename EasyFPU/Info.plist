@@ -10,6 +10,8 @@
 	<string>EasyFPU uses HealthKit to store total meal carbs, extended carbs and total meal calories in the Health app - only on user request</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>EasyFPU uses HealthKit to store total meal carbs, extended carbs and total meal calories in the Health app - only on user request</string>
+	<key>NSCameraUsageDescription</key>
+	<string>EasyFPU wants to scan barcodes of food</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

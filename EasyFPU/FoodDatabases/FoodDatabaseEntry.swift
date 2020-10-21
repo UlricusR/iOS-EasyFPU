@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct FoodDatabaseEntry {
+struct FoodDatabaseEntry2 {
     var productName: String
     var caloriesPer100g: Double
     var carbsPer100g: Double

@@ -201,6 +201,9 @@
 "No search results (yet)" = "(Noch) keine Suchergebnisse";
 "Nothing selected" = "Nichts ausgewählt";
 "- No name -" = "- Kein Name -";
+"Error scanning food: " = "Fehler beim Scannen: ";
+"Loading food item..." = "Lade Lebensmittel...";
+"Scanned Food" = "Gescanntes Lebensmittel";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";

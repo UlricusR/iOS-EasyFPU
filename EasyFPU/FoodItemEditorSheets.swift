@@ -12,6 +12,8 @@ class FoodItemEditorSheets {
     enum State: Identifiable {
         case help
         case search
+        case scan
+        case foodPreview
         
         var id: State { self }
     }

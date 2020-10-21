@@ -22,7 +22,7 @@ struct FoodSearch: View {
                 if foodDatabase.searchResults.isEmpty {
                     Text("No search results (yet)")
                 } else {
-                    ForEach(foodDatabase.searchResults, id: \.self) { searchResult in
+                    ForEach(foodDatabase.searchResults) { searchResult in
                         FoodSearchResultPreview(product: searchResult, isSelected: self.selectedResult == searchResult)
                             .onTapGesture {
                                 self.selectedResult = searchResult
@@ -32,6 +32,8 @@ struct FoodSearch: View {
             }
             .navigationBarTitle("Food Database Search")
             .navigationBarItems(leading: Button(action: {
+                // Empty search result and close sheet
+                foodDatabase.searchResults.removeAll()
                 presentation.wrappedValue.dismiss()
             }) {
                 Text("Cancel")
@@ -41,25 +43,11 @@ struct FoodSearch: View {
                     showingAlert = true
                 } else {
                     do {
-                        let foodItem = try selectedResult!.fill(foodDatabase: foodDatabase)
-                        foodDatabase.foodDatabaseEntry = foodItem
-                        draftFoodItem.name = foodItem.productName
-                        if foodItem.brand != nil {
-                            draftFoodItem.name += " (\(foodItem.brand!))"
-                        }
+                        foodDatabase.foodDatabaseEntry = selectedResult!
+                        try draftFoodItem.fill(with: selectedResult!)
                         
-                        guard
-                            let caloriesAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: foodItem.caloriesPer100g)),
-                            let carbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: foodItem.carbsPer100g)),
-                            let sugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: foodItem.sugarsPer100g ?? 0))
-                        else {
-                            throw InvalidNumberError.inputError(NSLocalizedString("Fatal error: Cannot convert numbers into string, please contact app developer", comment: ""))
-                        }
-                        draftFoodItem.caloriesPer100gAsString = caloriesAsString
-                        draftFoodItem.carbsPer100gAsString = carbsAsString
-                        draftFoodItem.sugarsPer100gAsString = sugarsAsString
-                        draftFoodItem.objectWillChange.send()
-                        foodDatabase.objectWillChange.send()
+                        // Empty search results and close sheet
+                        foodDatabase.searchResults.removeAll()
                         presentation.wrappedValue.dismiss()
                     } catch FoodDatabaseError.incompleteData(let errorMessage) {
                         self.errorMessage = errorMessage
