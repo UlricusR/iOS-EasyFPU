@@ -8,6 +8,18 @@
 
 import Foundation
 
+protocol FoodDatabase {
+    var databaseType: FoodDatabaseType { get }
+    func search(for term: String, foodDatabaseResults: FoodDatabaseResults)
+    func prepare(_ id: String, foodDatabaseResults: FoodDatabaseResults)
+}
+
+enum FoodDatabaseType: String {
+    case openFoodFacts = "OpenFoodFacts"
+    
+    static let key = "FoodDatabase"
+}
+
 enum FoodDatabaseError: Error {
     case incompleteData(String)
     case typeError(String)

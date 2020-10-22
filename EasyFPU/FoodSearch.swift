@@ -9,20 +9,20 @@
 import SwiftUI
 
 struct FoodSearch: View {
-    @ObservedObject var foodDatabase: OpenFoodFacts
+    @ObservedObject var foodDatabaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
     @Environment(\.presentationMode) var presentation
-    @State var selectedResult: OpenFoodFactsProduct?
+    @State var selectedResult: FoodDatabaseEntry?
     @State var errorMessage = ""
     @State var showingAlert = false
     
     var body: some View {
         NavigationView {
             List {
-                if foodDatabase.searchResults.isEmpty {
+                if foodDatabaseResults.searchResults == nil || foodDatabaseResults.searchResults!.isEmpty {
                     Text("No search results (yet)")
                 } else {
-                    ForEach(foodDatabase.searchResults) { searchResult in
+                    ForEach(foodDatabaseResults.searchResults!) { searchResult in
                         FoodSearchResultPreview(product: searchResult, isSelected: self.selectedResult == searchResult)
                             .onTapGesture {
                                 self.selectedResult = searchResult
@@ -33,7 +33,7 @@ struct FoodSearch: View {
             .navigationBarTitle("Food Database Search")
             .navigationBarItems(leading: Button(action: {
                 // Empty search result and close sheet
-                foodDatabase.searchResults.removeAll()
+                foodDatabaseResults.searchResults = nil
                 presentation.wrappedValue.dismiss()
             }) {
                 Text("Cancel")
@@ -42,23 +42,12 @@ struct FoodSearch: View {
                     errorMessage = NSLocalizedString("Nothing selected", comment: "")
                     showingAlert = true
                 } else {
-                    do {
-                        foodDatabase.foodDatabaseEntry = selectedResult!
-                        try draftFoodItem.fill(with: selectedResult!)
-                        
-                        // Empty search results and close sheet
-                        foodDatabase.searchResults.removeAll()
-                        presentation.wrappedValue.dismiss()
-                    } catch FoodDatabaseError.incompleteData(let errorMessage) {
-                        self.errorMessage = errorMessage
-                        showingAlert = true
-                    } catch FoodDatabaseError.typeError(let errorMessage) {
-                        self.errorMessage = errorMessage
-                        showingAlert = true
-                    } catch {
-                        self.errorMessage = error.localizedDescription
-                        showingAlert = true
-                    }
+                    foodDatabaseResults.selectedEntry = selectedResult!
+                    draftFoodItem.fill(with: selectedResult!)
+                    
+                    // Empty search results and close sheet
+                    foodDatabaseResults.searchResults = nil
+                    presentation.wrappedValue.dismiss()
                 }
             }) {
                 Text("Select")
@@ -75,6 +64,6 @@ struct FoodSearch: View {
     }
     
     private func search() {
-        foodDatabase.search(for: draftFoodItem.name)
+        UserSettings.shared.foodDatabase.search(for: draftFoodItem.name, foodDatabaseResults: foodDatabaseResults)
     }
 }

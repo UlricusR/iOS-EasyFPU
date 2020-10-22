@@ -16,7 +16,7 @@ struct FoodItemEditor: View {
     var navigationBarTitle: String
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem? // Working copy of the food item
-    @ObservedObject var foodDatabase = OpenFoodFacts(countrycode: OpenFoodFacts.CountryCodes.de)
+    @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
     @State var errorMessage: String = ""
     @State var activeSheet: FoodItemEditorSheets.State?
     
@@ -392,7 +392,7 @@ struct FoodItemEditor: View {
         
         switch result {
         case .success(let barcode):
-            foodDatabase.prepare(barcode)
+            UserSettings.shared.foodDatabase.prepare(barcode, foodDatabaseResults: foodDatabaseResults)
             self.activeSheet = .foodPreview
         case .failure(let error):
             errorMessage = NSLocalizedString("Error scanning food: ", comment: "") + error.localizedDescription
@@ -406,11 +406,11 @@ struct FoodItemEditor: View {
         case .help:
             HelpView(helpScreen: self.helpScreen)
         case .search:
-            FoodSearch(foodDatabase: self.foodDatabase, draftFoodItem: self.draftFoodItem)
+            FoodSearch(foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem)
         case .scan:
             CodeScannerView(codeTypes: [.ean13], simulatedData: "4101530002123", completion: self.handleScan)
         case .foodPreview:
-            FoodPreview(foodDatabase: foodDatabase, draftFoodItem: draftFoodItem)
+            FoodPreview(foodDatabaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem)
         }
     }
 }

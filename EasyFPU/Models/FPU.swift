@@ -10,14 +10,13 @@ import Foundation
 
 class FPU {
     var fpu: Double
-    var eCarbsFactor: Double = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault
     
     init(fpu: Double) {
         self.fpu = fpu
     }
     
     func getExtendedCarbs() -> Double {
-        fpu * eCarbsFactor
+        fpu * UserSettings.shared.eCarbsFactor
     }
     
     func getAbsorptionTime(absorptionScheme: AbsorptionScheme) -> Int? {

@@ -8,12 +8,24 @@
 
 import Foundation
 
-class OpenFoodFacts: ObservableObject {
-    @Published var foodDatabaseEntry: OpenFoodFactsProduct?
-    @Published var searchResults = [OpenFoodFactsProduct]()
-    @Published var errorMessage: String?
-    private var countrycode: String
-    private let languagecode = "en"
+class OpenFoodFacts: FoodDatabase {
+    var databaseType = FoodDatabaseType.openFoodFacts
+    private var countrycode: CountryCode {
+        if let countryCodeString = UserSettings.shared.countryCode {
+            if let countryCode = CountryCode.init(rawValue: countryCodeString) {
+                return countryCode
+            }
+        }
+        
+        if let countryCodeString = Locale.current.regionCode?.lowercased() {
+            if let countryCode = CountryCode.init(rawValue: countryCodeString) {
+                return countryCode
+            }
+        }
+        
+        return CountryCode.world
+    }
+    //private let languagecode = "en"
     private let userAgent = "EasyFPU - iOS - Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)"
     private var productFields: [String] {
         var fields = [String]()
@@ -23,29 +35,26 @@ class OpenFoodFacts: ObservableObject {
         return fields
     }
     
-    enum CountryCodes: String {
+    enum CountryCode: String, CaseIterable {
         case world = "world"
         case de = "de"
         case us = "us"
     }
     
-    init(countrycode: CountryCodes) {
-        self.countrycode = countrycode.rawValue
-    }
-    
-    func search(for term: String) {
+    func search(for term: String, foodDatabaseResults: FoodDatabaseResults) {
         guard let urlSearchTerm = term.trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-            errorMessage = NSLocalizedString("Unable to convert your search string into a valid URL", comment: "")
+            foodDatabaseResults.errorMessage = NSLocalizedString("Unable to convert your search string into a valid URL", comment: "")
             return
         }
-        let urlString = "https://\(countrycode)-\(languagecode).openfoodfacts.org/cgi/search.pl?action=process&search_terms=\(urlSearchTerm)&sort_by=unique_scans_n&json=true"
+        //let urlString = "https://\(countrycode.rawValue)-\(languagecode).openfoodfacts.org/cgi/search.pl?action=process&search_terms=\(urlSearchTerm)&sort_by=unique_scans_n&json=true" // Version with language code
+        let urlString = "https://\(countrycode.rawValue).openfoodfacts.org/cgi/search.pl?action=process&search_terms=\(urlSearchTerm)&sort_by=unique_scans_n&json=true" // Version without language code
         let request = prepareRequest(urlString)
         
         let session = URLSession.shared
         session.dataTask(with: request, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
             guard error == nil else {
                 debugPrint(error!.localizedDescription)
-                self.errorMessage = error!.localizedDescription
+                foodDatabaseResults.errorMessage = error!.localizedDescription
                 return
             }
             
@@ -57,20 +66,26 @@ class OpenFoodFacts: ObservableObject {
                     }
                     
                     DispatchQueue.main.async {
-                        self.searchResults = products
+                        foodDatabaseResults.searchResults = [FoodDatabaseEntry]()
+                        for product in products {
+                            if let foodDatabaseEntry = FoodDatabaseEntry(from: product) {
+                                foodDatabaseResults.searchResults!.append(foodDatabaseEntry)
+                            }
+                        }
                     }
                 } catch {
                     debugPrint(error.localizedDescription)
                     DispatchQueue.main.async {
-                        self.errorMessage = error.localizedDescription
+                        foodDatabaseResults.errorMessage = error.localizedDescription
                     }
                 }
             }
         }).resume()
     }
     
-    func prepare(_ id: String) {
-        let urlString = "https://\(countrycode)-\(languagecode).openfoodfacts.org/api/v0/product/\(id).json?fields=\(productFields.joined(separator: ","))"
+    func prepare(_ id: String, foodDatabaseResults: FoodDatabaseResults) {
+        //let urlString = "https://\(countrycode.rawValue)-\(languagecode).openfoodfacts.org/api/v0/product/\(id).json?fields=\(productFields.joined(separator: ","))" // Version with language code
+        let urlString = "https://\(countrycode.rawValue).openfoodfacts.org/api/v0/product/\(id).json?fields=\(productFields.joined(separator: ","))" // Version without language code
         let request = prepareRequest(urlString)
         
         let session = URLSession.shared
@@ -86,20 +101,21 @@ class OpenFoodFacts: ObservableObject {
                     
                     // Fill the FoodDatabaseEntry
                     DispatchQueue.main.async {
-                        self.foodDatabaseEntry = product
-                        /*
                         do {
-                            self.foodDatabaseEntry = try product.fill(foodDatabase: self)
+                            guard let foodDatabaseEntry = FoodDatabaseEntry(from: product) else {
+                                throw FoodDatabaseError.incompleteData(NSLocalizedString("No food found", comment: ""))
+                            }
+                            foodDatabaseResults.selectedEntry = foodDatabaseEntry
                         } catch FoodDatabaseError.incompleteData(let errorMessage) {
-                            self.errorMessage = errorMessage
+                            foodDatabaseResults.errorMessage = errorMessage
                         } catch {
-                            self.errorMessage = error.localizedDescription
-                        }*/
+                            foodDatabaseResults.errorMessage = error.localizedDescription
+                        }
                     }
                 } catch {
                     debugPrint(error.localizedDescription)
                     DispatchQueue.main.async {
-                        self.errorMessage = error.localizedDescription
+                        foodDatabaseResults.errorMessage = error.localizedDescription
                     }
                 }
             }
@@ -200,44 +216,6 @@ struct OpenFoodFactsProduct: Decodable, Hashable, Identifiable {
         case carbsPer100g = "carbohydrates_100g"
         case sugarsPer100g = "sugars_100g"
     }
-    /*
-    func fill(foodDatabase: OpenFoodFacts) throws -> FoodDatabaseEntry {
-        // First address the mandatory values
-        guard let productName = productName else {
-            throw FoodDatabaseError.incompleteData(NSLocalizedString("Entry has no name", comment: ""))
-        }
-        
-        guard let code = code else {
-            throw FoodDatabaseError.incompleteData(NSLocalizedString("Entry has no code", comment: ""))
-        }
-        
-        let caloriesPer100g = try getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.caloriesPer100g)
-        let carbsPer100g = try getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.carbsPer100g)
-        
-        var foodDatabaseEntry = FoodDatabaseEntry(
-            productName: productName,
-            caloriesPer100g: caloriesPer100g,
-            carbsPer100g: carbsPer100g,
-            source: foodDatabase,
-            sourceId: code
-        )
-        
-        // Append optional values if available
-        if let sugarsPer100g = try? getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.sugarsPer100g) {
-            foodDatabaseEntry.sugarsPer100g = sugarsPer100g
-        }
-        
-        if genericName != nil {
-            foodDatabaseEntry.genericName = genericName!
-        }
-        
-        if brands != nil {
-            foodDatabaseEntry.brand = brands!
-        }
-        
-        // Return the resulting entry
-        return foodDatabaseEntry
-    }*/
     
     func getNutrimentsDoubleValue(key: NutrimentsKey) throws -> Double {
         guard let value = nutriments?[key.rawValue] else {

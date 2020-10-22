@@ -7,21 +7,10 @@
 //
 
 import SwiftUI
-import URLImage
 
 struct FoodPreview: View {
-    
-    @ObservedObject var foodDatabase: OpenFoodFacts
+    @ObservedObject var foodDatabaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
-    private var selectedFoodItem: FoodItemViewModel? {
-        if foodDatabase.foodDatabaseEntry == nil {
-            return nil
-        } else {
-            let selectedFoodItem = draftFoodItem
-            try? selectedFoodItem.fill(with: foodDatabase.foodDatabaseEntry!)
-            return selectedFoodItem
-        }
-    }
     @Environment(\.presentationMode) var presentation
     @State var errorMessage = ""
     @State var showingAlert = false
@@ -29,27 +18,27 @@ struct FoodPreview: View {
     var body: some View {
         NavigationView {
             VStack {
-                if selectedFoodItem == nil {
+                if foodDatabaseResults.selectedEntry == nil {
                     Text("Loading food item...")
                 } else {
                     // The food name
-                    Text(selectedFoodItem!.name).font(.headline).padding()
+                    Text(foodDatabaseResults.selectedEntry!.name).font(.headline).padding()
                     
                     HStack {
                         Text("Calories per 100g")
                         Spacer()
-                        Text(selectedFoodItem!.caloriesPer100gAsString)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseResults.selectedEntry!.caloriesPer100g))!)
                         Text("kcal")
                     }
                     HStack {
                         Text("Carbs per 100g")
                         Spacer()
-                        Text(selectedFoodItem!.carbsPer100gAsString)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseResults.selectedEntry!.carbsPer100g))!)
                         Text("g")
                     }
                     HStack {
                         Text("Thereof Sugars per 100g")
-                        Text(selectedFoodItem!.sugarsPer100gAsString)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseResults.selectedEntry!.sugarsPer100g))!)
                         Text("g")
                     }
                     
@@ -74,26 +63,15 @@ struct FoodPreview: View {
             }) {
                 Text("Cancel")
             }, trailing: Button(action: {
-                if let selectedResult = foodDatabase.foodDatabaseEntry {
-                    do {
-                        try draftFoodItem.fill(with: selectedResult)
+                if let selectedResult = foodDatabaseResults.selectedEntry {
+                    draftFoodItem.fill(with: selectedResult)
                         
-                        // Close sheet
-                        presentation.wrappedValue.dismiss()
-                    } catch FoodDatabaseError.incompleteData(let errorMessage) {
-                        self.errorMessage = errorMessage
-                        showingAlert = true
-                    } catch FoodDatabaseError.typeError(let errorMessage) {
-                        self.errorMessage = errorMessage
-                        showingAlert = true
-                    } catch {
-                        self.errorMessage = error.localizedDescription
-                        showingAlert = true
-                    }
+                    // Close sheet
+                    presentation.wrappedValue.dismiss()
                 }
                 
             }) {
-                Text("Select").disabled(foodDatabase.foodDatabaseEntry == nil)
+                Text("Select").disabled(foodDatabaseResults.selectedEntry == nil)
             })
         }
         .alert(isPresented: self.$showingAlert) {

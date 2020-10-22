@@ -9,13 +9,13 @@
 import SwiftUI
 
 struct FoodSearchResultPreview: View {
-    var product: OpenFoodFactsProduct
+    var product: FoodDatabaseEntry
     var isSelected: Bool
     
     var body: some View {
         HStack {
             Image(systemName: isSelected ? "checkmark.circle.fill" : "circle").foregroundColor(.green)
-            Text(product.productName ?? NSLocalizedString("- No name -", comment: ""))
+            Text(product.name)
         }
     }
 }
