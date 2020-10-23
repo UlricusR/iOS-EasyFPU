@@ -230,8 +230,8 @@ struct SettingsEditor: View {
                     // For OpenFoodFacts: The country code
                     if selectedFoodDatabaseType == .openFoodFacts {
                         Picker("Country", selection: $selectedCountry) {
-                            ForEach(OpenFoodFactsCountryCodes.getAllCodes().sorted(), id: \.self) { countryCode in
-                                Text(OpenFoodFactsCountryCodes.alpha2Codes[countryCode]!).tag(countryCode)
+                            ForEach(OpenFoodFactsCountryCodes.getAllCountries(), id: \.self) { country in
+                                Text(country).tag(OpenFoodFactsCountryCodes.getCode(for: country))
                             }
                         }
                     }
@@ -296,7 +296,8 @@ struct SettingsEditor: View {
                         UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedFoodDatabaseType.rawValue, UserSettings.UserDefaultsStringKey.foodDatabase), errorMessage: &self.errorMessage)
+                        UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedFoodDatabaseType.rawValue, UserSettings.UserDefaultsStringKey.foodDatabase), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedCountry, UserSettings.UserDefaultsStringKey.countryCode), errorMessage: &errorMessage)
                     ) {
                         self.showingAlert = true
                     } else {
@@ -312,6 +313,7 @@ struct SettingsEditor: View {
                         UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
                         UserSettings.shared.treatSugarsSeparately = self.draftAbsorptionScheme.treatSugarsSeparately
                         UserSettings.shared.foodDatabase = FoodDatabaseType.getFoodDatabase(type: self.selectedFoodDatabaseType)
+                        UserSettings.shared.countryCode = self.selectedCountry
                         UserSettings.shared.objectWillChange.send()
                         
                         // Close sheet

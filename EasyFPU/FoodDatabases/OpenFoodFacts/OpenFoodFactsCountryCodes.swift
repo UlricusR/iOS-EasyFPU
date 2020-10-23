@@ -34,11 +34,14 @@ class OpenFoodFactsCountryCodes: Decodable {
         Array(alpha2Codes.values.sorted())
     }
     
+    static func getCode(for country: String) -> String {
+        alpha2Codes.filter{ $1 == country }.map{ $0.0 }[0]
+    }
+    
     static func getDefault() -> (code: String, country: String)? {
-        if let locale = Locale.current.regionCode?.lowercased() {
-            let allCodesInCapitals = getAllCodes().map({ $0.uppercased() })
-            if allCodesInCapitals.contains(locale.uppercased()) {
-                return (code: locale, country: alpha2Codes[locale.uppercased()]!)
+        if let locale = Locale.current.regionCode {
+            if getAllCodes().contains(locale) {
+                return (code: locale, country: alpha2Codes[locale]!)
             }
         }
         
