@@ -18,6 +18,8 @@ struct SettingsEditor: View {
     @State private var updateButton: Bool = false
     @State private var showingAlert: Bool = false
     @State private var absorptionBlocksToBeDeleted = [AbsorptionBlockViewModel]()
+    @State private var selectedFoodDatabaseType: FoodDatabaseType = UserSettings.getFoodDatabaseType()
+    @State private var selectedCountry: String = UserSettings.getCountryCode()
     @State private var showingScreen = false
     private let helpScreen = HelpScreen.absorptionSchemeEditor
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -215,6 +217,25 @@ struct SettingsEditor: View {
                         Text("min")
                     }
                 }
+                
+                // Food database
+                Section(header: Text("Food Database")) {
+                    // The food database
+                    Picker("Database", selection: $selectedFoodDatabaseType) {
+                        ForEach(FoodDatabaseType.allCases) { foodDatabaseType in
+                            Text(foodDatabaseType.rawValue).tag(foodDatabaseType)
+                        }
+                    }
+                    
+                    // For OpenFoodFacts: The country code
+                    if selectedFoodDatabaseType == .openFoodFacts {
+                        Picker("Country", selection: $selectedCountry) {
+                            ForEach(OpenFoodFactsCountryCodes.getAllCodes().sorted(), id: \.self) { countryCode in
+                                Text(OpenFoodFactsCountryCodes.alpha2Codes[countryCode]!).tag(countryCode)
+                            }
+                        }
+                    }
+                }
             }
             .animation(.easeInOut(duration: 0.16))
             
@@ -274,7 +295,8 @@ struct SettingsEditor: View {
                         UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &self.errorMessage)
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedFoodDatabaseType.rawValue, UserSettings.UserDefaultsStringKey.foodDatabase), errorMessage: &self.errorMessage)
                     ) {
                         self.showingAlert = true
                     } else {
@@ -289,6 +311,7 @@ struct SettingsEditor: View {
                         UserSettings.shared.absorptionTimeECarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalECarbs
                         UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
                         UserSettings.shared.treatSugarsSeparately = self.draftAbsorptionScheme.treatSugarsSeparately
+                        UserSettings.shared.foodDatabase = FoodDatabaseType.getFoodDatabase(type: self.selectedFoodDatabaseType)
                         UserSettings.shared.objectWillChange.send()
                         
                         // Close sheet

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct FoodPreview: View {
-    @ObservedObject var foodDatabaseResults: FoodDatabaseResults
+    var selectedEntry: FoodDatabaseEntry
     @ObservedObject var draftFoodItem: FoodItemViewModel
     @Environment(\.presentationMode) var presentation
     @State var errorMessage = ""
@@ -18,43 +18,39 @@ struct FoodPreview: View {
     var body: some View {
         NavigationView {
             VStack {
-                if foodDatabaseResults.selectedEntry == nil {
-                    Text("Loading food item...")
-                } else {
-                    // The food name
-                    Text(foodDatabaseResults.selectedEntry!.name).font(.headline).padding()
-                    
-                    HStack {
-                        Text("Calories per 100g")
-                        Spacer()
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseResults.selectedEntry!.caloriesPer100g))!)
-                        Text("kcal")
-                    }
-                    HStack {
-                        Text("Carbs per 100g")
-                        Spacer()
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseResults.selectedEntry!.carbsPer100g))!)
-                        Text("g")
-                    }
-                    HStack {
-                        Text("Thereof Sugars per 100g")
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseResults.selectedEntry!.sugarsPer100g))!)
-                        Text("g")
-                    }
-                    
-                    /*if foodDatabase.foodDatabaseEntry!.imageThumbUrl != nil {
-                        URLImage(
-                            url: URL(foodDatabase.foodDatabaseEntry!.imageThumbUrl!),
-                            content: { image in
-                                image
-                                    .resizable()
-                                    .aspectRation(contentMode: .fit)
-                            }
-                        )
-                    }*/
-                    
+                // The food name
+                Text(selectedEntry.name).font(.headline).padding()
+                
+                HStack {
+                    Text("Calories per 100g")
                     Spacer()
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.caloriesPer100g))!)
+                    Text("kcal")
                 }
+                HStack {
+                    Text("Carbs per 100g")
+                    Spacer()
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.carbsPer100g))!)
+                    Text("g")
+                }
+                HStack {
+                    Text("Thereof Sugars per 100g")
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.sugarsPer100g))!)
+                    Text("g")
+                }
+                
+                /*if foodDatabase.foodDatabaseEntry!.imageThumbUrl != nil {
+                    URLImage(
+                        url: URL(foodDatabase.foodDatabaseEntry!.imageThumbUrl!),
+                        content: { image in
+                            image
+                                .resizable()
+                                .aspectRation(contentMode: .fit)
+                        }
+                    )
+                }*/
+                
+                Spacer()
             }
             .navigationBarTitle("Scanned Food")
             .navigationBarItems(leading: Button(action: {
@@ -63,15 +59,13 @@ struct FoodPreview: View {
             }) {
                 Text("Cancel")
             }, trailing: Button(action: {
-                if let selectedResult = foodDatabaseResults.selectedEntry {
-                    draftFoodItem.fill(with: selectedResult)
-                        
-                    // Close sheet
-                    presentation.wrappedValue.dismiss()
-                }
+                draftFoodItem.fill(with: selectedEntry)
+                    
+                // Close sheet
+                presentation.wrappedValue.dismiss()
                 
             }) {
-                Text("Select").disabled(foodDatabaseResults.selectedEntry == nil)
+                Text("Select")
             })
         }
         .alert(isPresented: self.$showingAlert) {

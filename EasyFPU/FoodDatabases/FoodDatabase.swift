@@ -10,19 +10,32 @@ import Foundation
 
 protocol FoodDatabase {
     var databaseType: FoodDatabaseType { get }
-    func search(for term: String, foodDatabaseResults: FoodDatabaseResults)
-    func prepare(_ id: String, foodDatabaseResults: FoodDatabaseResults)
+    func search(for term: String, completion: @escaping (Result<[FoodDatabaseEntry]?, FoodDatabaseError>) -> Void)
+    func prepare(_ id: String, completion: @escaping (Result<FoodDatabaseEntry?, FoodDatabaseError>) -> Void)
 }
 
-enum FoodDatabaseType: String {
-    case openFoodFacts = "OpenFoodFacts"
+enum FoodDatabaseType: String, CaseIterable, Identifiable {
+    case openFoodFacts = "Open Food Facts"
+    
+    var id: String { self.rawValue }
+    
+    static func getFoodDatabase(type: FoodDatabaseType) -> FoodDatabase {
+        switch type {
+        case .openFoodFacts:
+            return OpenFoodFacts()
+        }
+    }
+    
+    static func getDefaultFoodDatabaseType() -> FoodDatabaseType {
+        return .openFoodFacts
+    }
     
     static let key = "FoodDatabase"
 }
 
 enum FoodDatabaseError: Error {
     case incompleteData(String)
-    case typeError(String)
+    case decodingError(String)
     case noSearchResults
     case networkError(String)
     case inputError(String)

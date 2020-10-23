@@ -190,6 +190,8 @@
 "No data selected" = "No data selected";
 
 // Food Database
+"Food Database" = "Lebensmitteldatenbank";
+"Database" = "Datenbank";
 "No product found" = "Kein Produkt gefunden";
 "No nutriments found" = "Keine Nährwerte gefunden";
 "Entry has no name" = "Eintrag hat keinen Namen";
@@ -205,6 +207,7 @@
 "Loading food item..." = "Lade Lebensmittel...";
 "Scanned Food" = "Gescanntes Lebensmittel";
 "No food found" = "Kein Lebensmittel gefunden";
+"Cannot decode JSON" = "Kann JSON nicht decodieren";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";

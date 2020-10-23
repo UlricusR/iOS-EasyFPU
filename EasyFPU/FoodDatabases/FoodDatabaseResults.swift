@@ -11,5 +11,4 @@ import Foundation
 class FoodDatabaseResults: ObservableObject {
     @Published var selectedEntry: FoodDatabaseEntry?
     @Published var searchResults: [FoodDatabaseEntry]?
-    @Published var errorMessage: String?
 }

@@ -19,7 +19,7 @@ struct FoodSearch: View {
     var body: some View {
         NavigationView {
             List {
-                if foodDatabaseResults.searchResults == nil || foodDatabaseResults.searchResults!.isEmpty {
+                if foodDatabaseResults.searchResults == nil {
                     Text("No search results (yet)")
                 } else {
                     ForEach(foodDatabaseResults.searchResults!) { searchResult in
@@ -32,8 +32,7 @@ struct FoodSearch: View {
             }
             .navigationBarTitle("Food Database Search")
             .navigationBarItems(leading: Button(action: {
-                // Empty search result and close sheet
-                foodDatabaseResults.searchResults = nil
+                // Close sheet
                 presentation.wrappedValue.dismiss()
             }) {
                 Text("Cancel")
@@ -45,8 +44,7 @@ struct FoodSearch: View {
                     foodDatabaseResults.selectedEntry = selectedResult!
                     draftFoodItem.fill(with: selectedResult!)
                     
-                    // Empty search results and close sheet
-                    foodDatabaseResults.searchResults = nil
+                    // Close sheet
                     presentation.wrappedValue.dismiss()
                 }
             }) {
@@ -60,10 +58,8 @@ struct FoodSearch: View {
                 dismissButton: .default(Text("OK"))
             )
         }
-        .onAppear(perform: search)
-    }
-    
-    private func search() {
-        UserSettings.shared.foodDatabase.search(for: draftFoodItem.name, foodDatabaseResults: foodDatabaseResults)
+        .onDisappear() {
+            foodDatabaseResults.searchResults = nil
+        }
     }
 }

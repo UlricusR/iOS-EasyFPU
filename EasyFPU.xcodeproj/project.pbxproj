@@ -52,6 +52,8 @@
 		1B6867E524FD37F80057EC6A /* HelpViewMealDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6867E424FD37F80057EC6A /* HelpViewMealDetails.swift */; };
 		1B6867E724FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6867E624FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift */; };
 		1B6B861A2517D1AC00ED10FE /* CarbsEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B86192517D1AC00ED10FE /* CarbsEntry.swift */; };
+		1B72BB452543187E008B0B51 /* ISO3166-1.alpha2.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B72BB442543187E008B0B51 /* ISO3166-1.alpha2.json */; };
+		1B72BB4925431BE6008B0B51 /* OpenFoodFactsCountryCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B72BB4825431BE6008B0B51 /* OpenFoodFactsCountryCodes.swift */; };
 		1B870FC124C9A32E00183C9F /* MealDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B870FC024C9A32E00183C9F /* MealDetail.swift */; };
 		1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */; };
 		1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */; };
@@ -130,6 +132,8 @@
 		1B6867E424FD37F80057EC6A /* HelpViewMealDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewMealDetails.swift; sourceTree = "<group>"; };
 		1B6867E624FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewAbsorptionSchemeEditor.swift; sourceTree = "<group>"; };
 		1B6B86192517D1AC00ED10FE /* CarbsEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsEntry.swift; sourceTree = "<group>"; };
+		1B72BB442543187E008B0B51 /* ISO3166-1.alpha2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "ISO3166-1.alpha2.json"; sourceTree = "<group>"; };
+		1B72BB4825431BE6008B0B51 /* OpenFoodFactsCountryCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFactsCountryCodes.swift; sourceTree = "<group>"; };
 		1B870FC024C9A32E00183C9F /* MealDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetail.swift; sourceTree = "<group>"; };
 		1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewModel.swift; sourceTree = "<group>"; };
 		1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmountViewModel.swift; sourceTree = "<group>"; };
@@ -284,6 +288,7 @@
 		1B004A5224BA52E9001E362A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1B72BB442543187E008B0B51 /* ISO3166-1.alpha2.json */,
 				1BAEE0872500E12400B4891F /* Default-568h@2x.png */,
 				1B004A5324BA532E001E362A /* absorptionscheme_default.json */,
 				1B68548524BC6FE0005ABB8B /* Localizable.strings */,
@@ -297,7 +302,7 @@
 				1B188446253B32DE00B671A2 /* FoodDatabase.swift */,
 				1B2D99862541D72F0012EC40 /* FoodDatabaseResults.swift */,
 				1B188449253B336500B671A2 /* FoodDatabaseEntry.swift */,
-				1B188443253B329000B671A2 /* OpenFoodFacts.swift */,
+				1B72BB4725431B95008B0B51 /* OpenFoodFacts */,
 			);
 			path = FoodDatabases;
 			sourceTree = "<group>";
@@ -323,6 +328,15 @@
 				1BA963E3250807DD00375650 /* HelpMealExportView.swift */,
 			);
 			path = Help;
+			sourceTree = "<group>";
+		};
+		1B72BB4725431B95008B0B51 /* OpenFoodFacts */ = {
+			isa = PBXGroup;
+			children = (
+				1B188443253B329000B671A2 /* OpenFoodFacts.swift */,
+				1B72BB4825431BE6008B0B51 /* OpenFoodFactsCountryCodes.swift */,
+			);
+			path = OpenFoodFacts;
 			sourceTree = "<group>";
 		};
 		1B8A4A8E24CAB9D300542212 /* ViewModels */ = {
@@ -440,6 +454,7 @@
 				1B004A5424BA532E001E362A /* absorptionscheme_default.json in Resources */,
 				1BDBE39C24FE384C00ED61F1 /* InfoPlist.strings in Resources */,
 				1BAEE0882500E12400B4891F /* Default-568h@2x.png in Resources */,
+				1B72BB452543187E008B0B51 /* ISO3166-1.alpha2.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,6 +522,7 @@
 				1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */,
 				1B004A2D24BA3035001E362A /* AppDelegate.swift in Sources */,
 				1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */,
+				1B72BB4925431BE6008B0B51 /* OpenFoodFactsCountryCodes.swift in Sources */,
 				1B2D99872541D72F0012EC40 /* FoodDatabaseResults.swift in Sources */,
 				1BF1A15A251AA1F8001E561C /* MealSugarsView.swift in Sources */,
 				1BF1A160251AA336001E561C /* MealECarbsView.swift in Sources */,

@@ -50,6 +50,7 @@ class UserSettings: ObservableObject {
     }
     
     enum UserDefaultsStringKey: String, CaseIterable {
+        case foodDatabase = "FoodDatabase"
         case countryCode = "CountryCode"
     }
     
@@ -85,7 +86,7 @@ class UserSettings: ObservableObject {
         absorptionTimeECarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault,
         eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault,
         treatSugarsSeparately: UserSettings.getValue(for: UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault,
-        foodDatabase: UserSettings.getFoodDatabase(),
+        foodDatabase: FoodDatabaseType.getFoodDatabase(type: UserSettings.getFoodDatabaseType()),
         countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode)
     )
     
@@ -180,13 +181,27 @@ class UserSettings: ObservableObject {
         UserSettings.keyStore.object(forKey: key.rawValue) == nil ? nil : UserSettings.keyStore.string(forKey: key.rawValue)
     }
     
-    private static func getFoodDatabase() -> FoodDatabase {
-        let foodDatabaseValue = UserSettings.keyStore.object(forKey: FoodDatabaseType.key) == nil ? FoodDatabaseType.openFoodFacts.rawValue : UserSettings.keyStore.string(forKey: FoodDatabaseType.key)
-        switch foodDatabaseValue {
-        case FoodDatabaseType.openFoodFacts.rawValue:
-            return OpenFoodFacts()
-        default:
-            return OpenFoodFacts()
+    static func getFoodDatabaseType() -> FoodDatabaseType {
+        let foodDatabaseValue = UserSettings.keyStore.object(forKey: FoodDatabaseType.key) == nil ? FoodDatabaseType.getDefaultFoodDatabaseType().rawValue : UserSettings.keyStore.string(forKey: FoodDatabaseType.key)!
+        
+        // If we don't have a key, we return the default
+        if let foodDatabaseType = FoodDatabaseType.init(rawValue: foodDatabaseValue) {
+            return foodDatabaseType
+        } else {
+            // Return the default
+            return FoodDatabaseType.getDefaultFoodDatabaseType()
+        }
+    }
+    
+    static func getCountryCode() -> String {
+        if let countryCode = UserSettings.shared.countryCode {
+            return countryCode
+        } else if let countryCode = UserSettings.getValue(for: UserSettings.UserDefaultsStringKey.countryCode) {
+            return countryCode
+        } else if let countryCode = OpenFoodFactsCountryCodes.getDefault() {
+            return countryCode.code
+        } else {
+            return ""
         }
     }
 }

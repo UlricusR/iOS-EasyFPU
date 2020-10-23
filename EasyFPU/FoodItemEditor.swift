@@ -17,8 +17,8 @@ struct FoodItemEditor: View {
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem? // Working copy of the food item
     @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
-    @State var errorMessage: String = ""
-    @State var activeSheet: FoodItemEditorSheets.State?
+    @State private var errorMessage: String = ""
+    @State private var activeSheet: FoodItemEditorSheets.State?
     
     @State var showingAlert = false
     @FetchRequest(
@@ -59,7 +59,7 @@ struct FoodItemEditor: View {
                                     self.errorMessage = NSLocalizedString("Search term must not be empty", comment: "")
                                     self.showingAlert = true
                                 } else {
-                                    activeSheet = .search
+                                    performSearch()
                                 }
                             }) {
                                 Image(systemName: "magnifyingglass").imageScale(.large)
@@ -392,11 +392,47 @@ struct FoodItemEditor: View {
         
         switch result {
         case .success(let barcode):
-            UserSettings.shared.foodDatabase.prepare(barcode, foodDatabaseResults: foodDatabaseResults)
-            self.activeSheet = .foodPreview
+            UserSettings.shared.foodDatabase.prepare(barcode) { result in
+                switch result {
+                case .success(let networkFoodDatabaseEntry):
+                    guard let foodDatabaseEntry = networkFoodDatabaseEntry else {
+                        // TODO
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        self.foodDatabaseResults.selectedEntry = foodDatabaseEntry
+                        self.activeSheet = .foodPreview
+                    }
+                    
+                    
+                case .failure(let error):
+                    // TODO
+                    debugPrint(error)
+                }
+            }
         case .failure(let error):
             errorMessage = NSLocalizedString("Error scanning food: ", comment: "") + error.localizedDescription
             showingAlert = true
+        }
+    }
+    
+    private func performSearch() {
+        UserSettings.shared.foodDatabase.search(for: draftFoodItem.name) { result in
+            switch result {
+            case .success(let networkSearchResults):
+                guard let searchResults = networkSearchResults else {
+                    // TODO
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.foodDatabaseResults.searchResults = searchResults
+                    self.activeSheet = .search
+                }
+            case .failure(let error):
+                // TODO
+                debugPrint(error)
+            }
         }
     }
     
@@ -410,7 +446,7 @@ struct FoodItemEditor: View {
         case .scan:
             CodeScannerView(codeTypes: [.ean13], simulatedData: "4101530002123", completion: self.handleScan)
         case .foodPreview:
-            FoodPreview(foodDatabaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem)
+            FoodPreview(selectedEntry: foodDatabaseResults.selectedEntry!, draftFoodItem: draftFoodItem)
         }
     }
 }

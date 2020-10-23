@@ -10,22 +10,24 @@ import Foundation
 
 class OpenFoodFacts: FoodDatabase {
     var databaseType = FoodDatabaseType.openFoodFacts
-    private var countrycode: CountryCode {
+    private var countrycode: String {
+        let allCountryKeys = OpenFoodFactsCountryCodes.alpha2Codes
+        let allCountryCodes = allCountryKeys.keys.map{ $0.lowercased() }
+        
         if let countryCodeString = UserSettings.shared.countryCode {
-            if let countryCode = CountryCode.init(rawValue: countryCodeString) {
-                return countryCode
+            if allCountryCodes.contains(countryCodeString) {
+                return countryCodeString
             }
         }
         
         if let countryCodeString = Locale.current.regionCode?.lowercased() {
-            if let countryCode = CountryCode.init(rawValue: countryCodeString) {
-                return countryCode
+            if allCountryCodes.contains(countryCodeString) {
+                return countryCodeString
             }
         }
         
-        return CountryCode.world
+        return "world"
     }
-    //private let languagecode = "en"
     private let userAgent = "EasyFPU - iOS - Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)"
     private var productFields: [String] {
         var fields = [String]()
@@ -35,26 +37,19 @@ class OpenFoodFacts: FoodDatabase {
         return fields
     }
     
-    enum CountryCode: String, CaseIterable {
-        case world = "world"
-        case de = "de"
-        case us = "us"
-    }
-    
-    func search(for term: String, foodDatabaseResults: FoodDatabaseResults) {
+    func search(for term: String, completion: @escaping (Result<[FoodDatabaseEntry]?, FoodDatabaseError>) -> Void) {
         guard let urlSearchTerm = term.trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-            foodDatabaseResults.errorMessage = NSLocalizedString("Unable to convert your search string into a valid URL", comment: "")
+            completion(.failure(.inputError(NSLocalizedString("Unable to convert your search string into a valid URL", comment: ""))))
             return
         }
-        //let urlString = "https://\(countrycode.rawValue)-\(languagecode).openfoodfacts.org/cgi/search.pl?action=process&search_terms=\(urlSearchTerm)&sort_by=unique_scans_n&json=true" // Version with language code
-        let urlString = "https://\(countrycode.rawValue).openfoodfacts.org/cgi/search.pl?action=process&search_terms=\(urlSearchTerm)&sort_by=unique_scans_n&json=true" // Version without language code
+        let urlString = "https://\(countrycode).openfoodfacts.org/cgi/search.pl?action=process&search_terms=\(urlSearchTerm)&sort_by=unique_scans_n&json=true" // Version without language code
         let request = prepareRequest(urlString)
         
         let session = URLSession.shared
         session.dataTask(with: request, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
             guard error == nil else {
                 debugPrint(error!.localizedDescription)
-                foodDatabaseResults.errorMessage = error!.localizedDescription
+                completion(.failure(.networkError(error!.localizedDescription)))
                 return
             }
             
@@ -62,62 +57,46 @@ class OpenFoodFacts: FoodDatabase {
                 do {
                     let openFoodFactsSearchResult = try JSONDecoder().decode(OpenFoodFactsSearchResult.self, from: data)
                     guard let products = openFoodFactsSearchResult.products else {
-                        throw FoodDatabaseError.noSearchResults
+                        completion(.failure(FoodDatabaseError.noSearchResults))
+                        return
                     }
                     
-                    DispatchQueue.main.async {
-                        foodDatabaseResults.searchResults = [FoodDatabaseEntry]()
-                        for product in products {
-                            if let foodDatabaseEntry = FoodDatabaseEntry(from: product) {
-                                foodDatabaseResults.searchResults!.append(foodDatabaseEntry)
-                            }
-                        }
-                    }
+                    let searchResults = products.compactMap( { FoodDatabaseEntry(from: $0) })
+                    completion(.success(searchResults))
                 } catch {
                     debugPrint(error.localizedDescription)
-                    DispatchQueue.main.async {
-                        foodDatabaseResults.errorMessage = error.localizedDescription
-                    }
+                    completion(.failure(.decodingError(error.localizedDescription)))
                 }
             }
         }).resume()
     }
     
-    func prepare(_ id: String, foodDatabaseResults: FoodDatabaseResults) {
-        //let urlString = "https://\(countrycode.rawValue)-\(languagecode).openfoodfacts.org/api/v0/product/\(id).json?fields=\(productFields.joined(separator: ","))" // Version with language code
-        let urlString = "https://\(countrycode.rawValue).openfoodfacts.org/api/v0/product/\(id).json?fields=\(productFields.joined(separator: ","))" // Version without language code
+    func prepare(_ id: String, completion: @escaping (Result<FoodDatabaseEntry?, FoodDatabaseError>) -> Void) {
+        let urlString = "https://\(countrycode).openfoodfacts.org/api/v0/product/\(id).json?fields=\(productFields.joined(separator: ","))"
         let request = prepareRequest(urlString)
         
         let session = URLSession.shared
         session.dataTask(with: request, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
             if let data = data {
-                do {
-                    let openFoodFactsObject = try JSONDecoder().decode(OpenFoodFactsObject.self, from: data)
-                    
-                    // Check if there's a product
-                    guard let product = openFoodFactsObject.product else {
-                        throw FoodDatabaseError.incompleteData(NSLocalizedString("No product found", comment: ""))
-                    }
-                    
-                    // Fill the FoodDatabaseEntry
-                    DispatchQueue.main.async {
-                        do {
-                            guard let foodDatabaseEntry = FoodDatabaseEntry(from: product) else {
-                                throw FoodDatabaseError.incompleteData(NSLocalizedString("No food found", comment: ""))
-                            }
-                            foodDatabaseResults.selectedEntry = foodDatabaseEntry
-                        } catch FoodDatabaseError.incompleteData(let errorMessage) {
-                            foodDatabaseResults.errorMessage = errorMessage
-                        } catch {
-                            foodDatabaseResults.errorMessage = error.localizedDescription
-                        }
-                    }
-                } catch {
-                    debugPrint(error.localizedDescription)
-                    DispatchQueue.main.async {
-                        foodDatabaseResults.errorMessage = error.localizedDescription
-                    }
+                guard let openFoodFactsObject = try? JSONDecoder().decode(OpenFoodFactsObject.self, from: data) else {
+                    completion(.failure(.decodingError(error?.localizedDescription ?? NSLocalizedString("Cannot decode JSON", comment: ""))))
+                    return
                 }
+                
+                // Check if there's a product
+                guard let product = openFoodFactsObject.product else {
+                    completion(.failure(.incompleteData(NSLocalizedString("No product found", comment: ""))))
+                    return
+                }
+                
+                // Fill the FoodDatabaseEntry
+                guard let foodDatabaseEntry = FoodDatabaseEntry(from: product) else {
+                    completion(.failure(.incompleteData(NSLocalizedString("No food found", comment: ""))))
+                    return
+                }
+                
+                // We have an entry
+                completion(.success(foodDatabaseEntry))
             }
         }).resume()
     }
@@ -227,7 +206,7 @@ struct OpenFoodFactsProduct: Decodable, Hashable, Identifiable {
             return number
         case .string(let string):
             guard let doubleFromString = Double(string) else {
-                throw FoodDatabaseError.typeError("Wrong data type for key \(key.rawValue): Expected Double")
+                throw FoodDatabaseError.decodingError("Wrong data type for key \(key.rawValue): Expected Double")
             }
             return doubleFromString
         }
