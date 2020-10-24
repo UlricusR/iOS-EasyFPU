@@ -25,6 +25,7 @@ class UserSettings: ObservableObject {
         case exportTotalMealSugars = "ExportTotalMealSugars"
         case exportTotalMealCalories = "ExportTotalMealCalories"
         case treatSugarsSeparately = "TreatSugarsSeparately"
+        case searchWorldwide = "SearchWorldwide"
     }
     
     enum UserDefaultsDoubleKey: String, CaseIterable {
@@ -72,6 +73,7 @@ class UserSettings: ObservableObject {
     @Published var mealDelayInMinutes: Int = 0
     @Published var alertPeriodAfterExportInMinutes: Int = 15
     @Published var foodDatabase: FoodDatabase
+    @Published var searchWorldwide: Bool
     @Published var countryCode: String?
     
     static let shared = UserSettings(
@@ -87,6 +89,7 @@ class UserSettings: ObservableObject {
         eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault,
         treatSugarsSeparately: UserSettings.getValue(for: UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault,
         foodDatabase: FoodDatabaseType.getFoodDatabase(type: UserSettings.getFoodDatabaseType()),
+        searchWorldwide: UserSettings.getValue(for: UserDefaultsBoolKey.searchWorldwide) ?? false,
         countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode)
     )
     
@@ -103,6 +106,7 @@ class UserSettings: ObservableObject {
         eCarbsFactor: Double,
         treatSugarsSeparately: Bool,
         foodDatabase: FoodDatabase,
+        searchWorldwide: Bool,
         countryCode: String?
     ) {
         self.disclaimerAccepted = disclaimerAccepted
@@ -117,6 +121,7 @@ class UserSettings: ObservableObject {
         self.eCarbsFactor = eCarbsFactor
         self.treatSugarsSeparately = treatSugarsSeparately
         self.foodDatabase = foodDatabase
+        self.searchWorldwide = searchWorldwide
         self.countryCode = countryCode
     }
     
@@ -198,8 +203,6 @@ class UserSettings: ObservableObject {
             return countryCode
         } else if let countryCode = UserSettings.getValue(for: UserSettings.UserDefaultsStringKey.countryCode) {
             return countryCode
-        } else if let countryCode = OpenFoodFactsCountryCodes.getDefault() {
-            return countryCode.code
         } else {
             return ""
         }

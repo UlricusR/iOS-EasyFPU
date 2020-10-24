@@ -11,7 +11,10 @@ import Foundation
 class OpenFoodFacts: FoodDatabase {
     var databaseType = FoodDatabaseType.openFoodFacts
     private var countrycode: String {
-        let countryCode = UserSettings.getCountryCode()
+        if UserSettings.shared.searchWorldwide {
+            return "world"
+        }
+        let countryCode = UserSettings.getCountryCode().lowercased()
         return countryCode != "" ? countryCode : "world"
     }
     private let userAgent = "EasyFPU - iOS - Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)"

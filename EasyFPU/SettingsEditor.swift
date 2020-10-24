@@ -19,6 +19,7 @@ struct SettingsEditor: View {
     @State private var showingAlert: Bool = false
     @State private var absorptionBlocksToBeDeleted = [AbsorptionBlockViewModel]()
     @State private var selectedFoodDatabaseType: FoodDatabaseType = UserSettings.getFoodDatabaseType()
+    @State private var searchWorldwide: Bool = UserSettings.shared.searchWorldwide
     @State private var selectedCountry: String = UserSettings.getCountryCode()
     @State private var showingScreen = false
     private let helpScreen = HelpScreen.absorptionSchemeEditor
@@ -229,9 +230,11 @@ struct SettingsEditor: View {
                     
                     // For OpenFoodFacts: The country code
                     if selectedFoodDatabaseType == .openFoodFacts {
-                        Picker("Country", selection: $selectedCountry) {
-                            ForEach(OpenFoodFactsCountryCodes.getAllCountries(), id: \.self) { country in
-                                Text(country).tag(OpenFoodFactsCountryCodes.getCode(for: country))
+                        Toggle("Search worldwide", isOn: self.$searchWorldwide)
+                        if !searchWorldwide {
+                            HStack {
+                                NavigationLink("Country", destination: CountryPicker(code: self.$selectedCountry))
+                                Text(self.selectedCountry)
                             }
                         }
                     }
@@ -297,6 +300,7 @@ struct SettingsEditor: View {
                         UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedFoodDatabaseType.rawValue, UserSettings.UserDefaultsStringKey.foodDatabase), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.searchWorldwide, UserSettings.UserDefaultsBoolKey.searchWorldwide), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedCountry, UserSettings.UserDefaultsStringKey.countryCode), errorMessage: &errorMessage)
                     ) {
                         self.showingAlert = true
@@ -313,6 +317,7 @@ struct SettingsEditor: View {
                         UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
                         UserSettings.shared.treatSugarsSeparately = self.draftAbsorptionScheme.treatSugarsSeparately
                         UserSettings.shared.foodDatabase = FoodDatabaseType.getFoodDatabase(type: self.selectedFoodDatabaseType)
+                        UserSettings.shared.searchWorldwide = self.searchWorldwide
                         UserSettings.shared.countryCode = self.selectedCountry
                         UserSettings.shared.objectWillChange.send()
                         

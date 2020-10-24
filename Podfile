@@ -7,5 +7,6 @@ target 'EasyFPU' do
 
   # Pods for EasyFPU
   pod 'Charts'
+  pod 'ADCountryPicker', '~> 2.1.0'
 
 end

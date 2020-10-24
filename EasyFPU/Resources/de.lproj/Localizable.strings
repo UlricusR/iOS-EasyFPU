@@ -104,7 +104,7 @@
 "Thereof" = "Davon";
 "Search term must not be empty" = "Suchbegriff darf nicht leer sein";
 
-// Absorption scheme editor
+// Settings editor
 "Absorption scheme" = "Absorptionsschema";
 "Absorption Blocks" = "Absorptionsblöcke";
 "Tap to edit, swipe left to delete" = "Zum Bearbeiten antippen, zum Löschen nach links wischen";
@@ -135,6 +135,9 @@
 "Treat sugars separately" = "KH aus Zucker separat behandeln";
 "Other Parameters" = "Andere Einstellungen";
 "Alert duration between exports" = "Hinweis-Dauer zwischen Exporten";
+"Country" = "Land";
+"Select food database country" = "Land für Lebensmitteldatenbank wählen";
+"Search worldwide" = "Weltweit suchen";
 
 // Menu actions
 "Settings" = "Einstellungen";

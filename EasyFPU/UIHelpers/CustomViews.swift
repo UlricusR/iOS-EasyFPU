@@ -15,7 +15,7 @@ struct CustomTextField: View {
     
     var body: some View {
         if #available(iOS 14.0, *) {
-            return AnyView(TextField(titleKey, text: $text).ignoresSafeArea(.keyboard, edges: .bottom).keyboardType(keyboardType))
+            return AnyView(TextField(NSLocalizedString(titleKey, comment: ""), text: $text).ignoresSafeArea(.keyboard, edges: .bottom).keyboardType(keyboardType))
         } else {
             // Fallback on earlier versions
             return AnyView(TextField(titleKey, text: $text).keyboardType(keyboardType))
