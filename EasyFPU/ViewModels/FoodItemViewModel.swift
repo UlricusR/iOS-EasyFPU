@@ -68,7 +68,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
     private(set) var carbsPer100g: Double = 0.0
     private(set) var sugarsPer100g: Double = 0.0
     private(set) var amount: Int = 0
-    var typicalAmounts = [TypicalAmountViewModel]()
+    @Published var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
     
     enum CodingKeys: String, CodingKey {

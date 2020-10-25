@@ -75,7 +75,6 @@ struct FoodItemSelector: View {
                                 }
                                 .onTapGesture {
                                     self.draftFoodItem.amountAsString = typicalAmount.amountAsString
-                                    self.draftFoodItem.objectWillChange.send()
                                 }
                             }
                         }
@@ -151,7 +150,6 @@ struct FoodItemSelector: View {
             let _ = newTypicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem)
             self.editedFoodItem.addToTypicalAmounts(newCoreDataTypicalAmount)
             try? AppDelegate.viewContext.save()
-            self.draftFoodItem.objectWillChange.send()
             
             self.addToTypicalAmounts = false
         } else {

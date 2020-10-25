@@ -32,10 +32,8 @@ struct MealDetail: View {
                     HStack {
                         Stepper("Delay until meal", onIncrement: {
                             userSettings.mealDelayInMinutes += 5
-                            userSettings.objectWillChange.send()
                         }, onDecrement: {
                             userSettings.mealDelayInMinutes = max(userSettings.mealDelayInMinutes - 5, 0)
-                            userSettings.objectWillChange.send()
                         })
                         Text(String(userSettings.mealDelayInMinutes))
                         Text("min")

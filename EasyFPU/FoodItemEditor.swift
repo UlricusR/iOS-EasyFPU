@@ -335,7 +335,6 @@ struct FoodItemEditor: View {
             return
         }
         self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
-        self.draftFoodItem.objectWillChange.send()
     }
     
     private func updateCDTypicalAmount(with typicalAmount: TypicalAmountViewModel) {
@@ -360,9 +359,6 @@ struct FoodItemEditor: View {
                 self.newTypicalAmount = ""
                 self.newTypicalAmountComment = ""
                 self.updateButton = false
-                
-                // Broadcast changed object
-                self.draftFoodItem.objectWillChange.send()
             } else {
                 self.showingAlert = true
             }

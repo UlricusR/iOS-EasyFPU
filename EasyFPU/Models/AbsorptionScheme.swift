@@ -11,8 +11,6 @@ import SwiftUI
 class AbsorptionScheme: Equatable, ObservableObject {
     @Published var absorptionBlocks = [AbsorptionBlock]()
     
-    
-    
     func addToAbsorptionBlocks(newAbsorptionBlock: AbsorptionBlock) {
         absorptionBlocks.append(newAbsorptionBlock)
         absorptionBlocks = absorptionBlocks.sorted()
@@ -61,21 +59,10 @@ class AbsorptionScheme: Equatable, ObservableObject {
     }
     
     static func == (lhs: AbsorptionScheme, rhs: AbsorptionScheme) -> Bool {
-        guard
-            let lhsMaxAbsorptionTime = lhs.getMaximumAbsorptionTime(),
-            let rhsMaxAbsorptionTime = rhs.getMaximumAbsorptionTime(),
-            let lhsMaxFPUs = lhs.getMaximumFPUs(),
-            let rhsMaxFPUs = rhs.getMaximumFPUs()
-        else {
-            return false
-        }
-        
-        if lhsMaxAbsorptionTime != rhsMaxAbsorptionTime {
-            return false
-        }
-        
-        if lhsMaxFPUs != rhsMaxFPUs {
-            return false
+        for absorptionBlock in lhs.absorptionBlocks {
+            if !rhs.absorptionBlocks.contains(absorptionBlock) {
+                return false
+            }
         }
         
         return true

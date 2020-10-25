@@ -69,7 +69,6 @@ struct MenuView: View {
                 
                 // Display disclaimer
                 UserSettings.shared.disclaimerAccepted = false
-                UserSettings.shared.objectWillChange.send()
             }) {
                 Text("Disclaimer")
             }

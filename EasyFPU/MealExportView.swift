@@ -54,11 +54,9 @@ struct MealExportView: View {
                 HStack {
                     Stepper("Delay until meal", onIncrement: {
                         userSettings.mealDelayInMinutes += 5
-                        userSettings.objectWillChange.send()
                         carbsRegimeCalculator.recalculate()
                     }, onDecrement: {
                         userSettings.mealDelayInMinutes = max(userSettings.mealDelayInMinutes - 5, 0)
-                        userSettings.objectWillChange.send()
                         carbsRegimeCalculator.recalculate()
                     })
                     Text(String(userSettings.mealDelayInMinutes))
@@ -140,7 +138,7 @@ struct MealExportView: View {
             return
         }
         self.carbsRegimeCalculator.meal = meal
-        self.carbsRegimeCalculator.absorptionTimeInMinutes = absorptionTimeInHours * 60
+        self.carbsRegimeCalculator.eCarbsAbsorptionTimeInMinutes = absorptionTimeInHours * 60
         self.carbsRegimeCalculator.recalculate()
     }
     

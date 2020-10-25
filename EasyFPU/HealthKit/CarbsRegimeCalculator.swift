@@ -33,7 +33,7 @@ class CarbsRegimeCalculator: ObservableObject {
         }
     }
     var meal: MealViewModel
-    var absorptionTimeInMinutes: Int
+    var eCarbsAbsorptionTimeInMinutes: Int
     
     // Parameters that change every time the carbs regime is changed by the user (e.g. include sugars, exclude carbs, etc.)
     // We set these to default values, but need give them proper values in the initializer / in the setParameters function
@@ -50,7 +50,7 @@ class CarbsRegimeCalculator: ObservableObject {
     
     static let `default` = CarbsRegimeCalculator(
         meal: MealViewModel.default,
-        absorptionTimeInHours: 5,
+        eCarbsAbsorptionTimeInHours: 5,
         includeSugars: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealSugars) ?? false,
         includeTotalMealCarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false,
         includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true
@@ -58,7 +58,7 @@ class CarbsRegimeCalculator: ObservableObject {
     
     // MARK: - Initializers
     
-    init(meal: MealViewModel, absorptionTimeInHours: Int, includeSugars: Bool, includeTotalMealCarbs: Bool, includeECarbs: Bool) {
+    init(meal: MealViewModel, eCarbsAbsorptionTimeInHours: Int, includeSugars: Bool, includeTotalMealCarbs: Bool, includeECarbs: Bool) {
         self.hkObjects = [HKObject]()
         self.sugarsEntries = [Date: CarbsEntry]()
         self.carbsEntries = [Date: CarbsEntry]()
@@ -67,7 +67,7 @@ class CarbsRegimeCalculator: ObservableObject {
         self.includeTotalMealSugars = includeSugars
         self.includeTotalMealCarbs = includeTotalMealCarbs
         self.includeECarbs = includeECarbs
-        self.absorptionTimeInMinutes = absorptionTimeInHours * 60
+        self.eCarbsAbsorptionTimeInMinutes = eCarbsAbsorptionTimeInHours * 60
         
         // Determine parameters
         self.setParameters()
@@ -84,9 +84,6 @@ class CarbsRegimeCalculator: ObservableObject {
         
         // Determine parameters
         setParameters()
-        
-        self.objectWillChange.send()
-        self.carbsRegime.objectWillChange.send()
     }
     
     // MARK: - Functions for calculating the HealthKit information
@@ -100,7 +97,7 @@ class CarbsRegimeCalculator: ObservableObject {
         globalEndTime = max(
             mealStartTime.addingTimeInterval(includeTotalMealSugars ? (Double(UserSettings.shared.absorptionTimeSugarsDelayInMinutes) + UserSettings.shared.absorptionTimeSugarsDurationInHours * 60) * 60 : 0), // either sugars start + duration or zero
             mealStartTime.addingTimeInterval(includeTotalMealCarbs ? (Double(UserSettings.shared.absorptionTimeCarbsDelayInMinutes) + UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) * 60 : 0), // either carbs start + duration or zero
-            mealStartTime.addingTimeInterval(includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + absorptionTimeInMinutes) * 60) : 0) // either eCarbs start + duration or zero
+            mealStartTime.addingTimeInterval(includeECarbs ? TimeInterval((UserSettings.shared.absorptionTimeECarbsDelayInMinutes + eCarbsAbsorptionTimeInMinutes) * 60) : 0) // either eCarbs start + duration or zero
         )
         intervalInMinutes = DataHelper.gcd([UserSettings.shared.absorptionTimeSugarsIntervalInMinutes, UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, UserSettings.shared.absorptionTimeECarbsIntervalInMinutes])
         
@@ -153,14 +150,14 @@ class CarbsRegimeCalculator: ObservableObject {
     private func calculateECarbs() {
         if includeECarbs {
             // Make sure to not go below 1 for number carb entries, otherwise we'd increase e-carbs amount in the next step
-            let numberOfECarbEntries = max(absorptionTimeInMinutes / UserSettings.shared.absorptionTimeECarbsIntervalInMinutes, 1)
+            let numberOfECarbEntries = max(eCarbsAbsorptionTimeInMinutes / UserSettings.shared.absorptionTimeECarbsIntervalInMinutes, 1)
             let totalECarbs = meal.fpus.getExtendedCarbs()
             calculateXCarbs(
                 xCarbsEntries: &self.eCarbsEntries,
                 numberOfXCarbsEntries: numberOfECarbEntries,
                 totalXCarbs: totalECarbs,
                 xCarbsStart: eCarbsStart,
-                xCarbsEnd: eCarbsStart.addingTimeInterval(TimeInterval(absorptionTimeInMinutes * 60)),
+                xCarbsEnd: eCarbsStart.addingTimeInterval(TimeInterval(eCarbsAbsorptionTimeInMinutes * 60)),
                 xCarbsType: .eCarbs,
                 timeIntervalInMinutes: UserSettings.shared.absorptionTimeECarbsIntervalInMinutes
             )

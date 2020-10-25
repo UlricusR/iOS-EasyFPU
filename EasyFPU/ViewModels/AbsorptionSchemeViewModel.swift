@@ -9,7 +9,7 @@
 import Foundation
 
 class AbsorptionSchemeViewModel: ObservableObject {
-    var absorptionBlocks: [AbsorptionBlockViewModel]
+    @Published var absorptionBlocks: [AbsorptionBlockViewModel]
     
     // Absorption block parameters for sugars
     private(set) var delaySugars: Int = AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault

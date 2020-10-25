@@ -162,9 +162,6 @@ struct SettingsEditor: View {
                                         self.newMaxFpu = ""
                                         self.newAbsorptionTime = ""
                                         self.updateButton = false
-                                        
-                                        // Broadcast change
-                                        self.draftAbsorptionScheme.objectWillChange.send()
                                     } else {
                                         self.showingAlert = true
                                     }
@@ -188,9 +185,6 @@ struct SettingsEditor: View {
                                         self.newMaxFpu = ""
                                         self.newAbsorptionTime = ""
                                         self.updateButton = false
-                                        
-                                        // Broadcast change
-                                        self.draftAbsorptionScheme.objectWillChange.send()
                                     } else {
                                         // Undo deletion of block and show alert
                                         self.draftAbsorptionScheme.absorptionBlocks.insert(existingAbsorptionBlock, at: index)
@@ -209,10 +203,8 @@ struct SettingsEditor: View {
                     HStack {
                         Stepper("Alert duration between exports", onIncrement: {
                             UserSettings.shared.alertPeriodAfterExportInMinutes += 5
-                            UserSettings.shared.objectWillChange.send()
                         }, onDecrement: {
                             UserSettings.shared.alertPeriodAfterExportInMinutes = max(UserSettings.shared.alertPeriodAfterExportInMinutes - 5, 0)
-                            UserSettings.shared.objectWillChange.send()
                         })
                         Text(String(UserSettings.shared.alertPeriodAfterExportInMinutes))
                         Text("min")
@@ -319,7 +311,6 @@ struct SettingsEditor: View {
                         UserSettings.shared.foodDatabase = FoodDatabaseType.getFoodDatabase(type: self.selectedFoodDatabaseType)
                         UserSettings.shared.searchWorldwide = self.searchWorldwide
                         UserSettings.shared.countryCode = self.selectedCountry
-                        UserSettings.shared.objectWillChange.send()
                         
                         // Close sheet
                         presentation.wrappedValue.dismiss()
@@ -352,7 +343,6 @@ struct SettingsEditor: View {
                 absorptionBlocksToBeDeleted.append(absorptionBlockToBeDeleted)
                 self.draftAbsorptionScheme.absorptionBlocks.remove(at: index)
             }
-            self.draftAbsorptionScheme.objectWillChange.send()
         } else {
             // We need to have at least one block left
             errorMessage = NSLocalizedString("At least one absorption block required", comment: "")
@@ -372,9 +362,6 @@ struct SettingsEditor: View {
         for absorptionBlock in defaultAbsorptionBlocks {
             let _ = draftAbsorptionScheme.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock), errorMessage: &errorMessage)
         }
-        
-        // Notify change
-        draftAbsorptionScheme.objectWillChange.send()
     }
     
     func resetSugarsToDefaults() {
@@ -382,9 +369,6 @@ struct SettingsEditor: View {
         draftAbsorptionScheme.delaySugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault))!
         draftAbsorptionScheme.intervalSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault))!
         draftAbsorptionScheme.durationSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault))!
-        
-        // Notify change
-        draftAbsorptionScheme.objectWillChange.send()
     }
      
     func resetCarbsToDefaults() {
@@ -392,9 +376,6 @@ struct SettingsEditor: View {
         draftAbsorptionScheme.delayCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault))!
         draftAbsorptionScheme.intervalCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsIntervalDefault))!
         draftAbsorptionScheme.durationCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault))!
-        
-        // Notify change
-        draftAbsorptionScheme.objectWillChange.send()
     }
      
     func resetECarbsToDefaults() {
@@ -404,8 +385,5 @@ struct SettingsEditor: View {
         
         // Reset eCarbs factor
         draftAbsorptionScheme.eCarbsFactorAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.eCarbsFactorDefault))!
-        
-        // Notify change
-        draftAbsorptionScheme.objectWillChange.send()
     }
 }

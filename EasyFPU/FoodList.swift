@@ -186,9 +186,6 @@ struct FoodList: View {
                                     // Store absorption blocks loaded from core data
                                     self.absorptionScheme.absorptionBlocks = self.absorptionBlocks.sorted()
                                 }
-                                
-                                // Publish change
-                                self.absorptionScheme.objectWillChange.send()
                             }
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height)
