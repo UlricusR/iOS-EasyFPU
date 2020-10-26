@@ -26,29 +26,20 @@ struct FoodPreview: View {
                     Spacer()
                     Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.caloriesPer100g))!)
                     Text("kcal")
-                }
+                }.padding([.leading, .trailing])
                 HStack {
                     Text("Carbs per 100g")
                     Spacer()
                     Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.carbsPer100g))!)
                     Text("g")
-                }
+                }.padding([.leading, .trailing])
                 HStack {
                     Text("Thereof Sugars per 100g")
                     Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.sugarsPer100g))!)
                     Text("g")
-                }
+                }.padding([.leading, .trailing])
                 
-                /*if foodDatabase.foodDatabaseEntry!.imageThumbUrl != nil {
-                    URLImage(
-                        url: URL(foodDatabase.foodDatabaseEntry!.imageThumbUrl!),
-                        content: { image in
-                            image
-                                .resizable()
-                                .aspectRation(contentMode: .fit)
-                        }
-                    )
-                }*/
+                
                 
                 Spacer()
             }
