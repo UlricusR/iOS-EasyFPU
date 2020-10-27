@@ -198,13 +198,13 @@ class UserSettings: ObservableObject {
         }
     }
     
-    static func getCountryCode() -> String {
+    static func getCountryCode() -> String? {
         if let countryCode = UserSettings.shared.countryCode {
             return countryCode
         } else if let countryCode = UserSettings.getValue(for: UserSettings.UserDefaultsStringKey.countryCode) {
             return countryCode
         } else {
-            return ""
+            return nil
         }
     }
 }

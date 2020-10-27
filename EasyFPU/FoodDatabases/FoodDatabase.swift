@@ -40,3 +40,17 @@ enum FoodDatabaseError: Error {
     case networkError(String)
     case inputError(String)
 }
+
+enum EnergyType: Equatable {
+    case kJ(Double)
+    case kcal(Double)
+    
+    func getEnergyInKcal() -> Double {
+        switch self {
+        case .kJ(let energy):
+            return 0.2388 * energy
+        case .kcal(let energy):
+            return energy
+        }
+    }
+}

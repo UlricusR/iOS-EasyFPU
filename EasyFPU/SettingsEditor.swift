@@ -20,7 +20,7 @@ struct SettingsEditor: View {
     @State private var absorptionBlocksToBeDeleted = [AbsorptionBlockViewModel]()
     @State private var selectedFoodDatabaseType: FoodDatabaseType = UserSettings.getFoodDatabaseType()
     @State private var searchWorldwide: Bool = UserSettings.shared.searchWorldwide
-    @State private var selectedCountry: String = UserSettings.getCountryCode()
+    @State private var selectedCountry: String = UserSettings.getCountryCode() ?? ""
     @State private var showingScreen = false
     private let helpScreen = HelpScreen.absorptionSchemeEditor
     @Environment(\.managedObjectContext) var managedObjectContext

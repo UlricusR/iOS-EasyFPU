@@ -14,8 +14,8 @@ class OpenFoodFacts: FoodDatabase {
         if UserSettings.shared.searchWorldwide {
             return "world"
         }
-        let countryCode = UserSettings.getCountryCode().lowercased()
-        return countryCode != "" ? countryCode : "world"
+        let countryCode = UserSettings.getCountryCode()?.lowercased()
+        return countryCode != nil ? countryCode! : "world"
     }
     private let userAgent = "EasyFPU - iOS - Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)"
     private var productFields: [String] {
@@ -121,14 +121,7 @@ struct OpenFoodFactsProduct: Decodable, Hashable, Identifiable {
     var brands: String?
     var genericName: String?
     var nutriments: Nutriments?
-    var imageThumbUrl: String?
-    var imageFrontSmallUrl: String?
-    var imageFrontUrl: String?
-    var imageNutritionThumbUrl: String?
-    var imageNutritionSmallUrl: String?
-    var imageNutritionUrl: String?
-    var imageIngredientsThumbUrl: String?
-    var imageSmallUrl: String?
+    var selectedImages: OpenFoodFactsSelectedProductImages?
     
     enum CodingKeys: String, CodingKey, CaseIterable {
         case code = "code"
@@ -136,14 +129,7 @@ struct OpenFoodFactsProduct: Decodable, Hashable, Identifiable {
         case brands = "brands"
         case genericName = "generic_name"
         case nutriments = "nutriments"
-        case imageThumbUrl = "image_thumb_url"
-        case imageFrontSmallUrl = "image_front_small_url"
-        case imageFrontUrl = "image_front_url"
-        case imageNutritionThumbUrl = "image_nutrition_thumb_url"
-        case imageNutritionSmallUrl = "image_nutrition_small_url"
-        case imageNutritionUrl = "image_nutrition_url"
-        case imageIngredientsThumbUrl = "image_ingredients_thumb_url"
-        case imageSmallUrl = "image_small_url"
+        case selectedImages = "selected_images"
     }
     
     enum DecodingError: Error {
@@ -180,7 +166,8 @@ struct OpenFoodFactsProduct: Decodable, Hashable, Identifiable {
     }
     
     enum NutrimentsKey: String {
-        case caloriesPer100g = "energy-kcal_100g"
+        case caloriesPer100gInKcal = "energy-kcal_100g"
+        case caloriesPer100gInKJ = "energy-kj_100g"
         case carbsPer100g = "carbohydrates_100g"
         case sugarsPer100g = "sugars_100g"
     }
@@ -223,4 +210,16 @@ struct OpenFoodFactsProduct: Decodable, Hashable, Identifiable {
     }
     
     typealias Nutriments = [String: ValueType]
+}
+
+struct OpenFoodFactsSelectedProductImages: Decodable {
+    var front: OpenFoodFactsProductImages?
+    var nutrition: OpenFoodFactsProductImages?
+    var ingredients: OpenFoodFactsProductImages?
+}
+
+struct OpenFoodFactsProductImages: Decodable {
+    var small: [String: String]?
+    var thumb: [String: String]?
+    var display: [String: String]?
 }

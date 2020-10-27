@@ -61,5 +61,6 @@ struct FoodSearch: View {
         .onDisappear() {
             foodDatabaseResults.searchResults = nil
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

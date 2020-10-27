@@ -9,9 +9,20 @@
 import Foundation
 import Combine
 
-enum RemoteContentLoadingState<Value> {
+public enum RemoteContentLoadingState<Value, Progress> {
     case initial
-    case inProgress
+    case inProgress(_ progress: Progress)
     case success(_ value: Value)
     case failure(_ error: Error)
+}
+
+public extension RemoteContentLoadingState {
+    var isInProgress: Bool {
+        switch self {
+        case .inProgress:
+            return true
+        default:
+            return false
+        }
+    }
 }

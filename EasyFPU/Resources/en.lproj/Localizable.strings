@@ -210,6 +210,8 @@
 "Scanned Food" = "Scanned Food";
 "No food found" = "No food found";
 "Cannot decode JSON" = "Cannot decode JSON";
+"Unable to create image url from " = "Unable to create image url from ";
+"No image data found" = "No image data found";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";

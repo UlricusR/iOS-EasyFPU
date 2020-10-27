@@ -392,7 +392,8 @@ struct FoodItemEditor: View {
                 switch result {
                 case .success(let networkFoodDatabaseEntry):
                     guard let foodDatabaseEntry = networkFoodDatabaseEntry else {
-                        // TODO
+                        errorMessage = NSLocalizedString("No food found", comment: "")
+                        showingAlert = true
                         return
                     }
                     DispatchQueue.main.async {
@@ -402,8 +403,9 @@ struct FoodItemEditor: View {
                     
                     
                 case .failure(let error):
-                    // TODO
                     debugPrint(error)
+                    errorMessage = error.localizedDescription
+                    showingAlert = true
                 }
             }
         case .failure(let error):
@@ -417,7 +419,8 @@ struct FoodItemEditor: View {
             switch result {
             case .success(let networkSearchResults):
                 guard let searchResults = networkSearchResults else {
-                    // TODO
+                    errorMessage = NSLocalizedString("No food found", comment: "")
+                    showingAlert = true
                     return
                 }
                 
@@ -426,8 +429,9 @@ struct FoodItemEditor: View {
                     self.activeSheet = .search
                 }
             case .failure(let error):
-                // TODO
                 debugPrint(error)
+                errorMessage = error.localizedDescription
+                showingAlert = true
             }
         }
     }

@@ -214,7 +214,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
     func fill(with foodDatabaseEntry: FoodDatabaseEntry) {
         name = foodDatabaseEntry.name
         
-        caloriesPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.caloriesPer100g))!
+        caloriesPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.caloriesPer100g.getEnergyInKcal()))!
         carbsPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.carbsPer100g))!
         sugarsPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.sugarsPer100g))!
     }
