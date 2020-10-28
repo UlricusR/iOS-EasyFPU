@@ -8,10 +8,11 @@
 
 import Foundation
 
-class FoodPreviewSheets {
+class FoodPreviewContentSheets {
     enum State: Identifiable {
         case front
         case nutriments
+        case ingredients
         
         var id: State { self }
     }

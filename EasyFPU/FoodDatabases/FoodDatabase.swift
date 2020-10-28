@@ -12,6 +12,7 @@ protocol FoodDatabase {
     var databaseType: FoodDatabaseType { get }
     func search(for term: String, completion: @escaping (Result<[FoodDatabaseEntry]?, FoodDatabaseError>) -> Void)
     func prepare(_ id: String, completion: @escaping (Result<FoodDatabaseEntry?, FoodDatabaseError>) -> Void)
+    func getLink(for id: String) throws -> URL
 }
 
 enum FoodDatabaseType: String, CaseIterable, Identifiable {

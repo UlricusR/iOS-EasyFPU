@@ -219,6 +219,8 @@
 "No search results: " = "Keine Suchergebnisse: ";
 "Network error: " = "Netzwerkfehler: ";
 "Input error: " = "Eingabefehler: ";
+"Link to entry in " = "Link zum Eintrag in ";
+"No food selected" = "Kein Lebensmittel ausgewählt";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";

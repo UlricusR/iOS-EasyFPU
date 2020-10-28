@@ -96,6 +96,14 @@ class OpenFoodFacts: FoodDatabase {
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
         return request
     }
+    
+    func getLink(for id: String) throws -> URL {
+        let urlString = "https://\(countrycode)-en.openfoodfacts.org/product/\(id)"
+        guard let url = URL(string: urlString) else {
+            throw FoodDatabaseError.inputError(NSLocalizedString("Invalid URL: ", comment: "") + urlString)
+        }
+        return url
+    }
 }
 
 struct OpenFoodFactsObject: Decodable {

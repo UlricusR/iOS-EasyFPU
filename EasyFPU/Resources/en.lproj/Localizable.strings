@@ -218,6 +218,8 @@
 "No search results: " = "No search results: ";
 "Network error: " = "Network error: ";
 "Input error: " = "Input error: ";
+"Link to entry in " = "Link to entry in ";
+"No food selected" = "No food selected";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";

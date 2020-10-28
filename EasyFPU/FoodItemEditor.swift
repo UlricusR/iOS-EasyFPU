@@ -446,7 +446,7 @@ struct FoodItemEditor: View {
         case .scan:
             CodeScannerView(codeTypes: [.ean13], simulatedData: "4101530002123", completion: self.handleScan)
         case .foodPreview:
-            FoodPreview(selectedEntry: foodDatabaseResults.selectedEntry!, draftFoodItem: draftFoodItem)
+            FoodPreview(product: foodDatabaseResults.selectedEntry!, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem)
         }
     }
 }

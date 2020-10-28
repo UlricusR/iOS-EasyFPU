@@ -67,6 +67,7 @@
 		1BA963E02507DFC200375650 /* MealExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA963DF2507DFC200375650 /* MealExportView.swift */; };
 		1BA963E22507E03100375650 /* MealDetailSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA963E12507E03000375650 /* MealDetailSheets.swift */; };
 		1BA963E4250807DD00375650 /* HelpMealExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA963E3250807DD00375650 /* HelpMealExportView.swift */; };
+		1BAD273D25495B4100A730FB /* FoodPreviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAD273C25495B4100A730FB /* FoodPreviewContent.swift */; };
 		1BAEE0862500C5FB00B4891F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAEE0852500C5FB00B4891F /* HealthKit.framework */; };
 		1BAEE0882500E12400B4891F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BAEE0872500E12400B4891F /* Default-568h@2x.png */; };
 		1BAF937E253333F700C4D75B /* MealExportViewActionSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAF937D253333F700C4D75B /* MealExportViewActionSheets.swift */; };
@@ -147,6 +148,7 @@
 		1BA963DF2507DFC200375650 /* MealExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealExportView.swift; sourceTree = "<group>"; };
 		1BA963E12507E03000375650 /* MealDetailSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailSheets.swift; sourceTree = "<group>"; };
 		1BA963E3250807DD00375650 /* HelpMealExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpMealExportView.swift; sourceTree = "<group>"; };
+		1BAD273C25495B4100A730FB /* FoodPreviewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodPreviewContent.swift; sourceTree = "<group>"; };
 		1BAEE0852500C5FB00B4891F /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		1BAEE0872500E12400B4891F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		1BAF937D253333F700C4D75B /* MealExportViewActionSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealExportViewActionSheets.swift; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 				1B25D482253DB0A900848C2A /* FoodSearch.swift */,
 				1B25D486253DC8DB00848C2A /* FoodSearchResultPreview.swift */,
 				1B51B3322540BCB800064EB1 /* FoodPreview.swift */,
+				1BAD273C25495B4100A730FB /* FoodPreviewContent.swift */,
 				1B91994F254894370049672D /* FoodPreviewSheets.swift */,
 				1B870FC024C9A32E00183C9F /* MealDetail.swift */,
 				1BA963E12507E03000375650 /* MealDetailSheets.swift */,
@@ -512,6 +515,7 @@
 			files = (
 				1BCC1BEF2519036F00920264 /* CarbsRegime.swift in Sources */,
 				1B6106BB24D93346001F2284 /* DataHelper.swift in Sources */,
+				1BAD273D25495B4100A730FB /* FoodPreviewContent.swift in Sources */,
 				1B6867E324FD22D60057EC6A /* HelpViewFoodItemEditor.swift in Sources */,
 				1B9723ED2508AC5C00E606A7 /* UserSettings.swift in Sources */,
 				1BEE525624D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift in Sources */,
