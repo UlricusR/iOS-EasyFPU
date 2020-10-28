@@ -36,9 +36,24 @@ enum FoodDatabaseType: String, CaseIterable, Identifiable {
 enum FoodDatabaseError: Error {
     case incompleteData(String)
     case decodingError(String)
-    case noSearchResults
+    case noSearchResults(String)
     case networkError(String)
     case inputError(String)
+    
+    func evaluate() -> String {
+        switch self {
+        case .incompleteData(let storedErrorMessage):
+            return (NSLocalizedString("Incomplete data: ", comment: "") + storedErrorMessage)
+        case .decodingError(let storedErrorMessage):
+            return(NSLocalizedString("Decoding error: ", comment: "") + storedErrorMessage)
+        case .noSearchResults(let storedErrorMessage):
+            return (NSLocalizedString("No search results: ", comment: "") + storedErrorMessage)
+        case .networkError(let storedErrorMessage):
+            return (NSLocalizedString("Network error: ", comment: "") + storedErrorMessage)
+        case .inputError(let storedErrorMessage):
+            return (NSLocalizedString("Input error: ", comment: "") + storedErrorMessage)
+        }
+    }
 }
 
 enum EnergyType: Equatable {

@@ -115,7 +115,7 @@ struct FoodItemSelector: View {
                         presentation.wrappedValue.dismiss()
                     case .failure(let err):
                         // Display alert and stay in edit mode
-                        self.errorMessage = DataHelper.getErrorMessage(from: err)
+                        self.errorMessage = err.evaluate()
                         self.showingAlert = true
                     }
                 }) {

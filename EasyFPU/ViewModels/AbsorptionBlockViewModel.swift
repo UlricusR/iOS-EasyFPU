@@ -17,7 +17,7 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
             case .success(let maxFpu):
                 self.maxFpu = maxFpu
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -29,7 +29,7 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
             case .success(let absorptionTime):
                 self.absorptionTime = absorptionTime
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -60,7 +60,7 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
         case .success(let maxFpu):
             self.maxFpu = maxFpu
         case .failure(let err):
-            errorMessage = DataHelper.getErrorMessage(from: err)
+            errorMessage = err.evaluate()
             return nil
         }
         self.maxFpuAsString = maxFpuAsString
@@ -71,7 +71,7 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
         case .success(let absorptionTime):
             self.absorptionTime = absorptionTime
         case .failure(let err):
-            errorMessage = DataHelper.getErrorMessage(from: err)
+            errorMessage = err.evaluate()
             return nil
         }
         self.absorptionTimeAsString = absorptionTimeAsString

@@ -46,7 +46,7 @@ class OpenFoodFacts: FoodDatabase {
                 do {
                     let openFoodFactsSearchResult = try JSONDecoder().decode(OpenFoodFactsSearchResult.self, from: data)
                     guard let products = openFoodFactsSearchResult.products else {
-                        completion(.failure(FoodDatabaseError.noSearchResults))
+                        completion(.failure(FoodDatabaseError.noSearchResults(NSLocalizedString("No products found", comment: ""))))
                         return
                     }
                     

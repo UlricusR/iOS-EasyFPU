@@ -12,6 +12,13 @@ import MobileCoreServices
 
 enum InvalidNumberError: Error {
     case inputError(String)
+    
+    func evaluate() -> String {
+        switch self {
+        case .inputError(let storedErrorMessage):
+            return (NSLocalizedString("Input error: ", comment: "") + storedErrorMessage)
+        }
+    }
 }
 
 class DataHelper {
@@ -94,13 +101,6 @@ class DataHelper {
             return .failure(.inputError(NSLocalizedString(allowZero ? "Value must not be negative" : "Value must not be zero or negative", comment: "")))
         }
         return .success(valueAsNumber.intValue)
-    }
-    
-    static func getErrorMessage(from error: InvalidNumberError) -> String {
-        switch error {
-        case .inputError(let errorMessage):
-            return errorMessage
-        }
     }
     
     static func gcd(_ numbers: [Int]) -> Int {

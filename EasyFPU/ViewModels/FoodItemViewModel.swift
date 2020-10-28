@@ -23,7 +23,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             case .success(let caloriesAsDouble):
                 caloriesPer100g = caloriesAsDouble
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -35,7 +35,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             case .success(let carbsAsDouble):
                 carbsPer100g = carbsAsDouble
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -47,7 +47,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             case .success(let sugarsAsDouble):
                 sugarsPer100g = sugarsAsDouble
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -59,7 +59,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
             case .success(let amountAsInt):
                 amount = amountAsInt
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -131,7 +131,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         case .success(let caloriesAsDouble):
             caloriesPer100g = caloriesAsDouble
         case .failure(let err):
-            let errorMessage = DataHelper.getErrorMessage(from: err)
+            let errorMessage = err.evaluate()
             error = .calories(errorMessage)
             return nil
         }
@@ -143,7 +143,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         case .success(let carbsAsDouble):
             carbsPer100g = carbsAsDouble
         case .failure(let err):
-            let errorMessage = DataHelper.getErrorMessage(from: err)
+            let errorMessage = err.evaluate()
             error = .carbs(errorMessage)
             return nil
         }
@@ -155,7 +155,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         case .success(let sugarsAsDouble):
             sugarsPer100g = sugarsAsDouble
         case .failure(let err):
-            let errorMessage = DataHelper.getErrorMessage(from: err)
+            let errorMessage = err.evaluate()
             error = .sugars(errorMessage)
             return nil
         }
@@ -179,7 +179,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
         case .success(let amountAsInt):
             amount = amountAsInt
         case .failure(let err):
-            let errorMessage = DataHelper.getErrorMessage(from: err)
+            let errorMessage = err.evaluate()
             error = .amount(errorMessage)
             return nil
         }

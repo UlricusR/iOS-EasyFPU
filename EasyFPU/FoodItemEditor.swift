@@ -403,8 +403,8 @@ struct FoodItemEditor: View {
                     
                     
                 case .failure(let error):
-                    debugPrint(error)
-                    errorMessage = error.localizedDescription
+                    errorMessage = error.evaluate()
+                    debugPrint(errorMessage)
                     showingAlert = true
                 }
             }
@@ -429,8 +429,8 @@ struct FoodItemEditor: View {
                     self.activeSheet = .search
                 }
             case .failure(let error):
-                debugPrint(error)
-                errorMessage = error.localizedDescription
+                errorMessage = error.evaluate()
+                debugPrint(errorMessage)
                 showingAlert = true
             }
         }

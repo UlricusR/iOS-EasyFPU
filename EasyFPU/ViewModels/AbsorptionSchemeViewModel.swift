@@ -20,7 +20,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             case .success(let value):
                 self.delaySugars = value
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -33,7 +33,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             case .success(let value):
                 self.intervalSugars = value
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -46,7 +46,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             case .success(let value):
                 self.durationSugars = value
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -61,7 +61,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             case .success(let value):
                 self.delayCarbs = value
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -74,7 +74,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             case .success(let value):
                 self.intervalCarbs = value
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -87,7 +87,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             case .success(let value):
                 self.durationCarbs = value
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -102,7 +102,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             case .success(let value):
                 self.delayECarbs = value
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -115,7 +115,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             case .success(let value):
                 self.intervalECarbs = value
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -130,7 +130,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             case .success(let value):
                 self.eCarbsFactor = value
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }

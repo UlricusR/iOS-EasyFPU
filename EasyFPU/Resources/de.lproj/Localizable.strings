@@ -196,6 +196,7 @@
 "Food Database" = "Lebensmitteldatenbank";
 "Database" = "Datenbank";
 "No product found" = "Kein Produkt gefunden";
+"No products found" = "Keine Produkte gefunden";
 "No nutriments found" = "Keine Nährwerte gefunden";
 "Entry has no name" = "Eintrag hat keinen Namen";
 "Entry has no code" = "Eintrag hat keinen Code";
@@ -213,6 +214,11 @@
 "Cannot decode JSON" = "Kann JSON nicht decodieren";
 "Unable to create image url from " = "Kann URL nicht bilden: ";
 "No image data found" = "Kein Bilddateien gefunden";
+"Incomplete data: " = "Unvollständige Daten: ";
+"Decoding error: " = "Decodierungsfehler: ";
+"No search results: " = "Keine Suchergebnisse: ";
+"Network error: " = "Netzwerkfehler: ";
+"Input error: " = "Eingabefehler: ";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";

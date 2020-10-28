@@ -195,6 +195,7 @@
 "Food Database" = "Food Database";
 "Database" = "Database";
 "No product found" = "No product found";
+"No products found" = "No products found";
 "No nutriments found" = "No nutriments found";
 "Entry has no name" = "Entry has no name";
 "Entry has no code" = "Entry has no code";
@@ -212,6 +213,11 @@
 "Cannot decode JSON" = "Cannot decode JSON";
 "Unable to create image url from " = "Unable to create image url from ";
 "No image data found" = "No image data found";
+"Incomplete data: " = "Incomplete data: ";
+"Decoding error: " = "Decoding error: ";
+"No search results: " = "No search results: ";
+"Network error: " = "Network error: ";
+"Input error: " = "Input error: ";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
