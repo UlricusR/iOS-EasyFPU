@@ -72,6 +72,9 @@
 "Cannot delete food item" = "Kann Essen nicht löschen";
 "Delay of Extended Carbs" = "Verzögerung der verlängerten KH";
 
+// Ingredients
+"Ingredients" = "Zutaten";
+
 // Meal preview
 "e-Carbs" = "Verl. KH";
 "Regular Carbs" = "Reguläre KH";

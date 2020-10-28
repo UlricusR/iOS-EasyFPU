@@ -212,6 +212,7 @@ struct FoodItemEditor: View {
                     // Create updated food item
                     if let updatedFoodItem = FoodItemViewModel(
                         name: self.draftFoodItem.name,
+                        category: self.draftFoodItem.category,
                         favorite: self.draftFoodItem.favorite,
                         caloriesAsString: self.draftFoodItem.caloriesPer100gAsString,
                         carbsAsString: self.draftFoodItem.carbsPer100gAsString,

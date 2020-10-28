@@ -72,6 +72,9 @@
 "Cannot delete food item" = "Cannot delete food item";
 "Delay of Extended Carbs" = "Delay of Extended Carbs";
 
+// Ingredients
+"Ingredients" = "Ingredients";
+
 // Meal preview
 "e-Carbs" = "e-Carbs";
 "Regular Carbs" = "Regular Carbs";
