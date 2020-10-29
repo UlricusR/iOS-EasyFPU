@@ -36,6 +36,8 @@
 
 // Food List
 "Food List" = "Food List";
+"Products" = "Products";
+"Product" = "Product";
 "Name" = "Name";
 "Favorite" = "Favorite";
 "Carbs per 100g" = "Carbs per 100g";
@@ -71,9 +73,13 @@
 "Select amount" = "Select amount";
 "Cannot delete food item" = "Cannot delete food item";
 "Delay of Extended Carbs" = "Delay of Extended Carbs";
+"Cannot delete ingredient" = "Cannot delete ingredient";
 
 // Ingredients
 "Ingredients" = "Ingredients";
+"Ingredient" = "Ingredient";
+"Category" = "Category";
+"Composed product" = "Product made of:";
 
 // Meal preview
 "e-Carbs" = "e-Carbs";

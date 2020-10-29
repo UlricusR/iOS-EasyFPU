@@ -36,6 +36,8 @@
 
 // Food List
 "Food List" = "Essensliste";
+"Products" = "Produkte";
+"Product" = "Produkt";
 "Name" = "Name";
 "Favorite" = "Lieblingsessen";
 "Carbs per 100g" = "Kohlenhydrate pro 100g";
@@ -71,9 +73,13 @@
 "Select amount" = "Menge auswählen";
 "Cannot delete food item" = "Kann Essen nicht löschen";
 "Delay of Extended Carbs" = "Verzögerung der verlängerten KH";
+"Cannot delete ingredient" = "Kann Zutat nicht löschen";
 
 // Ingredients
 "Ingredients" = "Zutaten";
+"Ingredient" = "Zutat";
+"Category" = "Kategorie";
+"Composed product" = "Produkt mit den Zutaten:";
 
 // Meal preview
 "e-Carbs" = "Verl. KH";

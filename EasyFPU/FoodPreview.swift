@@ -13,6 +13,7 @@ struct FoodPreview: View {
     var product: FoodDatabaseEntry
     @ObservedObject var databaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
+    var category: FoodItemCategory
     @Environment(\.presentationMode) var presentation
     @State private var errorMessage = ""
     @State private var showingAlert = false
@@ -28,6 +29,7 @@ struct FoodPreview: View {
                 Text("Cancel")
             }, trailing: Button(action: {
                 databaseResults.selectedEntry = product
+                databaseResults.selectedEntry?.category = category
                 draftFoodItem.fill(with: product)
                     
                 // Close sheet

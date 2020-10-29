@@ -12,6 +12,7 @@ struct FoodSearchResultPreview: View {
     var product: FoodDatabaseEntry
     @ObservedObject var foodDatabaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
+    var category: FoodItemCategory
     @Environment(\.presentationMode) var parentPresentation
     @State var showDetails: Bool = false
     
@@ -38,7 +39,7 @@ struct FoodSearchResultPreview: View {
             }.buttonStyle(BorderlessButtonStyle())
         }
         .sheet(isPresented: $showDetails) {
-            FoodPreview(product: product, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem).onDisappear() {
+            FoodPreview(product: product, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category).onDisappear() {
                 parentPresentation.wrappedValue.dismiss()
             }
         }

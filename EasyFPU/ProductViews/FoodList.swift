@@ -24,7 +24,7 @@ struct FoodList: View {
     @State private var errorMessage = ""
     @State private var draftFoodItem = FoodItemViewModel(
         name: "",
-        category: .food,
+        category: .product,
         favorite: false,
         caloriesPer100g: 0.0,
         carbsPer100g: 0.0,
@@ -38,9 +38,9 @@ struct FoodList: View {
 
     var filteredFoodItems: [FoodItemViewModel] {
         if searchString == "" {
-            return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite && $0.category == .food } : foodItems.map { FoodItemViewModel(from: $0) }
+            return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite && $0.category == .product } : foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == .product }
         } else {
-            return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite && $0.category == .food && $0.name.lowercased().contains(searchString.lowercased()) } : foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.name.lowercased().contains(searchString.lowercased()) }
+            return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite && $0.category == .product && $0.name.lowercased().contains(searchString.lowercased()) } : foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == .product && $0.name.lowercased().contains(searchString.lowercased()) }
         }
     }
     
@@ -62,8 +62,8 @@ struct FoodList: View {
                     SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
                         .padding(.horizontal)
                     Text("Tap to select, long press to edit").font(.caption)
-                    ForEach(self.filteredFoodItems, id: \.self) { foodItem in
-                        FoodItemView(absorptionScheme: self.absorptionScheme, foodItem: foodItem)
+                    ForEach(self.filteredFoodItems) { foodItem in
+                        FoodItemView(foodItem: foodItem, category: .product)
                             .environment(\.managedObjectContext, self.managedObjectContext)
                     }
                     .onDelete(perform: self.deleteFoodItem)
@@ -74,7 +74,7 @@ struct FoodList: View {
                 }
             }
             .disabled(self.showingMenu ? true : false)
-            .navigationBarTitle("Food List")
+            .navigationBarTitle("Products")
             .navigationBarItems(
                 leading: HStack {
                     Button(action: {
@@ -115,15 +115,6 @@ struct FoodList: View {
                     
                     Button(action: {
                         // Add new food item
-                        self.draftFoodItem = FoodItemViewModel(
-                            name: "",
-                            category: .food,
-                            favorite: false,
-                            caloriesPer100g: 0.0,
-                            carbsPer100g: 0.0,
-                            sugarsPer100g: 0.0,
-                            amount: 0
-                        )
                         activeSheet = .addFoodItem
                     }) {
                         Image(systemName: "plus.circle")
@@ -178,7 +169,8 @@ struct FoodList: View {
         case .addFoodItem:
             FoodItemEditor(
                 navigationBarTitle: NSLocalizedString("New food item", comment: ""),
-                draftFoodItem: draftFoodItem
+                draftFoodItem: draftFoodItem,
+                category: .product
             ).environment(\.managedObjectContext, managedObjectContext)
         case .mealDetails:
             MealDetail(absorptionScheme: self.absorptionScheme, meal: self.meal)

@@ -16,6 +16,7 @@ struct FoodItemEditor: View {
     var navigationBarTitle: String
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem? // Working copy of the food item
+    var category: FoodItemCategory
     @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
     @State private var errorMessage: String = ""
     @State private var activeSheet: FoodItemEditorSheets.State?
@@ -70,6 +71,12 @@ struct FoodItemEditor: View {
                             }) {
                                 Image(systemName: "barcode.viewfinder").imageScale(.large)
                             }.buttonStyle(BorderlessButtonStyle())
+                        }
+                        
+                        // Category
+                        Picker("Category", selection: $draftFoodItem.category) {
+                            Text("Product").tag(FoodItemCategory.product)
+                            Text("Ingredient").tag(FoodItemCategory.ingredient)
                         }
                         
                         // Favorite
@@ -221,6 +228,7 @@ struct FoodItemEditor: View {
                         error: &error) { // We have a valid food item
                         if self.editedFoodItem != nil { // We need to update an existing food item
                             self.editedFoodItem!.name = updatedFoodItem.name
+                            self.editedFoodItem!.category = updatedFoodItem.category.rawValue
                             self.editedFoodItem!.favorite = updatedFoodItem.favorite
                             self.editedFoodItem!.carbsPer100g = updatedFoodItem.carbsPer100g
                             self.editedFoodItem!.caloriesPer100g = updatedFoodItem.caloriesPer100g
@@ -247,6 +255,7 @@ struct FoodItemEditor: View {
                             let newFoodItem = FoodItem(context: self.managedObjectContext)
                             newFoodItem.id = UUID()
                             newFoodItem.name = updatedFoodItem.name
+                            newFoodItem.category = updatedFoodItem.category.rawValue
                             newFoodItem.favorite = updatedFoodItem.favorite
                             newFoodItem.carbsPer100g = updatedFoodItem.carbsPer100g
                             newFoodItem.caloriesPer100g = updatedFoodItem.caloriesPer100g
@@ -443,11 +452,11 @@ struct FoodItemEditor: View {
         case .help:
             HelpView(helpScreen: self.helpScreen)
         case .search:
-            FoodSearch(foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem)
+            FoodSearch(foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem, category: category)
         case .scan:
             CodeScannerView(codeTypes: [.ean13], simulatedData: "4101530002123", completion: self.handleScan)
         case .foodPreview:
-            FoodPreview(product: foodDatabaseResults.selectedEntry!, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem)
+            FoodPreview(product: foodDatabaseResults.selectedEntry!, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category)
         }
     }
 }

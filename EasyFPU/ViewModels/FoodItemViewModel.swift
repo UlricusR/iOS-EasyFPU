@@ -13,12 +13,12 @@ enum FoodItemViewModelError {
 }
 
 enum FoodItemCategory: String, CaseIterable {
-    case food = "Food"
+    case product = "Product"
     case ingredient = "Ingredient"
 }
 
-class FoodItemViewModel: ObservableObject, Codable, Hashable {
-    private var id = UUID()
+class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable {
+    var id = UUID()
     @Published var name: String
     @Published var favorite: Bool
     @Published var caloriesPer100gAsString: String = "" {
@@ -99,7 +99,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
     
     init(from cdFoodItem: FoodItem) {
         self.name = cdFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
-        self.category = FoodItemCategory.init(rawValue: cdFoodItem.category ?? FoodItemCategory.food.rawValue) ?? FoodItemCategory.food // Default is food item
+        self.category = FoodItemCategory.init(rawValue: cdFoodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is food item
         self.favorite = cdFoodItem.favorite
         self.caloriesPer100g = cdFoodItem.caloriesPer100g
         self.carbsPer100g = cdFoodItem.carbsPer100g
@@ -200,7 +200,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let foodItem = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)
-        category = try FoodItemCategory.init(rawValue: foodItem.decode(String.self, forKey: .category)) ?? .food
+        category = try FoodItemCategory.init(rawValue: foodItem.decode(String.self, forKey: .category)) ?? .product
         amount = try foodItem.decode(Int.self, forKey: .amount)
         caloriesPer100g = try foodItem.decode(Double.self, forKey: .caloriesPer100g)
         carbsPer100g = try foodItem.decode(Double.self, forKey: .carbsPer100g)

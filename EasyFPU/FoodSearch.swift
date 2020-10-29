@@ -11,6 +11,7 @@ import SwiftUI
 struct FoodSearch: View {
     @ObservedObject var foodDatabaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
+    var category: FoodItemCategory
     @Environment(\.presentationMode) var presentation
     @State var errorMessage = ""
     @State var showingAlert = false
@@ -22,16 +23,25 @@ struct FoodSearch: View {
                     Text("No search results (yet)")
                 } else {
                     ForEach(foodDatabaseResults.searchResults!) { searchResult in
-                        FoodSearchResultPreview(product: searchResult, foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem, parentPresentation: _presentation)
+                        FoodSearchResultPreview(product: searchResult, foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem, category: self.category, parentPresentation: _presentation)
                     }
                 }
             }
             .navigationBarTitle("Food Database Search")
-            .navigationBarItems(trailing: Button(action: {
+            .navigationBarItems(leading: Button(action: {
+                // Just close
+                presentation.wrappedValue.dismiss()
+            }) {
+                Text("Cancel")
+            }, trailing: Button(action: {
+                if foodDatabaseResults.selectedEntry != nil {
+                    foodDatabaseResults.selectedEntry!.category = category
+                    draftFoodItem.fill(with: foodDatabaseResults.selectedEntry!)
+                }
                 // Close sheet
                 presentation.wrappedValue.dismiss()
             }) {
-                Text("Done")
+                Text("Select").disabled(foodDatabaseResults.selectedEntry == nil)
             })
         }
         .onDisappear() {

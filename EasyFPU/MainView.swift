@@ -47,11 +47,11 @@ struct MainView: View {
                             FoodList(absorptionScheme: absorptionScheme, showingMenu: $showingMenu)
                                 .tag(0)
                                 .tabItem{
-                                    Text("Food List")
+                                    Text("Products")
                                 }
                                 .environment(\.managedObjectContext, managedObjectContext)
                             
-                            IngredientsList()
+                            IngredientsList(showingMenu: $showingMenu)
                                 .tag(1)
                                 .tabItem{
                                     Text("Ingredients")

@@ -10,8 +10,8 @@ import SwiftUI
 
 struct FoodItemView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    var absorptionScheme: AbsorptionScheme
     @ObservedObject var foodItem: FoodItemViewModel
+    var category: FoodItemCategory
     @State var activeSheet: FoodItemViewSheets.State?
     
     var body: some View {
@@ -81,7 +81,8 @@ struct FoodItemView: View {
                 FoodItemEditor(
                     navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
                     draftFoodItem: self.foodItem,
-                    editedFoodItem: self.foodItem.cdFoodItem!
+                    editedFoodItem: self.foodItem.cdFoodItem!,
+                    category: category
                 ).environment(\.managedObjectContext, managedObjectContext)
             } else {
                 Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))

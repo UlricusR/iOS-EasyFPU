@@ -11,7 +11,7 @@ import Foundation
 struct FoodDatabaseEntry: Identifiable, Equatable {
     var id = UUID()
     var name: String
-    var category: FoodItemCategory = .food
+    var category: FoodItemCategory = .product
     var caloriesPer100g: EnergyType
     var carbsPer100g: Double
     var sugarsPer100g: Double
