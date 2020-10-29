@@ -46,8 +46,7 @@ struct IngredientsList: View {
     var composedProduct: ComposedProductViewModel {
         let product = ComposedProductViewModel(name: "Composed Product")
         for foodItem in foodItems {
-            if foodItem.amount > 0 {
-                foodItem.category = FoodItemCategory.ingredient.rawValue
+            if foodItem.category == FoodItemCategory.ingredient.rawValue && foodItem.amount > 0 {
                 product.add(foodItem: FoodItemViewModel(from: foodItem))
             }
         }

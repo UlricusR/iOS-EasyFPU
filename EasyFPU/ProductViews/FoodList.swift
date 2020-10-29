@@ -47,7 +47,7 @@ struct FoodList: View {
     var meal: MealViewModel {
         let meal = MealViewModel(name: "Total meal")
         for foodItem in foodItems {
-            if foodItem.amount > 0 {
+            if foodItem.category == FoodItemCategory.product.rawValue && foodItem.amount > 0 {
                 meal.add(foodItem: FoodItemViewModel(from: foodItem))
             }
         }
@@ -69,7 +69,7 @@ struct FoodList: View {
                     .onDelete(perform: self.deleteFoodItem)
                 }
                 
-                if self.meal.amount > 0 {
+                if !self.meal.foodItems.isEmpty {
                     MealSummaryView(activeFoodListSheet: self.$activeSheet, absorptionScheme: self.absorptionScheme, meal: self.meal)
                 }
             }
