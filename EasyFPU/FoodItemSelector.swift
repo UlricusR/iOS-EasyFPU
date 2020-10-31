@@ -36,11 +36,11 @@ struct FoodItemSelector: View {
                         // Buttons to ease input
                         HStack {
                             Spacer()
-                            NumberButton(number: 100, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 7)
-                            NumberButton(number: 50, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 7)
-                            NumberButton(number: 10, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 7)
-                            NumberButton(number: 5, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 7)
-                            NumberButton(number: 1, draftFoodItem: self.draftFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 100, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 50, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 10, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 5, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 1, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
                             Spacer()
                         }
                         
@@ -157,24 +157,3 @@ struct FoodItemSelector: View {
         }
     }
 }
-
-struct NumberButton: View {
-    var number: Int
-    var draftFoodItem: FoodItemViewModel
-    var width: CGFloat
-    
-    var body: some View {
-        Button(action: {
-            let newValue = self.draftFoodItem.amount + self.number
-            self.draftFoodItem.amountAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
-        }) {
-            Text("+\(self.number)")
-        }
-        .frame(width: width, height: 40, alignment: .center)
-        .background(Color.green)
-        .foregroundColor(.white)
-        .buttonStyle(BorderlessButtonStyle())
-        .cornerRadius(20)
-    }
-}
-

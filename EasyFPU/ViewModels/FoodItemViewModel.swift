@@ -17,7 +17,7 @@ enum FoodItemCategory: String, CaseIterable {
     case ingredient = "Ingredient"
 }
 
-class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable {
+class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, VariableAmountItem {
     var id = UUID()
     @Published var name: String
     @Published var favorite: Bool
@@ -73,7 +73,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable {
     private(set) var caloriesPer100g: Double = 0.0
     private(set) var carbsPer100g: Double = 0.0
     private(set) var sugarsPer100g: Double = 0.0
-    private(set) var amount: Int = 0
+    var amount: Int = 0
     @Published var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
     

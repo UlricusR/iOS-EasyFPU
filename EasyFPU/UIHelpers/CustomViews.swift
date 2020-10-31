@@ -22,3 +22,23 @@ struct CustomTextField: View {
         }
     }
 }
+
+struct NumberButton<T: VariableAmountItem>: View {
+    var number: Int
+    var variableAmountItem: T
+    var width: CGFloat
+    
+    var body: some View {
+        Button(action: {
+            let newValue = self.variableAmountItem.amount + self.number
+            self.variableAmountItem.amountAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
+        }) {
+            Text("+\(self.number)")
+        }
+        .frame(width: width, height: 40, alignment: .center)
+        .background(Color.green)
+        .foregroundColor(.white)
+        .buttonStyle(BorderlessButtonStyle())
+        .cornerRadius(20)
+    }
+}

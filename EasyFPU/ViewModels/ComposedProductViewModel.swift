@@ -8,14 +8,27 @@
 
 import Foundation
 
-class ComposedProductViewModel: ObservableObject {
+class ComposedProductViewModel: ObservableObject, VariableAmountItem {
     var name: String
     var calories: Double = 0.0
     private var carbs: Double = 0.0
     private var sugars: Double = 0.0
-    @Published var amount: Int = 0
+    var amount: Int = 0
     var fpus: FPU = FPU(fpu: 0.0)
     var foodItems = [FoodItemViewModel]()
+    
+    @Published var amountAsString: String = "" {
+        willSet {
+            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
+            switch result {
+            case .success(let amountAsInt):
+                amount = amountAsInt
+            case .failure(let err):
+                debugPrint(err.evaluate())
+                return
+            }
+        }
+    }
     
     static let `default` = ComposedProductViewModel(name: "Default")
     
@@ -29,7 +42,7 @@ class ComposedProductViewModel: ObservableObject {
         calories += foodItem.getCalories()
         carbs += foodItem.getCarbsInclSugars()
         sugars += foodItem.getSugarsOnly()
-        amount += foodItem.amount
+        amountAsString = String(amount + foodItem.amount) // amount will be set implicitely
         fpus = FPU(fpu: tempFPUs + foodItem.getFPU().fpu)
     }
     

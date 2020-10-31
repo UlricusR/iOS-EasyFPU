@@ -80,6 +80,11 @@
 "Ingredient" = "Zutat";
 "Category" = "Kategorie";
 "Composed product" = "Produkt mit den Zutaten:";
+"Weight" = "Gewicht";
+"Final product" = "Endprodukt";
+"The weight of the composed product is less than the sum of its ingredients" = "Das Gewicht des Produkts is kleiner als das seiner Zutaten";
+"Save" = "Speichern";
+"Save anyway" = "Trotzdem speichern";
 
 // Meal preview
 "e-Carbs" = "Verl. KH";
