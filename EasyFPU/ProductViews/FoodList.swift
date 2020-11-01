@@ -34,7 +34,7 @@ struct FoodList: View {
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
-    private let helpScreen = HelpScreen.foodList
+    private let helpScreen = HelpScreen.productsList
 
     var filteredFoodItems: [FoodItemViewModel] {
         if searchString == "" {
@@ -63,8 +63,8 @@ struct FoodList: View {
                         .padding(.horizontal)
                     Text("Tap to select, long press to edit").font(.caption)
                     ForEach(self.filteredFoodItems) { foodItem in
-                        FoodItemView(foodItem: foodItem, category: .product)
-                            .environment(\.managedObjectContext, self.managedObjectContext)
+                        /*FoodItemView(foodItem: foodItem, category: .product)
+                            .environment(\.managedObjectContext, self.managedObjectContext)*/
                     }
                     .onDelete(perform: self.deleteFoodItem)
                 }

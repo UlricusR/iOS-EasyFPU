@@ -34,10 +34,11 @@
 "Documentation on rueth.info" = "Dokumentation auf rueth.info";
 "Home-Link" = "https://rueth.info/index.php/de/easyfpe/easyfpe-fuer-ios";
 
-// Food List
+// Products List
 "Food List" = "Essensliste";
 "Products" = "Produkte";
 "Product" = "Produkt";
+"Product List" = "Produktliste";
 "Name" = "Name";
 "Favorite" = "Lieblingsessen";
 "Carbs per 100g" = "Kohlenhydrate pro 100g";
@@ -54,7 +55,7 @@
 "kcal" = "kcal";
 "g/FPU" = "g/FPE";
 "e-Carbs Factor" = "e-Carbs-Faktor";
-"New food item" = "Neues Essen";
+"New Product" = "Neues Produkt";
 "Edit food item" = "Essen bearbeiten";
 "Nutritional values per 100g:" = "Nährwerte pro 100g:";
 "Nutritional values for" = "Nährwerte für";
@@ -78,12 +79,14 @@
 // Ingredients
 "Ingredients" = "Zutaten";
 "Ingredient" = "Zutat";
+"Ingredient List" = "Zutatenliste";
+"New Ingredient" = "Neue Zutat";
 "Category" = "Kategorie";
-"Composed product" = "Produkt mit den Zutaten:";
+"Composed product" = "Zusammengestelltes Produkt";
 "Weight" = "Gewicht";
 "Final product" = "Endprodukt";
 "The weight of the composed product is less than the sum of its ingredients" = "Das Gewicht des Produkts is kleiner als das seiner Zutaten";
-"Save" = "Speichern";
+"Save as new product" = "Als neues Produkt speichern";
 "Save anyway" = "Trotzdem speichern";
 
 // Meal preview

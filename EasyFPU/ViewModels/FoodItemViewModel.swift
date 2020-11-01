@@ -77,6 +77,16 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     @Published var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
     
+    static let `default` = FoodItemViewModel(
+        name: "",
+        category: .product,
+        favorite: false,
+        caloriesPer100g: 0.0,
+        carbsPer100g: 0.0,
+        sugarsPer100g: 0.0,
+        amount: 0
+    )
+        
     enum CodingKeys: String, CodingKey {
         case foodItem
         case amount, caloriesPer100g, carbsPer100g, sugarsPer100g, favorite, name, typicalAmounts, category
@@ -99,7 +109,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     
     init(from cdFoodItem: FoodItem) {
         self.name = cdFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
-        self.category = FoodItemCategory.init(rawValue: cdFoodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is food item
+        self.category = FoodItemCategory.init(rawValue: cdFoodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
         self.favorite = cdFoodItem.favorite
         self.caloriesPer100g = cdFoodItem.caloriesPer100g
         self.carbsPer100g = cdFoodItem.carbsPer100g

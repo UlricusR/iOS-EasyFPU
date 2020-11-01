@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct HelpViewFoodList: View {
+struct HelpViewProductsList: View {
     var body: some View {
         VStack(alignment: .leading) {
             // The Food List
@@ -35,17 +35,17 @@ struct HelpViewFoodList: View {
                 Text("In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:").padding()
                 
                 HStack {
-                    Image(systemName: "cube.fill").foregroundColor(Color(MealSugarsView.color))
+                    Image(systemName: "cube.fill").foregroundColor(Color(ComposedFoodItemSugarsView.color))
                     Text("Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.")
                 }.padding()
                 
                 HStack {
-                    Image(systemName: "hare.fill").foregroundColor(Color(MealCarbsView.color))
+                    Image(systemName: "hare.fill").foregroundColor(Color(ComposedFoodItemCarbsView.color))
                     Text("Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.")
                 }.padding()
                 
                 HStack {
-                    Image(systemName: "tortoise.fill").foregroundColor(Color(MealECarbsView.color))
+                    Image(systemName: "tortoise.fill").foregroundColor(Color(ComposedFoodItemECarbsView.color))
                     Text("Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.")
                 }.padding()
                 

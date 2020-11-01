@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ComposedProductSummaryView: View {
     @Binding var activeIngredientsListSheet: IngredientsListSheets.State?
-    @ObservedObject var product: ComposedProductViewModel
+    @ObservedObject var product: ComposedFoodItemViewModel
     
     var body: some View {
         Divider()

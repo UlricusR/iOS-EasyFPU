@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ComposedProductViewModel: ObservableObject, VariableAmountItem {
+class ComposedFoodItemViewModel: ObservableObject, VariableAmountItem {
     var name: String
     var calories: Double = 0.0
     private var carbs: Double = 0.0
@@ -30,7 +30,7 @@ class ComposedProductViewModel: ObservableObject, VariableAmountItem {
         }
     }
     
-    static let `default` = ComposedProductViewModel(name: "Default")
+    static let `default` = ComposedFoodItemViewModel(name: "Default")
     
     init(name: String) {
         self.name = name
@@ -68,6 +68,7 @@ class ComposedProductViewModel: ObservableObject, VariableAmountItem {
         if let index = foodItems.firstIndex(of: foodItem) {
             foodItems.remove(at: index)
         }
+        try? AppDelegate.viewContext.save()
     }
     
     func clear() {

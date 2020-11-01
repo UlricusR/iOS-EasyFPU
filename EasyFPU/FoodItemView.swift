@@ -10,6 +10,7 @@ import SwiftUI
 
 struct FoodItemView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var foodItem: FoodItemViewModel
     var category: FoodItemCategory
     @State var activeSheet: FoodItemViewSheets.State?
@@ -57,9 +58,7 @@ struct FoodItemView: View {
         }
         .onTapGesture {
             if self.foodItem.amount > 0 {
-                self.foodItem.amountAsString = "0"
-                self.foodItem.cdFoodItem?.amount = 0
-                try? AppDelegate.viewContext.save()
+                composedFoodItem.remove(foodItem: foodItem)
             } else {
                 activeSheet = .selectFoodItem
             }

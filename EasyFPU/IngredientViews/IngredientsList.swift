@@ -33,7 +33,7 @@ struct IngredientsList: View {
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
-    private let helpScreen = HelpScreen.ingredients
+    private let helpScreen = HelpScreen.ingredientsList
 
     var filteredFoodItems: [FoodItemViewModel] {
         if searchString == "" {
@@ -43,8 +43,8 @@ struct IngredientsList: View {
         }
     }
     
-    var composedProduct: ComposedProductViewModel {
-        let product = ComposedProductViewModel(name: "Composed Product")
+    var composedProduct: ComposedFoodItemViewModel {
+        let product = ComposedFoodItemViewModel(name: "Composed Product")
         for foodItem in foodItems {
             if foodItem.category == FoodItemCategory.ingredient.rawValue && foodItem.amount > 0 {
                 product.add(foodItem: FoodItemViewModel(from: foodItem))
@@ -62,8 +62,8 @@ struct IngredientsList: View {
                         .padding(.horizontal)
                     Text("Tap to select, long press to edit").font(.caption)
                     ForEach(self.filteredFoodItems) { foodItem in
-                        FoodItemView(foodItem: foodItem, category: .ingredient)
-                            .environment(\.managedObjectContext, self.managedObjectContext)
+                        /*FoodItemView(foodItem: foodItem, category: .ingredient)
+                            .environment(\.managedObjectContext, self.managedObjectContext)*/
                     }
                     .onDelete(perform: self.deleteFoodItem)
                 }

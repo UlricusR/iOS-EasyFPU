@@ -44,14 +44,14 @@ struct MainView: View {
                 ZStack(alignment: .leading) {
                     GeometryReader { geometry in
                         TabView(selection: $selectedTab) {
-                            FoodList(absorptionScheme: absorptionScheme, showingMenu: $showingMenu)
+                            ProductsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu)
                                 .tag(0)
                                 .tabItem{
                                     Text("Products")
                                 }
                                 .environment(\.managedObjectContext, managedObjectContext)
                             
-                            IngredientsList(showingMenu: $showingMenu)
+                            IngredientsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu)
                                 .tag(1)
                                 .tabItem{
                                     Text("Ingredients")
