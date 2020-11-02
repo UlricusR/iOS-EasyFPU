@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import MobileCoreServices
+import UniformTypeIdentifiers
 
 struct MenuView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -109,9 +109,9 @@ struct MenuView: View {
             SettingsEditor(draftAbsorptionScheme: self.draftAbsorptionScheme, editedAbsorptionScheme: absorptionScheme)
                     .environment(\.managedObjectContext, managedObjectContext)
         case .pickFileToImport:
-            FilePickerView(callback: filePicked, documentTypes: [kUTTypeText as String])
+            FilePickerView(callback: filePicked, documentTypes: [UTType.json])
         case .pickExportDirectory:
-            FilePickerView(callback: exportDirectory, documentTypes: [kUTTypeFolder as String])
+            FilePickerView(callback: exportDirectory, documentTypes: [UTType.folder])
         case .about:
             AboutView()
         }

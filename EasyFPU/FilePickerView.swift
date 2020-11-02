@@ -7,10 +7,11 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct FilePickerController: UIViewControllerRepresentable {
     var callback: (URL) -> ()
-    var documentTypes: [String]
+    var documentTypes: [UTType]
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -22,7 +23,7 @@ struct FilePickerController: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
         debugPrint("Making the picker")
-        let controller = UIDocumentPickerViewController(documentTypes: documentTypes, in: .open)
+        let controller = UIDocumentPickerViewController(forOpeningContentTypes: documentTypes)
         
         controller.delegate = context.coordinator
         debugPrint("Setup the delegate \(context.coordinator)")
@@ -56,7 +57,7 @@ struct FilePickerController: UIViewControllerRepresentable {
 
 struct FilePickerView: View {
     var callback: (URL) -> ()
-    var documentTypes: [String]
+    var documentTypes: [UTType]
     var body: some View {
         FilePickerController(callback: callback, documentTypes: documentTypes)
     }
