@@ -183,7 +183,11 @@ struct FoodItemComposerView: View {
     }
     
     private func saveProduct() {
-        let newProduct = FoodItemViewModel(name: composedFoodItem.name, category: .product, favorite: false, caloriesPer100g: composedFoodItem.calories, carbsPer100g: composedFoodItem.getCarbsInclSugars(), sugarsPer100g: composedFoodItem.getSugarsOnly(), amount: composedFoodItem.amount)
+        let amountDivider = Double(composedFoodItem.amount) / 100.0
+        let caloriesPer100g = composedFoodItem.calories / amountDivider
+        let carbsPer100g = composedFoodItem.getCarbsInclSugars() / amountDivider
+        let sugarsPer100g = composedFoodItem.getSugarsOnly() / amountDivider
+        let newProduct = FoodItemViewModel(name: composedFoodItem.name, category: .product, favorite: false, caloriesPer100g: caloriesPer100g, carbsPer100g: carbsPer100g, sugarsPer100g: sugarsPer100g, amount: composedFoodItem.amount)
         let newFoodItem = FoodItem(context: self.managedObjectContext)
         newFoodItem.id = UUID()
         newFoodItem.name = newProduct.name
