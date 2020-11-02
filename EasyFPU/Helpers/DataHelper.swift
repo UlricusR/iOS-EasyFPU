@@ -100,7 +100,12 @@ class DataHelper {
     }
     
     static func checkForPositiveInt(valueAsString: String, allowZero: Bool) -> Result<Int, InvalidNumberError> {
-        guard let valueAsNumber = intFormatter.number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
+        // First remove group separator
+        let groupingSeparator = intFormatter.groupingSeparator!
+        var valueWithoutGroupingSeparator = valueAsString
+        valueWithoutGroupingSeparator.removeAll(where: { $0 == Character(groupingSeparator) })
+        
+        guard let valueAsNumber = intFormatter.number(from: valueWithoutGroupingSeparator.isEmpty ? "0" : valueWithoutGroupingSeparator) else {
             return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
         }
         guard allowZero ? valueAsNumber.intValue >= 0 : valueAsNumber.intValue > 0 else {
