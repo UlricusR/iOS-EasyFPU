@@ -104,7 +104,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.caloriesPer100gAsString = caloriesPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g))!
         self.carbsPer100gAsString = carbsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g))!
         self.sugarsPer100gAsString = sugarsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: sugarsPer100g))!
-        self.amountAsString = amount == 0 ? "" : NumberFormatter().string(from: NSNumber(value: amount))!
+        self.amountAsString = amount == 0 ? "" : DataHelper.intFormatter.string(from: NSNumber(value: amount))!
     }
     
     init(from cdFoodItem: FoodItem) {
@@ -120,7 +120,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.caloriesPer100gAsString = cdFoodItem.caloriesPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.caloriesPer100g))!
         self.carbsPer100gAsString = cdFoodItem.carbsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.carbsPer100g))!
         self.sugarsPer100gAsString = cdFoodItem.sugarsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.sugarsPer100g))!
-        self.amountAsString = cdFoodItem.amount == 0 ? "" : NumberFormatter().string(from: NSNumber(value: cdFoodItem.amount))!
+        self.amountAsString = cdFoodItem.amount == 0 ? "" : DataHelper.intFormatter.string(from: NSNumber(value: cdFoodItem.amount))!
         
         if cdFoodItem.typicalAmounts != nil {
             for typicalAmount in cdFoodItem.typicalAmounts!.allObjects {
@@ -223,7 +223,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
             let caloriesAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g)),
             let carbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g)),
             let sugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: sugarsPer100g)),
-            let amountAsString = NumberFormatter().string(from: NSNumber(value: amount))
+            let amountAsString = DataHelper.intFormatter.string(from: NSNumber(value: amount))
         else {
             throw InvalidNumberError.inputError(NSLocalizedString("Fatal error: Cannot convert numbers into string, please contact app developer", comment: ""))
         }

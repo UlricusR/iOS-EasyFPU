@@ -93,6 +93,8 @@
 "Generate" = "Generate";
 "portion(s)" = "portions(s)";
 "Cannot create typical amount: " = "Cannot create typical amount: ";
+"Successfully saved as" = "Successfully saved as";
+"in your Products list" = "in your Products list";
 
 // Meal preview
 "e-Carbs" = "e-Carbs";

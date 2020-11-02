@@ -83,6 +83,12 @@ class DataHelper {
         return numberFormatter
     }
     
+    static var intFormatter: NumberFormatter {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.locale = Locale.current
+        return numberFormatter
+    }
+    
     static func checkForPositiveDouble(valueAsString: String, allowZero: Bool) -> Result<Double, InvalidNumberError> {
         guard let valueAsNumber = DataHelper.doubleFormatter(numberOfDigits: 5).number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
             return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
@@ -94,7 +100,7 @@ class DataHelper {
     }
     
     static func checkForPositiveInt(valueAsString: String, allowZero: Bool) -> Result<Int, InvalidNumberError> {
-        guard let valueAsNumber = NumberFormatter().number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
+        guard let valueAsNumber = intFormatter.number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
             return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
         }
         guard allowZero ? valueAsNumber.intValue >= 0 : valueAsNumber.intValue > 0 else {

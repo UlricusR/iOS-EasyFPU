@@ -18,7 +18,7 @@ struct ComposedFoodItemEvaluationView: View {
     @State private var showDetails = false
     var absorptionTimeAsString: String {
         if composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return NumberFormatter().string(from: NSNumber(value: composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+            return DataHelper.intFormatter.string(from: NSNumber(value: composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
         } else {
             return "..."
         }

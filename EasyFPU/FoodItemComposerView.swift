@@ -187,7 +187,7 @@ struct FoodItemComposerView: View {
         let caloriesPer100g = composedFoodItem.calories / amountDivider
         let carbsPer100g = composedFoodItem.getCarbsInclSugars() / amountDivider
         let sugarsPer100g = composedFoodItem.getSugarsOnly() / amountDivider
-        let newProduct = FoodItemViewModel(name: composedFoodItem.name, category: .product, favorite: false, caloriesPer100g: caloriesPer100g, carbsPer100g: carbsPer100g, sugarsPer100g: sugarsPer100g, amount: composedFoodItem.amount)
+        let newProduct = FoodItemViewModel(name: composedFoodItem.name, category: .product, favorite: false, caloriesPer100g: caloriesPer100g, carbsPer100g: carbsPer100g, sugarsPer100g: sugarsPer100g, amount: 0)
         let newFoodItem = FoodItem(context: self.managedObjectContext)
         newFoodItem.id = UUID()
         newFoodItem.name = newProduct.name
@@ -198,12 +198,17 @@ struct FoodItemComposerView: View {
         newFoodItem.sugarsPer100g = newProduct.sugarsPer100g
         newFoodItem.amount = Int64(newProduct.amount)
         
-        for typicalAmount in self.typicalAmounts {
-            let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-            typicalAmount.cdTypicalAmount = newTypicalAmount
-            let _ = typicalAmount.updateCDTypicalAmount(foodItem: newFoodItem)
-            newFoodItem.addToTypicalAmounts(newTypicalAmount)
+        if generateTypicalAmounts {
+            for typicalAmount in self.typicalAmounts {
+                let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
+                typicalAmount.cdTypicalAmount = newTypicalAmount
+                let _ = typicalAmount.updateCDTypicalAmount(foodItem: newFoodItem)
+                newFoodItem.addToTypicalAmounts(newTypicalAmount)
+            }
         }
+        
+        errorMessage = "\(NSLocalizedString("Successfully saved as", comment: "")) '\(newProduct.name)' \(NSLocalizedString("in your Products list", comment: ""))";
+        showingAlert = true
         
         // Save new food item
         try? AppDelegate.viewContext.save()
