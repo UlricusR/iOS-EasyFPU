@@ -83,12 +83,6 @@ struct FoodItemListView: View {
                         }
                         .onDelete(perform: self.deleteFoodItem)
                     }
-
-                    if !self.composedFoodItem.foodItems.isEmpty {
-                        BottomSheetView(isOpen: self.$bottomSheetShown, maxHeight: geometry.size.height * 0.75) {
-                            bottomSheetContent()
-                        }
-                    }
                 }
                 .disabled(self.showingMenu ? true : false)
                 .navigationBarTitle(foodItemListTitle)
@@ -151,6 +145,12 @@ struct FoodItemListView: View {
                     message: Text(self.errorMessage),
                     dismissButton: .default(Text("OK"))
                 )
+            }
+            
+            if !self.composedFoodItem.foodItems.isEmpty {
+                BottomSheetView(isOpen: self.$bottomSheetShown, maxHeight: geometry.size.height * 0.95) {
+                    bottomSheetContent()
+                }
             }
         }.edgesIgnoringSafeArea(.all)
     }

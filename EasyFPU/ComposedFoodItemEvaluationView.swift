@@ -115,8 +115,6 @@ struct ComposedFoodItemEvaluationView: View {
                 }
                 .animation(.easeInOut)
             }
-            
-            Spacer()
         }
         .sheet(item: $activeSheet) {
             sheetContent($0)

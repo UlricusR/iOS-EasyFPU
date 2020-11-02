@@ -19,7 +19,7 @@ struct FoodItemComposerView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            Form {
+            VStack {
                 HStack {
                     Button(action: {
                         activeSheet = .help
@@ -38,50 +38,52 @@ struct FoodItemComposerView: View {
                     Spacer()
                 }
                 
-                Section(header: Text("Final product")) {
-                    HStack {
-                        Text("Name")
-                        TextField("Name", text: self.$composedFoodItem.name)
-                    }
-                    
-                    HStack {
-                        Text("Weight")
-                        CustomTextField(titleKey: "Weight", text: self.$composedFoodItem.amountAsString, keyboardType: .numberPad)
-                            .multilineTextAlignment(.trailing)
-                        Text("g")
-                    }
-                    
-                    // Buttons to ease input
-                    HStack {
-                        Spacer()
-                        NumberButton(number: 100, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
-                        NumberButton(number: 50, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
-                        NumberButton(number: 10, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
-                        NumberButton(number: 5, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
-                        NumberButton(number: 1, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
-                        Spacer()
-                    }
-                    
-                    Button(action: {
-                        if !weightCheck() {
-                            message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
-                            showingActionSheet = true
-                        } else {
-                            saveProduct()
-                            presentation.wrappedValue.dismiss()
+                Form {
+                    Section(header: Text("Final product")) {
+                        HStack {
+                            Text("Name")
+                            TextField("Name", text: self.$composedFoodItem.name)
                         }
-                    }) {
-                        Text("Save as new product")
+                        
+                        HStack {
+                            Text("Weight")
+                            CustomTextField(titleKey: "Weight", text: self.$composedFoodItem.amountAsString, keyboardType: .numberPad)
+                                .multilineTextAlignment(.trailing)
+                            Text("g")
+                        }
+                        
+                        // Buttons to ease input
+                        HStack {
+                            Spacer()
+                            NumberButton(number: 100, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 50, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 10, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 5, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
+                            NumberButton(number: 1, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
+                            Spacer()
+                        }
+                        
+                        Button(action: {
+                            if !weightCheck() {
+                                message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                                showingActionSheet = true
+                            } else {
+                                saveProduct()
+                                presentation.wrappedValue.dismiss()
+                            }
+                        }) {
+                            Text("Save as new product")
+                        }
                     }
-                }
-                
-                Section(header: Text("Ingredients")) {
-                    List {
-                        ForEach(composedFoodItem.foodItems) { foodItem in
-                            HStack {
-                                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
-                                Text("g")
-                                Text(foodItem.name)
+                    
+                    Section(header: Text("Ingredients")) {
+                        List {
+                            ForEach(composedFoodItem.foodItems) { foodItem in
+                                HStack {
+                                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
+                                    Text("g")
+                                    Text(foodItem.name)
+                                }
                             }
                         }
                     }
