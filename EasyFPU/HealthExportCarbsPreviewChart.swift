@@ -43,15 +43,15 @@ struct HealthExportCarbsPreviewChart: UIViewRepresentable {
         self.carbsRegime = carbsRegime
         
         self.sugarsDataSet = BarChartDataSet()
-        self.sugarsDataSet.setColor(MealSugarsView.color)
+        self.sugarsDataSet.setColor(ComposedFoodItemSugarsView.color)
         self.sugarsDataSet.label = NSLocalizedString("Sugars", comment: "")
         
         self.carbsDataSet = BarChartDataSet()
-        self.carbsDataSet.setColor(MealCarbsView.color)
+        self.carbsDataSet.setColor(ComposedFoodItemCarbsView.color)
         self.carbsDataSet.label = NSLocalizedString("Regular Carbs", comment: "")
         
         self.eCarbsDataSet = BarChartDataSet()
-        self.eCarbsDataSet.setColor(MealECarbsView.color)
+        self.eCarbsDataSet.setColor(ComposedFoodItemECarbsView.color)
         self.eCarbsDataSet.label = NSLocalizedString("e-Carbs", comment: "")
     }
     
@@ -117,7 +117,7 @@ struct HealthExportCarbsPreviewChart: UIViewRepresentable {
         let dataSet = BarChartDataSet(entries: dataEntries, label: NSLocalizedString("Carbs in g", comment: ""))
         
         // Style data set
-        dataSet.colors = [MealSugarsView.color, MealCarbsView.color, MealECarbsView.color]
+        dataSet.colors = [ComposedFoodItemSugarsView.color, ComposedFoodItemCarbsView.color, ComposedFoodItemECarbsView.color]
         dataSet.stackLabels = [
             NSLocalizedString("Sugars_short", comment: ""),
             NSLocalizedString("Carbs_short", comment: ""),

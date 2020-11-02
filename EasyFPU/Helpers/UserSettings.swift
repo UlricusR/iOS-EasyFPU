@@ -15,6 +15,7 @@ class UserSettings: ObservableObject {
         case double(Double, UserSettings.UserDefaultsDoubleKey)
         case int(Int, UserSettings.UserDefaultsIntKey)
         case date(Date, UserSettings.UserDefaultsDateKey)
+        case string(String, UserSettings.UserDefaultsStringKey)
     }
     
     enum UserDefaultsBoolKey: String, CaseIterable {
@@ -24,6 +25,7 @@ class UserSettings: ObservableObject {
         case exportTotalMealSugars = "ExportTotalMealSugars"
         case exportTotalMealCalories = "ExportTotalMealCalories"
         case treatSugarsSeparately = "TreatSugarsSeparately"
+        case searchWorldwide = "SearchWorldwide"
     }
     
     enum UserDefaultsDoubleKey: String, CaseIterable {
@@ -48,6 +50,11 @@ class UserSettings: ObservableObject {
         case lastCaloriesExport = "LastCaloriesExport"
     }
     
+    enum UserDefaultsStringKey: String, CaseIterable {
+        case foodDatabase = "FoodDatabase"
+        case countryCode = "CountryCode"
+    }
+    
     // MARK: - The key store for syncing via iCloud
     private static var keyStore = NSUbiquitousKeyValueStore()
     
@@ -65,6 +72,9 @@ class UserSettings: ObservableObject {
     @Published var treatSugarsSeparately: Bool
     @Published var mealDelayInMinutes: Int = 0
     @Published var alertPeriodAfterExportInMinutes: Int = 15
+    @Published var foodDatabase: FoodDatabase
+    @Published var searchWorldwide: Bool
+    @Published var countryCode: String?
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
@@ -77,7 +87,10 @@ class UserSettings: ObservableObject {
         absorptionTimeECarbsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault,
         absorptionTimeECarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault,
         eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault,
-        treatSugarsSeparately: UserSettings.getValue(for: UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault
+        treatSugarsSeparately: UserSettings.getValue(for: UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault,
+        foodDatabase: FoodDatabaseType.getFoodDatabase(type: UserSettings.getFoodDatabaseType()),
+        searchWorldwide: UserSettings.getValue(for: UserDefaultsBoolKey.searchWorldwide) ?? false,
+        countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode)
     )
     
     private init(
@@ -91,7 +104,10 @@ class UserSettings: ObservableObject {
         absorptionTimeECarbsDelayInMinutes: Int,
         absorptionTimeECarbsIntervalInMinutes: Int,
         eCarbsFactor: Double,
-        treatSugarsSeparately: Bool
+        treatSugarsSeparately: Bool,
+        foodDatabase: FoodDatabase,
+        searchWorldwide: Bool,
+        countryCode: String?
     ) {
         self.disclaimerAccepted = disclaimerAccepted
         self.absorptionTimeSugarsDelayInMinutes = absorptionTimeSugarsDelayInMinutes // in minutes
@@ -104,6 +120,9 @@ class UserSettings: ObservableObject {
         self.absorptionTimeECarbsIntervalInMinutes = absorptionTimeECarbsIntervalInMinutes // in minutes
         self.eCarbsFactor = eCarbsFactor
         self.treatSugarsSeparately = treatSugarsSeparately
+        self.foodDatabase = foodDatabase
+        self.searchWorldwide = searchWorldwide
+        self.countryCode = countryCode
     }
     
     // MARK: - Static helper functions
@@ -134,6 +153,12 @@ class UserSettings: ObservableObject {
                 return false
             }
             UserSettings.keyStore.set(value, forKey: key.rawValue)
+        case .string(let value, let key):
+            if !UserDefaultsStringKey.allCases.contains(key) {
+                errorMessage = NSLocalizedString("Fatal error, please inform app developer: Cannot store parameter: ", comment: "") + key.rawValue
+                return false
+            }
+            UserSettings.keyStore.set(value, forKey: key.rawValue)
         }
         
         // Synchronize
@@ -155,5 +180,31 @@ class UserSettings: ObservableObject {
     
     static func getValue(for key: UserDefaultsDateKey) -> Date? {
         UserSettings.keyStore.object(forKey: key.rawValue) == nil ? nil : UserSettings.keyStore.object(forKey: key.rawValue) as? Date
+    }
+    
+    static func getValue(for key: UserDefaultsStringKey) -> String? {
+        UserSettings.keyStore.object(forKey: key.rawValue) == nil ? nil : UserSettings.keyStore.string(forKey: key.rawValue)
+    }
+    
+    static func getFoodDatabaseType() -> FoodDatabaseType {
+        let foodDatabaseValue = UserSettings.keyStore.object(forKey: FoodDatabaseType.key) == nil ? FoodDatabaseType.getDefaultFoodDatabaseType().rawValue : UserSettings.keyStore.string(forKey: FoodDatabaseType.key)!
+        
+        // If we don't have a key, we return the default
+        if let foodDatabaseType = FoodDatabaseType.init(rawValue: foodDatabaseValue) {
+            return foodDatabaseType
+        } else {
+            // Return the default
+            return FoodDatabaseType.getDefaultFoodDatabaseType()
+        }
+    }
+    
+    static func getCountryCode() -> String? {
+        if let countryCode = UserSettings.shared.countryCode {
+            return countryCode
+        } else if let countryCode = UserSettings.getValue(for: UserSettings.UserDefaultsStringKey.countryCode) {
+            return countryCode
+        } else {
+            return nil
+        }
     }
 }

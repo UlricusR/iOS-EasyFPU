@@ -14,11 +14,26 @@ struct CustomTextField: View {
     var keyboardType: UIKeyboardType
     
     var body: some View {
-        if #available(iOS 14.0, *) {
-            return AnyView(TextField(titleKey, text: $text).ignoresSafeArea(.keyboard, edges: .bottom).keyboardType(keyboardType))
-        } else {
-            // Fallback on earlier versions
-            return AnyView(TextField(titleKey, text: $text).keyboardType(keyboardType))
+        return AnyView(TextField(NSLocalizedString(titleKey, comment: ""), text: $text).ignoresSafeArea(.keyboard, edges: .bottom).keyboardType(keyboardType))
+    }
+}
+
+struct NumberButton<T: VariableAmountItem>: View {
+    var number: Int
+    var variableAmountItem: T
+    var width: CGFloat
+    
+    var body: some View {
+        Button(action: {
+            let newValue = self.variableAmountItem.amount + self.number
+            self.variableAmountItem.amountAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
+        }) {
+            Text("+\(self.number)")
         }
+        .frame(width: width, height: 40, alignment: .center)
+        .background(Color.green)
+        .foregroundColor(.white)
+        .buttonStyle(BorderlessButtonStyle())
+        .cornerRadius(20)
     }
 }

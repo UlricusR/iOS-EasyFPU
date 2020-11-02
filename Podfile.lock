@@ -1,18 +1,22 @@
 PODS:
+  - ADCountryPicker (2.1.0)
   - Charts (3.6.0):
     - Charts/Core (= 3.6.0)
   - Charts/Core (3.6.0)
 
 DEPENDENCIES:
+  - ADCountryPicker (~> 2.1.0)
   - Charts
 
 SPEC REPOS:
   trunk:
+    - ADCountryPicker
     - Charts
 
 SPEC CHECKSUMS:
+  ADCountryPicker: 502cee76a30ea1c3834eb0df170ce635691655c9
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
 
-PODFILE CHECKSUM: fc27743890565653f4248bb37cf4875357175c94
+PODFILE CHECKSUM: faa85e1e4a45d487d185bf13741db813d2b82d82
 
 COCOAPODS: 1.9.3

@@ -8,12 +8,12 @@
 
 import SwiftUI
 
-struct MealECarbsView: View {
-    var meal: MealViewModel
+struct ComposedFoodItemECarbsView: View {
+    var composedFoodItem: ComposedFoodItemViewModel
     var absorptionScheme: AbsorptionScheme
     var absorptionTimeAsString: String {
-        if meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return NumberFormatter().string(from: NSNumber(value: meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+        if composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
+            return DataHelper.intFormatter.string(from: NSNumber(value: composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
         } else {
             return "..."
         }
@@ -32,18 +32,18 @@ struct MealECarbsView: View {
                 Text("e-Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
-            .foregroundColor(Color(MealECarbsView.color))
+            .foregroundColor(Color(ComposedFoodItemECarbsView.color))
             .padding(.trailing)
             
             VStack(alignment: .trailing) { // Questions
                 Text("How much?")
                 Text("When?")
                 Text("How long?")
-            }.foregroundColor(Color(MealECarbsView.color))
+            }.foregroundColor(Color(ComposedFoodItemECarbsView.color))
             
             VStack(alignment: .leading) { // Answers
                 HStack {
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.fpus.getExtendedCarbs()))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.fpus.getExtendedCarbs()))!)
                     Text("g Carbs")
                 }
                 HStack {

@@ -8,15 +8,16 @@
 
 import SwiftUI
 
-struct MealItemView: View {
+struct ComposedFoodItemView: View {
     var foodItem: FoodItemViewModel
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var fontSizeName: Font?
     var fontSizeDetails: Font?
     var foregroundColorName: Color?
+    @ObservedObject var userSettings = UserSettings.shared
     var absorptionTimeAsString: String {
         if foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return NumberFormatter().string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+            return DataHelper.intFormatter.string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
         } else {
             return "..."
         }
@@ -38,26 +39,26 @@ struct MealItemView: View {
             }.font(fontSizeDetails)
             
             // Sugars
-            if UserSettings.shared.treatSugarsSeparately {
+            if userSettings.treatSugarsSeparately {
                 HStack {
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getSugars(when: UserSettings.shared.treatSugarsSeparately)))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getSugars(when: userSettings.treatSugarsSeparately)))!)
                     Text("g Sugars")
                     Text("in")
-                    Text(String(UserSettings.shared.absorptionTimeSugarsDelayInMinutes))
+                    Text(String(userSettings.absorptionTimeSugarsDelayInMinutes + userSettings.mealDelayInMinutes))
                     Text("min for")
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeSugarsDurationInHours))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: userSettings.absorptionTimeSugarsDurationInHours))!)
                     Text("h")
                 }.font(fontSizeDetails)
             }
             
             // Regular Carbs
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getRegularCarbs(when: UserSettings.shared.treatSugarsSeparately)))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getRegularCarbs(when: userSettings.treatSugarsSeparately)))!)
                 Text("g Regular Carbs")
                 Text("in")
-                Text(String(UserSettings.shared.absorptionTimeCarbsDelayInMinutes))
+                Text(String(userSettings.absorptionTimeCarbsDelayInMinutes + userSettings.mealDelayInMinutes))
                 Text("min for")
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeCarbsDurationInHours))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: userSettings.absorptionTimeCarbsDurationInHours))!)
                 Text("h")
             }.font(fontSizeDetails)
             
@@ -69,7 +70,7 @@ struct MealItemView: View {
                 Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().getExtendedCarbs()))!)
                 Text("g Extended Carbs")
                 Text("in")
-                Text(String(UserSettings.shared.absorptionTimeECarbsDelayInMinutes))
+                Text(String(userSettings.absorptionTimeECarbsDelayInMinutes + userSettings.mealDelayInMinutes))
                 Text("min for")
                 Text(self.absorptionTimeAsString)
                 Text("h")

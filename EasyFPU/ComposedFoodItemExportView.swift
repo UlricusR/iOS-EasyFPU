@@ -10,9 +10,9 @@ import SwiftUI
 import HealthKit
 import LocalAuthentication
 
-struct MealExportView: View {
+struct ComposedFoodItemExportView: View {
     @Environment(\.presentationMode) var presentation
-    var meal: MealViewModel
+    var composedFoodItem: ComposedFoodItemViewModel
     var absorptionScheme: AbsorptionScheme
     @ObservedObject var userSettings = UserSettings.shared
     @ObservedObject var carbsRegimeCalculator = CarbsRegimeCalculator.default
@@ -52,16 +52,8 @@ struct MealExportView: View {
                 }.padding([.leading, .trailing, .top])
                 
                 HStack {
-                    Stepper("Delay until meal", onIncrement: {
-                        userSettings.mealDelayInMinutes += 5
-                        userSettings.objectWillChange.send()
-                        carbsRegimeCalculator.recalculate()
-                    }, onDecrement: {
-                        userSettings.mealDelayInMinutes = max(userSettings.mealDelayInMinutes - 5, 0)
-                        userSettings.objectWillChange.send()
-                        carbsRegimeCalculator.recalculate()
-                    })
-                    Text(String(userSettings.mealDelayInMinutes))
+                    Stepper("Delay until meal", value: $userSettings.mealDelayInMinutes, in: 0...60, step: 5)
+                    Text("\(userSettings.mealDelayInMinutes)")
                     Text("min")
                 }.padding()
                 
@@ -134,13 +126,13 @@ struct MealExportView: View {
     }
     
     private func processHealthSample() {
-        guard let absorptionTimeInHours = meal.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) else {
+        guard let absorptionTimeInHours = composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) else {
             errorMessage = NSLocalizedString("Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks", comment: "")
             showingAlert = true
             return
         }
-        self.carbsRegimeCalculator.meal = meal
-        self.carbsRegimeCalculator.absorptionTimeInMinutes = absorptionTimeInHours * 60
+        self.carbsRegimeCalculator.composedFoodItem = composedFoodItem
+        self.carbsRegimeCalculator.eCarbsAbsorptionTimeInMinutes = absorptionTimeInHours * 60
         self.carbsRegimeCalculator.recalculate()
     }
     
@@ -161,7 +153,7 @@ struct MealExportView: View {
         var hkObjects = [HKObject]()
         hkObjects.append(contentsOf: carbsRegimeCalculator.hkObjects)
         if exportTotalMealCalories {
-            let caloriesObject = HealthDataHelper.processQuantitySample(value: meal.calories, unit: HealthDataHelper.unitCalories, start: Date(), end: Date(), sampleType: HealthDataHelper.objectTypeCalories)
+            let caloriesObject = HealthDataHelper.processQuantitySample(value: composedFoodItem.calories, unit: HealthDataHelper.unitCalories, start: Date(), end: Date(), sampleType: HealthDataHelper.objectTypeCalories)
             hkObjects.append(caloriesObject)
         }
         

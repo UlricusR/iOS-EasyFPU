@@ -10,8 +10,9 @@ import SwiftUI
 
 struct FoodItemView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    var absorptionScheme: AbsorptionScheme
+    var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var foodItem: FoodItemViewModel
+    var category: FoodItemCategory
     @State var activeSheet: FoodItemViewSheets.State?
     
     var body: some View {
@@ -57,9 +58,7 @@ struct FoodItemView: View {
         }
         .onTapGesture {
             if self.foodItem.amount > 0 {
-                self.foodItem.amountAsString = "0"
-                self.foodItem.cdFoodItem?.amount = 0
-                try? AppDelegate.viewContext.save()
+                composedFoodItem.remove(foodItem: foodItem)
             } else {
                 activeSheet = .selectFoodItem
             }
@@ -81,7 +80,8 @@ struct FoodItemView: View {
                 FoodItemEditor(
                     navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
                     draftFoodItem: self.foodItem,
-                    editedFoodItem: self.foodItem.cdFoodItem!
+                    editedFoodItem: self.foodItem.cdFoodItem!,
+                    category: category
                 ).environment(\.managedObjectContext, managedObjectContext)
             } else {
                 Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))

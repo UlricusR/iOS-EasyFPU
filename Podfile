@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '13.5'
+platform :ios, '14.0'
 
 target 'EasyFPU' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -7,5 +7,15 @@ target 'EasyFPU' do
 
   # Pods for EasyFPU
   pod 'Charts'
+  pod 'ADCountryPicker', '~> 2.1.0'
+  
+  # Post-install instructions
+  post_install do |pi|
+    pi.pods_project.targets.each do |t|
+      t.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+      end
+    end
+  end
 
 end

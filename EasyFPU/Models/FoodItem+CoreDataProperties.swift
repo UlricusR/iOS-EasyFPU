@@ -25,6 +25,7 @@ extension FoodItem {
     @NSManaged public var id: UUID?
     @NSManaged public var name: String?
     @NSManaged public var typicalAmounts: NSSet?
+    @NSManaged public var category: String?
 }
 
 // MARK: Generated accessors for typicalAmounts

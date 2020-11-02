@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable {
+class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, Identifiable {
     var id = UUID()
     @Published var amountAsString: String {
         willSet {
@@ -17,7 +17,7 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable {
             case .success(let amount):
                 self.amount = amount
             case .failure(let err):
-                debugPrint(DataHelper.getErrorMessage(from: err))
+                debugPrint(err.evaluate())
                 return
             }
         }
@@ -46,7 +46,7 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable {
         case .success(let amount):
             self.amount = amount
         case .failure(let err):
-            errorMessage = DataHelper.getErrorMessage(from: err)
+            errorMessage = err.evaluate()
             return nil
         }
         self.amountAsString = amountAsString

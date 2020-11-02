@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct MealCarbsView: View {
-    var meal: MealViewModel
+struct ComposedFoodItemCarbsView: View {
+    var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
     var regularCarbsTimeAsString: String {
         let time = Date().addingTimeInterval(TimeInterval((userSettings.absorptionTimeCarbsDelayInMinutes + userSettings.mealDelayInMinutes) * 60))
@@ -24,18 +24,18 @@ struct MealCarbsView: View {
                 Text("Regular Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
-            .foregroundColor(Color(MealCarbsView.color))
+            .foregroundColor(Color(ComposedFoodItemCarbsView.color))
             .padding(.trailing)
             
             VStack(alignment: .trailing) { // Questions
                 Text("How much?")
                 Text("When?")
                 Text("How long?")
-            }.foregroundColor(Color(MealCarbsView.color))
+            }.foregroundColor(Color(ComposedFoodItemCarbsView.color))
             
             VStack(alignment: .leading) { // Answers
                 HStack {
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.getRegularCarbs(when: userSettings.treatSugarsSeparately)))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.getRegularCarbs(when: userSettings.treatSugarsSeparately)))!)
                     Text("g Carbs")
                 }
                 HStack {

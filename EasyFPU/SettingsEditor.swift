@@ -11,6 +11,7 @@ import SwiftUI
 struct SettingsEditor: View {
     @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var editedAbsorptionScheme: AbsorptionScheme
+    @ObservedObject var userSettings = UserSettings.shared
     @State private var newMaxFpu: String = ""
     @State private var newAbsorptionTime: String = ""
     @State private var newAbsorptionBlockId: UUID?
@@ -18,6 +19,9 @@ struct SettingsEditor: View {
     @State private var updateButton: Bool = false
     @State private var showingAlert: Bool = false
     @State private var absorptionBlocksToBeDeleted = [AbsorptionBlockViewModel]()
+    @State private var selectedFoodDatabaseType: FoodDatabaseType = UserSettings.getFoodDatabaseType()
+    @State private var searchWorldwide: Bool = UserSettings.shared.searchWorldwide
+    @State private var selectedCountry: String = UserSettings.getCountryCode() ?? ""
     @State private var showingScreen = false
     private let helpScreen = HelpScreen.absorptionSchemeEditor
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -159,9 +163,6 @@ struct SettingsEditor: View {
                                         self.newMaxFpu = ""
                                         self.newAbsorptionTime = ""
                                         self.updateButton = false
-                                        
-                                        // Broadcast change
-                                        self.draftAbsorptionScheme.objectWillChange.send()
                                     } else {
                                         self.showingAlert = true
                                     }
@@ -185,9 +186,6 @@ struct SettingsEditor: View {
                                         self.newMaxFpu = ""
                                         self.newAbsorptionTime = ""
                                         self.updateButton = false
-                                        
-                                        // Broadcast change
-                                        self.draftAbsorptionScheme.objectWillChange.send()
                                     } else {
                                         // Undo deletion of block and show alert
                                         self.draftAbsorptionScheme.absorptionBlocks.insert(existingAbsorptionBlock, at: index)
@@ -204,15 +202,30 @@ struct SettingsEditor: View {
                 // Other settings
                 Section(header: Text("Other Parameters")) {
                     HStack {
-                        Stepper("Alert duration between exports", onIncrement: {
-                            UserSettings.shared.alertPeriodAfterExportInMinutes += 5
-                            UserSettings.shared.objectWillChange.send()
-                        }, onDecrement: {
-                            UserSettings.shared.alertPeriodAfterExportInMinutes = max(UserSettings.shared.alertPeriodAfterExportInMinutes - 5, 0)
-                            UserSettings.shared.objectWillChange.send()
-                        })
+                        Stepper("Alert duration between exports", value: $userSettings.alertPeriodAfterExportInMinutes, in: 0...60, step: 5)
                         Text(String(UserSettings.shared.alertPeriodAfterExportInMinutes))
                         Text("min")
+                    }
+                }
+                
+                // Food database
+                Section(header: Text("Food Database")) {
+                    // The food database
+                    Picker("Database", selection: $selectedFoodDatabaseType) {
+                        ForEach(FoodDatabaseType.allCases) { foodDatabaseType in
+                            Text(foodDatabaseType.rawValue).tag(foodDatabaseType)
+                        }
+                    }
+                    
+                    // For OpenFoodFacts: The country code
+                    if selectedFoodDatabaseType == .openFoodFacts {
+                        Toggle("Search worldwide", isOn: self.$searchWorldwide)
+                        if !searchWorldwide {
+                            HStack {
+                                NavigationLink("Country", destination: CountryPicker(code: self.$selectedCountry))
+                                Text(self.selectedCountry)
+                            }
+                        }
                     }
                 }
             }
@@ -274,7 +287,10 @@ struct SettingsEditor: View {
                         UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &self.errorMessage) &&
                         UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &self.errorMessage)
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedFoodDatabaseType.rawValue, UserSettings.UserDefaultsStringKey.foodDatabase), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.searchWorldwide, UserSettings.UserDefaultsBoolKey.searchWorldwide), errorMessage: &self.errorMessage) &&
+                        UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedCountry, UserSettings.UserDefaultsStringKey.countryCode), errorMessage: &errorMessage)
                     ) {
                         self.showingAlert = true
                     } else {
@@ -289,7 +305,9 @@ struct SettingsEditor: View {
                         UserSettings.shared.absorptionTimeECarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalECarbs
                         UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
                         UserSettings.shared.treatSugarsSeparately = self.draftAbsorptionScheme.treatSugarsSeparately
-                        UserSettings.shared.objectWillChange.send()
+                        UserSettings.shared.foodDatabase = FoodDatabaseType.getFoodDatabase(type: self.selectedFoodDatabaseType)
+                        UserSettings.shared.searchWorldwide = self.searchWorldwide
+                        UserSettings.shared.countryCode = self.selectedCountry
                         
                         // Close sheet
                         presentation.wrappedValue.dismiss()
@@ -322,7 +340,6 @@ struct SettingsEditor: View {
                 absorptionBlocksToBeDeleted.append(absorptionBlockToBeDeleted)
                 self.draftAbsorptionScheme.absorptionBlocks.remove(at: index)
             }
-            self.draftAbsorptionScheme.objectWillChange.send()
         } else {
             // We need to have at least one block left
             errorMessage = NSLocalizedString("At least one absorption block required", comment: "")
@@ -342,9 +359,6 @@ struct SettingsEditor: View {
         for absorptionBlock in defaultAbsorptionBlocks {
             let _ = draftAbsorptionScheme.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock), errorMessage: &errorMessage)
         }
-        
-        // Notify change
-        draftAbsorptionScheme.objectWillChange.send()
     }
     
     func resetSugarsToDefaults() {
@@ -352,9 +366,6 @@ struct SettingsEditor: View {
         draftAbsorptionScheme.delaySugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault))!
         draftAbsorptionScheme.intervalSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault))!
         draftAbsorptionScheme.durationSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault))!
-        
-        // Notify change
-        draftAbsorptionScheme.objectWillChange.send()
     }
      
     func resetCarbsToDefaults() {
@@ -362,9 +373,6 @@ struct SettingsEditor: View {
         draftAbsorptionScheme.delayCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault))!
         draftAbsorptionScheme.intervalCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsIntervalDefault))!
         draftAbsorptionScheme.durationCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault))!
-        
-        // Notify change
-        draftAbsorptionScheme.objectWillChange.send()
     }
      
     func resetECarbsToDefaults() {
@@ -374,8 +382,5 @@ struct SettingsEditor: View {
         
         // Reset eCarbs factor
         draftAbsorptionScheme.eCarbsFactorAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.eCarbsFactorDefault))!
-        
-        // Notify change
-        draftAbsorptionScheme.objectWillChange.send()
     }
 }

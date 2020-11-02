@@ -49,11 +49,20 @@ class MealViewModel {
         treatSugarsSeparately ? self.sugars : 0
     }
     
+    func remove(foodItem: FoodItemViewModel) {
+        foodItem.amountAsString = "0"
+        foodItem.cdFoodItem?.amount = 0
+        if let index = foodItems.firstIndex(of: foodItem) {
+            foodItems.remove(at: index)
+        }
+    }
+    
     func clear() {
         for foodItem in foodItems {
             foodItem.amountAsString = "0"
             foodItem.cdFoodItem?.amount = 0
         }
+        foodItems.removeAll()
         try? AppDelegate.viewContext.save()
     }
 }

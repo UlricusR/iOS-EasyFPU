@@ -10,3 +10,4 @@
 "NSFaceIDUsageDescription" = "Avoid accidential export of carbs and/or calories to Apple Health";
 "NSHealthUpdateUsageDescription" = "EasyFPU uses HealthKit to store total meal carbs, extended carbs and total meal calories in the Health app - only on user request";
 "NSHealthShareUsageDescription" = "EasyFPU uses HealthKit to store total meal carbs, extended carbs and total meal calories in the Health app - only on user request";
+"NSCameraUsageDescription" = "EasyFPU wants to scan barcodes of food";

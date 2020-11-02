@@ -9,12 +9,14 @@
 import SwiftUI
 
 enum HelpScreen: String {
-    case foodList = "Food List"
+    case productsList = "Product List"
+    case ingredientsList = "Ingredients List"
     case foodItemSelector = "Select Food Item"
     case foodItemEditor = "Edit Food Item"
     case mealDetails = "Meal Details"
     case absorptionSchemeEditor = "Edit Absorption Scheme"
     case mealExport = "Export to Health"
+    case foodItemComposer = "Food Item Composer"
 }
 
 struct HelpView: View {
@@ -25,8 +27,10 @@ struct HelpView: View {
         NavigationView {
             ScrollView<AnyView> {
                 switch helpScreen {
-                case .foodList:
-                    return AnyView(HelpViewFoodList())
+                case .productsList:
+                    return AnyView(HelpViewProductsList())
+                case .ingredientsList:
+                    return AnyView(HelpViewIngredientsList())
                 case .foodItemSelector:
                     return AnyView(HelpViewFoodItemSelector())
                 case .foodItemEditor:
@@ -37,6 +41,8 @@ struct HelpView: View {
                     return AnyView(HelpViewAbsorptionSchemeEditor())
                 case .mealExport:
                     return AnyView(HelpMealExportView())
+                case .foodItemComposer:
+                    return AnyView(HelpFoodItemComposer())
                 }
             }
             .navigationBarTitle(NSLocalizedString(self.helpScreen.rawValue, comment: ""))

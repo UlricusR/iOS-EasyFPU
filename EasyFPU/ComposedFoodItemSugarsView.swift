@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct MealSugarsView: View {
-    var meal: MealViewModel
+struct ComposedFoodItemSugarsView: View {
+    var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
     var sugarsTimeAsString: String {
         let time = Date().addingTimeInterval(TimeInterval((userSettings.absorptionTimeSugarsDelayInMinutes + userSettings.mealDelayInMinutes) * 60))
@@ -24,18 +24,18 @@ struct MealSugarsView: View {
                 Text("Sugars").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
-            .foregroundColor(Color(MealSugarsView.color))
+            .foregroundColor(Color(ComposedFoodItemSugarsView.color))
             .padding(.trailing)
             
             VStack(alignment: .trailing) { // Questions
                 Text("How much?")
                 Text("When?")
                 Text("How long?")
-            }.foregroundColor(Color(MealSugarsView.color))
+            }.foregroundColor(Color(ComposedFoodItemSugarsView.color))
             
             VStack(alignment: .leading) { // Answers
                 HStack { // How much?
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.meal.getSugars(when: userSettings.treatSugarsSeparately)))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.getSugars(when: userSettings.treatSugarsSeparately)))!)
                     Text("g Carbs")
                 }
                 HStack {

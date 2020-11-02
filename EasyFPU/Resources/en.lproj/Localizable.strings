@@ -34,8 +34,11 @@
 "Documentation on rueth.info" = "Documentation on rueth.info";
 "Home-Link" = "https://rueth.info/index.php/en/easyfpu/easyfpu-for-ios";
 
-// Food List
+// Products List
 "Food List" = "Food List";
+"Products" = "Products";
+"Product" = "Product";
+"Product List" = "Product List";
 "Name" = "Name";
 "Favorite" = "Favorite";
 "Carbs per 100g" = "Carbs per 100g";
@@ -52,7 +55,7 @@
 "kcal" = "kcal";
 "g/FPU" = "g/FPU";
 "e-Carbs Factor" = "e-Carbs Faktor";
-"New food item" = "New food item";
+"New Product" = "New Product";
 "Edit food item" = "Edit food item";
 "Nutritional values per 100g:" = "Nutritional values per 100g:";
 "Nutritional values for" = "Nutritional values for";
@@ -71,6 +74,27 @@
 "Select amount" = "Select amount";
 "Cannot delete food item" = "Cannot delete food item";
 "Delay of Extended Carbs" = "Delay of Extended Carbs";
+"Cannot delete ingredient" = "Cannot delete ingredient";
+
+// Ingredients
+"Ingredients" = "Ingredients";
+"Ingredient" = "Ingredient";
+"Ingredient List" = "Ingredient List";
+"New Ingredient" = "New Ingredient";
+"Category" = "Category";
+"Composed product" = "Composed product";
+"Weight" = "Weight";
+"Final product" = "Final product";
+"The weight of the composed product is less than the sum of its ingredients" = "The weight of the composed product is less than the sum of its ingredients";
+"Save" = "Save";
+"Save anyway" = "Save anyway";
+"Generate typical amounts" = "Generate typical amounts";
+"Number of portions" = "Number of portions";
+"Generate" = "Generate";
+"portion(s)" = "portions(s)";
+"Cannot create typical amount: " = "Cannot create typical amount: ";
+"Successfully saved as" = "Successfully saved as";
+"in your Products list" = "in your Products list";
 
 // Meal preview
 "e-Carbs" = "e-Carbs";
@@ -102,8 +126,9 @@
 "Delete food item" = "Delete food item";
 "Sugars exceed carbs" = "Sugars exceed carbs";
 "Thereof" = "Thereof";
+"Search term must not be empty" = "Search term must not be empty";
 
-// Absorption scheme editor
+// Settings editor
 "Absorption scheme" = "Absorption scheme";
 "Absorption Blocks" = "Absorption Blocks";
 "Tap to edit, swipe left to delete" = "Tap to edit, swipe left to delete";
@@ -133,6 +158,9 @@
 "Treat sugars separately" = "Treat sugars separately";
 "Other Parameters" = "Other Parameters";
 "Alert duration between exports" = "Alert duration between exports";
+"Country" = "Country";
+"Select food database country" = "Select food database country";
+"Search worldwide" = "Search worldwide";
 
 // Menu actions
 "Settings" = "Settings";
@@ -186,6 +214,36 @@
 "eCarbs_short" = "Extended";
 "Carbs in g" = "Carbs in g";
 "No data selected" = "No data selected";
+
+// Food Database
+"Food Database" = "Food Database";
+"Database" = "Database";
+"No product found" = "No product found";
+"No products found" = "No products found";
+"No nutriments found" = "No nutriments found";
+"Entry has no name" = "Entry has no name";
+"Entry has no code" = "Entry has no code";
+"Entry has no calories per 100g" = "Entry has no calories per 100g";
+"Entry has no carbs per 100g" = "Entry has no carbs per 100g";
+"Food Database Search" = "Food Database Search";
+"Select" = "Select";
+"No search results (yet)" = "No search results (yet)";
+"Nothing selected" = "Nothing selected";
+"- No name -" = "- No name -";
+"Error scanning food: " = "Error scanning food: ";
+"Loading food item..." = "Loading food item...";
+"Scanned Food" = "Scanned Food";
+"No food found" = "No food found";
+"Cannot decode JSON" = "Cannot decode JSON";
+"Unable to create image url from " = "Unable to create image url from ";
+"No image data found" = "No image data found";
+"Incomplete data: " = "Incomplete data: ";
+"Decoding error: " = "Decoding error: ";
+"No search results: " = "No search results: ";
+"Network error: " = "Network error: ";
+"Input error: " = "Input error: ";
+"Link to entry in " = "Link to entry in ";
+"No food selected" = "No food selected";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";

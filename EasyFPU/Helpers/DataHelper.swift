@@ -12,6 +12,13 @@ import MobileCoreServices
 
 enum InvalidNumberError: Error {
     case inputError(String)
+    
+    func evaluate() -> String {
+        switch self {
+        case .inputError(let storedErrorMessage):
+            return (NSLocalizedString("Input error: ", comment: "") + storedErrorMessage)
+        }
+    }
 }
 
 class DataHelper {
@@ -76,6 +83,12 @@ class DataHelper {
         return numberFormatter
     }
     
+    static var intFormatter: NumberFormatter {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.locale = Locale.current
+        return numberFormatter
+    }
+    
     static func checkForPositiveDouble(valueAsString: String, allowZero: Bool) -> Result<Double, InvalidNumberError> {
         guard let valueAsNumber = DataHelper.doubleFormatter(numberOfDigits: 5).number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
             return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
@@ -87,20 +100,18 @@ class DataHelper {
     }
     
     static func checkForPositiveInt(valueAsString: String, allowZero: Bool) -> Result<Int, InvalidNumberError> {
-        guard let valueAsNumber = NumberFormatter().number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
+        // First remove group separator
+        let groupingSeparator = intFormatter.groupingSeparator!
+        var valueWithoutGroupingSeparator = valueAsString
+        valueWithoutGroupingSeparator.removeAll(where: { $0 == Character(groupingSeparator) })
+        
+        guard let valueAsNumber = intFormatter.number(from: valueWithoutGroupingSeparator.isEmpty ? "0" : valueWithoutGroupingSeparator) else {
             return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
         }
         guard allowZero ? valueAsNumber.intValue >= 0 : valueAsNumber.intValue > 0 else {
             return .failure(.inputError(NSLocalizedString(allowZero ? "Value must not be negative" : "Value must not be zero or negative", comment: "")))
         }
         return .success(valueAsNumber.intValue)
-    }
-    
-    static func getErrorMessage(from error: InvalidNumberError) -> String {
-        switch error {
-        case .inputError(let errorMessage):
-            return errorMessage
-        }
     }
     
     static func gcd(_ numbers: [Int]) -> Int {

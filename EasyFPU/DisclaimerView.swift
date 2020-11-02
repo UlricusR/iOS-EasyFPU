@@ -54,7 +54,6 @@ struct DisclaimerView: View {
                     
                     // Set dynamic variable and broadcast change in UserSettings
                     UserSettings.shared.disclaimerAccepted = true
-                    UserSettings.shared.objectWillChange.send()
                 }) {
                     Text("Accept")
                 }

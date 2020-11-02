@@ -34,8 +34,11 @@
 "Documentation on rueth.info" = "Dokumentation auf rueth.info";
 "Home-Link" = "https://rueth.info/index.php/de/easyfpe/easyfpe-fuer-ios";
 
-// Food List
+// Products List
 "Food List" = "Essensliste";
+"Products" = "Produkte";
+"Product" = "Produkt";
+"Product List" = "Produktliste";
 "Name" = "Name";
 "Favorite" = "Lieblingsessen";
 "Carbs per 100g" = "Kohlenhydrate pro 100g";
@@ -52,7 +55,7 @@
 "kcal" = "kcal";
 "g/FPU" = "g/FPE";
 "e-Carbs Factor" = "e-Carbs-Faktor";
-"New food item" = "Neues Essen";
+"New Product" = "Neues Produkt";
 "Edit food item" = "Essen bearbeiten";
 "Nutritional values per 100g:" = "Nährwerte pro 100g:";
 "Nutritional values for" = "Nährwerte für";
@@ -71,6 +74,27 @@
 "Select amount" = "Menge auswählen";
 "Cannot delete food item" = "Kann Essen nicht löschen";
 "Delay of Extended Carbs" = "Verzögerung der verlängerten KH";
+"Cannot delete ingredient" = "Kann Zutat nicht löschen";
+
+// Ingredients
+"Ingredients" = "Zutaten";
+"Ingredient" = "Zutat";
+"Ingredient List" = "Zutatenliste";
+"New Ingredient" = "Neue Zutat";
+"Category" = "Kategorie";
+"Composed product" = "Zusammengestelltes Produkt";
+"Weight" = "Gewicht";
+"Final product" = "Endprodukt";
+"The weight of the composed product is less than the sum of its ingredients" = "Das Gewicht des Produkts is kleiner als das seiner Zutaten";
+"Save" = "Speichern";
+"Save anyway" = "Trotzdem speichern";
+"Generate typical amounts" = "Berechne typische Mengen";
+"Number of portions" = "Anzahl Portionen";
+"Generate" = "Berechnen";
+"portion(s)" = "Portion(en)";
+"Cannot create typical amount: " = "Kann typische Menge nicht berechnen: ";
+"Successfully saved as" = "Erfolgreich als";
+"in your Products list" = "in der Produktliste gespeichert";
 
 // Meal preview
 "e-Carbs" = "Verl. KH";
@@ -102,8 +126,9 @@
 "Delete food item" = "Dieses Essen löschen";
 "Sugars exceed carbs" = "Zucker übersteigt Kohlenhydrate";
 "Thereof" = "Davon";
+"Search term must not be empty" = "Suchbegriff darf nicht leer sein";
 
-// Absorption scheme editor
+// Settings editor
 "Absorption scheme" = "Absorptionsschema";
 "Absorption Blocks" = "Absorptionsblöcke";
 "Tap to edit, swipe left to delete" = "Zum Bearbeiten antippen, zum Löschen nach links wischen";
@@ -134,6 +159,9 @@
 "Treat sugars separately" = "KH aus Zucker separat behandeln";
 "Other Parameters" = "Andere Einstellungen";
 "Alert duration between exports" = "Hinweis-Dauer zwischen Exporten";
+"Country" = "Land";
+"Select food database country" = "Land für Lebensmitteldatenbank wählen";
+"Search worldwide" = "Weltweit suchen";
 
 // Menu actions
 "Settings" = "Einstellungen";
@@ -187,6 +215,36 @@
 "eCarbs_short" = "Verlängerte";
 "Carbs in g" = "Kohlenhydrate in g";
 "No data selected" = "No data selected";
+
+// Food Database
+"Food Database" = "Lebensmitteldatenbank";
+"Database" = "Datenbank";
+"No product found" = "Kein Produkt gefunden";
+"No products found" = "Keine Produkte gefunden";
+"No nutriments found" = "Keine Nährwerte gefunden";
+"Entry has no name" = "Eintrag hat keinen Namen";
+"Entry has no code" = "Eintrag hat keinen Code";
+"Entry has no calories per 100g" = "Eintrag hat keine Kalorien pro 100g";
+"Entry has no carbs per 100g" = "Eintrag hat keine Kohlenhydrate pro 100g";
+"Food Database Search" = "Essensdatenbank-Suche";
+"Select" = "Übernehmen";
+"No search results (yet)" = "(Noch) keine Suchergebnisse";
+"Nothing selected" = "Nichts ausgewählt";
+"- No name -" = "- Kein Name -";
+"Error scanning food: " = "Fehler beim Scannen: ";
+"Loading food item..." = "Lade Lebensmittel...";
+"Scanned Food" = "Gescanntes Lebensmittel";
+"No food found" = "Kein Lebensmittel gefunden";
+"Cannot decode JSON" = "Kann JSON nicht decodieren";
+"Unable to create image url from " = "Kann URL nicht bilden: ";
+"No image data found" = "Kein Bilddateien gefunden";
+"Incomplete data: " = "Unvollständige Daten: ";
+"Decoding error: " = "Decodierungsfehler: ";
+"No search results: " = "Keine Suchergebnisse: ";
+"Network error: " = "Netzwerkfehler: ";
+"Input error: " = "Eingabefehler: ";
+"Link to entry in " = "Link zum Eintrag in ";
+"No food selected" = "Kein Lebensmittel ausgewählt";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";
