@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable {
+class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, Identifiable {
     var id = UUID()
     @Published var amountAsString: String {
         willSet {

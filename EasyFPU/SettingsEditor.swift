@@ -11,6 +11,7 @@ import SwiftUI
 struct SettingsEditor: View {
     @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var editedAbsorptionScheme: AbsorptionScheme
+    @ObservedObject var userSettings = UserSettings.shared
     @State private var newMaxFpu: String = ""
     @State private var newAbsorptionTime: String = ""
     @State private var newAbsorptionBlockId: UUID?
@@ -201,11 +202,7 @@ struct SettingsEditor: View {
                 // Other settings
                 Section(header: Text("Other Parameters")) {
                     HStack {
-                        Stepper("Alert duration between exports", onIncrement: {
-                            UserSettings.shared.alertPeriodAfterExportInMinutes += 5
-                        }, onDecrement: {
-                            UserSettings.shared.alertPeriodAfterExportInMinutes = max(UserSettings.shared.alertPeriodAfterExportInMinutes - 5, 0)
-                        })
+                        Stepper("Alert duration between exports", value: $userSettings.alertPeriodAfterExportInMinutes, in: 0...60, step: 5)
                         Text(String(UserSettings.shared.alertPeriodAfterExportInMinutes))
                         Text("min")
                     }

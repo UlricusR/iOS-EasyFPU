@@ -16,6 +16,12 @@ struct FoodItemComposerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @State var activeSheet: FoodItemComposerViewSheets.State?
     private let helpScreen = HelpScreen.foodItemComposer
+    @State var errorMessage: String = ""
+    @State var showingAlert: Bool = false
+    
+    @State var generateTypicalAmounts: Bool = true
+    @State var numberOfPortions: Int = 1
+    @State var typicalAmounts = [TypicalAmountViewModel]()
     
     var body: some View {
         GeometryReader { geometry in
@@ -32,6 +38,9 @@ struct FoodItemComposerView: View {
                                 Text("Weight")
                                 CustomTextField(titleKey: "Weight", text: self.$composedFoodItem.amountAsString, keyboardType: .numberPad)
                                     .multilineTextAlignment(.trailing)
+                                    .onChange(of: self.composedFoodItem.amount) { _ in
+                                        generateAmounts()
+                                    }
                                 Text("g")
                             }
                             
@@ -45,19 +54,37 @@ struct FoodItemComposerView: View {
                                 NumberButton(number: 1, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
                                 Spacer()
                             }
+                        }
+                        
+                        
+                        Section(header: Text("Typical Amounts")) {
+                            // Generate typical amounts
+                            Toggle("Generate typical amounts", isOn: self.$generateTypicalAmounts)
                             
-                            Button(action: {
-                                if !weightCheck() {
-                                    message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
-                                    showingActionSheet = true
-                                } else {
-                                    saveProduct()
-                                    presentation.wrappedValue.dismiss()
+                            if generateTypicalAmounts {
+                                // Number of portions
+                                HStack {
+                                    Stepper("Number of portions", value: $numberOfPortions, in: 1...100)
+                                    Text("\(numberOfPortions)")
                                 }
-                            }) {
-                                Text("Save as new product")
+                                .onChange(of: numberOfPortions) { _ in
+                                    generateAmounts()
+                                }
+                                
+                                if !typicalAmounts.isEmpty {
+                                    List {
+                                        ForEach(typicalAmounts) { typicalAmount in
+                                            HStack {
+                                                Text(typicalAmount.amountAsString)
+                                                Text("g")
+                                                Text(typicalAmount.comment)
+                                            }
+                                        }.onDelete(perform: deleteTypicalAmount)
+                                    }
+                                }
                             }
                         }
+                        
                         
                         Section(header: Text("Ingredients")) {
                             List {
@@ -85,7 +112,17 @@ struct FoodItemComposerView: View {
                             composedFoodItem.clear()
                         }) {
                             Image(systemName: "xmark.circle").foregroundColor(.red).imageScale(.large).padding([.leading, .trailing])
-                        }.padding(.leading)
+                        }
+                    }, trailing: Button(action: {
+                        if !weightCheck() {
+                            message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                            showingActionSheet = true
+                        } else {
+                            saveProduct()
+                            presentation.wrappedValue.dismiss()
+                        }
+                    }) {
+                        Text("Save")
                     }
                 )
             }
@@ -99,6 +136,40 @@ struct FoodItemComposerView: View {
                 },
                 .cancel()
             ])
+        }
+        .alert(isPresented: self.$showingAlert) {
+            Alert(
+                title: Text("Notice"),
+                message: Text(self.errorMessage),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+        .onAppear() {
+            generateAmounts()
+        }
+    }
+    
+    private func generateAmounts() {
+        typicalAmounts.removeAll()
+        if generateTypicalAmounts && composedFoodItem.amount > 0 {
+            let portionWeight = composedFoodItem.amount / numberOfPortions
+            for multiplier in 1...numberOfPortions {
+                let amount = portionWeight * multiplier
+                let amountAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: amount))!
+                let comment = "- \(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(numberOfPortions))"
+                if let typicalAmount = TypicalAmountViewModel(amountAsString: amountAsString, comment: comment, errorMessage: &errorMessage) {
+                    typicalAmounts.append(typicalAmount)
+                } else {
+                    errorMessage = NSLocalizedString("Cannot create typical amount: ", comment: "") + errorMessage
+                    showingAlert = true
+                }
+            }
+        }
+    }
+    
+    private func deleteTypicalAmount(at offsets: IndexSet) {
+        offsets.forEach { index in
+            typicalAmounts.remove(at: index)
         }
     }
     
@@ -123,12 +194,12 @@ struct FoodItemComposerView: View {
         newFoodItem.sugarsPer100g = newProduct.sugarsPer100g
         newFoodItem.amount = Int64(newProduct.amount)
         
-        /*for typicalAmount in self.typicalAmounts {
+        for typicalAmount in self.typicalAmounts {
             let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
             typicalAmount.cdTypicalAmount = newTypicalAmount
             let _ = typicalAmount.updateCDTypicalAmount(foodItem: newFoodItem)
             newFoodItem.addToTypicalAmounts(newTypicalAmount)
-        }*/
+        }
         
         // Save new food item
         try? AppDelegate.viewContext.save()

@@ -52,14 +52,8 @@ struct ComposedFoodItemExportView: View {
                 }.padding([.leading, .trailing, .top])
                 
                 HStack {
-                    Stepper("Delay until meal", onIncrement: {
-                        userSettings.mealDelayInMinutes += 5
-                        carbsRegimeCalculator.recalculate()
-                    }, onDecrement: {
-                        userSettings.mealDelayInMinutes = max(userSettings.mealDelayInMinutes - 5, 0)
-                        carbsRegimeCalculator.recalculate()
-                    })
-                    Text(String(userSettings.mealDelayInMinutes))
+                    Stepper("Delay until meal", value: $userSettings.mealDelayInMinutes, in: 0...60, step: 5)
+                    Text("\(userSettings.mealDelayInMinutes)")
                     Text("min")
                 }.padding()
                 

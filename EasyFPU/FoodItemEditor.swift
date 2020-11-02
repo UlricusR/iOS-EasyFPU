@@ -118,7 +118,7 @@ struct FoodItemEditor: View {
                     
                     if self.typicalAmounts.count > 0 {
                         Section(footer: Text("Tap to edit")) {
-                            ForEach(self.typicalAmounts, id: \.self) { typicalAmount in
+                            ForEach(self.typicalAmounts) { typicalAmount in
                                 HStack {
                                     HStack {
                                         Text(typicalAmount.amountAsString)

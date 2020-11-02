@@ -23,7 +23,6 @@ struct FoodItemListView: View {
     @State private var activeSheet: FoodItemListViewSheets.State?
     @State private var showingAlert: Bool = false
     @State private var errorMessage: String = ""
-    @State private var bottomSheetShown = false
     
     @FetchRequest(
         entity: FoodItem.entity(),
@@ -148,7 +147,7 @@ struct FoodItemListView: View {
             }
             
             if !self.composedFoodItem.foodItems.isEmpty {
-                BottomSheetView(isOpen: self.$bottomSheetShown, maxHeight: geometry.size.height * 0.95) {
+                BottomSheetView(maxHeight: geometry.size.height * 0.95) {
                     bottomSheetContent()
                 }
             }

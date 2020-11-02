@@ -13,7 +13,7 @@ class ComposedFoodItemViewModel: ObservableObject, VariableAmountItem {
     var calories: Double = 0.0
     private var carbs: Double = 0.0
     private var sugars: Double = 0.0
-    var amount: Int = 0
+    @Published var amount: Int = 0
     var fpus: FPU = FPU(fpu: 0.0)
     var foodItems = [FoodItemViewModel]()
     
