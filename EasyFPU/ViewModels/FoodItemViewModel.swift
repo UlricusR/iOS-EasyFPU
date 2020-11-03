@@ -276,14 +276,30 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         return FPU(fpu: fpus)
     }
     
-    func updateCDFoodItem(_ cdFoodItem: inout FoodItem) {
-        cdFoodItem.name = name
-        cdFoodItem.category = category.rawValue
-        cdFoodItem.amount = Int64(amount)
-        cdFoodItem.caloriesPer100g = caloriesPer100g
-        cdFoodItem.carbsPer100g = carbsPer100g
-        cdFoodItem.sugarsPer100g = sugarsPer100g
-        cdFoodItem.favorite = favorite
+    func changeCategory(to newCategory: FoodItemCategory) {
+        if category != newCategory {
+            category = newCategory
+            if cdFoodItem != nil {
+                cdFoodItem!.category = newCategory.rawValue
+                try? AppDelegate.viewContext.save()
+            }
+        }
+    }
+    
+    func duplicate() {
+        let duplicate = FoodItemViewModel(
+            name: "\(NSLocalizedString("Copy of", comment: "")) \(name)",
+            category: category,
+            favorite: favorite,
+            caloriesPer100g: caloriesPer100g,
+            carbsPer100g: carbsPer100g,
+            sugarsPer100g: sugarsPer100g,
+            amount: 0
+        )
+        duplicate.typicalAmounts = typicalAmounts
+        
+        // Create new FoodItem in CoreData
+        FoodItem.create(from: duplicate)
     }
     
     func encode(to encoder: Encoder) throws {

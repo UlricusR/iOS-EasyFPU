@@ -22,8 +22,14 @@
 "Add" = "Hinzufügen";
 "Update" = "Aktualisieren";
 "Search" = "Suchen";
+"Edit" = "Bearbeiten";
+"Duplicate" = "Duplizieren";
+"Share" = "Teilen";
+"Move to Product List" = "Zu Produkten verschieben";
+"Move to Ingredient List" = "Zu Zutaten verschieben";
+"Delete" = "Löschen";
+"Copy of" = "Kopie von";
 "Tap to edit" = "Zum Bearbeiten antippen";
-"Tap to select, long press to edit" = "Zum Auswählen antippen, zum Bearbeiten lange drücken, zum Löschen nach links wischen";
 
 // About
 "About" = "Über";

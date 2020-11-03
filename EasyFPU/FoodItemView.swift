@@ -63,10 +63,45 @@ struct FoodItemView: View {
                 activeSheet = .selectFoodItem
             }
         }
-        .onLongPressGesture {
-            // Edit food item
-            activeSheet = .editFoodItem
-        }
+        .contextMenu(menuItems: {
+            // Editing the food item
+            Button(action: {
+                activeSheet = .editFoodItem
+            }) {
+                Text("Edit")
+            }
+            
+            // Duplicating the food item
+            Button(action: {
+                foodItem.duplicate()
+            }) {
+                Text("Duplicate")
+            }
+            
+            // TODO: Sharing the food item
+            /*Button(action: {
+                
+            }) {
+                Text("Share")
+            }*/
+            
+            // Moving the food item to another category
+            Button(action: {
+                composedFoodItem.remove(foodItem: foodItem)
+                foodItem.changeCategory(to: foodItem.category == .product ? .ingredient : .product)
+            }) {
+                Text(NSLocalizedString("Move to \(foodItem.category == .product ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""))
+            }
+            
+            // Delete the food item
+            Button(action: {
+                if let foodItemToBeDeleted = foodItem.cdFoodItem {
+                    FoodItem.delete(foodItemToBeDeleted)
+                }
+            }) {
+                Text("Delete")
+            }
+        })
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }

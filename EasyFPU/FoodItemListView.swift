@@ -75,12 +75,10 @@ struct FoodItemListView: View {
                         // Search view
                         SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
                             .padding(.horizontal)
-                        Text("Tap to select, long press to edit").font(.caption)
                         ForEach(self.filteredFoodItems) { foodItem in
                             FoodItemView(composedFoodItem: composedFoodItem, foodItem: foodItem, category: self.category)
                                 .environment(\.managedObjectContext, self.managedObjectContext)
                         }
-                        .onDelete(perform: self.deleteFoodItem)
                     }
                 }
                 .disabled(self.showingMenu ? true : false)
@@ -152,30 +150,6 @@ struct FoodItemListView: View {
                 }
             }
         }.edgesIgnoringSafeArea(.all)
-    }
-    
-    private func deleteFoodItem(at offsets: IndexSet) {
-        offsets.forEach { index in
-            guard let foodItem = self.filteredFoodItems[index].cdFoodItem else {
-                errorMessage = NSLocalizedString("Cannot delete food item", comment: "")
-                showingAlert = true
-                return
-            }
-            
-            // Delete typical amounts first
-            let typicalAmountsToBeDeleted = foodItem.typicalAmounts
-            if typicalAmountsToBeDeleted != nil {
-                for typicalAmountToBeDeleted in typicalAmountsToBeDeleted! {
-                    self.managedObjectContext.delete(typicalAmountToBeDeleted as! TypicalAmount)
-                }
-                foodItem.removeFromTypicalAmounts(typicalAmountsToBeDeleted!)
-            }
-            
-            // Delete food item
-            self.managedObjectContext.delete(foodItem)
-        }
-        
-        try? AppDelegate.viewContext.save()
     }
     
     @ViewBuilder
