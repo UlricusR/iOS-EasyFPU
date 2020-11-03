@@ -15,7 +15,7 @@ fileprivate enum Constants {
     static let snapRatioMax: CGFloat = 0.4
     static let snapRatioMid: CGFloat = 0.1
     static let midHeightRatio: CGFloat = 0.3
-    static let minHeightRatio: CGFloat = 0.13
+    static let minHeightRatio: CGFloat = 0.15
 }
 
 fileprivate enum Position {
