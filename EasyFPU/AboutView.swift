@@ -28,6 +28,8 @@ struct AboutView: View {
                     .onTapGesture {
                         UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
                     }
+                Text("Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String) Build \(Bundle.main.infoDictionary!["CFBundleVersion"] as! String)").padding()
+                
                 Spacer()
             }
             .navigationBarTitle(Text("About this app"))
