@@ -190,16 +190,8 @@ struct MainView: View {
     private func importFoodItems() {
         if foodItemsToBeImported != nil {
             for foodItemToBeImported in foodItemsToBeImported! {
-                var newFoodItem = FoodItem(context: managedObjectContext)
-                foodItemToBeImported.updateCDFoodItem(&newFoodItem)
-                for typicalAmount in foodItemToBeImported.typicalAmounts {
-                    let newCDTypicalAmount = TypicalAmount(context: managedObjectContext)
-                    newCDTypicalAmount.amount = Int64(typicalAmount.amount)
-                    newCDTypicalAmount.comment = typicalAmount.comment
-                    newFoodItem.addToTypicalAmounts(newCDTypicalAmount)
-                }
+                FoodItem.create(from: foodItemToBeImported)
             }
-            try? AppDelegate.viewContext.save()
         } else {
             errorMessage = "Could not import food list"
             showingAlert = true

@@ -22,8 +22,14 @@
 "Add" = "Add";
 "Update" = "Update";
 "Search" = "Search";
+"Edit" = "Edit";
+"Duplicate" = "Duplicate";
+"Share" = "Share";
+"Move to Product List" = "Move to Products";
+"Move to Ingredient List" = "Move to Ingredients";
+"Delete" = "Delete";
+"Copy of" = "Copy of";
 "Tap to edit" = "Tap to edit";
-"Tap to select, long press to edit" = "Tap to select, long press to edit, swipe left to delete";
 
 // About
 "About" = "About";

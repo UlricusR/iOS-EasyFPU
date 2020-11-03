@@ -156,27 +156,13 @@ struct FoodItemEditor: View {
                     if editedFoodItem != nil {
                         Section {
                             Button(action: {
-                                // First close the sheet
+                                // Close the sheet
                                 presentation.wrappedValue.dismiss()
                                 
-                                // Then delete all related typical amounts
-                                for typicalAmount in self.typicalAmounts {
-                                    if typicalAmount.cdTypicalAmount != nil {
-                                        typicalAmount.cdTypicalAmount!.prepareForDeletion()
-                                        if self.draftFoodItem.cdFoodItem != nil {
-                                            self.draftFoodItem.cdFoodItem!.removeFromTypicalAmounts(typicalAmount.cdTypicalAmount!)
-                                        }
-                                        self.managedObjectContext.delete(typicalAmount.cdTypicalAmount!)
-                                    }
+                                // Delete food item
+                                if let foodItemToBeDeleted = self.draftFoodItem.cdFoodItem {
+                                    FoodItem.delete(foodItemToBeDeleted)
                                 }
-                                
-                                // Then delete the food item itself
-                                if self.draftFoodItem.cdFoodItem != nil {
-                                    self.managedObjectContext.delete(self.draftFoodItem.cdFoodItem!)
-                                }
-                                
-                                // And save the context
-                                try? AppDelegate.viewContext.save()
                             }) {
                                 Text("Delete food item")
                             }
