@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import URLImage
 
 struct FoodSearchResultPreview: View {
     var product: FoodDatabaseEntry
@@ -15,6 +16,7 @@ struct FoodSearchResultPreview: View {
     var category: FoodItemCategory
     @Environment(\.presentationMode) var parentPresentation
     @State var showDetails: Bool = false
+    @State var productWasChosenInFoodPreview = false
     
     var body: some View {
         HStack {
@@ -23,6 +25,28 @@ struct FoodSearchResultPreview: View {
             }) {
                 Image(systemName: self.foodDatabaseResults.selectedEntry == product ? "checkmark.circle.fill" : "circle").foregroundColor(.green)
             }.buttonStyle(BorderlessButtonStyle())
+            
+            if let frontThumb = product.imageFront?.thumb {
+                URLImage(url: frontThumb,
+                         failure: { error, retry in
+                            Image("no-photo-icon")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 100)
+                         },
+                         content: { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 100)
+                         }
+                )
+            } else {
+                Image("no-photo-icon")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 100)
+            }
             
             Text(product.name).font(.headline)
                 .onTapGesture {
@@ -39,8 +63,10 @@ struct FoodSearchResultPreview: View {
             }.buttonStyle(BorderlessButtonStyle())
         }
         .sheet(isPresented: $showDetails) {
-            FoodPreview(product: product, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category).onDisappear() {
-                parentPresentation.wrappedValue.dismiss()
+            FoodPreview(product: product, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, productWasChosen: $productWasChosenInFoodPreview).onDisappear() {
+                if productWasChosenInFoodPreview {
+                    parentPresentation.wrappedValue.dismiss()
+                }
             }
         }
     }

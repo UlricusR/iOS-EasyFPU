@@ -8,6 +8,7 @@ target 'EasyFPU' do
   # Pods for EasyFPU
   pod 'Charts'
   pod 'ADCountryPicker', '~> 2.1.0'
+  pod 'URLImage'
   
   # Post-install instructions
   post_install do |pi|

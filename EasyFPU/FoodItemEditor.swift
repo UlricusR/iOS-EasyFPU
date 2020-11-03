@@ -42,6 +42,7 @@ struct FoodItemEditor: View {
     @State var newTypicalAmountId: UUID?
     @State var typicalAmountsToBeDeleted = [TypicalAmountViewModel]()
     @State var updateButton = false
+    @State var productWasChosenInFoodPreview = false // We actually don't need this variable in this view
     
     private let helpScreen = HelpScreen.foodItemEditor
     
@@ -442,7 +443,7 @@ struct FoodItemEditor: View {
         case .scan:
             CodeScannerView(codeTypes: [.ean13], simulatedData: "4101530002123", completion: self.handleScan)
         case .foodPreview:
-            FoodPreview(product: foodDatabaseResults.selectedEntry!, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category)
+            FoodPreview(product: foodDatabaseResults.selectedEntry!, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, productWasChosen: $productWasChosenInFoodPreview)
         }
     }
 }

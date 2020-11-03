@@ -7,13 +7,13 @@
 //
 
 import SwiftUI
-import RemoteContentView
 
 struct FoodPreview: View {
     var product: FoodDatabaseEntry
     @ObservedObject var databaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var category: FoodItemCategory
+    @Binding var productWasChosen: Bool
     @Environment(\.presentationMode) var presentation
     @State private var errorMessage = ""
     @State private var showingAlert = false
@@ -24,6 +24,7 @@ struct FoodPreview: View {
             .navigationBarTitle("Scanned Food")
             .navigationBarItems(leading: Button(action: {
                 // Just close sheet
+                productWasChosen = false
                 presentation.wrappedValue.dismiss()
             }) {
                 Text("Cancel")
@@ -31,6 +32,9 @@ struct FoodPreview: View {
                 databaseResults.selectedEntry = product
                 databaseResults.selectedEntry?.category = category
                 draftFoodItem.fill(with: product)
+                
+                // Set product to chosen
+                productWasChosen = true
                     
                 // Close sheet
                 presentation.wrappedValue.dismiss()
