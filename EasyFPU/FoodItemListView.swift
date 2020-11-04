@@ -16,7 +16,6 @@ struct FoodItemListView: View {
     var foodItemListTitle: String
     var composedFoodItemTitle: String
     @Binding var showingMenu: Bool
-    private var draftFoodItem: FoodItemViewModel
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
@@ -56,15 +55,6 @@ struct FoodItemListView: View {
         self.foodItemListTitle = foodItemListTitle
         self.composedFoodItemTitle = composedFoodItemTitle
         self._showingMenu = showingMenu
-        self.draftFoodItem = FoodItemViewModel(
-            name: "",
-            category: category,
-            favorite: false,
-            caloriesPer100g: 0.0,
-            carbsPer100g: 0.0,
-            sugarsPer100g: 0.0,
-            amount: 0
-        )
     }
     
     var body: some View {
@@ -168,7 +158,16 @@ struct FoodItemListView: View {
         case .addFoodItem:
             FoodItemEditor(
                 navigationBarTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
-                draftFoodItem: draftFoodItem,
+                draftFoodItem: // Create new empty draftFoodItem
+                    FoodItemViewModel(
+                        name: "",
+                        category: category,
+                        favorite: false,
+                        caloriesPer100g: 0.0,
+                        carbsPer100g: 0.0,
+                        sugarsPer100g: 0.0,
+                        amount: 0
+                    ),
                 category: category
             ).environment(\.managedObjectContext, managedObjectContext)
         case .productsListHelp:

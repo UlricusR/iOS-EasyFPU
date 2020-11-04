@@ -494,7 +494,7 @@ struct FoodItemEditor: View {
     @ViewBuilder func notificationViewContent() -> some View {
         switch notificationState {
         case .searching:
-            ActivityIndicatorDynamicText(staticText: "Searching")
+            ActivityIndicatorDynamicText(staticText: NSLocalizedString("Searching", comment: ""))
         case .noSearchResults:
             Text("No food found")
                 .onAppear() {
