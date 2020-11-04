@@ -407,8 +407,7 @@ struct FoodItemEditor: View {
                 switch result {
                 case .success(let networkFoodDatabaseEntry):
                     guard let foodDatabaseEntry = networkFoodDatabaseEntry else {
-                        errorMessage = NSLocalizedString("No food found", comment: "")
-                        showingAlert = true
+                        DispatchQueue.main.async { self.notificationState = .noSearchResults }
                         return
                     }
                     DispatchQueue.main.async {
