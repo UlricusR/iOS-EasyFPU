@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import URLImage
 
 struct FoodSearchResultPreview: View {
     var product: FoodDatabaseEntry
@@ -23,6 +24,15 @@ struct FoodSearchResultPreview: View {
             }) {
                 Image(systemName: self.foodDatabaseResults.selectedEntry == product ? "checkmark.circle.fill" : "circle").foregroundColor(.green)
             }.buttonStyle(BorderlessButtonStyle())
+            
+            if let imageObject = product.imageFront {
+                URLImage(url: imageObject.thumb) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 100)
+                }
+            }
             
             Text(product.name).font(.headline)
                 .onTapGesture {

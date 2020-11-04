@@ -63,7 +63,6 @@
 		1B90D2DA24F7A8EB0059BFFA /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2D924F7A8EB0059BFFA /* SearchView.swift */; };
 		1B90D2DC24F7A9660059BFFA /* ResignKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2DB24F7A9660059BFFA /* ResignKeyboard.swift */; };
 		1B90D2DE24F7BAB40059BFFA /* ComposedFoodItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2DD24F7BAB40059BFFA /* ComposedFoodItemView.swift */; };
-		1B91994A254811430049672D /* RemoteContentView in Frameworks */ = {isa = PBXBuildFile; productRef = 1B919949254811430049672D /* RemoteContentView */; };
 		1B919950254894370049672D /* FoodPreviewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B91994F254894370049672D /* FoodPreviewSheets.swift */; };
 		1B9723ED2508AC5C00E606A7 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9723EC2508AC5C00E606A7 /* UserSettings.swift */; };
 		1BA040CA24BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA040C624BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift */; };
@@ -200,7 +199,6 @@
 				1B004A4624BA338A001E362A /* CloudKit.framework in Frameworks */,
 				1BAEE0862500C5FB00B4891F /* HealthKit.framework in Frameworks */,
 				1B3EEB1025334A0C004C110A /* Pods_EasyFPU.framework in Frameworks */,
-				1B91994A254811430049672D /* RemoteContentView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,7 +433,6 @@
 			name = EasyFPU;
 			packageProductDependencies = (
 				1B51B32F2540B31300064EB1 /* CodeScanner */,
-				1B919949254811430049672D /* RemoteContentView */,
 			);
 			productName = EasyFPU;
 			productReference = 1B004A2924BA3035001E362A /* EasyFPU.app */;
@@ -469,7 +466,6 @@
 			mainGroup = 1B004A2024BA3035001E362A;
 			packageReferences = (
 				1B51B32E2540B31300064EB1 /* XCRemoteSwiftPackageReference "CodeScanner" */,
-				1B919948254811430049672D /* XCRemoteSwiftPackageReference "remote-content-view" */,
 			);
 			productRefGroup = 1B004A2A24BA3035001E362A /* Products */;
 			projectDirPath = "";
@@ -849,14 +845,6 @@
 				minimumVersion = 1.0.6;
 			};
 		};
-		1B919948254811430049672D /* XCRemoteSwiftPackageReference "remote-content-view" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/dmytro-anokhin/remote-content-view";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.4;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -864,11 +852,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1B51B32E2540B31300064EB1 /* XCRemoteSwiftPackageReference "CodeScanner" */;
 			productName = CodeScanner;
-		};
-		1B919949254811430049672D /* RemoteContentView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1B919948254811430049672D /* XCRemoteSwiftPackageReference "remote-content-view" */;
-			productName = RemoteContentView;
 		};
 /* End XCSwiftPackageProductDependency section */
 

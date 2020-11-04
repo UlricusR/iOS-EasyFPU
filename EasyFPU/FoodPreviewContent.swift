@@ -7,16 +7,16 @@
 //
 
 import SwiftUI
-import RemoteContentView
+import URLImage
 
 struct FoodPreviewContent: View {
     var selectedEntry: FoodDatabaseEntry
     @State var activeSheet: FoodPreviewContentSheets.State?
-    /*@State var scale: CGFloat = 1
+    @State var scale: CGFloat = 1.0
     @State var isTapped: Bool = false
-    @State var pointTapped: CGPoint = .zero
-    @State var draggedSize: CGSize = .zero
-    @State var previousDragged: CGSize = .zero*/
+    @State var pointTapped: CGPoint = CGPoint.zero
+    @State var draggedSize: CGSize = CGSize.zero
+    @State var previousDragged: CGSize = CGSize.zero
     
     var body: some View {
         VStack {
@@ -82,9 +82,8 @@ struct FoodPreviewContent: View {
     @ViewBuilder
     private func getThumbView(image: FoodDatabaseImage?) -> some View {
         if image != nil {
-            let remoteImage = RemoteImage(url: image!.thumb)
-            RemoteContentView(remoteContent: remoteImage) {
-                Image(uiImage: $0)
+            URLImage(url: image!.thumb) { image in
+                image
             }
         }
     }
@@ -94,10 +93,9 @@ struct FoodPreviewContent: View {
         switch state {
         case .front:
             if selectedEntry.imageFront != nil {
-                let remoteImage = RemoteImage(url: selectedEntry.imageFront!.image)
                 NavigationView {
                     GeometryReader { reader in
-                        getImageView(remoteImage: remoteImage, for: reader)
+                        getImageView(url: selectedEntry.imageFront!.image, for: reader)
                         .navigationBarTitle(selectedEntry.name)
                         .navigationBarItems(trailing: Button(action: {
                             self.activeSheet = nil
@@ -109,10 +107,9 @@ struct FoodPreviewContent: View {
             }
         case .nutriments:
             if selectedEntry.imageNutriments != nil {
-                let remoteImage = RemoteImage(url: selectedEntry.imageNutriments!.image)
                 NavigationView {
                     GeometryReader { reader in
-                        getImageView(remoteImage: remoteImage, for: reader)
+                        getImageView(url: selectedEntry.imageNutriments!.image, for: reader)
                         .navigationBarTitle(selectedEntry.name)
                         .navigationBarItems(trailing: Button(action: {
                             self.activeSheet = nil
@@ -124,10 +121,9 @@ struct FoodPreviewContent: View {
             }
         case .ingredients:
             if selectedEntry.imageIngredients != nil {
-                let remoteImage = RemoteImage(url: selectedEntry.imageIngredients!.image)
                 NavigationView {
                     GeometryReader { reader in
-                        getImageView(remoteImage: remoteImage, for: reader)
+                        getImageView(url: selectedEntry.imageIngredients!.image, for: reader)
                         .navigationBarTitle(selectedEntry.name)
                         .navigationBarItems(trailing: Button(action: {
                             self.activeSheet = nil
@@ -141,35 +137,57 @@ struct FoodPreviewContent: View {
     }
     
     @ViewBuilder
-    private func getImageView(remoteImage: RemoteImage, for geometry: GeometryProxy) -> some View {
-        RemoteContentView(remoteContent: remoteImage) {
-            Image(uiImage: $0)
+    private func getImageView(url: URL, for reader: GeometryProxy) -> some View {
+        URLImage(url: url) { image in
+            image
                 .resizable()
                 .scaledToFit()
-                /*.animation(.default)
-                .offset(x: self.draggedSize.width, y: self.draggedSize.height)
+                .animation(.default)
+                .offset(x: self.draggedSize.width, y: 0)
                 .scaleEffect(self.scale)
-                .scaleEffect(self.isTapped ? 2 : 1, anchor: UnitPoint(x: self.pointTapped.x / geometry.frame(in: .global).maxX, y: self.pointTapped.y / geometry.frame(in: .global).maxY))
-                .gesture(TapGesture(count: 2)
-                            .onEnded({
-                                self.isTapped = !self.isTapped
-                            }).simultaneously(with: DragGesture(minimumDistance: 0, coordinateSpace: .global).onChanged({ value in
-                                self.pointTapped = value.startLocation
-                                self.draggedSize = CGSize(width: value.translation.width + self.previousDragged.width, height: value.translation.height + self.previousDragged.height)
-                            }).onEnded({ value in
-                                self.draggedSize = CGSize(width: value.translation.width + self.previousDragged.width, height: value.translation.height + self.previousDragged.height)
-                                self.previousDragged = self.draggedSize
-                                print(value.location)
-                            }))
-                )
-                .gesture(MagnificationGesture()
-                            .onChanged({ scale in
-                                self.scale = scale.magnitude
-                            })
-                            .onEnded({ scaleFinal in
-                                self.scale = scaleFinal.magnitude
-                            })
-                )*/
+                .scaleEffect(self.isTapped ? 2 : 1,
+                 anchor: UnitPoint(
+                  x: self.pointTapped.x / reader.frame(in: .global).maxX,
+                  y: self.pointTapped.y / reader.frame(in: .global).maxY
+                  ))
+                 .gesture(TapGesture(count: 2)
+                 .onEnded({
+                self.isTapped = !self.isTapped
+            })
+            .simultaneously(with: DragGesture(minimumDistance: 0, coordinateSpace: .global)
+            .onChanged({ (value) in
+                self.pointTapped = value.startLocation
+                self.draggedSize = CGSize(
+                     width: value.translation.width + self.previousDragged.width,
+                     height: value.translation.height + self.previousDragged.height)
+
+            }).onEnded({ (value) in
+                let globalMaxX = reader.frame(in: .global).maxX
+                let offsetWidth = ((globalMaxX * self.scale) - globalMaxX) / 2
+                let newDraggedWidth = self.draggedSize.width * self.scale
+                if (newDraggedWidth > offsetWidth) {
+                    self.draggedSize = CGSize(
+                        width: offsetWidth / self.scale,
+                        height: value.translation.height + self.previousDragged.height
+                        )
+                } else if (newDraggedWidth < -offsetWidth) {
+                    self.draggedSize = CGSize(
+                        width: -offsetWidth / self.scale,
+                        height: value.translation.height + self.previousDragged.height
+                        )
+                } else {
+                    self.draggedSize = CGSize(
+                        width: value.translation.width + self.previousDragged.width,
+                        height: value.translation.height + self.previousDragged.height
+                        )
+                }
+                self.previousDragged = self.draggedSize
+                }))).gesture(MagnificationGesture()
+                .onChanged({ (scale) in
+                self.scale = scale.magnitude
+            }).onEnded({ (scaleFinal) in
+                self.scale = scaleFinal.magnitude
+            }))
         }
     }
 }
