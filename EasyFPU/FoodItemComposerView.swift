@@ -99,34 +99,37 @@ struct FoodItemComposerView: View {
                         }
                     }
                 }
-                .navigationBarTitle(Text("Composed product"), displayMode: .inline)
+                .navigationBarTitle(Text("Final product"), displayMode: .inline)
                 .navigationBarItems(
-                    leading: HStack {
-                        Button(action: {
-                            activeSheet = .help
-                        }) {
-                            Image(systemName: "questionmark.circle").imageScale(.large)
-                        }
-                        
+                    leading: Button(action: {
+                        activeSheet = .help
+                    }) {
+                        Image(systemName: "questionmark.circle").imageScale(.large)
+                    }, trailing: HStack {
                         Button(action: {
                             composedFoodItem.clear()
                         }) {
-                            Image(systemName: "xmark.circle").foregroundColor(.red).imageScale(.large).padding([.leading, .trailing])
+                            Image(systemName: "xmark.circle").foregroundColor(.red).imageScale(.large).padding(.trailing)
                         }
-                    }, trailing: Button(action: {
-                        if !weightCheck() {
-                            message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
-                            showingActionSheet = true
-                        } else {
-                            saveProduct()
-                            presentation.wrappedValue.dismiss()
+                        
+                        Button(action: {
+                            if !weightCheck() {
+                                message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                                showingActionSheet = true
+                            } else {
+                                saveProduct()
+                                presentation.wrappedValue.dismiss()
+                            }
+                        }) {
+                            Text("Save")
                         }
-                    }) {
-                        Text("Save")
                     }
                 )
             }
             .navigationViewStyle(StackNavigationViewStyle())
+        }
+        .sheet(item: $activeSheet) {
+            sheetContent($0)
         }
         .actionSheet(isPresented: self.$showingActionSheet) {
             ActionSheet(title: Text("Notice"), message: Text(message), buttons: [
