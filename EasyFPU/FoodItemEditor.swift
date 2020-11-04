@@ -25,6 +25,7 @@ struct FoodItemEditor: View {
     @State private var notificationState = NotificationState.void
     @State private var errorMessage: String = ""
     @State private var activeSheet: FoodItemEditorSheets.State?
+    @State private var foodSelected = false // We don't need this variable here
     
     @State var showingAlert = false
     @FetchRequest(
@@ -474,7 +475,7 @@ struct FoodItemEditor: View {
         case .scan:
             CodeScannerView(codeTypes: [.ean13], simulatedData: "4101530002123", completion: self.handleScan)
         case .foodPreview:
-            FoodPreview(product: foodDatabaseResults.selectedEntry!, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category)
+            FoodPreview(product: foodDatabaseResults.selectedEntry!, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected)
         }
     }
 }

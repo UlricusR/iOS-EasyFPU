@@ -14,6 +14,7 @@ struct FoodPreview: View {
     @ObservedObject var databaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var category: FoodItemCategory
+    @Binding var foodSelected: Bool
     @Environment(\.presentationMode) var presentation
     @State private var errorMessage = ""
     @State private var showingAlert = false
@@ -24,6 +25,7 @@ struct FoodPreview: View {
             .navigationBarTitle("Scanned Food")
             .navigationBarItems(leading: Button(action: {
                 // Just close sheet
+                foodSelected = false
                 presentation.wrappedValue.dismiss()
             }) {
                 Text("Cancel")
@@ -33,6 +35,7 @@ struct FoodPreview: View {
                 draftFoodItem.fill(with: product)
                     
                 // Close sheet
+                foodSelected = true
                 presentation.wrappedValue.dismiss()
                 
             }) {
