@@ -250,6 +250,9 @@
 "Input error: " = "Input error: ";
 "Link to entry in " = "Link to entry in ";
 "No food selected" = "No food selected";
+"Searching" = "Searching";
+"The nutritional values from the database may not be correct, please cross-check! Use at your own risk." = "The nutritional values from the database may not be correct, please cross-check! Use at your own risk.";
+"Use at my own risk" = "Use at my own risk";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
