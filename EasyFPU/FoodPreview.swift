@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import RemoteContentView
 
 struct FoodPreview: View {
     var product: FoodDatabaseEntry

@@ -201,104 +201,7 @@ struct FoodItemEditor: View {
                         }.padding()
                     },
                     trailing: Button(action: {
-                        // First check if there's an unsaved typical amount
-                        if self.newTypicalAmount != "" && self.newTypicalAmountComment != "" { // We have an unsaved typical amount
-                            self.addTypicalAmount()
-                        }
-                        
-                        // Create error to store feedback from FoodItemViewModel
-                        var error = FoodItemViewModelError.name("Dummy")
-                        
-                        // Create updated food item
-                        if let updatedFoodItem = FoodItemViewModel(
-                            name: self.draftFoodItem.name,
-                            category: self.draftFoodItem.category,
-                            favorite: self.draftFoodItem.favorite,
-                            caloriesAsString: self.draftFoodItem.caloriesPer100gAsString,
-                            carbsAsString: self.draftFoodItem.carbsPer100gAsString,
-                            sugarsAsString: self.draftFoodItem.sugarsPer100gAsString,
-                            amountAsString: self.draftFoodItem.amountAsString,
-                            error: &error) { // We have a valid food item
-                            if self.editedFoodItem != nil { // We need to update an existing food item
-                                self.editedFoodItem!.name = updatedFoodItem.name
-                                self.editedFoodItem!.category = updatedFoodItem.category.rawValue
-                                self.editedFoodItem!.favorite = updatedFoodItem.favorite
-                                self.editedFoodItem!.carbsPer100g = updatedFoodItem.carbsPer100g
-                                self.editedFoodItem!.caloriesPer100g = updatedFoodItem.caloriesPer100g
-                                self.editedFoodItem!.sugarsPer100g = updatedFoodItem.sugarsPer100g
-                                self.editedFoodItem!.amount = Int64(updatedFoodItem.amount)
-                                
-                                // Update typical amounts
-                                for typicalAmount in self.draftFoodItem.typicalAmounts {
-                                    self.updateCDTypicalAmount(with: typicalAmount)
-                                }
-                                
-                                // Remove deleted typical amounts
-                                for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
-                                    if typicalAmountToBeDeleted.cdTypicalAmount != nil {
-                                        typicalAmountToBeDeleted.cdTypicalAmount!.foodItem = nil
-                                        self.editedFoodItem!.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
-                                        self.managedObjectContext.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
-                                    }
-                                }
-                                
-                                // Reset typical amounts to be deleted
-                                self.typicalAmountsToBeDeleted.removeAll()
-                            } else { // We have a new food item
-                                let newFoodItem = FoodItem(context: self.managedObjectContext)
-                                newFoodItem.id = UUID()
-                                newFoodItem.name = updatedFoodItem.name
-                                newFoodItem.category = updatedFoodItem.category.rawValue
-                                newFoodItem.favorite = updatedFoodItem.favorite
-                                newFoodItem.carbsPer100g = updatedFoodItem.carbsPer100g
-                                newFoodItem.caloriesPer100g = updatedFoodItem.caloriesPer100g
-                                newFoodItem.sugarsPer100g = updatedFoodItem.sugarsPer100g
-                                newFoodItem.amount = Int64(updatedFoodItem.amount)
-                                
-                                for typicalAmount in self.typicalAmounts {
-                                    let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-                                    typicalAmount.cdTypicalAmount = newTypicalAmount
-                                    let _ = typicalAmount.updateCDTypicalAmount(foodItem: newFoodItem)
-                                    newFoodItem.addToTypicalAmounts(newTypicalAmount)
-                                }
-                            }
-                            
-                            // Save new food item
-                            try? AppDelegate.viewContext.save()
-                            
-                            // Quit edit mode
-                            presentation.wrappedValue.dismiss()
-                        } else { // Invalid data, display alert
-                            // Evaluate error
-                            switch error {
-                            case .name(let errorMessage):
-                                self.errorMessage = errorMessage
-                                self.draftFoodItem.name = self.oldName
-                            case .calories(let errorMessage):
-                                self.errorMessage = NSLocalizedString("Calories: ", comment:"") + errorMessage
-                                self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
-                            case .carbs(let errorMessage):
-                                self.errorMessage = NSLocalizedString("Carbs: ", comment:"") + errorMessage
-                                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
-                            case .sugars(let errorMessage):
-                                self.errorMessage = NSLocalizedString("Sugars: ", comment: "") + errorMessage
-                                self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
-                            case .tooMuchCarbs(let errorMessage):
-                                self.errorMessage = errorMessage
-                                self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
-                                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
-                            case .tooMuchSugars(let errorMessage):
-                                self.errorMessage = errorMessage
-                                self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
-                                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
-                            case .amount(let errorMessage):
-                                self.errorMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
-                                self.draftFoodItem.amountAsString = self.oldAmountAsString
-                            }
-                            
-                            // Display alert and stay in edit mode
-                            self.showingAlert = true
-                        }
+                        saveFoodItem()
                     }) {
                         Text("Done")
                     }
@@ -329,6 +232,107 @@ struct FoodItemEditor: View {
                     notificationViewContent()
                 }
             }
+        }
+    }
+    
+    private func saveFoodItem() {
+        // First check if there's an unsaved typical amount
+        if self.newTypicalAmount != "" && self.newTypicalAmountComment != "" { // We have an unsaved typical amount
+            self.addTypicalAmount()
+        }
+        
+        // Create error to store feedback from FoodItemViewModel
+        var error = FoodItemViewModelError.name("Dummy")
+        
+        // Create updated food item
+        if let updatedFoodItem = FoodItemViewModel(
+            name: self.draftFoodItem.name,
+            category: self.draftFoodItem.category,
+            favorite: self.draftFoodItem.favorite,
+            caloriesAsString: self.draftFoodItem.caloriesPer100gAsString,
+            carbsAsString: self.draftFoodItem.carbsPer100gAsString,
+            sugarsAsString: self.draftFoodItem.sugarsPer100gAsString,
+            amountAsString: self.draftFoodItem.amountAsString,
+            error: &error) { // We have a valid food item
+            if self.editedFoodItem != nil { // We need to update an existing food item
+                self.editedFoodItem!.name = updatedFoodItem.name
+                self.editedFoodItem!.category = updatedFoodItem.category.rawValue
+                self.editedFoodItem!.favorite = updatedFoodItem.favorite
+                self.editedFoodItem!.carbsPer100g = updatedFoodItem.carbsPer100g
+                self.editedFoodItem!.caloriesPer100g = updatedFoodItem.caloriesPer100g
+                self.editedFoodItem!.sugarsPer100g = updatedFoodItem.sugarsPer100g
+                self.editedFoodItem!.amount = Int64(updatedFoodItem.amount)
+                
+                // Update typical amounts
+                for typicalAmount in self.draftFoodItem.typicalAmounts {
+                    self.updateCDTypicalAmount(with: typicalAmount)
+                }
+                
+                // Remove deleted typical amounts
+                for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
+                    if typicalAmountToBeDeleted.cdTypicalAmount != nil {
+                        typicalAmountToBeDeleted.cdTypicalAmount!.foodItem = nil
+                        self.editedFoodItem!.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
+                        self.managedObjectContext.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
+                    }
+                }
+                
+                // Reset typical amounts to be deleted
+                self.typicalAmountsToBeDeleted.removeAll()
+            } else { // We have a new food item
+                let newFoodItem = FoodItem(context: self.managedObjectContext)
+                newFoodItem.id = UUID()
+                newFoodItem.name = updatedFoodItem.name
+                newFoodItem.category = updatedFoodItem.category.rawValue
+                newFoodItem.favorite = updatedFoodItem.favorite
+                newFoodItem.carbsPer100g = updatedFoodItem.carbsPer100g
+                newFoodItem.caloriesPer100g = updatedFoodItem.caloriesPer100g
+                newFoodItem.sugarsPer100g = updatedFoodItem.sugarsPer100g
+                newFoodItem.amount = Int64(updatedFoodItem.amount)
+                
+                for typicalAmount in self.typicalAmounts {
+                    let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
+                    typicalAmount.cdTypicalAmount = newTypicalAmount
+                    let _ = typicalAmount.updateCDTypicalAmount(foodItem: newFoodItem)
+                    newFoodItem.addToTypicalAmounts(newTypicalAmount)
+                }
+            }
+            
+            // Save new food item
+            try? AppDelegate.viewContext.save()
+            
+            // Quit edit mode
+            presentation.wrappedValue.dismiss()
+        } else { // Invalid data, display alert
+            // Evaluate error
+            switch error {
+            case .name(let errorMessage):
+                self.errorMessage = errorMessage
+                self.draftFoodItem.name = self.oldName
+            case .calories(let errorMessage):
+                self.errorMessage = NSLocalizedString("Calories: ", comment:"") + errorMessage
+                self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
+            case .carbs(let errorMessage):
+                self.errorMessage = NSLocalizedString("Carbs: ", comment:"") + errorMessage
+                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+            case .sugars(let errorMessage):
+                self.errorMessage = NSLocalizedString("Sugars: ", comment: "") + errorMessage
+                self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
+            case .tooMuchCarbs(let errorMessage):
+                self.errorMessage = errorMessage
+                self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
+                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+            case .tooMuchSugars(let errorMessage):
+                self.errorMessage = errorMessage
+                self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
+                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+            case .amount(let errorMessage):
+                self.errorMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
+                self.draftFoodItem.amountAsString = self.oldAmountAsString
+            }
+            
+            // Display alert and stay in edit mode
+            self.showingAlert = true
         }
     }
     
