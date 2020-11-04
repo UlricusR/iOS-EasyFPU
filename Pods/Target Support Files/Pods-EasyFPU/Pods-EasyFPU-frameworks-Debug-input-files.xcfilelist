@@ -1,0 +1,4 @@
+${PODS_ROOT}/Target Support Files/Pods-EasyFPU/Pods-EasyFPU-frameworks.sh
+${BUILT_PRODUCTS_DIR}/ADCountryPicker/ADCountryPicker.framework
+${BUILT_PRODUCTS_DIR}/Charts/Charts.framework
+${BUILT_PRODUCTS_DIR}/URLImage/URLImage.framework

@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "CodeScanner",
+        "repositoryURL": "https://github.com/twostraws/CodeScanner",
+        "state": {
+          "branch": null,
+          "revision": "9d902dec616bd70b1a2a1b1e6d821c10c392ba9f",
+          "version": "1.0.6"
+        }
+      },
+      {
+        "package": "RemoteContentView",
+        "repositoryURL": "https://github.com/dmytro-anokhin/remote-content-view",
+        "state": {
+          "branch": null,
+          "revision": "e0f1315d56d990d7dc55bcb2ddba61dbb087432c",
+          "version": "0.0.4"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
