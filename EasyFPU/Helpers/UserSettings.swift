@@ -20,6 +20,7 @@ class UserSettings: ObservableObject {
     
     enum UserDefaultsBoolKey: String, CaseIterable {
         case disclaimerAccepted = "DisclaimerAccepted"
+        case foodDatabaseUseAtOwnRiskAccepted = "FoodDatabaseUseAtOwnRiskAccepted"
         case exportECarbs = "ExportECarbs"
         case exportTotalMealCarbs = "ExportTotalMealCarbs"
         case exportTotalMealSugars = "ExportTotalMealSugars"
@@ -60,6 +61,7 @@ class UserSettings: ObservableObject {
     
     // MARK: - Dynamic user settings are treated here
     @Published var disclaimerAccepted: Bool
+    @Published var foodDatabaseUseAtOwnRiskAccepted: Bool
     @Published var absorptionTimeSugarsDelayInMinutes: Int
     @Published var absorptionTimeSugarsIntervalInMinutes: Int
     @Published var absorptionTimeSugarsDurationInHours: Double
@@ -78,6 +80,7 @@ class UserSettings: ObservableObject {
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
+        foodDatabaseUseAtOwnRiskAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted) ?? false,
         absorptionTimeSugarsDelayInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeSugarsDelay) ?? AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault,
         absorptionTimeSugarsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeSugarsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault,
         absorptionTimeSugarsDurationInHours: UserSettings.getValue(for: UserDefaultsDoubleKey.absorptionTimeSugarsDuration) ?? AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault,
@@ -95,6 +98,7 @@ class UserSettings: ObservableObject {
     
     private init(
         disclaimerAccepted: Bool,
+        foodDatabaseUseAtOwnRiskAccepted: Bool,
         absorptionTimeSugarsDelayInMinutes: Int,
         absorptionTimeSugarsIntervalInMinutes: Int,
         absorptionTimeSugarsDurationInHours: Double,
@@ -110,6 +114,7 @@ class UserSettings: ObservableObject {
         countryCode: String?
     ) {
         self.disclaimerAccepted = disclaimerAccepted
+        self.foodDatabaseUseAtOwnRiskAccepted = foodDatabaseUseAtOwnRiskAccepted
         self.absorptionTimeSugarsDelayInMinutes = absorptionTimeSugarsDelayInMinutes // in minutes
         self.absorptionTimeSugarsIntervalInMinutes = absorptionTimeSugarsIntervalInMinutes // in minutes
         self.absorptionTimeSugarsDurationInHours = absorptionTimeSugarsDurationInHours // in hours

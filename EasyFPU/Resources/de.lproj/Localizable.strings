@@ -252,6 +252,9 @@
 "Link to entry in " = "Link zum Eintrag in ";
 "No food selected" = "Kein Lebensmittel ausgewählt";
 "Searching" = "Suche";
+"The nutritional values from the database may not be correct, please cross-check! Use at your own risk." = "Der Autor der App übernimmt keine Haftung für die Korrektheit der Nährwerte in der Datenbank. Bitte kontrollieren Sie diese! Nutzung auf eigenes Risiko!";
+"Accept and continue" = "Auf eigenes Risiko nutzen";
+"Decline and cancel" = "Ablehnen und abbrechen";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";

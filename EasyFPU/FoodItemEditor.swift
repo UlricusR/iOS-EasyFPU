@@ -28,6 +28,8 @@ struct FoodItemEditor: View {
     @State private var foodSelected = false // We don't need this variable here
     
     @State var showingAlert = false
+    @State var activeActionSheet: FoodItemEditorSheets.ActionSheetState?
+    
     @FetchRequest(
         entity: FoodItem.entity(),
         sortDescriptors: [
@@ -67,14 +69,22 @@ struct FoodItemEditor: View {
                                         self.errorMessage = NSLocalizedString("Search term must not be empty", comment: "")
                                         self.showingAlert = true
                                     } else {
-                                        performSearch()
+                                        if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
+                                            performSearch()
+                                        } else {
+                                            activeActionSheet = .search
+                                        }
                                     }
                                 }) {
                                     Image(systemName: "magnifyingglass").imageScale(.large)
                                 }.buttonStyle(BorderlessButtonStyle())
                                 
                                 Button(action: {
-                                    activeSheet = .scan
+                                    if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
+                                        activeSheet = .scan
+                                    } else {
+                                        activeActionSheet = .scan
+                                    }
                                 }) {
                                     Image(systemName: "barcode.viewfinder").imageScale(.large)
                                 }.buttonStyle(BorderlessButtonStyle())
@@ -217,6 +227,35 @@ struct FoodItemEditor: View {
             }
             .sheet(item: $activeSheet) {
                 sheetContent($0)
+            }
+            .actionSheet(item: $activeActionSheet) { state in
+                ActionSheet(
+                    title: Text("Disclaimer"),
+                    message: Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk."),
+                    buttons: [
+                        .default(Text("Accept and continue")) {
+                            var settingsError = ""
+                            if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
+                                errorMessage = settingsError
+                                showingAlert = true
+                            }
+
+                            // Set dynamic variable
+                            UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
+                            
+                            // Start activity
+                            switch state {
+                            case .scan:
+                                activeSheet = .scan
+                            case .search:
+                                performSearch()
+                            }
+                        },
+                        .default(Text("Decline and cancel")) {
+                            // Do nothing, don't take over any data
+                        }
+                    ]
+                )
             }
             .onAppear() {
                 self.oldName = self.draftFoodItem.name

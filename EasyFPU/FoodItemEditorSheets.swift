@@ -17,4 +17,11 @@ class FoodItemEditorSheets {
         
         var id: State { self }
     }
+    
+    enum ActionSheetState: Identifiable {
+        case scan
+        case search
+        
+        var id: ActionSheetState { self }
+    }
 }
