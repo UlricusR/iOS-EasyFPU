@@ -26,6 +26,7 @@ extension FoodItem {
     @NSManaged public var name: String?
     @NSManaged public var typicalAmounts: NSSet?
     @NSManaged public var category: String?
+    @NSManaged public var composedFoodItem: ComposedFoodItem?
 }
 
 // MARK: Generated accessors for typicalAmounts
@@ -43,4 +44,8 @@ extension FoodItem {
     @objc(removeTypicalAmounts:)
     @NSManaged public func removeFromTypicalAmounts(_ values: NSSet)
 
+}
+
+extension FoodItem: Identifiable {
+    
 }
