@@ -19,6 +19,7 @@ extension ComposedFoodItem {
 
     @NSManaged public var name: String?
     @NSManaged public var amount: Int64
+    @NSManaged public var numberOfPortions: Int16
     @NSManaged public var favorite: Bool
     @NSManaged public var category: String?
     @NSManaged public var ingredients: NSSet?
