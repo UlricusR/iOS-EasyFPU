@@ -12,7 +12,7 @@ enum FoodItemViewModelError {
     case name(String), calories(String), carbs(String), sugars(String), amount(String), tooMuchCarbs(String), tooMuchSugars(String)
 }
 
-enum FoodItemCategory: String, CaseIterable {
+enum FoodItemCategory: String {
     case product = "Product"
     case ingredient = "Ingredient"
 }
@@ -76,6 +76,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     var amount: Int = 0
     @Published var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
+    var cdIngredient: Ingredient?
     
     static let `default` = FoodItemViewModel(
         name: "",
@@ -128,6 +129,22 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
                 typicalAmounts.append(TypicalAmountViewModel(from: castedTypicalAmount))
             }
         }
+    }
+    
+    init(from cdIngredient: Ingredient) {
+        self.name = cdIngredient.name ?? NSLocalizedString("- Unnamned -", comment: "")
+        self.category = FoodItemCategory.init(rawValue: cdIngredient.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
+        self.favorite = cdIngredient.favorite
+        self.caloriesPer100g = cdIngredient.caloriesPer100g
+        self.carbsPer100g = cdIngredient.carbsPer100g
+        self.sugarsPer100g = cdIngredient.sugarsPer100g
+        self.amount = Int(cdIngredient.amount)
+        self.cdIngredient = cdIngredient
+        
+        self.caloriesPer100gAsString = cdIngredient.caloriesPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdIngredient.caloriesPer100g))!
+        self.carbsPer100gAsString = cdIngredient.carbsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdIngredient.carbsPer100g))!
+        self.sugarsPer100gAsString = cdIngredient.sugarsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdIngredient.sugarsPer100g))!
+        self.amountAsString = cdIngredient.amount == 0 ? "" : DataHelper.intFormatter.string(from: NSNumber(value: cdIngredient.amount))!
     }
     
     init?(name: String, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError) {
