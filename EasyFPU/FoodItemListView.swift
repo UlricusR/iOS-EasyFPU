@@ -39,7 +39,7 @@ struct FoodItemListView: View {
     }
     
     var composedFoodItem: ComposedFoodItemViewModel {
-        let composedFoodItem = ComposedFoodItemViewModel(name: composedFoodItemTitle)
+        let composedFoodItem = ComposedFoodItemViewModel(name: composedFoodItemTitle, category: .product, favorite: false)
         for foodItem in foodItems {
             if foodItem.category == self.category.rawValue && foodItem.amount > 0 {
                 composedFoodItem.add(foodItem: FoodItemViewModel(from: foodItem))

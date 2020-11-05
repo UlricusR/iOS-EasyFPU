@@ -10,11 +10,10 @@ import Foundation
 
 class ComposedFoodItemViewModel: ObservableObject, VariableAmountItem {
     var name: String
-    var calories: Double = 0.0
-    private var carbs: Double = 0.0
-    private var sugars: Double = 0.0
+    var category: FoodItemCategory
+    var favorite: Bool
     @Published var amount: Int = 0
-    var fpus: FPU = FPU(fpu: 0.0)
+    @Published var numberOfPortions: Int = 1
     var foodItems = [FoodItemViewModel]()
     
     @Published var amountAsString: String = "" {
@@ -30,20 +29,77 @@ class ComposedFoodItemViewModel: ObservableObject, VariableAmountItem {
         }
     }
     
-    static let `default` = ComposedFoodItemViewModel(name: "Default")
+    var calories: Double {
+        var newValue = 0.0
+        for foodItem in foodItems {
+            newValue += foodItem.getCalories()
+        }
+        return newValue
+    }
     
-    init(name: String) {
+    private var carbs: Double {
+        var newValue = 0.0
+        for foodItem in foodItems {
+            newValue += foodItem.getCarbsInclSugars()
+        }
+        return newValue
+    }
+    
+    private var sugars: Double {
+        var newValue = 0.0
+        for foodItem in foodItems {
+            newValue += foodItem.getSugarsOnly()
+        }
+        return newValue
+    }
+    
+    var fpus: FPU {
+        var fpu = FPU(fpu: 0.0)
+        for foodItem in foodItems {
+            let tempFPU = fpu.fpu
+            fpu = FPU(fpu: tempFPU + foodItem.getFPU().fpu)
+        }
+        return fpu
+    }
+    
+    var caloriesPer100g: Double {
+        calories / Double(amount) * 100
+    }
+    
+    var carbsPer100g: Double {
+        carbs / Double(amount) * 100
+    }
+    
+    var sugarsPer100g: Double {
+        sugars / Double(amount) * 100
+    }
+    
+    static let `default` = ComposedFoodItemViewModel(name: "Default", category: .product, favorite: false)
+    
+    init(name: String, category: FoodItemCategory, favorite: Bool) {
         self.name = name
+        self.category = category
+        self.favorite = favorite
+    }
+    
+    init(from cdComposedFoodItem: ComposedFoodItem) {
+        self.name = cdComposedFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
+        self.category = FoodItemCategory.init(rawValue: cdComposedFoodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
+        self.favorite = cdComposedFoodItem.favorite
+        self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
+        
+        if let cdIngredients = cdComposedFoodItem.ingredients {
+            for cdIngredient in cdIngredients {
+                let castedCDIngredient = cdIngredient as! Ingredient
+                let foodItem = FoodItemViewModel(from: castedCDIngredient)
+                foodItems.append(foodItem)
+            }
+        }
     }
     
     func add(foodItem: FoodItemViewModel) {
         foodItems.append(foodItem)
-        let tempFPUs = fpus.fpu
-        calories += foodItem.getCalories()
-        carbs += foodItem.getCarbsInclSugars()
-        sugars += foodItem.getSugarsOnly()
         amountAsString = String(amount + foodItem.amount) // amount will be set implicitely
-        fpus = FPU(fpu: tempFPUs + foodItem.getFPU().fpu)
     }
     
     func getCarbsInclSugars() -> Double {
