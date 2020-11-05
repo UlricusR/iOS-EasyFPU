@@ -12,5 +12,21 @@ import CoreData
 
 
 public class ComposedFoodItem: NSManagedObject {
-
+    static func fetchAll(viewContext: NSManagedObjectContext = AppDelegate.viewContext) -> [ComposedFoodItem] {
+        let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        
+        guard let composedFoodItems = try? AppDelegate.viewContext.fetch(request) else {
+            return []
+        }
+        return composedFoodItems
+    }
+    
+    static func deleteAll(viewContext: NSManagedObjectContext = AppDelegate.viewContext) {
+        ComposedFoodItem.fetchAll(viewContext: viewContext).forEach({
+            viewContext.delete($0)
+        })
+        
+        try? viewContext.save()
+    }
 }
