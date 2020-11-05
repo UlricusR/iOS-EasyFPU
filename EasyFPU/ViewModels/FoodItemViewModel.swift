@@ -77,6 +77,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     @Published var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
     var cdIngredient: Ingredient?
+    var cdComposedFoodItem: ComposedFoodItem?
     
     static let `default` = FoodItemViewModel(
         name: "",
@@ -102,10 +103,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.sugarsPer100g = sugarsPer100g
         self.amount = amount
         
-        self.caloriesPer100gAsString = caloriesPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g))!
-        self.carbsPer100gAsString = carbsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g))!
-        self.sugarsPer100gAsString = sugarsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: sugarsPer100g))!
-        self.amountAsString = amount == 0 ? "" : DataHelper.intFormatter.string(from: NSNumber(value: amount))!
+        initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
     }
     
     init(from cdFoodItem: FoodItem) {
@@ -118,10 +116,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.amount = Int(cdFoodItem.amount)
         self.cdFoodItem = cdFoodItem
         
-        self.caloriesPer100gAsString = cdFoodItem.caloriesPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.caloriesPer100g))!
-        self.carbsPer100gAsString = cdFoodItem.carbsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.carbsPer100g))!
-        self.sugarsPer100gAsString = cdFoodItem.sugarsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdFoodItem.sugarsPer100g))!
-        self.amountAsString = cdFoodItem.amount == 0 ? "" : DataHelper.intFormatter.string(from: NSNumber(value: cdFoodItem.amount))!
+        initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
         
         if cdFoodItem.typicalAmounts != nil {
             for typicalAmount in cdFoodItem.typicalAmounts!.allObjects {
@@ -141,10 +136,33 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.amount = Int(cdIngredient.amount)
         self.cdIngredient = cdIngredient
         
-        self.caloriesPer100gAsString = cdIngredient.caloriesPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdIngredient.caloriesPer100g))!
-        self.carbsPer100gAsString = cdIngredient.carbsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdIngredient.carbsPer100g))!
-        self.sugarsPer100gAsString = cdIngredient.sugarsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: cdIngredient.sugarsPer100g))!
-        self.amountAsString = cdIngredient.amount == 0 ? "" : DataHelper.intFormatter.string(from: NSNumber(value: cdIngredient.amount))!
+        initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
+    }
+    
+    init(from composedFoodItem: ComposedFoodItemViewModel) {
+        self.name = composedFoodItem.name
+        self.category = composedFoodItem.category
+        self.favorite = composedFoodItem.favorite
+        self.caloriesPer100g = composedFoodItem.caloriesPer100g
+        self.carbsPer100g = composedFoodItem.carbsPer100g
+        self.sugarsPer100g = composedFoodItem.sugarsPer100g
+        self.amount = 0
+        self.cdComposedFoodItem = composedFoodItem.cdComposedFoodItem
+        
+        initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
+        
+        if let numberOfPortions = composedFoodItem.numberOfPortions {
+            if numberOfPortions > 0 {
+                // Non-nil value means the user wants to store calculated typical amounts
+                let portionWeight = composedFoodItem.amount / numberOfPortions
+                for multiplier in 1...numberOfPortions {
+                    let portionAmount = portionWeight * multiplier
+                    let comment = "\(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(numberOfPortions))"
+                    let typicalAmount = TypicalAmountViewModel(amount: portionAmount, comment: comment)
+                    typicalAmounts.append(typicalAmount)
+                }
+            }
+        }
     }
     
     init?(name: String, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError) {
@@ -250,10 +268,18 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.amountAsString = amountAsString
     }
     
+    private func initStringRepresentations(amount: Int, carbsPer100g: Double, caloriesPer100g: Double, sugarsPer100g: Double) {
+        self.caloriesPer100gAsString = caloriesPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g))!
+        self.carbsPer100gAsString = carbsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: carbsPer100g))!
+        self.sugarsPer100gAsString = sugarsPer100g == 0 ? "" : DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: sugarsPer100g))!
+        self.amountAsString = amount == 0 ? "" : DataHelper.intFormatter.string(from: NSNumber(value: amount))!
+    }
+    
     func fill(with foodDatabaseEntry: FoodDatabaseEntry) {
         name = foodDatabaseEntry.name
         category = foodDatabaseEntry.category
         
+        // When setting string representations, number will be set implicitely
         caloriesPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.caloriesPer100g.getEnergyInKcal()))!
         carbsPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.carbsPer100g))!
         sugarsPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.sugarsPer100g))!

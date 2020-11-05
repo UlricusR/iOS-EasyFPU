@@ -52,6 +52,12 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, I
         self.amountAsString = amountAsString
     }
     
+    init(amount: Int, comment: String) {
+        self.amount = amount
+        self.comment = comment
+        self.amountAsString = String(amount)
+    }
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         amount = try container.decode(Int.self, forKey: .amount)
