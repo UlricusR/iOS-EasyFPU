@@ -22,6 +22,7 @@ struct FoodItemEditor: View {
     var editedFoodItem: FoodItem? // Working copy of the food item
     var category: FoodItemCategory
     @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
+    @State private var scanResult: FoodDatabaseEntry?
     @State private var notificationState = NotificationState.void
     @State private var errorMessage: String = ""
     @State private var activeSheet: FoodItemEditorSheets.State?
@@ -442,7 +443,10 @@ struct FoodItemEditor: View {
         
         switch result {
         case .success(let barcode):
-            UserSettings.shared.foodDatabase.prepare(barcode) { result in
+            // Show search notification
+            notificationState = .searching
+            
+            UserSettings.shared.foodDatabase.prepare(barcode, category: category) { result in
                 switch result {
                 case .success(let networkFoodDatabaseEntry):
                     guard let foodDatabaseEntry = networkFoodDatabaseEntry else {
@@ -450,12 +454,14 @@ struct FoodItemEditor: View {
                         return
                     }
                     DispatchQueue.main.async {
-                        self.foodDatabaseResults.selectedEntry = foodDatabaseEntry
+                        self.notificationState = .void
+                        self.scanResult = foodDatabaseEntry
                         self.activeSheet = .foodPreview
                     }
                     
                     
                 case .failure(let error):
+                    DispatchQueue.main.async { self.notificationState = .void }
                     errorMessage = error.evaluate()
                     debugPrint(errorMessage)
                     showingAlert = true
@@ -469,7 +475,7 @@ struct FoodItemEditor: View {
     
     private func performSearch() {
         notificationState = .searching
-        UserSettings.shared.foodDatabase.search(for: draftFoodItem.name) { result in
+        UserSettings.shared.foodDatabase.search(for: draftFoodItem.name, category: category) { result in
             switch result {
             case .success(let networkSearchResults):
                 guard let searchResults = networkSearchResults, !searchResults.isEmpty else {
@@ -515,9 +521,9 @@ struct FoodItemEditor: View {
         case .search:
             FoodSearch(foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem, category: category)
         case .scan:
-            CodeScannerView(codeTypes: [.ean13], simulatedData: "4101530002123", completion: self.handleScan)
+            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "4101530002123", completion: self.handleScan)
         case .foodPreview:
-            FoodPreview(product: foodDatabaseResults.selectedEntry!, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected)
+            FoodPreview(product: $scanResult, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected)
         }
     }
 }

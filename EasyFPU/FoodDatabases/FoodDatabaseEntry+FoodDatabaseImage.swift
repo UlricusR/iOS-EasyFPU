@@ -11,7 +11,7 @@ import Foundation
 struct FoodDatabaseEntry: Identifiable, Equatable {
     var id = UUID()
     var name: String
-    var category: FoodItemCategory = .product
+    var category: FoodItemCategory
     var caloriesPer100g: EnergyType
     var carbsPer100g: Double
     var sugarsPer100g: Double
@@ -22,7 +22,9 @@ struct FoodDatabaseEntry: Identifiable, Equatable {
     var imageNutriments: FoodDatabaseImage?
     var imageIngredients: FoodDatabaseImage?
     
-    init?(from openFoodFactsProduct: OpenFoodFactsProduct) {
+    init?(from openFoodFactsProduct: OpenFoodFactsProduct, category: FoodItemCategory) {
+        self.category = category
+        
         source = UserSettings.shared.foodDatabase.databaseType
         
         guard let code = openFoodFactsProduct.code else {

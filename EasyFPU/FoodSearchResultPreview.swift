@@ -14,9 +14,10 @@ struct FoodSearchResultPreview: View {
     @ObservedObject var foodDatabaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var category: FoodItemCategory
-    @State var foodSelected = false
+    @State private var selectedEntry: FoodDatabaseEntry?
+    @State private var foodSelected = false
+    @State private var showDetails: Bool = false
     @Environment(\.presentationMode) var parentPresentation
-    @State var showDetails: Bool = false
     
     var body: some View {
         HStack {
@@ -50,11 +51,15 @@ struct FoodSearchResultPreview: View {
             }.buttonStyle(BorderlessButtonStyle())
         }
         .sheet(isPresented: $showDetails) {
-            FoodPreview(product: product, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected).onDisappear() {
+            FoodPreview(product: $selectedEntry, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected)
+            .onDisappear() {
                 if foodSelected {
                     parentPresentation.wrappedValue.dismiss()
                 }
             }
+        }
+        .onAppear() {
+            self.selectedEntry = self.product
         }
     }
 }

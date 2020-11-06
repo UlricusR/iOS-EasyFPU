@@ -10,8 +10,8 @@ import Foundation
 
 protocol FoodDatabase {
     var databaseType: FoodDatabaseType { get }
-    func search(for term: String, completion: @escaping (Result<[FoodDatabaseEntry]?, FoodDatabaseError>) -> Void)
-    func prepare(_ id: String, completion: @escaping (Result<FoodDatabaseEntry?, FoodDatabaseError>) -> Void)
+    func search(for term: String, category: FoodItemCategory, completion: @escaping (Result<[FoodDatabaseEntry]?, FoodDatabaseError>) -> Void)
+    func prepare(_ id: String, category: FoodItemCategory, completion: @escaping (Result<FoodDatabaseEntry?, FoodDatabaseError>) -> Void)
     func getLink(for id: String) throws -> URL
 }
 
