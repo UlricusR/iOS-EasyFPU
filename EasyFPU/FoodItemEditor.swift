@@ -497,7 +497,8 @@ struct FoodItemEditor: View {
         }
     }
     
-    @ViewBuilder func notificationViewContent() -> some View {
+    @ViewBuilder
+    private func notificationViewContent() -> some View {
         switch notificationState {
         case .searching:
             ActivityIndicatorDynamicText(staticText: NSLocalizedString("Searching", comment: ""))

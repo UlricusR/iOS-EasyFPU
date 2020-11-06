@@ -14,7 +14,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
     var category: FoodItemCategory
     var favorite: Bool
     @Published var amount: Int = 0
-    @Published var numberOfPortions: Int?
+    @Published var numberOfPortions: Int = 0
     var foodItems = [FoodItemViewModel]()
     var cdComposedFoodItem: ComposedFoodItem?
     
@@ -76,21 +76,18 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
         sugars / Double(amount) * 100
     }
     
-    var typicalAmounts: [TypicalAmountViewModel]? {
-        if let numberOfPortions = numberOfPortions { // Non-nil value means the user wants to store calculated typical amounts
-            if numberOfPortions > 0 {
-                var typicalAmounts = [TypicalAmountViewModel]()
-                let portionWeight = amount / numberOfPortions
-                for multiplier in 1...numberOfPortions {
-                    let portionAmount = portionWeight * multiplier
-                    let comment = "\(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(numberOfPortions))"
-                    let typicalAmount = TypicalAmountViewModel(amount: portionAmount, comment: comment)
-                    typicalAmounts.append(typicalAmount)
-                }
-                return typicalAmounts
+    var typicalAmounts: [TypicalAmountViewModel] {
+        var typicalAmounts = [TypicalAmountViewModel]()
+        if numberOfPortions > 0 {
+            let portionWeight = amount / numberOfPortions
+            for multiplier in 1...numberOfPortions {
+                let portionAmount = portionWeight * multiplier
+                let comment = "\(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(numberOfPortions))"
+                let typicalAmount = TypicalAmountViewModel(amount: portionAmount, comment: comment)
+                typicalAmounts.append(typicalAmount)
             }
         }
-        return nil
+        return typicalAmounts
     }
     
     enum CodingKeys: String, CodingKey {
@@ -110,7 +107,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
         self.name = cdComposedFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
         self.category = FoodItemCategory.init(rawValue: cdComposedFoodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
         self.favorite = cdComposedFoodItem.favorite
-        self.numberOfPortions = cdComposedFoodItem.numberOfPortions == 0 ? nil : Int(cdComposedFoodItem.numberOfPortions)
+        self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
         self.cdComposedFoodItem = cdComposedFoodItem
         
         if let cdIngredients = cdComposedFoodItem.ingredients {

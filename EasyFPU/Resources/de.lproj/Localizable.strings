@@ -99,8 +99,7 @@
 "Generate" = "Berechnen";
 "portion(s)" = "Portion(en)";
 "Cannot create typical amount: " = "Kann typische Menge nicht berechnen: ";
-"Successfully saved as" = "Erfolgreich als";
-"in your Products list" = "in der Produktliste gespeichert";
+"successfully saved in Products" = "erfolgreich in Produkten gespeichert";
 
 // Meal preview
 "e-Carbs" = "Verl. KH";

@@ -151,9 +151,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
         
-        if let typicalAmounts = composedFoodItem.typicalAmounts {
-            self.typicalAmounts = typicalAmounts
-        }
+        self.typicalAmounts = composedFoodItem.typicalAmounts
     }
     
     init?(name: String, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError) {

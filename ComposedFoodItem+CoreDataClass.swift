@@ -30,7 +30,7 @@ public class ComposedFoodItem: NSManagedObject {
         try? viewContext.save()
     }
     
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) {
+    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem {
         let moc = AppDelegate.viewContext
         
         // Create the ComposedFoodItem
@@ -51,6 +51,8 @@ public class ComposedFoodItem: NSManagedObject {
         
         // Save new composed food item
         try? moc.save()
+        
+        return cdComposedFoodItem
     }
     
     static func delete(_ composedFoodItem: ComposedFoodItem) {
