@@ -29,4 +29,40 @@ public class ComposedFoodItem: NSManagedObject {
         
         try? viewContext.save()
     }
+    
+    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) {
+        let moc = AppDelegate.viewContext
+        
+        // Create the ComposedFoodItem
+        let cdComposedFoodItem = ComposedFoodItem(context: moc)
+        
+        // Fill data
+        cdComposedFoodItem.name = composedFoodItemVM.name
+        cdComposedFoodItem.category = composedFoodItemVM.category.rawValue
+        cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
+        cdComposedFoodItem.favorite = composedFoodItemVM.favorite
+        cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
+        
+        // Add ingredients
+        for ingredient in composedFoodItemVM.foodItems {
+            let cdIngredient = Ingredient.create(from: ingredient)
+            cdComposedFoodItem.addToIngredients(cdIngredient)
+        }
+        
+        // Save new composed food item
+        try? moc.save()
+    }
+    
+    static func delete(_ composedFoodItem: ComposedFoodItem) {
+        let moc = AppDelegate.viewContext
+        
+        // Deletion of all related ingredients will happen automatically
+        // as we have set Delete Rule to Cascade in data model
+        
+        // Delete the food item itself
+        moc.delete(composedFoodItem)
+        
+        // And save the context
+        try? moc.save()
+    }
 }

@@ -29,4 +29,20 @@ public class TypicalAmount: NSManagedObject {
         
         try? viewContext.save()
     }
+    
+    static func create(from typicalAmountVM: TypicalAmountViewModel) -> TypicalAmount {
+        let moc = AppDelegate.viewContext
+        
+        // Create TypicalAmount
+        let cdTypicalAmount = TypicalAmount(context: moc)
+        
+        // Fill data
+        cdTypicalAmount.amount = Int64(typicalAmountVM.amount)
+        cdTypicalAmount.comment = typicalAmountVM.comment
+        
+        // Save new Ingredient
+        try? moc.save()
+        
+        return cdTypicalAmount
+    }
 }

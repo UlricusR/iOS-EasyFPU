@@ -47,10 +47,13 @@ public class FoodItem: NSManagedObject {
         
         // Add typical amounts
         for typicalAmount in foodItemVM.typicalAmounts {
-            let newCDTypicalAmount = TypicalAmount(context: moc)
-            newCDTypicalAmount.amount = Int64(typicalAmount.amount)
-            newCDTypicalAmount.comment = typicalAmount.comment
+            let newCDTypicalAmount = TypicalAmount.create(from: typicalAmount)
             cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
+        }
+        
+        // Add ComposedFoodItem if available
+        if let cdComposedFoodItem = foodItemVM.cdComposedFoodItem {
+            cdFoodItem.composedFoodItem = cdComposedFoodItem
         }
         
         // Save new food item
@@ -60,19 +63,13 @@ public class FoodItem: NSManagedObject {
     static func delete(_ foodItem: FoodItem) {
         let moc = AppDelegate.viewContext
         
-        // Delete all related typical amounts
-        if let typicalAmounts = foodItem.typicalAmounts?.allObjects as? [TypicalAmount] {
-            for typicalAmount in typicalAmounts {
-                typicalAmount.prepareForDeletion()
-                foodItem.removeFromTypicalAmounts(typicalAmount)
-                moc.delete(typicalAmount)
-            }
-        }
+        // Deletion of all related typical amounts will happen automatically
+        // as we have set Delete Rule to Cascade in data model
         
-        // Then delete the food item itself
+        // Delete the food item itself
         moc.delete(foodItem)
         
         // And save the context
-        try? AppDelegate.viewContext.save()
+        try? moc.save()
     }
 }
