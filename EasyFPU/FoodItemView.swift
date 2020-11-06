@@ -13,7 +13,11 @@ struct FoodItemView: View {
     var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var foodItem: FoodItemViewModel
     var category: FoodItemCategory
+    @Binding var selectedTab: Int
     @State var activeSheet: FoodItemViewSheets.State?
+    @State var showingActionSheet: Bool = false
+    @State var loadedIngredients = [Ingredient]()
+    @State var missingFoodItems = [String]()
     
     var body: some View {
         VStack {
@@ -66,7 +70,11 @@ struct FoodItemView: View {
         .contextMenu(menuItems: {
             // Editing the food item
             Button(action: {
-                activeSheet = .editFoodItem
+                if foodItem.cdComposedFoodItem == nil { // This is a regular FoodItem, so open FoodItemEditor
+                    activeSheet = .editFoodItem
+                } else { // This is a ComposedFoodItem
+                    editComposedFoodItem(foodItem.cdComposedFoodItem!)
+                }
             }) {
                 Text("Edit")
             }
@@ -104,6 +112,52 @@ struct FoodItemView: View {
         })
         .sheet(item: $activeSheet) {
             sheetContent($0)
+        }
+        .actionSheet(isPresented: $showingActionSheet) {
+            ActionSheet(
+                title: Text("Missing Ingredients"),
+                message: Text(
+                    NSLocalizedString("The following ingredients are no longer available: ", comment: "") +
+                        missingFoodItems.joined(separator: ", ") +
+                    NSLocalizedString(". Do you want to create them or remove them from your product?", comment: "")
+                ),
+                buttons: [
+                    .default(Text("Create missing ingredients")) {
+                        FoodItem.setFoodItems(from: loadedIngredients, syncStrategy: FoodItem.IngredientsSyncStrategy.createMissingFoodItems)
+                    },
+                    .default(Text("Remove from product")) {
+                        FoodItem.setFoodItems(from: loadedIngredients, syncStrategy: FoodItem.IngredientsSyncStrategy.removeNonExistingIngredients)
+                    }
+                ]
+            )
+        }
+    }
+    
+    private func editComposedFoodItem(_ composedFoodItem: ComposedFoodItem) {
+        // Switch to Ingredients tab and set title of ComposedFoodItem
+        selectedTab = MainView.Tab.ingredients.rawValue
+        let composedFoodItemTitle = composedFoodItem.name ?? NSLocalizedString("- Unnamed -", comment: "")
+        UserSettings.shared.composedFoodItemTitle = composedFoodItemTitle
+        var errorMessage = ""
+        _ = UserSettings.set(UserSettings.UserDefaultsType.string(composedFoodItemTitle, UserSettings.UserDefaultsStringKey.composedFoodItemTitle), errorMessage: &errorMessage)
+        
+        // Load ingredients
+        if let ingredients = composedFoodItem.ingredients {
+            loadedIngredients = ingredients.allObjects as! [Ingredient]
+            
+            // Check for missing ingredients
+            let missingFoodItems = FoodItem.checkForMissingFoodItems(of: loadedIngredients)
+            if missingFoodItems.isEmpty {
+                FoodItem.setFoodItems(from: loadedIngredients, syncStrategy: .createMissingFoodItems)
+            } else {
+                self.missingFoodItems = [String]()
+                for missingFoodItem in missingFoodItems {
+                    self.missingFoodItems.append(missingFoodItem.name ?? NSLocalizedString("- Unnamed -", comment: ""))
+                }
+                showingActionSheet = true
+            }
+        } else {
+            // TODO Notification
         }
     }
     

@@ -9,6 +9,10 @@
 import SwiftUI
 
 struct MainView: View {
+    enum Tab: Int {
+        case products = 0, ingredients
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var userSettings = UserSettings.shared
     @FetchRequest(
@@ -44,15 +48,15 @@ struct MainView: View {
                 ZStack(alignment: .leading) {
                     GeometryReader { geometry in
                         TabView(selection: $selectedTab) {
-                            ProductsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu)
-                                .tag(0)
+                            ProductsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu, selectedTab: $selectedTab)
+                                .tag(Tab.products.rawValue)
                                 .tabItem{
                                     Text("Products")
                                 }
                                 .environment(\.managedObjectContext, managedObjectContext)
                             
-                            IngredientsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu)
-                                .tag(1)
+                            IngredientsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu, selectedTab: $selectedTab)
+                                .tag(Tab.ingredients.rawValue)
                                 .tabItem{
                                     Text("Ingredients")
                                 }

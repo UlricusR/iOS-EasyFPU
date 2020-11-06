@@ -26,6 +26,7 @@ extension Ingredient {
     @NSManaged public var amount: Int64
     @NSManaged public var id: UUID?
     @NSManaged public var composedFoodItem: ComposedFoodItem?
+    @NSManaged public var foodItem: FoodItem?
 
 }
 

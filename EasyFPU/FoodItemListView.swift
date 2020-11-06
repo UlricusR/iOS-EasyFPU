@@ -10,12 +10,13 @@ import SwiftUI
 
 struct FoodItemListView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    private var category: FoodItemCategory
+    var category: FoodItemCategory
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var helpSheet: FoodItemListViewSheets.State
     var foodItemListTitle: String
     var composedFoodItemTitle: String
     @Binding var showingMenu: Bool
+    @Binding var selectedTab: Int
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
@@ -39,6 +40,7 @@ struct FoodItemListView: View {
     }
     
     var composedFoodItem: ComposedFoodItemViewModel {
+        let composedFoodItemTitle = category == .ingredient ? UserSettings.shared.composedFoodItemTitle ?? self.composedFoodItemTitle : self.composedFoodItemTitle
         let composedFoodItem = ComposedFoodItemViewModel(name: composedFoodItemTitle, category: .product, favorite: false)
         for foodItem in foodItems {
             if foodItem.category == self.category.rawValue && foodItem.amount > 0 {
@@ -46,15 +48,6 @@ struct FoodItemListView: View {
             }
         }
         return composedFoodItem
-    }
-    
-    init(category: FoodItemCategory, absorptionScheme: AbsorptionScheme, helpSheet: FoodItemListViewSheets.State, foodItemListTitle: String, composedFoodItemTitle: String, showingMenu: Binding<Bool>) {
-        self.absorptionScheme = absorptionScheme
-        self.category = category
-        self.helpSheet = helpSheet
-        self.foodItemListTitle = foodItemListTitle
-        self.composedFoodItemTitle = composedFoodItemTitle
-        self._showingMenu = showingMenu
     }
     
     var body: some View {
@@ -66,7 +59,7 @@ struct FoodItemListView: View {
                         SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
                             .padding(.horizontal)
                         ForEach(self.filteredFoodItems) { foodItem in
-                            FoodItemView(composedFoodItem: composedFoodItem, foodItem: foodItem, category: self.category)
+                            FoodItemView(composedFoodItem: composedFoodItem, foodItem: foodItem, category: self.category, selectedTab: $selectedTab)
                                 .environment(\.managedObjectContext, self.managedObjectContext)
                         }
                     }

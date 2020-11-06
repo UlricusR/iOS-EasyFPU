@@ -115,6 +115,9 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.sugarsPer100g = cdFoodItem.sugarsPer100g
         self.amount = Int(cdFoodItem.amount)
         self.cdFoodItem = cdFoodItem
+        if let cdComposedFoodItem = cdFoodItem.composedFoodItem {
+            self.cdComposedFoodItem = cdComposedFoodItem
+        }
         
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
         

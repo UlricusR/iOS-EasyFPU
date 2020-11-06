@@ -23,6 +23,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="sugarsPer100g" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="composedFoodItem" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ComposedFoodItem" inverseName="foodItem" inverseEntity="ComposedFoodItem"/>
+        <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Ingredient" inverseName="foodItem" inverseEntity="Ingredient"/>
         <relationship name="typicalAmounts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TypicalAmount" inverseName="foodItem" inverseEntity="TypicalAmount"/>
     </entity>
     <entity name="Ingredient" representedClassName=".Ingredient" syncable="YES">
@@ -35,6 +36,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="sugarsPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="composedFoodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ComposedFoodItem" inverseName="ingredients" inverseEntity="ComposedFoodItem"/>
+        <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="ingredients" inverseEntity="FoodItem"/>
     </entity>
     <entity name="TypicalAmount" representedClassName=".TypicalAmount" syncable="YES">
         <attribute name="amount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -44,8 +46,8 @@
     <elements>
         <element name="AbsorptionBlock" positionX="-140.796875" positionY="-207.42578125" width="128" height="28"/>
         <element name="ComposedFoodItem" positionX="-115.8828125" positionY="241.0078125" width="128" height="148"/>
-        <element name="FoodItem" positionX="-120.265625" positionY="-100.04296875" width="128" height="193"/>
-        <element name="Ingredient" positionX="286.59765625" positionY="180.2578125" width="128" height="178"/>
+        <element name="FoodItem" positionX="-120.265625" positionY="-100.04296875" width="128" height="208"/>
+        <element name="Ingredient" positionX="343.34375" positionY="166.60546875" width="128" height="193"/>
         <element name="TypicalAmount" positionX="286.51171875" positionY="-106.484375" width="128" height="88"/>
     </elements>
 </model>

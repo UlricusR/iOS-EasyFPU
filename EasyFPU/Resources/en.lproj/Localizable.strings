@@ -100,6 +100,11 @@
 "portion(s)" = "portions(s)";
 "Cannot create typical amount: " = "Cannot create typical amount: ";
 "successfully saved in Products" = "successfully saved in Products";
+"Missing Ingredients" = "Missing Ingredients";
+"The following ingredients are no longer available: " = "The following ingredients are no longer available: ";
+". Do you want to create them or remove them from your product?" = ". Do you want to create them or remove them from your product?";
+"Create missing ingredients" = "Create missing ingredients";
+"Remove from product" = "Remove from product";
 
 // Meal preview
 "e-Carbs" = "e-Carbs";

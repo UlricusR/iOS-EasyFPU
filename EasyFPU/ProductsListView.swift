@@ -11,6 +11,7 @@ import SwiftUI
 struct ProductsListView: View {
     @ObservedObject var absorptionScheme: AbsorptionScheme
     @Binding var showingMenu: Bool
+    @Binding var selectedTab: Int
     
     var body: some View {
         FoodItemListView(
@@ -19,7 +20,8 @@ struct ProductsListView: View {
             helpSheet: FoodItemListViewSheets.State.productsListHelp,
             foodItemListTitle: NSLocalizedString("Products", comment: ""),
             composedFoodItemTitle: NSLocalizedString("Total meal", comment: ""),
-            showingMenu: $showingMenu
+            showingMenu: $showingMenu,
+            selectedTab: $selectedTab
         )
     }
 }

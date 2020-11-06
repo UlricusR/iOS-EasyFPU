@@ -54,6 +54,7 @@ class UserSettings: ObservableObject {
     enum UserDefaultsStringKey: String, CaseIterable {
         case foodDatabase = "FoodDatabase"
         case countryCode = "CountryCode"
+        case composedFoodItemTitle = "ComposedFoodItemTitle"
     }
     
     // MARK: - The key store for syncing via iCloud
@@ -77,6 +78,7 @@ class UserSettings: ObservableObject {
     @Published var foodDatabase: FoodDatabase
     @Published var searchWorldwide: Bool
     @Published var countryCode: String?
+    @Published var composedFoodItemTitle: String?
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
@@ -93,7 +95,8 @@ class UserSettings: ObservableObject {
         treatSugarsSeparately: UserSettings.getValue(for: UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault,
         foodDatabase: FoodDatabaseType.getFoodDatabase(type: UserSettings.getFoodDatabaseType()),
         searchWorldwide: UserSettings.getValue(for: UserDefaultsBoolKey.searchWorldwide) ?? false,
-        countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode)
+        countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode),
+        composedFoodItemTitle: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemTitle)
     )
     
     private init(
@@ -111,7 +114,8 @@ class UserSettings: ObservableObject {
         treatSugarsSeparately: Bool,
         foodDatabase: FoodDatabase,
         searchWorldwide: Bool,
-        countryCode: String?
+        countryCode: String?,
+        composedFoodItemTitle: String?
     ) {
         self.disclaimerAccepted = disclaimerAccepted
         self.foodDatabaseUseAtOwnRiskAccepted = foodDatabaseUseAtOwnRiskAccepted
@@ -128,6 +132,7 @@ class UserSettings: ObservableObject {
         self.foodDatabase = foodDatabase
         self.searchWorldwide = searchWorldwide
         self.countryCode = countryCode
+        self.composedFoodItemTitle = composedFoodItemTitle
     }
     
     // MARK: - Static helper functions
@@ -169,6 +174,10 @@ class UserSettings: ObservableObject {
         // Synchronize
         UserSettings.keyStore.synchronize()
         return true
+    }
+    
+    static func remove(_ key: String) {
+        UserSettings.keyStore.removeObject(forKey: key)
     }
     
     static func getValue(for key: UserDefaultsBoolKey) -> Bool? {
