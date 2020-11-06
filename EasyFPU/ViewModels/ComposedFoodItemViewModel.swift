@@ -76,6 +76,23 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
         sugars / Double(amount) * 100
     }
     
+    var typicalAmounts: [TypicalAmountViewModel]? {
+        if let numberOfPortions = numberOfPortions { // Non-nil value means the user wants to store calculated typical amounts
+            if numberOfPortions > 0 {
+                var typicalAmounts = [TypicalAmountViewModel]()
+                let portionWeight = amount / numberOfPortions
+                for multiplier in 1...numberOfPortions {
+                    let portionAmount = portionWeight * multiplier
+                    let comment = "\(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(numberOfPortions))"
+                    let typicalAmount = TypicalAmountViewModel(amount: portionAmount, comment: comment)
+                    typicalAmounts.append(typicalAmount)
+                }
+                return typicalAmounts
+            }
+        }
+        return nil
+    }
+    
     enum CodingKeys: String, CodingKey {
         case composedFoodItem
         case amount, favorite, name, category, numberOfPortions, foodItems

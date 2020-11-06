@@ -151,17 +151,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
         
-        if let numberOfPortions = composedFoodItem.numberOfPortions {
-            if numberOfPortions > 0 {
-                // Non-nil value means the user wants to store calculated typical amounts
-                let portionWeight = composedFoodItem.amount / numberOfPortions
-                for multiplier in 1...numberOfPortions {
-                    let portionAmount = portionWeight * multiplier
-                    let comment = "\(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(numberOfPortions))"
-                    let typicalAmount = TypicalAmountViewModel(amount: portionAmount, comment: comment)
-                    typicalAmounts.append(typicalAmount)
-                }
-            }
+        if let typicalAmounts = composedFoodItem.typicalAmounts {
+            self.typicalAmounts = typicalAmounts
         }
     }
     
