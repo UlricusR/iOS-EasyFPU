@@ -169,10 +169,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
         try? AppDelegate.viewContext.save()
         
         // Reset stored name in UserSettings
-        if category == .ingredient {
-            UserSettings.shared.composedFoodItemTitle = nil
-            UserSettings.remove(UserSettings.UserDefaultsStringKey.composedFoodItemTitle.rawValue)
-        }
+        UserSettings.shared.composedFoodItemTitle = nil
+        UserSettings.remove(UserSettings.UserDefaultsStringKey.composedFoodItemTitle.rawValue)
     }
     
     func encode(to encoder: Encoder) throws {

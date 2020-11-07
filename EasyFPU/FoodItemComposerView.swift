@@ -160,11 +160,11 @@ struct FoodItemComposerView: View {
         let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItem)
         composedFoodItem.cdComposedFoodItem = cdComposedFoodItem
         
-        // Then save ComposedFoodItem as new FoodItem
-        let newFoodItem = FoodItemViewModel(from: composedFoodItem)
-        FoodItem.create(from: newFoodItem)
+        // Then save ComposedFoodItem as new FoodItem, but set amount to zero, so that it won't appear selected in Products list
+        let cdFoodItem = FoodItem.create(from: composedFoodItem)
+        cdFoodItem.amount = 0
         
-        // Clear the ComposedFoodItem and notify user of successful storage
+        // Clear the ComposedFoodItem, and notify user of successful storage
         composedFoodItem.clear()
         notificationState = .successfullySavedFoodItem
     }

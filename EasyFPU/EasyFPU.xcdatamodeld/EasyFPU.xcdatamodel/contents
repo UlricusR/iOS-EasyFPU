@@ -8,6 +8,7 @@
         <attribute name="amount" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="category" attributeType="String" defaultValueString="Product"/>
         <attribute name="favorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="numberOfPortions" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="composedFoodItem" inverseEntity="FoodItem"/>
@@ -45,7 +46,7 @@
     </entity>
     <elements>
         <element name="AbsorptionBlock" positionX="-140.796875" positionY="-207.42578125" width="128" height="28"/>
-        <element name="ComposedFoodItem" positionX="-115.8828125" positionY="241.0078125" width="128" height="148"/>
+        <element name="ComposedFoodItem" positionX="-115.8828125" positionY="241.0078125" width="128" height="163"/>
         <element name="FoodItem" positionX="-120.265625" positionY="-100.04296875" width="128" height="208"/>
         <element name="Ingredient" positionX="343.34375" positionY="166.60546875" width="128" height="193"/>
         <element name="TypicalAmount" positionX="286.51171875" positionY="-106.484375" width="128" height="88"/>

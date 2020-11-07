@@ -86,6 +86,29 @@ public class FoodItem: NSManagedObject {
         try? moc.save()
     }
     
+    static func create(from composedFoodItem: ComposedFoodItemViewModel) -> FoodItem {
+        let moc = AppDelegate.viewContext
+        
+        // Create the FoodItem
+        let cdFoodItem = FoodItem(context: moc)
+        
+        // Fill data
+        cdFoodItem.name = composedFoodItem.name
+        cdFoodItem.category = composedFoodItem.category.rawValue
+        cdFoodItem.amount = Int64(composedFoodItem.amount)
+        cdFoodItem.caloriesPer100g = composedFoodItem.caloriesPer100g
+        cdFoodItem.carbsPer100g = composedFoodItem.carbsPer100g
+        cdFoodItem.sugarsPer100g = composedFoodItem.sugarsPer100g
+        cdFoodItem.favorite = composedFoodItem.favorite
+        cdFoodItem.id = UUID()
+        cdFoodItem.composedFoodItem = composedFoodItem.cdComposedFoodItem
+        
+        // Save new food item
+        try? moc.save()
+        
+        return cdFoodItem
+    }
+    
     static func delete(_ foodItem: FoodItem) {
         let moc = AppDelegate.viewContext
         
