@@ -286,6 +286,7 @@ struct FoodItemEditor: View {
         
         // Create updated food item
         if let updatedFoodItem = FoodItemViewModel(
+            id: self.draftFoodItem.id,
             name: self.draftFoodItem.name,
             category: self.draftFoodItem.category,
             favorite: self.draftFoodItem.favorite,

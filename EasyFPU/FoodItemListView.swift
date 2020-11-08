@@ -41,7 +41,8 @@ struct FoodItemListView: View {
     
     var composedFoodItem: ComposedFoodItemViewModel {
         let composedFoodItemTitle = category == .ingredient ? UserSettings.shared.composedFoodItemTitle ?? self.composedFoodItemTitle : self.composedFoodItemTitle
-        let composedFoodItem = ComposedFoodItemViewModel(name: composedFoodItemTitle, category: .product, favorite: false)
+        let composedFoodItemID = UUID(uuidString: UserSettings.shared.composedFoodItemID ?? UUID().uuidString) ?? UUID()
+        let composedFoodItem = ComposedFoodItemViewModel(id: composedFoodItemID, name: composedFoodItemTitle, category: .product, favorite: false)
         for foodItem in foodItems {
             if foodItem.category == self.category.rawValue && foodItem.amount > 0 {
                 composedFoodItem.add(foodItem: FoodItemViewModel(from: foodItem))
@@ -153,6 +154,7 @@ struct FoodItemListView: View {
                 navigationBarTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
                 draftFoodItem: // Create new empty draftFoodItem
                     FoodItemViewModel(
+                        id: UUID(),
                         name: "",
                         category: category,
                         favorite: false,

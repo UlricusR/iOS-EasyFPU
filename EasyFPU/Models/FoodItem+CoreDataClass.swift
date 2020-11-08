@@ -48,7 +48,7 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
         cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
         cdFoodItem.favorite = foodItemVM.favorite
-        cdFoodItem.id = UUID()
+        cdFoodItem.id = foodItemVM.id
         
         // Add typical amounts
         for typicalAmount in foodItemVM.typicalAmounts {
@@ -86,11 +86,31 @@ public class FoodItem: NSManagedObject {
         try? moc.save()
     }
     
-    static func create(from composedFoodItem: ComposedFoodItemViewModel) -> FoodItem {
+    static func create(from composedFoodItem: ComposedFoodItemViewModel, idToBeReplaced: String?) -> FoodItem {
+        debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         let moc = AppDelegate.viewContext
+        var existingCDFoodItem: FoodItem? = nil
         
-        // Create the FoodItem
-        let cdFoodItem = FoodItem(context: moc)
+        // Check for existing FoodItem to be replaced
+        if let idToBeReplaced = idToBeReplaced {
+            let predicate = NSPredicate(format: "id = %@", idToBeReplaced)
+            let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
+            request.predicate = predicate
+            if let result = try? moc.fetch(request) {
+                if !result.isEmpty {
+                    existingCDFoodItem = result[0]
+                }
+            }
+        }
+        
+        let cdFoodItem: FoodItem
+        if existingCDFoodItem != nil {
+            cdFoodItem = existingCDFoodItem!
+        } else {
+            // Create new FoodItem
+            cdFoodItem = FoodItem(context: moc)
+            cdFoodItem.id = UUID()
+        }
         
         // Fill data
         cdFoodItem.name = composedFoodItem.name
@@ -100,7 +120,6 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.carbsPer100g = composedFoodItem.carbsPer100g
         cdFoodItem.sugarsPer100g = composedFoodItem.sugarsPer100g
         cdFoodItem.favorite = composedFoodItem.favorite
-        cdFoodItem.id = UUID()
         cdFoodItem.composedFoodItem = composedFoodItem.cdComposedFoodItem
         
         // Save new food item
@@ -122,6 +141,15 @@ public class FoodItem: NSManagedObject {
         try? moc.save()
     }
     
+    static func setAmount(_ foodItem: FoodItem?, to amount: Int) {
+        if let foodItem = foodItem {
+            let moc = AppDelegate.viewContext
+            foodItem.amount = Int64(amount)
+            moc.refresh(foodItem, mergeChanges: true)
+            try? moc.save()
+        }
+    }
+    
     static func checkForMissingFoodItems(of ingredients: [Ingredient]) -> [Ingredient] {
         var ingredientsWithoutFoodItems = [Ingredient]()
         for ingredient in ingredients {
@@ -133,7 +161,6 @@ public class FoodItem: NSManagedObject {
     }
     
     static func setFoodItems(from ingredients: [Ingredient], syncStrategy: IngredientsSyncStrategy) {
-        // First set all amounts to zero
         let predicate = NSPredicate(format: "category = %@ AND amount > 0", FoodItemCategory.ingredient.rawValue)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.predicate = predicate

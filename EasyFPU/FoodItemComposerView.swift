@@ -157,11 +157,11 @@ struct FoodItemComposerView: View {
     
     private func saveProduct() {
         // First store new ComposedFoodItem in CoreData and add it to the view model
-        let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItem)
+        let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItem, idToBeReplaced: UserSettings.shared.composedFoodItemID)
         composedFoodItem.cdComposedFoodItem = cdComposedFoodItem
         
         // Then save ComposedFoodItem as new FoodItem, but set amount to zero, so that it won't appear selected in Products list
-        let cdFoodItem = FoodItem.create(from: composedFoodItem)
+        let cdFoodItem = FoodItem.create(from: composedFoodItem, idToBeReplaced: UserSettings.shared.composedFoodItemFoodItemID)
         cdFoodItem.amount = 0
         
         // Clear the ComposedFoodItem, and notify user of successful storage

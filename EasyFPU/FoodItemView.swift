@@ -137,9 +137,21 @@ struct FoodItemView: View {
         // Switch to Ingredients tab and set title of ComposedFoodItem
         selectedTab = MainView.Tab.ingredients.rawValue
         let composedFoodItemTitle = composedFoodItem.name ?? NSLocalizedString("- Unnamed -", comment: "")
-        UserSettings.shared.composedFoodItemTitle = composedFoodItemTitle
+        
+        // Save food item title, ID and ComposedFoodItem ID
         var errorMessage = ""
+        UserSettings.shared.composedFoodItemTitle = composedFoodItemTitle
         _ = UserSettings.set(UserSettings.UserDefaultsType.string(composedFoodItemTitle, UserSettings.UserDefaultsStringKey.composedFoodItemTitle), errorMessage: &errorMessage)
+        
+        if let composedFoodItemFoodItemID = composedFoodItem.foodItem?.id?.uuidString {
+            UserSettings.shared.composedFoodItemFoodItemID = composedFoodItemFoodItemID
+            _ = UserSettings.set(UserSettings.UserDefaultsType.string(composedFoodItemFoodItemID, UserSettings.UserDefaultsStringKey.composedFoodItemFoodItemID), errorMessage: &errorMessage)
+        }
+        
+        if let composedFoodItemID = composedFoodItem.id?.uuidString {
+            UserSettings.shared.composedFoodItemID = composedFoodItemID
+            _ = UserSettings.set(UserSettings.UserDefaultsType.string(composedFoodItemID, UserSettings.UserDefaultsStringKey.composedFoodItemID), errorMessage: &errorMessage)
+        }
         
         // Load ingredients
         if let ingredients = composedFoodItem.ingredients {

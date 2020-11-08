@@ -106,10 +106,7 @@ struct FoodItemSelector: View {
                     let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
                     switch amountResult {
                     case .success(let amountAsInt):
-                        self.editedFoodItem.amount = Int64(amountAsInt)
-                        
-                        // Save new food item
-                        try? AppDelegate.viewContext.save()
+                        FoodItem.setAmount(self.editedFoodItem, to: amountAsInt)
                         
                         // Quit edit mode
                         presentation.wrappedValue.dismiss()

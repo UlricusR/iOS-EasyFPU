@@ -55,6 +55,8 @@ class UserSettings: ObservableObject {
         case foodDatabase = "FoodDatabase"
         case countryCode = "CountryCode"
         case composedFoodItemTitle = "ComposedFoodItemTitle"
+        case composedFoodItemFoodItemID = "ComposedFoodItemFoodItemID"
+        case composedFoodItemID = "ComposedFoodItemID"
     }
     
     // MARK: - The key store for syncing via iCloud
@@ -78,7 +80,11 @@ class UserSettings: ObservableObject {
     @Published var foodDatabase: FoodDatabase
     @Published var searchWorldwide: Bool
     @Published var countryCode: String?
+    
+    // Temporary user settings, only required to persist if user interrupts activity
     @Published var composedFoodItemTitle: String?
+    @Published var composedFoodItemFoodItemID: String?
+    @Published var composedFoodItemID: String?
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
@@ -96,7 +102,9 @@ class UserSettings: ObservableObject {
         foodDatabase: FoodDatabaseType.getFoodDatabase(type: UserSettings.getFoodDatabaseType()),
         searchWorldwide: UserSettings.getValue(for: UserDefaultsBoolKey.searchWorldwide) ?? false,
         countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode),
-        composedFoodItemTitle: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemTitle)
+        composedFoodItemTitle: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemTitle),
+        composedFoodItemFoodItemID: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemFoodItemID),
+        composedFoodItemID: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemID)
     )
     
     private init(
@@ -115,7 +123,9 @@ class UserSettings: ObservableObject {
         foodDatabase: FoodDatabase,
         searchWorldwide: Bool,
         countryCode: String?,
-        composedFoodItemTitle: String?
+        composedFoodItemTitle: String?,
+        composedFoodItemFoodItemID: String?,
+        composedFoodItemID: String?
     ) {
         self.disclaimerAccepted = disclaimerAccepted
         self.foodDatabaseUseAtOwnRiskAccepted = foodDatabaseUseAtOwnRiskAccepted
@@ -133,6 +143,8 @@ class UserSettings: ObservableObject {
         self.searchWorldwide = searchWorldwide
         self.countryCode = countryCode
         self.composedFoodItemTitle = composedFoodItemTitle
+        self.composedFoodItemFoodItemID = composedFoodItemFoodItemID
+        self.composedFoodItemID = composedFoodItemID
     }
     
     // MARK: - Static helper functions

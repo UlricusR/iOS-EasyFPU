@@ -30,11 +30,31 @@ public class ComposedFoodItem: NSManagedObject {
         try? viewContext.save()
     }
     
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem {
+    static func create(from composedFoodItemVM: ComposedFoodItemViewModel, idToBeReplaced: String?) -> ComposedFoodItem {
+        debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         let moc = AppDelegate.viewContext
+        var existingCDComposedFoodItem: ComposedFoodItem? = nil
         
-        // Create the ComposedFoodItem
-        let cdComposedFoodItem = ComposedFoodItem(context: moc)
+        // Check for existing ComposedFoodItem to be replaced
+        if let idToBeReplaced = idToBeReplaced {
+            let predicate = NSPredicate(format: "id = %@", idToBeReplaced)
+            let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
+            request.predicate = predicate
+            if let result = try? moc.fetch(request) {
+                if !result.isEmpty {
+                    existingCDComposedFoodItem = result[0]
+                }
+            }
+        }
+        
+        let cdComposedFoodItem: ComposedFoodItem
+        if existingCDComposedFoodItem != nil {
+            cdComposedFoodItem = existingCDComposedFoodItem!
+        } else {
+            // Create new FoodItem
+            cdComposedFoodItem = ComposedFoodItem(context: moc)
+            cdComposedFoodItem.id = UUID()
+        }
         
         // Fill data
         cdComposedFoodItem.name = composedFoodItemVM.name
