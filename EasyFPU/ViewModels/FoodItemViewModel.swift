@@ -322,10 +322,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     func changeCategory(to newCategory: FoodItemCategory) {
         if category != newCategory {
             category = newCategory
-            if cdFoodItem != nil {
-                cdFoodItem!.category = newCategory.rawValue
-                try? AppDelegate.viewContext.save()
-            }
+            FoodItem.setCategory(cdFoodItem, to: newCategory.rawValue)
         }
     }
     

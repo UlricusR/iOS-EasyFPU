@@ -150,6 +150,15 @@ public class FoodItem: NSManagedObject {
         }
     }
     
+    static func setCategory(_ foodItem: FoodItem?, to category: String) {
+        if let foodItem = foodItem {
+            let moc = AppDelegate.viewContext
+            foodItem.category = category
+            moc.refresh(foodItem, mergeChanges: true)
+            try? moc.save()
+        }
+    }
+    
     static func checkForMissingFoodItems(of ingredients: [Ingredient]) -> [Ingredient] {
         var ingredientsWithoutFoodItems = [Ingredient]()
         for ingredient in ingredients {
