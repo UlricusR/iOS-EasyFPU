@@ -78,8 +78,8 @@
             filePath = "EasyFPU/FoodItemListView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
             landmarkName = "composedFoodItem"
             landmarkType = "24">
          </BreakpointContent>
