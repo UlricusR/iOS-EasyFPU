@@ -64,7 +64,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "91"
             endingLineNumber = "91"
-            landmarkName = "create(from:idToBeReplaced:)"
+            landmarkName = "create(from:generateTypicalAmounts:idToBeReplaced:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

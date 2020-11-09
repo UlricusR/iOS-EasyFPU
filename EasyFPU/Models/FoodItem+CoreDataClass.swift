@@ -86,7 +86,7 @@ public class FoodItem: NSManagedObject {
         try? moc.save()
     }
     
-    static func create(from composedFoodItem: ComposedFoodItemViewModel, idToBeReplaced: String?) -> FoodItem {
+    static func create(from composedFoodItem: ComposedFoodItemViewModel, generateTypicalAmounts: Bool, idToBeReplaced: String?) -> FoodItem {
         debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         let moc = AppDelegate.viewContext
         var existingCDFoodItem: FoodItem? = nil
@@ -121,6 +121,20 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.sugarsPer100g = composedFoodItem.sugarsPer100g
         cdFoodItem.favorite = composedFoodItem.favorite
         cdFoodItem.composedFoodItem = composedFoodItem.cdComposedFoodItem
+        
+        // Add typical amounts
+        if generateTypicalAmounts {
+            // First remove existing typical amounts
+            if let existingTypicalAmounts = cdFoodItem.typicalAmounts {
+                cdFoodItem.removeFromTypicalAmounts(existingTypicalAmounts)
+            }
+            
+            // Then add the newly generated ones
+            for typicalAmount in composedFoodItem.typicalAmounts {
+                let newCDTypicalAmount = TypicalAmount.create(from: typicalAmount)
+                cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
+            }
+        }
         
         // Save new food item
         try? moc.save()
