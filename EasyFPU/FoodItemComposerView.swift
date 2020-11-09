@@ -162,7 +162,7 @@ struct FoodItemComposerView: View {
         
         // Then save ComposedFoodItem as new FoodItem, but set amount to zero, so that it won't appear selected in Products list
         let cdFoodItem = FoodItem.create(from: composedFoodItem, idToBeReplaced: UserSettings.shared.composedFoodItemFoodItemID)
-        cdFoodItem.amount = 0
+        FoodItem.setAmount(cdFoodItem, to: 0)
         
         // Clear the ComposedFoodItem, and notify user of successful storage
         composedFoodItem.clear()
