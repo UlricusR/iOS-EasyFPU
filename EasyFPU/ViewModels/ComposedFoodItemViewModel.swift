@@ -142,7 +142,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
     func remove(foodItem: FoodItemViewModel) {
         foodItem.amountAsString = "0"
         FoodItem.setAmount(foodItem.cdFoodItem, to: 0)
-        if let index = foodItems.firstIndex(where: { $0.cdFoodItem!.id == foodItem.cdFoodItem!.id }) {
+        if let index = foodItems.firstIndex(of: foodItem) {
             foodItems.remove(at: index)
         }
     }

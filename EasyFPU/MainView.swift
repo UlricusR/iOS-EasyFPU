@@ -187,7 +187,8 @@ struct MainView: View {
     private func importFoodItems() {
         if foodItemsToBeImported != nil {
             for foodItemToBeImported in foodItemsToBeImported! {
-                _ = FoodItem.create(from: foodItemToBeImported)
+                let newFoodItem = FoodItem.create(from: foodItemToBeImported)
+                FoodItem.setAmount(newFoodItem, to: 0)
             }
         } else {
             errorMessage = "Could not import food list"
