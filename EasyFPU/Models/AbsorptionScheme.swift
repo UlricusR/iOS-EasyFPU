@@ -58,6 +58,17 @@ class AbsorptionScheme: Equatable, ObservableObject {
         }
     }
     
+    static func create(from absoptionBlockVMs: [AbsorptionBlockFromJson], for absorptionScheme: AbsorptionScheme) {
+        for absorptionBlock in absoptionBlockVMs {
+            let cdAbsorptionBlock = AbsorptionBlock.create(from: absorptionBlock)
+            
+            if !absorptionScheme.absorptionBlocks.contains(cdAbsorptionBlock) {
+                absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
+            }
+        }
+        try? AppDelegate.viewContext.save()
+    }
+    
     static func == (lhs: AbsorptionScheme, rhs: AbsorptionScheme) -> Bool {
         for absorptionBlock in lhs.absorptionBlocks {
             if !rhs.absorptionBlocks.contains(absorptionBlock) {

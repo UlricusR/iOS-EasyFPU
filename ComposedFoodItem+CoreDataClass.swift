@@ -30,13 +30,13 @@ public class ComposedFoodItem: NSManagedObject {
         try? viewContext.save()
     }
     
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel, idToBeReplaced: String?) -> ComposedFoodItem {
+    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem {
         debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         let moc = AppDelegate.viewContext
         var existingCDComposedFoodItem: ComposedFoodItem? = nil
         
         // Check for existing ComposedFoodItem to be replaced
-        if let idToBeReplaced = idToBeReplaced {
+        if let idToBeReplaced = composedFoodItemVM.cdComposedFoodItem?.id?.uuidString {
             let predicate = NSPredicate(format: "id = %@", idToBeReplaced)
             let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
             request.predicate = predicate

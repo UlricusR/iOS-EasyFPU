@@ -12,7 +12,6 @@ import CoreData
 
 
 extension TypicalAmount {
-
     @nonobjc public class func fetchRequest() -> NSFetchRequest<TypicalAmount> {
         return NSFetchRequest<TypicalAmount>(entityName: "TypicalAmount")
     }
@@ -20,4 +19,11 @@ extension TypicalAmount {
     @NSManaged public var amount: Int64
     @NSManaged public var comment: String?
     @NSManaged public var foodItem: FoodItem?
+    @NSManaged public var id: UUID?
+}
+
+extension TypicalAmount: Identifiable {
+    public static func == (lhs: TypicalAmount, rhs: TypicalAmount) -> Bool {
+        lhs.id == rhs.id
+    }
 }

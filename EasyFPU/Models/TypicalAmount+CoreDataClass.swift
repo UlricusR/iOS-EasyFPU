@@ -39,10 +39,31 @@ public class TypicalAmount: NSManagedObject {
         // Fill data
         cdTypicalAmount.amount = Int64(typicalAmountVM.amount)
         cdTypicalAmount.comment = typicalAmountVM.comment
+        cdTypicalAmount.id = typicalAmountVM.id ?? UUID()
+        typicalAmountVM.cdTypicalAmount = cdTypicalAmount
         
-        // Save new Ingredient
+        // Save new TypicalAmount
         try? moc.save()
         
         return cdTypicalAmount
+    }
+    
+    static func update(with typicalAmountVM: TypicalAmountViewModel) -> TypicalAmount {
+        let moc = AppDelegate.viewContext
+        var typicalAmount: TypicalAmount
+        
+        if typicalAmountVM.cdTypicalAmount != nil {
+            typicalAmount = typicalAmountVM.cdTypicalAmount!
+        } else {
+            typicalAmount = TypicalAmount(context: moc)
+            typicalAmount.id = UUID()
+        }
+        
+        typicalAmount.amount = Int64(typicalAmountVM.amount)
+        typicalAmount.comment = typicalAmountVM.comment
+        typicalAmountVM.cdTypicalAmount = typicalAmount
+        
+        try? AppDelegate.viewContext.save()
+        return typicalAmount
     }
 }

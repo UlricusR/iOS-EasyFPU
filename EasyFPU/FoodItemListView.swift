@@ -15,12 +15,13 @@ struct FoodItemListView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     var category: FoodItemCategory
+    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var helpSheet: FoodItemListViewSheets.State
     var foodItemListTitle: String
-    var composedFoodItemTitle: String
     @Binding var showingMenu: Bool
     @Binding var selectedTab: Int
+    @State private var editedComposedFoodItem: ComposedFoodItem?
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
@@ -44,18 +45,6 @@ struct FoodItemListView: View {
         }
     }
     
-    var composedFoodItem: ComposedFoodItemViewModel {
-        let composedFoodItemTitle = category == .ingredient ? UserSettings.shared.composedFoodItemTitle ?? self.composedFoodItemTitle : self.composedFoodItemTitle
-        let composedFoodItemID = UUID(uuidString: UserSettings.shared.composedFoodItemID ?? UUID().uuidString) ?? UUID()
-        let composedFoodItem = ComposedFoodItemViewModel(id: composedFoodItemID, name: composedFoodItemTitle, category: .product, favorite: false)
-        for foodItem in foodItems {
-            if foodItem.category == self.category.rawValue && foodItem.amount > 0 {
-                composedFoodItem.add(foodItem: FoodItemViewModel(from: foodItem))
-            }
-        }
-        return composedFoodItem
-    }
-    
     var body: some View {
         ZStack(alignment: .top) {
             GeometryReader { geometry in
@@ -66,7 +55,7 @@ struct FoodItemListView: View {
                             SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
                                 .padding(.horizontal)
                             ForEach(self.filteredFoodItems) { foodItem in
-                                FoodItemView(composedFoodItem: composedFoodItem, foodItem: foodItem, category: self.category, selectedTab: $selectedTab)
+                                FoodItemView(composedFoodItem: composedFoodItem, foodItem: foodItem, category: self.category, selectedTab: $selectedTab, editedComposedFoodItem: $editedComposedFoodItem)
                                     .environment(\.managedObjectContext, self.managedObjectContext)
                             }
                         }
@@ -148,6 +137,13 @@ struct FoodItemListView: View {
                 }
             }
         }
+        .onAppear() {
+            for foodItem in foodItems {
+                if foodItem.category == self.category.rawValue && foodItem.amount > 0 {
+                    composedFoodItem.add(foodItem: FoodItemViewModel(from: foodItem))
+                }
+            }
+        }
     }
     
     @ViewBuilder
@@ -186,7 +182,6 @@ struct FoodItemListView: View {
                 navigationBarTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
                 draftFoodItem: // Create new empty draftFoodItem
                     FoodItemViewModel(
-                        id: UUID(),
                         name: "",
                         category: category,
                         favorite: false,

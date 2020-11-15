@@ -11,7 +11,7 @@ import SwiftUI
 struct ComposedFoodItemEvaluationView: View {
     @Environment(\.presentationMode) var presentation
     @ObservedObject var absorptionScheme: AbsorptionScheme
-    var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
     @State var activeSheet: ComposedFoodItemEvaluationViewSheets.State?

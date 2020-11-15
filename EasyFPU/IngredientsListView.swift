@@ -16,10 +16,10 @@ struct IngredientsListView: View {
     var body: some View {
         FoodItemListView(
             category: .ingredient,
+            composedFoodItem: ComposedFoodItemViewModel(name: NSLocalizedString("Composed product", comment: ""), category: .product, favorite: false),
             absorptionScheme: absorptionScheme,
             helpSheet: FoodItemListViewSheets.State.ingredientsListHelp,
             foodItemListTitle: NSLocalizedString("Ingredients", comment: ""),
-            composedFoodItemTitle: NSLocalizedString("Composed product", comment: ""),
             showingMenu: $showingMenu,
             selectedTab: $selectedTab
         )

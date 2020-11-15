@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ComposedFoodItemECarbsView: View {
-    var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     var absorptionScheme: AbsorptionScheme
     var absorptionTimeAsString: String {
         if composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {

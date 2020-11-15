@@ -10,10 +10,11 @@ import SwiftUI
 
 struct FoodItemView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var foodItem: FoodItemViewModel
     var category: FoodItemCategory
     @Binding var selectedTab: Int
+    @Binding var editedComposedFoodItem: ComposedFoodItem?
     @State var activeSheet: FoodItemViewSheets.State?
     @State var showingActionSheet: Bool = false
     @State var loadedIngredients = [Ingredient]()
@@ -134,24 +135,10 @@ struct FoodItemView: View {
     }
     
     private func editComposedFoodItem(_ composedFoodItem: ComposedFoodItem) {
-        // Switch to Ingredients tab and set title of ComposedFoodItem
+        editedComposedFoodItem = composedFoodItem
+        
+        // Switch to Ingredients tab
         selectedTab = MainView.Tab.ingredients.rawValue
-        let composedFoodItemTitle = composedFoodItem.name ?? NSLocalizedString("- Unnamed -", comment: "")
-        
-        // Save food item title, ID and ComposedFoodItem ID
-        var errorMessage = ""
-        UserSettings.shared.composedFoodItemTitle = composedFoodItemTitle
-        _ = UserSettings.set(UserSettings.UserDefaultsType.string(composedFoodItemTitle, UserSettings.UserDefaultsStringKey.composedFoodItemTitle), errorMessage: &errorMessage)
-        
-        if let composedFoodItemFoodItemID = composedFoodItem.foodItem?.id?.uuidString {
-            UserSettings.shared.composedFoodItemFoodItemID = composedFoodItemFoodItemID
-            _ = UserSettings.set(UserSettings.UserDefaultsType.string(composedFoodItemFoodItemID, UserSettings.UserDefaultsStringKey.composedFoodItemFoodItemID), errorMessage: &errorMessage)
-        }
-        
-        if let composedFoodItemID = composedFoodItem.id?.uuidString {
-            UserSettings.shared.composedFoodItemID = composedFoodItemID
-            _ = UserSettings.set(UserSettings.UserDefaultsType.string(composedFoodItemID, UserSettings.UserDefaultsStringKey.composedFoodItemID), errorMessage: &errorMessage)
-        }
         
         // Load ingredients
         if let ingredients = composedFoodItem.ingredients {
@@ -188,7 +175,7 @@ struct FoodItemView: View {
                 Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
             }
         case .selectFoodItem:
-            FoodItemSelector(draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!)
+            FoodItemSelector(draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!, composedFoodItem: composedFoodItem)
         }
     }
 }

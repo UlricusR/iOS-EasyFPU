@@ -286,7 +286,6 @@ struct FoodItemEditor: View {
         
         // Create updated food item
         if let updatedFoodItem = FoodItemViewModel(
-            id: self.draftFoodItem.id,
             name: self.draftFoodItem.name,
             category: self.draftFoodItem.category,
             favorite: self.draftFoodItem.favorite,
@@ -296,51 +295,14 @@ struct FoodItemEditor: View {
             amountAsString: self.draftFoodItem.amountAsString,
             error: &error) { // We have a valid food item
             if self.editedFoodItem != nil { // We need to update an existing food item
-                self.editedFoodItem!.name = updatedFoodItem.name
-                self.editedFoodItem!.category = updatedFoodItem.category.rawValue
-                self.editedFoodItem!.favorite = updatedFoodItem.favorite
-                self.editedFoodItem!.carbsPer100g = updatedFoodItem.carbsPer100g
-                self.editedFoodItem!.caloriesPer100g = updatedFoodItem.caloriesPer100g
-                self.editedFoodItem!.sugarsPer100g = updatedFoodItem.sugarsPer100g
-                self.editedFoodItem!.amount = Int64(updatedFoodItem.amount)
-                
-                // Update typical amounts
-                for typicalAmount in self.draftFoodItem.typicalAmounts {
-                    self.updateCDTypicalAmount(with: typicalAmount)
-                }
-                
-                // Remove deleted typical amounts
-                for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
-                    if typicalAmountToBeDeleted.cdTypicalAmount != nil {
-                        typicalAmountToBeDeleted.cdTypicalAmount!.foodItem = nil
-                        self.editedFoodItem!.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
-                        self.managedObjectContext.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
-                    }
-                }
+                FoodItem.update(editedFoodItem!, with: updatedFoodItem)
+                FoodItem.remove(typicalAmountsToBeDeleted, from: editedFoodItem!)
                 
                 // Reset typical amounts to be deleted
                 self.typicalAmountsToBeDeleted.removeAll()
             } else { // We have a new food item
-                let newFoodItem = FoodItem(context: self.managedObjectContext)
-                newFoodItem.id = UUID()
-                newFoodItem.name = updatedFoodItem.name
-                newFoodItem.category = updatedFoodItem.category.rawValue
-                newFoodItem.favorite = updatedFoodItem.favorite
-                newFoodItem.carbsPer100g = updatedFoodItem.carbsPer100g
-                newFoodItem.caloriesPer100g = updatedFoodItem.caloriesPer100g
-                newFoodItem.sugarsPer100g = updatedFoodItem.sugarsPer100g
-                newFoodItem.amount = Int64(updatedFoodItem.amount)
-                
-                for typicalAmount in self.typicalAmounts {
-                    let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-                    typicalAmount.cdTypicalAmount = newTypicalAmount
-                    let _ = typicalAmount.updateCDTypicalAmount(foodItem: newFoodItem)
-                    newFoodItem.addToTypicalAmounts(newTypicalAmount)
-                }
+                let _ = FoodItem.create(from: updatedFoodItem)
             }
-            
-            // Save new food item
-            try? AppDelegate.viewContext.save()
             
             // Quit edit mode
             presentation.wrappedValue.dismiss()
@@ -391,18 +353,6 @@ struct FoodItemEditor: View {
             return
         }
         self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
-    }
-    
-    private func updateCDTypicalAmount(with typicalAmount: TypicalAmountViewModel) {
-        // Check if it's an existing core data entry
-        if typicalAmount.cdTypicalAmount == nil { // This is a new typical amount
-            let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-            typicalAmount.cdTypicalAmount = newTypicalAmount
-            let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
-            self.editedFoodItem!.addToTypicalAmounts(newTypicalAmount)
-        } else { // This is an existing typical amount, so just update values
-            let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
-        }
     }
     
     private func addTypicalAmount() {

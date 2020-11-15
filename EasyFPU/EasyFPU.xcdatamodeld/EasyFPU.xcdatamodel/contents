@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="19H2" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17511" systemVersion="20B29" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="AbsorptionBlock" representedClassName="AbsorptionBlock" syncable="YES">
         <attribute name="absorptionTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="maxFpu" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <entity name="ComposedFoodItem" representedClassName=".ComposedFoodItem" syncable="YES">
@@ -42,13 +43,14 @@
     <entity name="TypicalAmount" representedClassName=".TypicalAmount" syncable="YES">
         <attribute name="amount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="comment" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="typicalAmounts" inverseEntity="FoodItem"/>
     </entity>
     <elements>
-        <element name="AbsorptionBlock" positionX="-140.796875" positionY="-207.42578125" width="128" height="28"/>
+        <element name="AbsorptionBlock" positionX="-140.796875" positionY="-207.42578125" width="128" height="74"/>
         <element name="ComposedFoodItem" positionX="-115.8828125" positionY="241.0078125" width="128" height="163"/>
         <element name="FoodItem" positionX="-120.265625" positionY="-100.04296875" width="128" height="208"/>
-        <element name="Ingredient" positionX="343.34375" positionY="166.60546875" width="128" height="193"/>
-        <element name="TypicalAmount" positionX="286.51171875" positionY="-106.484375" width="128" height="88"/>
+        <element name="Ingredient" positionX="343.34375" positionY="166.60546875" width="128" height="179"/>
+        <element name="TypicalAmount" positionX="286.51171875" positionY="-106.484375" width="128" height="89"/>
     </elements>
 </model>

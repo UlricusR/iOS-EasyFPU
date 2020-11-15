@@ -103,15 +103,8 @@ struct MainView: View {
                                 return
                             }
                             
-                            for absorptionBlock in defaultAbsorptionBlocks {
-                                let cdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
-                                cdAbsorptionBlock.absorptionTime = Int64(absorptionBlock.absorptionTime)
-                                cdAbsorptionBlock.maxFpu = Int64(absorptionBlock.maxFpu)
-                                if !self.absorptionScheme.absorptionBlocks.contains(cdAbsorptionBlock) {
-                                    self.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
-                                }
-                            }
-                            try? AppDelegate.viewContext.save()
+                            // Create absorption blocks from default
+                            AbsorptionScheme.create(from: defaultAbsorptionBlocks, for: self.absorptionScheme)
                         } else {
                             // Store absorption blocks loaded from core data
                             self.absorptionScheme.absorptionBlocks = self.absorptionBlocks.sorted()
@@ -194,7 +187,7 @@ struct MainView: View {
     private func importFoodItems() {
         if foodItemsToBeImported != nil {
             for foodItemToBeImported in foodItemsToBeImported! {
-                FoodItem.create(from: foodItemToBeImported)
+                _ = FoodItem.create(from: foodItemToBeImported)
             }
         } else {
             errorMessage = "Could not import food list"

@@ -26,5 +26,10 @@ extension AbsorptionBlock: Comparable {
 
     @NSManaged public var maxFpu: Int64
     @NSManaged public var absorptionTime: Int64
+    @NSManaged public var id: UUID?
 
+}
+
+extension AbsorptionBlock: Identifiable {
+    
 }

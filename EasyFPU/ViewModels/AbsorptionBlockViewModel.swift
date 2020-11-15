@@ -9,7 +9,11 @@
 import Foundation
 
 class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
-    var id = UUID()
+    var id: UUID? {
+        // We reuse the id of the CoreData AbsorptionBlock
+        cdAbsorptionBlock?.id
+    }
+    
     @Published var maxFpuAsString: String {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)

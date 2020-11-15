@@ -29,4 +29,33 @@ public class AbsorptionBlock: NSManagedObject {
         
         try? viewContext.save()
     }
+    
+    static func create(from absorptionBlockFromJson: AbsorptionBlockFromJson) -> AbsorptionBlock {
+        let moc = AppDelegate.viewContext
+        let cdAbsorptionBlock = AbsorptionBlock(context: moc)
+        cdAbsorptionBlock.id = UUID()
+        cdAbsorptionBlock.absorptionTime = Int64(absorptionBlockFromJson.absorptionTime)
+        cdAbsorptionBlock.maxFpu = Int64(absorptionBlockFromJson.maxFpu)
+        
+        try? moc.save()
+        return cdAbsorptionBlock
+    }
+    
+    static func create(from absorptionBlockFromJson: AbsorptionBlockViewModel) -> AbsorptionBlock {
+        let moc = AppDelegate.viewContext
+        let cdAbsorptionBlock = AbsorptionBlock(context: moc)
+        cdAbsorptionBlock.id = UUID()
+        cdAbsorptionBlock.absorptionTime = Int64(absorptionBlockFromJson.absorptionTime)
+        cdAbsorptionBlock.maxFpu = Int64(absorptionBlockFromJson.maxFpu)
+        
+        try? moc.save()
+        return cdAbsorptionBlock
+    }
+    
+    static func remove(_ absorptionBlock: AbsorptionBlock, from absorptionScheme: AbsorptionScheme) {
+        let moc = AppDelegate.viewContext
+        absorptionScheme.removeFromAbsorptionBlocks(absorptionBlockToBeDeleted: absorptionBlock)
+        moc.delete(absorptionBlock)
+        try? moc.save()
+    }
 }

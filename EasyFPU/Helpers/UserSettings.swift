@@ -42,6 +42,7 @@ class UserSettings: ObservableObject {
         case absorptionTimeCarbsInterval = "AbsorptionTimeCarbsInterval"
         case absorptionTimeECarbsDelay = "AbsorptionTimeECarbsDelay"
         case absorptionTimeECarbsInterval = "AbsorptionTimeECarbsInterval"
+        case composedFoodItemPortions = "ComposedFoodItemPortions"
     }
     
     enum UserDefaultsDateKey: String, CaseIterable {
@@ -81,11 +82,6 @@ class UserSettings: ObservableObject {
     @Published var searchWorldwide: Bool
     @Published var countryCode: String?
     
-    // Temporary user settings, only required to persist if user interrupts activity
-    @Published var composedFoodItemTitle: String?
-    @Published var composedFoodItemFoodItemID: String?
-    @Published var composedFoodItemID: String?
-    
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
         foodDatabaseUseAtOwnRiskAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted) ?? false,
@@ -104,7 +100,8 @@ class UserSettings: ObservableObject {
         countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode),
         composedFoodItemTitle: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemTitle),
         composedFoodItemFoodItemID: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemFoodItemID),
-        composedFoodItemID: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemID)
+        composedFoodItemID: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemID),
+        composedFoodItemPortions: UserSettings.getValue(for: UserDefaultsIntKey.composedFoodItemPortions)
     )
     
     private init(
@@ -125,7 +122,8 @@ class UserSettings: ObservableObject {
         countryCode: String?,
         composedFoodItemTitle: String?,
         composedFoodItemFoodItemID: String?,
-        composedFoodItemID: String?
+        composedFoodItemID: String?,
+        composedFoodItemPortions: Int?
     ) {
         self.disclaimerAccepted = disclaimerAccepted
         self.foodDatabaseUseAtOwnRiskAccepted = foodDatabaseUseAtOwnRiskAccepted
@@ -142,9 +140,6 @@ class UserSettings: ObservableObject {
         self.foodDatabase = foodDatabase
         self.searchWorldwide = searchWorldwide
         self.countryCode = countryCode
-        self.composedFoodItemTitle = composedFoodItemTitle
-        self.composedFoodItemFoodItemID = composedFoodItemFoodItemID
-        self.composedFoodItemID = composedFoodItemID
     }
     
     // MARK: - Static helper functions

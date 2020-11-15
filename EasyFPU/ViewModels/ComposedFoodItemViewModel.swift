@@ -9,13 +9,17 @@
 import Foundation
 
 class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
-    var id: UUID
-    var name: String
+    var id: UUID? {
+        // We reuse the id of the CoreData ComposedFoodItem
+        cdComposedFoodItem?.id
+    }
+    
+    @Published var name: String
     var category: FoodItemCategory
-    var favorite: Bool
+    @Published var favorite: Bool
     @Published var amount: Int = 0
     @Published var numberOfPortions: Int = 0
-    var foodItems = [FoodItemViewModel]()
+    @Published var foodItems = [FoodItemViewModel]()
     var cdComposedFoodItem: ComposedFoodItem?
     
     @Published var amountAsString: String = "" {
@@ -95,17 +99,15 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
         case id, amount, favorite, name, category, numberOfPortions, foodItems
     }
     
-    static let `default` = ComposedFoodItemViewModel(id: UUID(), name: "Default", category: .product, favorite: false)
+    static let `default` = ComposedFoodItemViewModel(name: "Default", category: .product, favorite: false)
     
-    init(id: UUID, name: String, category: FoodItemCategory, favorite: Bool) {
-        self.id = id
+    init(name: String, category: FoodItemCategory, favorite: Bool) {
         self.name = name
         self.category = category
         self.favorite = favorite
     }
     
     init(from cdComposedFoodItem: ComposedFoodItem) {
-        self.id = cdComposedFoodItem.id ?? UUID()
         self.name = cdComposedFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
         self.category = FoodItemCategory.init(rawValue: cdComposedFoodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
         self.favorite = cdComposedFoodItem.favorite
@@ -124,7 +126,6 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let composedFoodItem = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .composedFoodItem)
-        id = try composedFoodItem.decode(UUID.self, forKey: .id)
         category = try FoodItemCategory.init(rawValue: composedFoodItem.decode(String.self, forKey: .category)) ?? .product
         amount = try composedFoodItem.decode(Int.self, forKey: .amount)
         favorite = try composedFoodItem.decode(Bool.self, forKey: .favorite)
@@ -136,6 +137,22 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
     func add(foodItem: FoodItemViewModel) {
         foodItems.append(foodItem)
         amountAsString = String(amount + foodItem.amount) // amount will be set implicitely
+    }
+    
+    func remove(foodItem: FoodItemViewModel) {
+        foodItem.amountAsString = "0"
+        FoodItem.setAmount(foodItem.cdFoodItem, to: 0)
+        if let index = foodItems.firstIndex(where: { $0.cdFoodItem!.id == foodItem.cdFoodItem!.id }) {
+            foodItems.remove(at: index)
+        }
+    }
+    
+    func clear() {
+        for foodItem in foodItems {
+            foodItem.amountAsString = "0"
+            FoodItem.setAmount(foodItem.cdFoodItem, to: 0)
+        }
+        foodItems.removeAll()
     }
     
     func getCarbsInclSugars() -> Double {
@@ -152,32 +169,6 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
     
     func getSugars(when treatSugarsSeparately: Bool) -> Double {
         treatSugarsSeparately ? self.sugars : 0
-    }
-    
-    func remove(foodItem: FoodItemViewModel) {
-        foodItem.amountAsString = "0"
-        FoodItem.setAmount(foodItem.cdFoodItem, to: 0)
-        if let index = foodItems.firstIndex(of: foodItem) {
-            foodItems.remove(at: index)
-        }
-    }
-    
-    func clear() {
-        for foodItem in foodItems {
-            foodItem.amountAsString = "0"
-            FoodItem.setAmount(foodItem.cdFoodItem, to: 0)
-        }
-        foodItems.removeAll()
-        
-        // Reset stored name in UserSettings
-        UserSettings.shared.composedFoodItemTitle = nil
-        UserSettings.remove(UserSettings.UserDefaultsStringKey.composedFoodItemTitle.rawValue)
-        
-        // Reset the stored IDs
-        UserSettings.shared.composedFoodItemFoodItemID = nil
-        UserSettings.remove(UserSettings.UserDefaultsStringKey.composedFoodItemFoodItemID.rawValue)
-        UserSettings.shared.composedFoodItemID = nil
-        UserSettings.remove(UserSettings.UserDefaultsStringKey.composedFoodItemID.rawValue)
     }
     
     func encode(to encoder: Encoder) throws {
