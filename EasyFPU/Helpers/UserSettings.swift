@@ -42,7 +42,6 @@ class UserSettings: ObservableObject {
         case absorptionTimeCarbsInterval = "AbsorptionTimeCarbsInterval"
         case absorptionTimeECarbsDelay = "AbsorptionTimeECarbsDelay"
         case absorptionTimeECarbsInterval = "AbsorptionTimeECarbsInterval"
-        case composedFoodItemPortions = "ComposedFoodItemPortions"
     }
     
     enum UserDefaultsDateKey: String, CaseIterable {
@@ -55,9 +54,6 @@ class UserSettings: ObservableObject {
     enum UserDefaultsStringKey: String, CaseIterable {
         case foodDatabase = "FoodDatabase"
         case countryCode = "CountryCode"
-        case composedFoodItemTitle = "ComposedFoodItemTitle"
-        case composedFoodItemFoodItemID = "ComposedFoodItemFoodItemID"
-        case composedFoodItemID = "ComposedFoodItemID"
     }
     
     // MARK: - The key store for syncing via iCloud
@@ -82,6 +78,10 @@ class UserSettings: ObservableObject {
     @Published var searchWorldwide: Bool
     @Published var countryCode: String?
     
+    // The ComposedFoodItems
+    @Published var composedMeal = ComposedFoodItemViewModel(name: NSLocalizedString(ProductsListView.composedFoodItemName, comment: ""), category: .product, favorite: false)
+    @Published var composedProduct = ComposedFoodItemViewModel(name: NSLocalizedString(IngredientsListView.composedFoodItemName, comment: ""), category: .ingredient, favorite: false)
+    
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
         foodDatabaseUseAtOwnRiskAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted) ?? false,
@@ -97,11 +97,7 @@ class UserSettings: ObservableObject {
         treatSugarsSeparately: UserSettings.getValue(for: UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault,
         foodDatabase: FoodDatabaseType.getFoodDatabase(type: UserSettings.getFoodDatabaseType()),
         searchWorldwide: UserSettings.getValue(for: UserDefaultsBoolKey.searchWorldwide) ?? false,
-        countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode),
-        composedFoodItemTitle: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemTitle),
-        composedFoodItemFoodItemID: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemFoodItemID),
-        composedFoodItemID: UserSettings.getValue(for: UserDefaultsStringKey.composedFoodItemID),
-        composedFoodItemPortions: UserSettings.getValue(for: UserDefaultsIntKey.composedFoodItemPortions)
+        countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode)
     )
     
     private init(
@@ -119,11 +115,7 @@ class UserSettings: ObservableObject {
         treatSugarsSeparately: Bool,
         foodDatabase: FoodDatabase,
         searchWorldwide: Bool,
-        countryCode: String?,
-        composedFoodItemTitle: String?,
-        composedFoodItemFoodItemID: String?,
-        composedFoodItemID: String?,
-        composedFoodItemPortions: Int?
+        countryCode: String?
     ) {
         self.disclaimerAccepted = disclaimerAccepted
         self.foodDatabaseUseAtOwnRiskAccepted = foodDatabaseUseAtOwnRiskAccepted

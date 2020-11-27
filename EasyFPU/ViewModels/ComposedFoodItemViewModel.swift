@@ -9,10 +9,10 @@
 import Foundation
 
 class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
-    var id: UUID? {
+    /*var id: UUID? {
         // We reuse the id of the CoreData ComposedFoodItem
         cdComposedFoodItem?.id
-    }
+    }*/
     
     @Published var name: String
     var category: FoodItemCategory
@@ -99,28 +99,10 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
         case id, amount, favorite, name, category, numberOfPortions, foodItems
     }
     
-    static let `default` = ComposedFoodItemViewModel(name: "Default", category: .product, favorite: false)
-    
     init(name: String, category: FoodItemCategory, favorite: Bool) {
         self.name = name
         self.category = category
         self.favorite = favorite
-    }
-    
-    init(from cdComposedFoodItem: ComposedFoodItem) {
-        self.name = cdComposedFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
-        self.category = FoodItemCategory.init(rawValue: cdComposedFoodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
-        self.favorite = cdComposedFoodItem.favorite
-        self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
-        self.cdComposedFoodItem = cdComposedFoodItem
-        
-        if let cdIngredients = cdComposedFoodItem.ingredients {
-            for cdIngredient in cdIngredients {
-                let castedCDIngredient = cdIngredient as! Ingredient
-                let foodItem = FoodItemViewModel(from: castedCDIngredient)
-                foodItems.append(foodItem)
-            }
-        }
     }
     
     required init(from decoder: Decoder) throws {
@@ -135,8 +117,10 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
     }
     
     func add(foodItem: FoodItemViewModel) {
-        foodItems.append(foodItem)
-        amountAsString = String(amount + foodItem.amount) // amount will be set implicitely
+        if !foodItems.contains(foodItem) {
+            foodItems.append(foodItem)
+            amountAsString = String(amount + foodItem.amount) // amount will be set implicitely
+        }
     }
     
     func remove(foodItem: FoodItemViewModel) {
@@ -153,6 +137,37 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
             FoodItem.setAmount(foodItem.cdFoodItem, to: 0)
         }
         foodItems.removeAll()
+        
+        switch category {
+        case .ingredient:
+            name = NSLocalizedString(IngredientsListView.composedFoodItemName, comment: "")
+        case .product:
+            name = NSLocalizedString(ProductsListView.composedFoodItemName, comment: "")
+        }
+        
+        favorite = false
+        amount = 0
+        numberOfPortions = 0
+        cdComposedFoodItem = nil
+    }
+    
+    func fill(from cdComposedFoodItem: ComposedFoodItem) {
+        // First clear existing data
+        clear()
+        
+        // Then fill from ComposedFoodItem
+        self.name = cdComposedFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
+        self.favorite = cdComposedFoodItem.favorite
+        self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
+        self.cdComposedFoodItem = cdComposedFoodItem
+        
+        if let cdIngredients = cdComposedFoodItem.ingredients {
+            for cdIngredient in cdIngredients {
+                let castedCDIngredient = cdIngredient as! Ingredient
+                let foodItem = FoodItemViewModel(from: castedCDIngredient)
+                foodItems.append(foodItem)
+            }
+        }
     }
     
     func getCarbsInclSugars() -> Double {
@@ -174,7 +189,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         var composedFoodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .composedFoodItem)
-        try composedFoodItem.encode(id, forKey: .id)
+        //try composedFoodItem.encode(id, forKey: .id)
         try composedFoodItem.encode(category.rawValue, forKey: .category)
         try composedFoodItem.encode(amount, forKey: .amount)
         try composedFoodItem.encode(favorite, forKey: .favorite)

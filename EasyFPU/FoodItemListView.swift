@@ -21,7 +21,6 @@ struct FoodItemListView: View {
     var foodItemListTitle: String
     @Binding var showingMenu: Bool
     @Binding var selectedTab: Int
-    @State private var editedComposedFoodItem: ComposedFoodItem?
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
@@ -55,7 +54,7 @@ struct FoodItemListView: View {
                             SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
                                 .padding(.horizontal)
                             ForEach(self.filteredFoodItems) { foodItem in
-                                FoodItemView(composedFoodItem: composedFoodItem, foodItem: foodItem, category: self.category, selectedTab: $selectedTab, editedComposedFoodItem: $editedComposedFoodItem)
+                                FoodItemView(composedFoodItem: composedFoodItem, foodItem: foodItem, category: self.category, selectedTab: $selectedTab)
                                     .environment(\.managedObjectContext, self.managedObjectContext)
                             }
                         }
@@ -123,6 +122,7 @@ struct FoodItemListView: View {
                     )
                 }
                 
+                // The Bottom Sheet
                 if !self.composedFoodItem.foodItems.isEmpty {
                     BottomSheetView(maxHeight: geometry.size.height * 0.95) {
                         bottomSheetContent()

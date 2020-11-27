@@ -131,7 +131,6 @@ struct ComposedFoodItemExportView: View {
             showingAlert = true
             return
         }
-        self.carbsRegimeCalculator.composedFoodItem = composedFoodItem
         self.carbsRegimeCalculator.eCarbsAbsorptionTimeInMinutes = absorptionTimeInHours * 60
         self.carbsRegimeCalculator.recalculate()
     }

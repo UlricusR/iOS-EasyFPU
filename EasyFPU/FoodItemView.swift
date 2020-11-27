@@ -14,7 +14,6 @@ struct FoodItemView: View {
     @ObservedObject var foodItem: FoodItemViewModel
     var category: FoodItemCategory
     @Binding var selectedTab: Int
-    @Binding var editedComposedFoodItem: ComposedFoodItem?
     @State var activeSheet: FoodItemViewSheets.State?
     @State var showingActionSheet: Bool = false
     @State var loadedIngredients = [Ingredient]()
@@ -24,14 +23,14 @@ struct FoodItemView: View {
         VStack {
             // First line: amount, name, favorite
             HStack {
-                if foodItem.amount > 0 {
+                if composedFoodItem.foodItems.contains(foodItem) {
                     Image(systemName: "xmark.circle").foregroundColor(.red)
                     Text(String(foodItem.amount)).font(.headline).foregroundColor(.accentColor)
                     Text("g").font(.headline).foregroundColor(.accentColor)
                 } else {
                     Image(systemName: "plus.circle").foregroundColor(.green)
                 }
-                Text(foodItem.name).font(.headline).foregroundColor(foodItem.amount > 0 ? .accentColor : .none)
+                Text(foodItem.name).font(.headline).foregroundColor(composedFoodItem.foodItems.contains(foodItem) ? .accentColor : .none)
                 if foodItem.favorite { Image(systemName: "star.fill").foregroundColor(.yellow).imageScale(.small) }
                 Spacer()
             }
@@ -62,7 +61,7 @@ struct FoodItemView: View {
             }
         }
         .onTapGesture {
-            if self.foodItem.amount > 0 {
+            if composedFoodItem.foodItems.contains(foodItem) {
                 composedFoodItem.remove(foodItem: foodItem)
             } else {
                 activeSheet = .selectFoodItem
@@ -134,14 +133,9 @@ struct FoodItemView: View {
         }
     }
     
-    private func editComposedFoodItem(_ composedFoodItem: ComposedFoodItem) {
-        editedComposedFoodItem = composedFoodItem
-        
-        // Switch to Ingredients tab
-        selectedTab = MainView.Tab.ingredients.rawValue
-        
-        // Load ingredients
-        if let ingredients = composedFoodItem.ingredients {
+    private func editComposedFoodItem(_ editedComposedFoodItem: ComposedFoodItem) {
+        if let ingredients = editedComposedFoodItem.ingredients {
+            // Load ingredients
             loadedIngredients = ingredients.allObjects as! [Ingredient]
             
             // Check for missing ingredients
@@ -158,6 +152,12 @@ struct FoodItemView: View {
         } else {
             // TODO Notification
         }
+        
+        // Set edited composed food item in UserSettings
+        UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem)
+        
+        // Switch to Ingredients tab
+        selectedTab = MainView.Tab.ingredients.rawValue
     }
     
     @ViewBuilder

@@ -13,10 +13,12 @@ struct ProductsListView: View {
     @Binding var showingMenu: Bool
     @Binding var selectedTab: Int
     
+    static let composedFoodItemName = "Total meal"
+    
     var body: some View {
         FoodItemListView(
             category: .product,
-            composedFoodItem: ComposedFoodItemViewModel(name: NSLocalizedString("Total meal", comment: ""), category: .product, favorite: false),
+            composedFoodItem: UserSettings.shared.composedMeal,
             absorptionScheme: absorptionScheme,
             helpSheet: FoodItemListViewSheets.State.productsListHelp,
             foodItemListTitle: NSLocalizedString("Products", comment: ""),
