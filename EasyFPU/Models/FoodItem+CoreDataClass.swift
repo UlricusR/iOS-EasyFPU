@@ -12,10 +12,6 @@ import CoreData
 
 
 public class FoodItem: NSManagedObject {
-    enum IngredientsSyncStrategy {
-        case createMissingFoodItems, removeNonExistingIngredients
-    }
-    
     static func fetchAll(viewContext: NSManagedObjectContext = AppDelegate.viewContext) -> [FoodItem] {
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -43,7 +39,6 @@ public class FoodItem: NSManagedObject {
         // Fill data
         cdFoodItem.name = foodItemVM.name
         cdFoodItem.category = foodItemVM.category.rawValue
-        cdFoodItem.amount = Int64(foodItemVM.amount)
         cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
         cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
         cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
@@ -76,7 +71,6 @@ public class FoodItem: NSManagedObject {
         // Fill data
         cdFoodItem.name = ingredient.name
         cdFoodItem.category = ingredient.category
-        cdFoodItem.amount = ingredient.amount
         cdFoodItem.caloriesPer100g = ingredient.caloriesPer100g
         cdFoodItem.carbsPer100g = ingredient.carbsPer100g
         cdFoodItem.sugarsPer100g = ingredient.sugarsPer100g
@@ -119,7 +113,6 @@ public class FoodItem: NSManagedObject {
         // Fill data
         cdFoodItem.name = composedFoodItem.name
         cdFoodItem.category = composedFoodItem.category.rawValue
-        cdFoodItem.amount = Int64(composedFoodItem.amount)
         cdFoodItem.caloriesPer100g = composedFoodItem.caloriesPer100g
         cdFoodItem.carbsPer100g = composedFoodItem.carbsPer100g
         cdFoodItem.sugarsPer100g = composedFoodItem.sugarsPer100g
@@ -161,7 +154,6 @@ public class FoodItem: NSManagedObject {
         foodItem.carbsPer100g = foodItemVM.carbsPer100g
         foodItem.caloriesPer100g = foodItemVM.caloriesPer100g
         foodItem.sugarsPer100g = foodItemVM.sugarsPer100g
-        foodItem.amount = Int64(foodItemVM.amount)
         
         // Update typical amounts
         for typicalAmountVM in foodItemVM.typicalAmounts {
@@ -205,15 +197,6 @@ public class FoodItem: NSManagedObject {
         try? moc.save()
     }
     
-    static func setAmount(_ foodItem: FoodItem?, to amount: Int) {
-        if let foodItem = foodItem {
-            let moc = AppDelegate.viewContext
-            foodItem.amount = Int64(amount)
-            moc.refresh(foodItem, mergeChanges: true)
-            try? moc.save()
-        }
-    }
-    
     static func setCategory(_ foodItem: FoodItem?, to category: String) {
         if let foodItem = foodItem {
             let moc = AppDelegate.viewContext
@@ -231,26 +214,5 @@ public class FoodItem: NSManagedObject {
             }
         }
         return ingredientsWithoutFoodItems
-    }
-    
-    static func setFoodItems(from ingredients: [Ingredient], syncStrategy: IngredientsSyncStrategy) {
-        let predicate = NSPredicate(format: "category = %@ AND amount > 0", FoodItemCategory.ingredient.rawValue)
-        let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
-        request.predicate = predicate
-        if let foodItemsToBeSetToZero = try? AppDelegate.viewContext.fetch(request) {
-            for foodItemToBeSetToZero in foodItemsToBeSetToZero {
-                foodItemToBeSetToZero.amount = 0
-            }
-        }
-        
-        // Then load ingredients and set food items
-        for ingredient in ingredients {
-            if let foodItem = ingredient.foodItem {
-                foodItem.category = FoodItemCategory.ingredient.rawValue
-                foodItem.amount = ingredient.amount
-            } else if syncStrategy == .createMissingFoodItems {
-                _ = FoodItem.create(from: ingredient)
-            }
-        }
     }
 }

@@ -16,16 +16,16 @@ struct FoodItemView: View {
     @Binding var selectedTab: Int
     @State var activeSheet: FoodItemViewSheets.State?
     @State var showingActionSheet: Bool = false
-    @State var loadedIngredients = [Ingredient]()
+    @State var editedComposedFoodItem: ComposedFoodItem? = nil
     @State var missingFoodItems = [String]()
     
     var body: some View {
         VStack {
             // First line: amount, name, favorite
             HStack {
-                if composedFoodItem.foodItems.contains(foodItem) {
+                if let foodItemIndex = composedFoodItem.foodItems.firstIndex(of: foodItem) {
                     Image(systemName: "xmark.circle").foregroundColor(.red)
-                    Text(String(foodItem.amount)).font(.headline).foregroundColor(.accentColor)
+                    Text("\(composedFoodItem.foodItems[foodItemIndex].amount)").font(.headline).foregroundColor(.accentColor)
                     Text("g").font(.headline).foregroundColor(.accentColor)
                 } else {
                     Image(systemName: "plus.circle").foregroundColor(.green)
@@ -73,7 +73,8 @@ struct FoodItemView: View {
                 if foodItem.cdComposedFoodItem == nil { // This is a regular FoodItem, so open FoodItemEditor
                     activeSheet = .editFoodItem
                 } else { // This is a ComposedFoodItem
-                    editComposedFoodItem(foodItem.cdComposedFoodItem!)
+                    editedComposedFoodItem = foodItem.cdComposedFoodItem!
+                    editComposedFoodItem()
                 }
             }) {
                 Text("Edit")
@@ -123,25 +124,25 @@ struct FoodItemView: View {
                 ),
                 buttons: [
                     .default(Text("Create missing ingredients")) {
-                        FoodItem.setFoodItems(from: loadedIngredients, syncStrategy: FoodItem.IngredientsSyncStrategy.createMissingFoodItems)
+                        UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem, syncStrategy: .createMissingFoodItems)
                     },
                     .default(Text("Remove from product")) {
-                        FoodItem.setFoodItems(from: loadedIngredients, syncStrategy: FoodItem.IngredientsSyncStrategy.removeNonExistingIngredients)
+                        UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem, syncStrategy: .removeNonExistingIngredients)
                     }
                 ]
             )
         }
     }
     
-    private func editComposedFoodItem(_ editedComposedFoodItem: ComposedFoodItem) {
-        if let ingredients = editedComposedFoodItem.ingredients {
+    private func editComposedFoodItem() {
+        if let ingredients = editedComposedFoodItem?.ingredients {
             // Load ingredients
-            loadedIngredients = ingredients.allObjects as! [Ingredient]
+            let loadedIngredients = ingredients.allObjects as! [Ingredient]
             
             // Check for missing ingredients
-            let missingFoodItems = FoodItem.checkForMissingFoodItems(of: loadedIngredients)
+            let missingFoodItems = checkForMissingFoodItems(of: loadedIngredients)
             if missingFoodItems.isEmpty {
-                FoodItem.setFoodItems(from: loadedIngredients, syncStrategy: .createMissingFoodItems)
+                UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem, syncStrategy: .createMissingFoodItems)
             } else {
                 self.missingFoodItems = [String]()
                 for missingFoodItem in missingFoodItems {
@@ -153,11 +154,18 @@ struct FoodItemView: View {
             // TODO Notification
         }
         
-        // Set edited composed food item in UserSettings
-        UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem)
-        
         // Switch to Ingredients tab
         selectedTab = MainView.Tab.ingredients.rawValue
+    }
+    
+    private func checkForMissingFoodItems(of ingredients: [Ingredient]) -> [Ingredient] {
+        var ingredientsWithoutFoodItems = [Ingredient]()
+        for ingredient in ingredients {
+            if ingredient.foodItem == nil {
+                ingredientsWithoutFoodItems.append(ingredient)
+            }
+        }
+        return ingredientsWithoutFoodItems
     }
     
     @ViewBuilder

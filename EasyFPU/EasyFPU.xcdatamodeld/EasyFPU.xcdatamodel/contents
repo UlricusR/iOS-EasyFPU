@@ -16,7 +16,6 @@
         <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Ingredient" inverseName="composedFoodItem" inverseEntity="Ingredient"/>
     </entity>
     <entity name="FoodItem" representedClassName=".FoodItem" syncable="YES">
-        <attribute name="amount" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="caloriesPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="carbsPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="category" optional="YES" attributeType="String"/>
@@ -49,7 +48,7 @@
     <elements>
         <element name="AbsorptionBlock" positionX="-140.796875" positionY="-207.42578125" width="128" height="74"/>
         <element name="ComposedFoodItem" positionX="-115.8828125" positionY="241.0078125" width="128" height="163"/>
-        <element name="FoodItem" positionX="-120.265625" positionY="-100.04296875" width="128" height="208"/>
+        <element name="FoodItem" positionX="-120.265625" positionY="-100.04296875" width="128" height="179"/>
         <element name="Ingredient" positionX="343.34375" positionY="166.60546875" width="128" height="179"/>
         <element name="TypicalAmount" positionX="286.51171875" positionY="-106.484375" width="128" height="89"/>
     </elements>

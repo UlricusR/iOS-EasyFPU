@@ -137,13 +137,6 @@ struct FoodItemListView: View {
                 }
             }
         }
-        .onAppear() {
-            for foodItem in foodItems {
-                if foodItem.category == self.category.rawValue && foodItem.amount > 0 {
-                    composedFoodItem.add(foodItem: FoodItemViewModel(from: foodItem))
-                }
-            }
-        }
     }
     
     @ViewBuilder

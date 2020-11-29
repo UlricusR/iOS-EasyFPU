@@ -17,7 +17,6 @@ extension FoodItem {
         return NSFetchRequest<FoodItem>(entityName: "FoodItem")
     }
 
-    @NSManaged public var amount: Int64
     @NSManaged public var caloriesPer100g: Double
     @NSManaged public var carbsPer100g: Double
     @NSManaged public var sugarsPer100g: Double

@@ -106,8 +106,7 @@ struct FoodItemSelector: View {
                     
                     let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
                     switch amountResult {
-                    case .success(let amountAsInt):
-                        FoodItem.setAmount(self.editedFoodItem, to: amountAsInt)
+                    case .success(_):
                         composedFoodItem.add(foodItem: draftFoodItem)
                         
                         // Quit edit mode

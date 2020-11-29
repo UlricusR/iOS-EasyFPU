@@ -77,7 +77,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     private(set) var caloriesPer100g: Double = 0.0
     private(set) var carbsPer100g: Double = 0.0
     private(set) var sugarsPer100g: Double = 0.0
-    var amount: Int = 0
+    @Published var amount: Int = 0
     @Published var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
     var cdIngredient: Ingredient?
@@ -107,7 +107,6 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.caloriesPer100g = cdFoodItem.caloriesPer100g
         self.carbsPer100g = cdFoodItem.carbsPer100g
         self.sugarsPer100g = cdFoodItem.sugarsPer100g
-        self.amount = Int(cdFoodItem.amount)
         self.cdFoodItem = cdFoodItem
         if let cdComposedFoodItem = cdFoodItem.composedFoodItem {
             self.cdComposedFoodItem = cdComposedFoodItem
