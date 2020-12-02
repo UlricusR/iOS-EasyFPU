@@ -16,10 +16,6 @@ extension AbsorptionBlock: Comparable {
         lhs.maxFpu < rhs.maxFpu
     }
     
-    public static func == (lhs: AbsorptionBlock, rhs: AbsorptionBlock) -> Bool {
-        lhs.absorptionTime == rhs.absorptionTime && lhs.maxFpu == rhs.maxFpu
-    }
-
     @nonobjc public class func fetchRequest() -> NSFetchRequest<AbsorptionBlock> {
         return NSFetchRequest<AbsorptionBlock>(entityName: "AbsorptionBlock")
     }
@@ -31,5 +27,7 @@ extension AbsorptionBlock: Comparable {
 }
 
 extension AbsorptionBlock: Identifiable {
-    
+    public static func == (lhs: AbsorptionBlock, rhs: AbsorptionBlock) -> Bool {
+        lhs.absorptionTime == rhs.absorptionTime && lhs.maxFpu == rhs.maxFpu
+    }
 }

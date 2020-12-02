@@ -63,7 +63,12 @@ public class ComposedFoodItem: NSManagedObject {
         cdComposedFoodItem.favorite = composedFoodItemVM.favorite
         cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
         
-        // Add ingredients
+        // Remove any existing ingredients
+        if let allOldIngredients = cdComposedFoodItem.ingredients {
+            cdComposedFoodItem.removeFromIngredients(allOldIngredients)
+        }
+        
+        // Add new ingredients
         for ingredient in composedFoodItemVM.foodItems {
             let cdIngredient = Ingredient.create(from: ingredient)
             cdComposedFoodItem.addToIngredients(cdIngredient)

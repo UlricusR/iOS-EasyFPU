@@ -31,5 +31,7 @@ extension Ingredient {
 }
 
 extension Ingredient : Identifiable {
-
+    public static func == (lhs: Ingredient, rhs: Ingredient) -> Bool {
+        lhs.id == rhs.id
+    }
 }

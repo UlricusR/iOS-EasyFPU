@@ -147,9 +147,14 @@ struct FoodItemComposerView: View {
         let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItem)
         composedFoodItem.cdComposedFoodItem = cdComposedFoodItem
         
-        // Clear the ComposedFoodItem, and notify user of successful storage
-        composedFoodItem.clear()
+        // Next, derive regular FoodItem and associate it with the ComposedFoodItem
+        let _ = FoodItem.create(from: composedFoodItem, generateTypicalAmounts: generateTypicalAmounts, idToBeReplaced: composedFoodItem.cdComposedFoodItem?.foodItem?.id?.uuidString)
+        
+        // Notify user of successful storage
         notificationState = .successfullySavedFoodItem(composedFoodItem.name)
+        
+        // Clear the ComposedFoodItem
+        composedFoodItem.clear()
     }
     
     @ViewBuilder

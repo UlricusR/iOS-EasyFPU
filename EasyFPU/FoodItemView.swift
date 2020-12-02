@@ -125,9 +125,15 @@ struct FoodItemView: View {
                 buttons: [
                     .default(Text("Create missing ingredients")) {
                         UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem, syncStrategy: .createMissingFoodItems)
+                        
+                        // Switch to Ingredients tab
+                        selectedTab = MainView.Tab.ingredients.rawValue
                     },
                     .default(Text("Remove from product")) {
                         UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem, syncStrategy: .removeNonExistingIngredients)
+                        
+                        // Switch to Ingredients tab
+                        selectedTab = MainView.Tab.ingredients.rawValue
                     }
                 ]
             )
@@ -143,6 +149,9 @@ struct FoodItemView: View {
             let missingFoodItems = checkForMissingFoodItems(of: loadedIngredients)
             if missingFoodItems.isEmpty {
                 UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem, syncStrategy: .createMissingFoodItems)
+                
+                // Switch to Ingredients tab
+                selectedTab = MainView.Tab.ingredients.rawValue
             } else {
                 self.missingFoodItems = [String]()
                 for missingFoodItem in missingFoodItems {
@@ -153,9 +162,6 @@ struct FoodItemView: View {
         } else {
             // TODO Notification
         }
-        
-        // Switch to Ingredients tab
-        selectedTab = MainView.Tab.ingredients.rawValue
     }
     
     private func checkForMissingFoodItems(of ingredients: [Ingredient]) -> [Ingredient] {

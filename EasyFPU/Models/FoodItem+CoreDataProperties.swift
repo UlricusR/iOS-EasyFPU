@@ -64,5 +64,7 @@ extension FoodItem {
 }
 
 extension FoodItem: Identifiable {
-    
+    public static func == (lhs: FoodItem, rhs: FoodItem) -> Bool {
+        lhs.id == rhs.id
+    }
 }

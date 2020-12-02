@@ -172,6 +172,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
             
             // Then fill from ComposedFoodItem
             self.name = cdComposedFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
+            self.amountAsString = String(cdComposedFoodItem.amount)
             self.favorite = cdComposedFoodItem.favorite
             self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
             self.cdComposedFoodItem = cdComposedFoodItem

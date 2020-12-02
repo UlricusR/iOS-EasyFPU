@@ -9,10 +9,7 @@
 import Foundation
 
 class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, Identifiable {
-    var id: UUID? {
-        // We reuse the id of the CoreData TypicalAmount
-        cdTypicalAmount?.id
-    }
+    var id = UUID()
     
     @Published var amountAsString: String {
         willSet {

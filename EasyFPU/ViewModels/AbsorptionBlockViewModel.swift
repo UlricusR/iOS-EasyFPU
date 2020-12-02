@@ -8,7 +8,7 @@
 
 import Foundation
 
-class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable {
+class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifiable {
     var id: UUID? {
         // We reuse the id of the CoreData AbsorptionBlock
         cdAbsorptionBlock?.id

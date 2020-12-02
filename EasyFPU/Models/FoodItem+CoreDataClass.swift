@@ -112,12 +112,14 @@ public class FoodItem: NSManagedObject {
         
         // Fill data
         cdFoodItem.name = composedFoodItem.name
-        cdFoodItem.category = composedFoodItem.category.rawValue
         cdFoodItem.caloriesPer100g = composedFoodItem.caloriesPer100g
         cdFoodItem.carbsPer100g = composedFoodItem.carbsPer100g
         cdFoodItem.sugarsPer100g = composedFoodItem.sugarsPer100g
         cdFoodItem.favorite = composedFoodItem.favorite
         cdFoodItem.composedFoodItem = composedFoodItem.cdComposedFoodItem
+        
+        // Set category to product
+        cdFoodItem.category = FoodItemCategory.product.rawValue
         
         // Add typical amounts
         if generateTypicalAmounts {
