@@ -258,6 +258,7 @@
 "The nutritional values from the database may not be correct, please cross-check! Use at your own risk." = "The author of the app is not liable for the correctness of the nutritional values in the database. Please cross-check those! Use at your own risk!";
 "Accept and continue" = "Use at own risk";
 "Decline and cancel" = "Decline and cancel";
+"Typical Amounts" = "Typical Amounts";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
