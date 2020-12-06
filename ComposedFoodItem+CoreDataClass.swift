@@ -75,6 +75,32 @@ public class ComposedFoodItem: NSManagedObject {
         return cdComposedFoodItem
     }
     
+    static func create(from existingComposedFoodItem: ComposedFoodItem) -> ComposedFoodItem {
+        let moc = AppDelegate.viewContext
+        let cdComposedFoodItem = ComposedFoodItem(context: moc)
+        cdComposedFoodItem.id = UUID()
+        
+        // Fill data
+        cdComposedFoodItem.name = existingComposedFoodItem.name
+        cdComposedFoodItem.category = existingComposedFoodItem.category
+        cdComposedFoodItem.amount = existingComposedFoodItem.amount
+        cdComposedFoodItem.favorite = existingComposedFoodItem.favorite
+        cdComposedFoodItem.numberOfPortions = existingComposedFoodItem.numberOfPortions
+        
+        // Add ingredients
+        if let existingIngredients = existingComposedFoodItem.ingredients?.allObjects as? [Ingredient] {
+            for ingredient in existingIngredients {
+                let cdIngredient = Ingredient.create(from: ingredient)
+                cdComposedFoodItem.addToIngredients(cdIngredient)
+            }
+        }
+        
+        // Save new composed food item
+        try? moc.save()
+        
+        return cdComposedFoodItem
+    }
+    
     static func delete(_ composedFoodItem: ComposedFoodItem) {
         let moc = AppDelegate.viewContext
         

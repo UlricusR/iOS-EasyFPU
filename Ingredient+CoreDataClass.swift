@@ -52,4 +52,11 @@ public class Ingredient: NSManagedObject {
         
         return cdIngredient
     }
+    
+    static func create(from existingIngredient: Ingredient) -> Ingredient {
+        let foodItemVM = FoodItemViewModel(from: existingIngredient)
+        let cdIngredient = Ingredient.create(from: foodItemVM)
+        
+        return cdIngredient
+    }
 }

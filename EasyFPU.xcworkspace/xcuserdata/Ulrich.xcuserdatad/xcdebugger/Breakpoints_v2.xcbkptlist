@@ -16,7 +16,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "88"
             endingLineNumber = "88"
-            landmarkName = "create(from:generateTypicalAmounts:)"
+            landmarkName = "create(from:generateTypicalAmounts:foodItemIDToBeReplaced:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -144,7 +144,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "34"
             endingLineNumber = "34"
-            landmarkName = "create(from:associatedFoodItem:)"
+            landmarkName = "create(from:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
