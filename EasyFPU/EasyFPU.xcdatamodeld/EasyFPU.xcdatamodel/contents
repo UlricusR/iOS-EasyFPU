@@ -12,7 +12,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="numberOfPortions" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="composedFoodItem" inverseEntity="FoodItem"/>
+        <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="FoodItem" inverseName="composedFoodItem" inverseEntity="FoodItem"/>
         <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Ingredient" inverseName="composedFoodItem" inverseEntity="Ingredient"/>
     </entity>
     <entity name="FoodItem" representedClassName=".FoodItem" syncable="YES">

@@ -154,8 +154,7 @@ struct FoodItemListView: View {
         switch notificationState {
         case .successfullySavedFoodItem(let name):
             HStack {
-                Text(name)
-                Text("successfully saved in Products")
+                Text("'\(name)' \(NSLocalizedString("successfully saved in Products", comment: ""))")
             }
             .onAppear() {
                 Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in

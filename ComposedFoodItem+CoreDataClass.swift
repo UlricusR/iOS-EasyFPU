@@ -47,14 +47,14 @@ public class ComposedFoodItem: NSManagedObject {
             }
         }
         
-        let cdComposedFoodItem: ComposedFoodItem
+        // Remove ComposedFoodItem from CoreData if existing
         if existingCDComposedFoodItem != nil {
-            cdComposedFoodItem = existingCDComposedFoodItem!
-        } else {
-            // Create new FoodItem
-            cdComposedFoodItem = ComposedFoodItem(context: moc)
-            cdComposedFoodItem.id = UUID()
+            moc.delete(existingCDComposedFoodItem!)
         }
+            
+        // Create new FoodItem
+        let cdComposedFoodItem = ComposedFoodItem(context: moc)
+        cdComposedFoodItem.id = UUID()
         
         // Fill data
         cdComposedFoodItem.name = composedFoodItemVM.name
@@ -62,11 +62,6 @@ public class ComposedFoodItem: NSManagedObject {
         cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
         cdComposedFoodItem.favorite = composedFoodItemVM.favorite
         cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
-        
-        // Remove any existing ingredients
-        if let allOldIngredients = cdComposedFoodItem.ingredients {
-            cdComposedFoodItem.removeFromIngredients(allOldIngredients)
-        }
         
         // Add new ingredients
         for ingredient in composedFoodItemVM.foodItems {

@@ -84,14 +84,14 @@ public class FoodItem: NSManagedObject {
         return cdFoodItem
     }
     
-    static func create(from composedFoodItem: ComposedFoodItemViewModel, generateTypicalAmounts: Bool, idToBeReplaced: String?) -> FoodItem {
+    static func create(from composedFoodItem: ComposedFoodItemViewModel, generateTypicalAmounts: Bool, foodItemIDToBeReplaced: UUID?) -> FoodItem {
         debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         let moc = AppDelegate.viewContext
         var existingCDFoodItem: FoodItem? = nil
         
         // Check for existing FoodItem to be replaced
-        if let idToBeReplaced = idToBeReplaced {
-            let predicate = NSPredicate(format: "id = %@", idToBeReplaced)
+        if let foodItemIDToBeReplaced = foodItemIDToBeReplaced {
+            let predicate = NSPredicate(format: "id = %@", foodItemIDToBeReplaced.uuidString)
             let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
             request.predicate = predicate
             if let result = try? moc.fetch(request) {
@@ -101,14 +101,14 @@ public class FoodItem: NSManagedObject {
             }
         }
         
-        let cdFoodItem: FoodItem
+        // Delete existing FoodItem
         if existingCDFoodItem != nil {
-            cdFoodItem = existingCDFoodItem!
-        } else {
-            // Create new FoodItem
-            cdFoodItem = FoodItem(context: moc)
-            cdFoodItem.id = UUID()
+            moc.delete(existingCDFoodItem!)
         }
+        
+        // Create new FoodItem
+        let cdFoodItem = FoodItem(context: moc)
+        cdFoodItem.id = UUID()
         
         // Fill data
         cdFoodItem.name = composedFoodItem.name
@@ -123,11 +123,6 @@ public class FoodItem: NSManagedObject {
         
         // Add typical amounts
         if generateTypicalAmounts {
-            // First remove existing typical amounts
-            if let existingTypicalAmounts = cdFoodItem.typicalAmounts {
-                cdFoodItem.removeFromTypicalAmounts(existingTypicalAmounts)
-            }
-            
             // Then add the newly generated ones
             for typicalAmount in composedFoodItem.typicalAmounts {
                 let newCDTypicalAmount = TypicalAmount.create(from: typicalAmount)
@@ -135,7 +130,7 @@ public class FoodItem: NSManagedObject {
             }
         }
         
-        // Save new food item
+        // Save new food item and refresh
         try? moc.save()
         
         return cdFoodItem
