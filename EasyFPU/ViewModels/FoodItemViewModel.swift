@@ -298,8 +298,9 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     }
     
     func duplicate() {
+        let nameOfDuplicate = "\(name) - \(NSLocalizedString("Copy", comment: ""))"
         let duplicate = FoodItemViewModel(
-            name: "\(name) - \(NSLocalizedString("Copy", comment: ""))",
+            name: nameOfDuplicate,
             category: category,
             favorite: favorite,
             caloriesPer100g: caloriesPer100g,
@@ -312,6 +313,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         // Check if this was associated to a ComposedFoodItem
         if let cdComposedFoodItem = cdComposedFoodItem {
             duplicate.cdComposedFoodItem = ComposedFoodItem.create(from: cdComposedFoodItem)
+            duplicate.cdComposedFoodItem?.name = nameOfDuplicate
         }
         
         // Create new FoodItem in CoreData

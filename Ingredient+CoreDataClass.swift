@@ -54,8 +54,24 @@ public class Ingredient: NSManagedObject {
     }
     
     static func create(from existingIngredient: Ingredient) -> Ingredient {
-        let foodItemVM = FoodItemViewModel(from: existingIngredient)
-        let cdIngredient = Ingredient.create(from: foodItemVM)
+        let moc = AppDelegate.viewContext
+        
+        // Create Ingredient
+        let cdIngredient = Ingredient(context: moc)
+        cdIngredient.id = UUID()
+        
+        // Fill data
+        cdIngredient.amount = existingIngredient.amount
+        cdIngredient.caloriesPer100g = existingIngredient.caloriesPer100g
+        cdIngredient.carbsPer100g = existingIngredient.carbsPer100g
+        cdIngredient.category = existingIngredient.category
+        cdIngredient.favorite = existingIngredient.favorite
+        cdIngredient.name = existingIngredient.name
+        cdIngredient.sugarsPer100g = existingIngredient.sugarsPer100g
+        cdIngredient.foodItem = existingIngredient.foodItem
+        
+        // Save new Ingredient
+        try? moc.save()
         
         return cdIngredient
     }

@@ -48,6 +48,9 @@ struct FoodItemComposerView: View {
                                 NumberButton(number: 1, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
                                 Spacer()
                             }
+                            
+                            // Favorite
+                            Toggle("Favorite", isOn: $composedFoodItem.favorite)
                         }
                         
                         
