@@ -12,6 +12,10 @@ import CoreData
 
 
 public class Ingredient: NSManagedObject {
+    public override var description: String {
+        name ?? NSLocalizedString("- Unnamed -", comment: "")
+    }
+    
     static func fetchAll(viewContext: NSManagedObjectContext = AppDelegate.viewContext) -> [Ingredient] {
         let request: NSFetchRequest<Ingredient> = Ingredient.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]

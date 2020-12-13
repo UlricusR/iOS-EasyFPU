@@ -48,6 +48,7 @@ public class ComposedFoodItem: NSManagedObject {
         }
         
         // Remove ComposedFoodItem from CoreData if existing
+        // This will also delete the associated FoodItem, as delete rule was set to cascade in data model
         if existingCDComposedFoodItem != nil {
             moc.delete(existingCDComposedFoodItem!)
         }
@@ -62,6 +63,9 @@ public class ComposedFoodItem: NSManagedObject {
         cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
         cdComposedFoodItem.favorite = composedFoodItemVM.favorite
         cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
+        
+        // Save before adding Ingredients, otherwise this could lead to an NSInvalidArgumentException
+        try? moc.save()
         
         // Add new ingredients
         for ingredient in composedFoodItemVM.foodItems {

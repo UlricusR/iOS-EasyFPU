@@ -84,27 +84,9 @@ public class FoodItem: NSManagedObject {
         return cdFoodItem
     }
     
-    static func create(from composedFoodItem: ComposedFoodItemViewModel, generateTypicalAmounts: Bool, foodItemIDToBeReplaced: UUID?) -> FoodItem {
+    static func create(from composedFoodItem: ComposedFoodItemViewModel, generateTypicalAmounts: Bool) -> FoodItem {
         debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         let moc = AppDelegate.viewContext
-        var existingCDFoodItem: FoodItem? = nil
-        
-        // Check for existing FoodItem to be replaced
-        if let foodItemIDToBeReplaced = foodItemIDToBeReplaced {
-            let predicate = NSPredicate(format: "id = %@", foodItemIDToBeReplaced.uuidString)
-            let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
-            request.predicate = predicate
-            if let result = try? moc.fetch(request) {
-                if !result.isEmpty {
-                    existingCDFoodItem = result[0]
-                }
-            }
-        }
-        
-        // Delete existing FoodItem
-        if existingCDFoodItem != nil {
-            moc.delete(existingCDFoodItem!)
-        }
         
         // Create new FoodItem
         let cdFoodItem = FoodItem(context: moc)
@@ -201,15 +183,5 @@ public class FoodItem: NSManagedObject {
             moc.refresh(foodItem, mergeChanges: true)
             try? moc.save()
         }
-    }
-    
-    static func checkForMissingFoodItems(of ingredients: [Ingredient]) -> [Ingredient] {
-        var ingredientsWithoutFoodItems = [Ingredient]()
-        for ingredient in ingredients {
-            if ingredient.foodItem == nil {
-                ingredientsWithoutFoodItems.append(ingredient)
-            }
-        }
-        return ingredientsWithoutFoodItems
     }
 }

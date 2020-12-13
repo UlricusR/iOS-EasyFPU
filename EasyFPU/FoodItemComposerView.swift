@@ -146,15 +146,12 @@ struct FoodItemComposerView: View {
     }
     
     private func saveProduct() {
-        // Get ID of existing associated FoodItem
-        let foodItemIDToBeReplaced = composedFoodItem.cdComposedFoodItem?.foodItem?.id
-        
         // First store new ComposedFoodItem in CoreData and add it to the view model
         let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItem)
         composedFoodItem.cdComposedFoodItem = cdComposedFoodItem
         
         // Next, derive regular FoodItem and associate it with the ComposedFoodItem
-        let foodItem = FoodItem.create(from: composedFoodItem, generateTypicalAmounts: generateTypicalAmounts, foodItemIDToBeReplaced: foodItemIDToBeReplaced)
+        let foodItem = FoodItem.create(from: composedFoodItem, generateTypicalAmounts: generateTypicalAmounts)
         composedFoodItem.cdComposedFoodItem?.foodItem = foodItem
         
         // Notify user of successful storage
