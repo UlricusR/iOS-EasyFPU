@@ -294,6 +294,9 @@ struct FoodItemEditor: View {
             sugarsAsString: self.draftFoodItem.sugarsPer100gAsString,
             amountAsString: self.draftFoodItem.amountAsString,
             error: &error) { // We have a valid food item
+            // Add typical amounts
+            updatedFoodItem.typicalAmounts = draftFoodItem.typicalAmounts
+            
             if self.editedFoodItem != nil { // We need to update an existing food item
                 FoodItem.update(editedFoodItem!, with: updatedFoodItem)
                 FoodItem.remove(typicalAmountsToBeDeleted, from: editedFoodItem!)
