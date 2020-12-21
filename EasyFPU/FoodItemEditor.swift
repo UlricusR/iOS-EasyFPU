@@ -51,7 +51,7 @@ struct FoodItemEditor: View {
     @State var newTypicalAmountId: UUID?
     @State var typicalAmountsToBeDeleted = [TypicalAmountViewModel]()
     @State var updateButton = false
-    @State var notificationStatus = NotificationStatus.void
+    @State var notificationStatus = FoodItemEditor.NotificationState.void
     @State var productWasChosenInFoodPreview = false // We actually don't need this variable in this view
     
     private let helpScreen = HelpScreen.foodItemEditor
