@@ -52,7 +52,13 @@ struct ComposedFoodItemExportView: View {
                 }.padding([.leading, .trailing, .top])
                 
                 HStack {
-                    Stepper("Delay until meal", value: $userSettings.mealDelayInMinutes, in: 0...60, step: 5)
+                    Stepper("Delay until meal", onIncrement: {
+                        userSettings.mealDelayInMinutes += 5
+                        carbsRegimeCalculator.recalculate()
+                    }, onDecrement: {
+                        userSettings.mealDelayInMinutes = max(0, userSettings.mealDelayInMinutes - 5)
+                        carbsRegimeCalculator.recalculate()
+                    })
                     Text("\(userSettings.mealDelayInMinutes)")
                     Text("min")
                 }.padding()
@@ -131,7 +137,6 @@ struct ComposedFoodItemExportView: View {
             showingAlert = true
             return
         }
-        self.carbsRegimeCalculator.composedFoodItem = composedFoodItem
         self.carbsRegimeCalculator.eCarbsAbsorptionTimeInMinutes = absorptionTimeInHours * 60
         self.carbsRegimeCalculator.recalculate()
     }

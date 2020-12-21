@@ -26,7 +26,7 @@ class OpenFoodFacts: FoodDatabase {
         return fields
     }
     
-    func search(for term: String, completion: @escaping (Result<[FoodDatabaseEntry]?, FoodDatabaseError>) -> Void) {
+    func search(for term: String, category: FoodItemCategory, completion: @escaping (Result<[FoodDatabaseEntry]?, FoodDatabaseError>) -> Void) {
         guard let urlSearchTerm = term.trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             completion(.failure(.inputError(NSLocalizedString("Unable to convert your search string into a valid URL", comment: ""))))
             return
@@ -50,7 +50,7 @@ class OpenFoodFacts: FoodDatabase {
                         return
                     }
                     
-                    let searchResults = products.compactMap( { FoodDatabaseEntry(from: $0) })
+                    let searchResults = products.compactMap( { FoodDatabaseEntry(from: $0, category: category) })
                     completion(.success(searchResults))
                 } catch {
                     debugPrint(error.localizedDescription)
@@ -60,7 +60,7 @@ class OpenFoodFacts: FoodDatabase {
         }).resume()
     }
     
-    func prepare(_ id: String, completion: @escaping (Result<FoodDatabaseEntry?, FoodDatabaseError>) -> Void) {
+    func prepare(_ id: String, category: FoodItemCategory, completion: @escaping (Result<FoodDatabaseEntry?, FoodDatabaseError>) -> Void) {
         let urlString = "https://\(countrycode).openfoodfacts.org/api/v0/product/\(id).json?fields=\(productFields.joined(separator: ","))"
         let request = prepareRequest(urlString)
         
@@ -79,7 +79,7 @@ class OpenFoodFacts: FoodDatabase {
                 }
                 
                 // Fill the FoodDatabaseEntry
-                guard let foodDatabaseEntry = FoodDatabaseEntry(from: product) else {
+                guard let foodDatabaseEntry = FoodDatabaseEntry(from: product, category: category) else {
                     completion(.failure(.incompleteData(NSLocalizedString("No food found", comment: ""))))
                     return
                 }

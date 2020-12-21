@@ -13,6 +13,7 @@ struct FoodItemSelector: View {
     @Environment(\.presentationMode) var presentation
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem
+    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     @State private var showingAlert = false
     @State private var errorMessage = ""
     @State private var newTypicalAmountComment = ""
@@ -67,7 +68,7 @@ struct FoodItemSelector: View {
                     
                     if !self.draftFoodItem.typicalAmounts.isEmpty {
                         Section(header: Text("Typical amounts:")) {
-                            ForEach(self.draftFoodItem.typicalAmounts.sorted(), id: \.self) { typicalAmount in
+                            ForEach(self.draftFoodItem.typicalAmounts.sorted()) { typicalAmount in
                                 HStack {
                                     Text(typicalAmount.amountAsString)
                                     Text("g")
@@ -105,11 +106,8 @@ struct FoodItemSelector: View {
                     
                     let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
                     switch amountResult {
-                    case .success(let amountAsInt):
-                        self.editedFoodItem.amount = Int64(amountAsInt)
-                        
-                        // Save new food item
-                        try? AppDelegate.viewContext.save()
+                    case .success(_):
+                        composedFoodItem.add(foodItem: draftFoodItem)
                         
                         // Quit edit mode
                         presentation.wrappedValue.dismiss()
@@ -145,11 +143,8 @@ struct FoodItemSelector: View {
             self.newTypicalAmountComment = ""
             
             // Update food item in core data, save and broadcast changed object
-            let newCoreDataTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-            newTypicalAmount.cdTypicalAmount = newCoreDataTypicalAmount
-            let _ = newTypicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem)
-            self.editedFoodItem.addToTypicalAmounts(newCoreDataTypicalAmount)
-            try? AppDelegate.viewContext.save()
+            let newCoreDataTypicalAmount = TypicalAmount.create(from: newTypicalAmount)
+            FoodItem.add(newCoreDataTypicalAmount, to: editedFoodItem)
             
             self.addToTypicalAmounts = false
         } else {

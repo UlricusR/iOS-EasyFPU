@@ -14,14 +14,11 @@ struct FoodItemComposerView: View {
     @State var showingActionSheet: Bool = false
     @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
-    @State var activeSheet: FoodItemComposerViewSheets.State?
+    @State private var activeSheet: FoodItemComposerViewSheets.State?
+    @Binding var notificationState: FoodItemListView.NotificationState?
     private let helpScreen = HelpScreen.foodItemComposer
-    @State var errorMessage: String = ""
-    @State var showingAlert: Bool = false
     
     @State var generateTypicalAmounts: Bool = true
-    @State var numberOfPortions: Int = 1
-    @State var typicalAmounts = [TypicalAmountViewModel]()
     
     var body: some View {
         GeometryReader { geometry in
@@ -38,9 +35,6 @@ struct FoodItemComposerView: View {
                                 Text("Weight")
                                 CustomTextField(titleKey: "Weight", text: self.$composedFoodItem.amountAsString, keyboardType: .numberPad)
                                     .multilineTextAlignment(.trailing)
-                                    .onChange(of: self.composedFoodItem.amount) { _ in
-                                        generateAmounts()
-                                    }
                                 Text("g")
                             }
                             
@@ -54,6 +48,9 @@ struct FoodItemComposerView: View {
                                 NumberButton(number: 1, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
                                 Spacer()
                             }
+                            
+                            // Favorite
+                            Toggle("Favorite", isOn: $composedFoodItem.favorite)
                         }
                         
                         
@@ -64,22 +61,19 @@ struct FoodItemComposerView: View {
                             if generateTypicalAmounts {
                                 // Number of portions
                                 HStack {
-                                    Stepper("Number of portions", value: $numberOfPortions, in: 1...100)
-                                    Text("\(numberOfPortions)")
-                                }
-                                .onChange(of: numberOfPortions) { _ in
-                                    generateAmounts()
+                                    Stepper("Number of portions", value: $composedFoodItem.numberOfPortions, in: 1...100)
+                                    Text("\(composedFoodItem.numberOfPortions)")
                                 }
                                 
-                                if !typicalAmounts.isEmpty {
+                                if !composedFoodItem.typicalAmounts.isEmpty {
                                     List {
-                                        ForEach(typicalAmounts) { typicalAmount in
+                                        ForEach(composedFoodItem.typicalAmounts) { typicalAmount in
                                             HStack {
                                                 Text(typicalAmount.amountAsString)
                                                 Text("g")
                                                 Text(typicalAmount.comment)
                                             }
-                                        }.onDelete(perform: deleteTypicalAmount)
+                                        }
                                     }
                                 }
                             }
@@ -99,34 +93,37 @@ struct FoodItemComposerView: View {
                         }
                     }
                 }
-                .navigationBarTitle(Text("Composed product"), displayMode: .inline)
+                .navigationBarTitle(Text("Final product"), displayMode: .inline)
                 .navigationBarItems(
-                    leading: HStack {
-                        Button(action: {
-                            activeSheet = .help
-                        }) {
-                            Image(systemName: "questionmark.circle").imageScale(.large)
-                        }
-                        
+                    leading: Button(action: {
+                        activeSheet = .help
+                    }) {
+                        Image(systemName: "questionmark.circle").imageScale(.large)
+                    }, trailing: HStack {
                         Button(action: {
                             composedFoodItem.clear()
                         }) {
-                            Image(systemName: "xmark.circle").foregroundColor(.red).imageScale(.large).padding([.leading, .trailing])
+                            Image(systemName: "xmark.circle").foregroundColor(.red).imageScale(.large).padding(.trailing)
                         }
-                    }, trailing: Button(action: {
-                        if !weightCheck() {
-                            message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
-                            showingActionSheet = true
-                        } else {
-                            saveProduct()
-                            presentation.wrappedValue.dismiss()
+                        
+                        Button(action: {
+                            if !weightCheck() {
+                                message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                                showingActionSheet = true
+                            } else {
+                                saveProduct()
+                                presentation.wrappedValue.dismiss()
+                            }
+                        }) {
+                            Text("Save")
                         }
-                    }) {
-                        Text("Save")
                     }
                 )
             }
             .navigationViewStyle(StackNavigationViewStyle())
+        }
+        .sheet(item: $activeSheet) {
+            sheetContent($0)
         }
         .actionSheet(isPresented: self.$showingActionSheet) {
             ActionSheet(title: Text("Notice"), message: Text(message), buttons: [
@@ -136,40 +133,6 @@ struct FoodItemComposerView: View {
                 },
                 .cancel()
             ])
-        }
-        .alert(isPresented: self.$showingAlert) {
-            Alert(
-                title: Text("Notice"),
-                message: Text(self.errorMessage),
-                dismissButton: .default(Text("OK"))
-            )
-        }
-        .onAppear() {
-            generateAmounts()
-        }
-    }
-    
-    private func generateAmounts() {
-        typicalAmounts.removeAll()
-        if generateTypicalAmounts && composedFoodItem.amount > 0 {
-            let portionWeight = composedFoodItem.amount / numberOfPortions
-            for multiplier in 1...numberOfPortions {
-                let amount = portionWeight * multiplier
-                let amountAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: amount))!
-                let comment = "- \(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(numberOfPortions))"
-                if let typicalAmount = TypicalAmountViewModel(amountAsString: amountAsString, comment: comment, errorMessage: &errorMessage) {
-                    typicalAmounts.append(typicalAmount)
-                } else {
-                    errorMessage = NSLocalizedString("Cannot create typical amount: ", comment: "") + errorMessage
-                    showingAlert = true
-                }
-            }
-        }
-    }
-    
-    private func deleteTypicalAmount(at offsets: IndexSet) {
-        offsets.forEach { index in
-            typicalAmounts.remove(at: index)
         }
     }
     
@@ -183,35 +146,19 @@ struct FoodItemComposerView: View {
     }
     
     private func saveProduct() {
-        let amountDivider = Double(composedFoodItem.amount) / 100.0
-        let caloriesPer100g = composedFoodItem.calories / amountDivider
-        let carbsPer100g = composedFoodItem.getCarbsInclSugars() / amountDivider
-        let sugarsPer100g = composedFoodItem.getSugarsOnly() / amountDivider
-        let newProduct = FoodItemViewModel(name: composedFoodItem.name, category: .product, favorite: false, caloriesPer100g: caloriesPer100g, carbsPer100g: carbsPer100g, sugarsPer100g: sugarsPer100g, amount: 0)
-        let newFoodItem = FoodItem(context: self.managedObjectContext)
-        newFoodItem.id = UUID()
-        newFoodItem.name = newProduct.name
-        newFoodItem.category = newProduct.category.rawValue
-        newFoodItem.favorite = newProduct.favorite
-        newFoodItem.carbsPer100g = newProduct.carbsPer100g
-        newFoodItem.caloriesPer100g = newProduct.caloriesPer100g
-        newFoodItem.sugarsPer100g = newProduct.sugarsPer100g
-        newFoodItem.amount = Int64(newProduct.amount)
+        // First store new ComposedFoodItem in CoreData and add it to the view model
+        let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItem)
+        composedFoodItem.cdComposedFoodItem = cdComposedFoodItem
         
-        if generateTypicalAmounts {
-            for typicalAmount in self.typicalAmounts {
-                let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-                typicalAmount.cdTypicalAmount = newTypicalAmount
-                let _ = typicalAmount.updateCDTypicalAmount(foodItem: newFoodItem)
-                newFoodItem.addToTypicalAmounts(newTypicalAmount)
-            }
-        }
+        // Next, derive regular FoodItem and associate it with the ComposedFoodItem
+        let foodItem = FoodItem.create(from: composedFoodItem, generateTypicalAmounts: generateTypicalAmounts)
+        composedFoodItem.cdComposedFoodItem?.foodItem = foodItem
         
-        errorMessage = "\(NSLocalizedString("Successfully saved as", comment: "")) '\(newProduct.name)' \(NSLocalizedString("in your Products list", comment: ""))";
-        showingAlert = true
+        // Notify user of successful storage
+        notificationState = .successfullySavedFoodItem(composedFoodItem.name)
         
-        // Save new food item
-        try? AppDelegate.viewContext.save()
+        // Clear the ComposedFoodItem
+        composedFoodItem.clear()
     }
     
     @ViewBuilder

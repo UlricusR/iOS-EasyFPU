@@ -8,14 +8,18 @@
 
 import Foundation
 
-class ComposedFoodItemViewModel: ObservableObject, VariableAmountItem {
-    var name: String
-    var calories: Double = 0.0
-    private var carbs: Double = 0.0
-    private var sugars: Double = 0.0
+class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
+    enum IngredientsSyncStrategy {
+        case createMissingFoodItems, removeNonExistingIngredients
+    }
+    
+    @Published var name: String
+    var category: FoodItemCategory
+    @Published var favorite: Bool
     @Published var amount: Int = 0
-    var fpus: FPU = FPU(fpu: 0.0)
-    var foodItems = [FoodItemViewModel]()
+    @Published var numberOfPortions: Int = 0
+    @Published var foodItems = [FoodItemViewModel]()
+    var cdComposedFoodItem: ComposedFoodItem?
     
     @Published var amountAsString: String = "" {
         willSet {
@@ -30,20 +34,155 @@ class ComposedFoodItemViewModel: ObservableObject, VariableAmountItem {
         }
     }
     
-    static let `default` = ComposedFoodItemViewModel(name: "Default")
+    var calories: Double {
+        var newValue = 0.0
+        for foodItem in foodItems {
+            newValue += foodItem.getCalories()
+        }
+        return newValue
+    }
     
-    init(name: String) {
+    private var carbs: Double {
+        var newValue = 0.0
+        for foodItem in foodItems {
+            newValue += foodItem.getCarbsInclSugars()
+        }
+        return newValue
+    }
+    
+    private var sugars: Double {
+        var newValue = 0.0
+        for foodItem in foodItems {
+            newValue += foodItem.getSugarsOnly()
+        }
+        return newValue
+    }
+    
+    var fpus: FPU {
+        var fpu = FPU(fpu: 0.0)
+        for foodItem in foodItems {
+            let tempFPU = fpu.fpu
+            fpu = FPU(fpu: tempFPU + foodItem.getFPU().fpu)
+        }
+        return fpu
+    }
+    
+    var caloriesPer100g: Double {
+        calories / Double(amount) * 100
+    }
+    
+    var carbsPer100g: Double {
+        carbs / Double(amount) * 100
+    }
+    
+    var sugarsPer100g: Double {
+        sugars / Double(amount) * 100
+    }
+    
+    var typicalAmounts: [TypicalAmountViewModel] {
+        var typicalAmounts = [TypicalAmountViewModel]()
+        if numberOfPortions > 0 {
+            let portionWeight = amount / numberOfPortions
+            for multiplier in 1...numberOfPortions {
+                let portionAmount = portionWeight * multiplier
+                let comment = "\(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(numberOfPortions))"
+                let typicalAmount = TypicalAmountViewModel(amount: portionAmount, comment: comment)
+                typicalAmounts.append(typicalAmount)
+            }
+        }
+        return typicalAmounts
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case composedFoodItem
+        case id, amount, favorite, name, category, numberOfPortions, foodItems
+    }
+    
+    init(name: String, category: FoodItemCategory, favorite: Bool) {
         self.name = name
+        self.category = category
+        self.favorite = favorite
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let composedFoodItem = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .composedFoodItem)
+        category = try FoodItemCategory.init(rawValue: composedFoodItem.decode(String.self, forKey: .category)) ?? .product
+        amount = try composedFoodItem.decode(Int.self, forKey: .amount)
+        favorite = try composedFoodItem.decode(Bool.self, forKey: .favorite)
+        name = try composedFoodItem.decode(String.self, forKey: .name)
+        numberOfPortions = try composedFoodItem.decode(Int.self, forKey: .numberOfPortions)
+        foodItems = try composedFoodItem.decode([FoodItemViewModel].self, forKey: .foodItems)
     }
     
     func add(foodItem: FoodItemViewModel) {
-        foodItems.append(foodItem)
-        let tempFPUs = fpus.fpu
-        calories += foodItem.getCalories()
-        carbs += foodItem.getCarbsInclSugars()
-        sugars += foodItem.getSugarsOnly()
-        amountAsString = String(amount + foodItem.amount) // amount will be set implicitely
-        fpus = FPU(fpu: tempFPUs + foodItem.getFPU().fpu)
+        if !foodItems.contains(foodItem) {
+            foodItems.append(foodItem)
+            amountAsString = String(amount + foodItem.amount) // amount will be set implicitely
+        }
+    }
+    
+    func remove(foodItem: FoodItemViewModel) {
+        if let index = foodItems.firstIndex(of: foodItem) {
+            // Substract amount of FoodItem removed
+            let oldFoodItemAmount = foodItems[index].amount
+            let newComposedFoodItemAmount = amount - oldFoodItemAmount
+            amountAsString = String(newComposedFoodItemAmount)
+            
+            // Remove FoodItem
+            foodItems[index].amountAsString = "0"
+            foodItems.remove(at: index)
+        }
+    }
+    
+    func clear() {
+        for foodItem in foodItems {
+            foodItem.amountAsString = "0"
+        }
+        foodItems.removeAll()
+        
+        switch category {
+        case .ingredient:
+            name = NSLocalizedString(IngredientsListView.composedFoodItemName, comment: "")
+        case .product:
+            name = NSLocalizedString(ProductsListView.composedFoodItemName, comment: "")
+        }
+        
+        favorite = false
+        amount = 0
+        numberOfPortions = 0
+        cdComposedFoodItem = nil
+    }
+    
+    func fill(from cdComposedFoodItem: ComposedFoodItem?, syncStrategy: IngredientsSyncStrategy) {
+        if let cdComposedFoodItem = cdComposedFoodItem {
+            // First clear existing data
+            clear()
+            
+            // Check for missing FoodItems
+            if let ingredients = cdComposedFoodItem.ingredients?.allObjects as? [Ingredient] {
+                for ingredient in ingredients {
+                    if let foodItem = ingredient.foodItem { // The FoodItem hasn't been deleted
+                        foodItem.category = FoodItemCategory.ingredient.rawValue
+                        let foodItemVM = FoodItemViewModel(from: foodItem)
+                        foodItemVM.amount = Int(ingredient.amount)
+                        foodItems.append(foodItemVM)
+                    } else if syncStrategy == .createMissingFoodItems { // Create missing FoodItem
+                        let foodItem = FoodItem.create(from: ingredient)
+                        let foodItemVM = FoodItemViewModel(from: foodItem)
+                        foodItemVM.amount = Int(ingredient.amount)
+                        foodItems.append(foodItemVM)
+                    }
+                }
+            }
+            
+            // Then fill from ComposedFoodItem
+            self.name = cdComposedFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
+            self.amountAsString = String(cdComposedFoodItem.amount)
+            self.favorite = cdComposedFoodItem.favorite
+            self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
+            self.cdComposedFoodItem = cdComposedFoodItem
+        }
     }
     
     func getCarbsInclSugars() -> Double {
@@ -62,21 +201,14 @@ class ComposedFoodItemViewModel: ObservableObject, VariableAmountItem {
         treatSugarsSeparately ? self.sugars : 0
     }
     
-    func remove(foodItem: FoodItemViewModel) {
-        foodItem.amountAsString = "0"
-        foodItem.cdFoodItem?.amount = 0
-        if let index = foodItems.firstIndex(of: foodItem) {
-            foodItems.remove(at: index)
-        }
-        try? AppDelegate.viewContext.save()
-    }
-    
-    func clear() {
-        for foodItem in foodItems {
-            foodItem.amountAsString = "0"
-            foodItem.cdFoodItem?.amount = 0
-        }
-        foodItems.removeAll()
-        try? AppDelegate.viewContext.save()
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        var composedFoodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .composedFoodItem)
+        try composedFoodItem.encode(category.rawValue, forKey: .category)
+        try composedFoodItem.encode(amount, forKey: .amount)
+        try composedFoodItem.encode(favorite, forKey: .favorite)
+        try composedFoodItem.encode(name, forKey: .name)
+        try composedFoodItem.encode(numberOfPortions, forKey: .numberOfPortions)
+        try composedFoodItem.encode(foodItems, forKey: .foodItems)
     }
 }

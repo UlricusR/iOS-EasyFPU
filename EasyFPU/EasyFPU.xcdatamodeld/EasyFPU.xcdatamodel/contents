@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="19H2" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17511" systemVersion="20B29" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="AbsorptionBlock" representedClassName="AbsorptionBlock" syncable="YES">
         <attribute name="absorptionTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="maxFpu" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
-    <entity name="FoodItem" representedClassName=".FoodItem" syncable="YES">
+    <entity name="ComposedFoodItem" representedClassName=".ComposedFoodItem" syncable="YES">
         <attribute name="amount" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="category" attributeType="String" defaultValueString="Product"/>
+        <attribute name="favorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="numberOfPortions" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="FoodItem" inverseName="composedFoodItem" inverseEntity="FoodItem"/>
+        <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Ingredient" inverseName="composedFoodItem" inverseEntity="Ingredient"/>
+    </entity>
+    <entity name="FoodItem" representedClassName=".FoodItem" syncable="YES">
         <attribute name="caloriesPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="carbsPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="category" optional="YES" attributeType="String"/>
@@ -13,16 +23,33 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="sugarsPer100g" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="typicalAmounts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TypicalAmount" inverseName="foodItem" inverseEntity="TypicalAmount"/>
+        <relationship name="composedFoodItem" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ComposedFoodItem" inverseName="foodItem" inverseEntity="ComposedFoodItem"/>
+        <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Ingredient" inverseName="foodItem" inverseEntity="Ingredient"/>
+        <relationship name="typicalAmounts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TypicalAmount" inverseName="foodItem" inverseEntity="TypicalAmount"/>
+    </entity>
+    <entity name="Ingredient" representedClassName=".Ingredient" syncable="YES">
+        <attribute name="amount" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="caloriesPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="carbsPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="category" attributeType="String" defaultValueString="Ingredient"/>
+        <attribute name="favorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="sugarsPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="composedFoodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ComposedFoodItem" inverseName="ingredients" inverseEntity="ComposedFoodItem"/>
+        <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="ingredients" inverseEntity="FoodItem"/>
     </entity>
     <entity name="TypicalAmount" representedClassName=".TypicalAmount" syncable="YES">
         <attribute name="amount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="comment" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="typicalAmounts" inverseEntity="FoodItem"/>
     </entity>
     <elements>
-        <element name="AbsorptionBlock" positionX="-54" positionY="45" width="128" height="28"/>
-        <element name="FoodItem" positionX="-63" positionY="-18" width="128" height="178"/>
-        <element name="TypicalAmount" positionX="-54" positionY="18" width="128" height="88"/>
+        <element name="AbsorptionBlock" positionX="-140.796875" positionY="-207.42578125" width="128" height="74"/>
+        <element name="ComposedFoodItem" positionX="-115.8828125" positionY="241.0078125" width="128" height="163"/>
+        <element name="FoodItem" positionX="-120.265625" positionY="-100.04296875" width="128" height="179"/>
+        <element name="Ingredient" positionX="343.34375" positionY="166.60546875" width="128" height="179"/>
+        <element name="TypicalAmount" positionX="286.51171875" positionY="-106.484375" width="128" height="89"/>
     </elements>
 </model>

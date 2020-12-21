@@ -13,7 +13,6 @@ class AbsorptionBlockFromJson: Codable {
         case maxFpu, absorptionTime
     }
     
-    var id = UUID()
     var maxFpu: Int
     var absorptionTime: Int
     

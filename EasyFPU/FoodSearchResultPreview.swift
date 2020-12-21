@@ -14,9 +14,10 @@ struct FoodSearchResultPreview: View {
     @ObservedObject var foodDatabaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var category: FoodItemCategory
+    @State private var selectedEntry: FoodDatabaseEntry?
+    @State private var foodSelected = false
+    @State private var showDetails: Bool = false
     @Environment(\.presentationMode) var parentPresentation
-    @State var showDetails: Bool = false
-    @State var productWasChosenInFoodPreview = false
     
     var body: some View {
         HStack {
@@ -26,26 +27,13 @@ struct FoodSearchResultPreview: View {
                 Image(systemName: self.foodDatabaseResults.selectedEntry == product ? "checkmark.circle.fill" : "circle").foregroundColor(.green)
             }.buttonStyle(BorderlessButtonStyle())
             
-            if let frontThumb = product.imageFront?.thumb {
-                URLImage(url: frontThumb,
-                         failure: { error, retry in
-                            Image("no-photo-icon")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 100)
-                         },
-                         content: { image in
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 100)
-                         }
-                )
-            } else {
-                Image("no-photo-icon")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 100)
+            if let imageObject = product.imageFront {
+                URLImage(url: imageObject.thumb) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 100)
+                }
             }
             
             Text(product.name).font(.headline)
@@ -63,11 +51,15 @@ struct FoodSearchResultPreview: View {
             }.buttonStyle(BorderlessButtonStyle())
         }
         .sheet(isPresented: $showDetails) {
-            FoodPreview(product: product, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, productWasChosen: $productWasChosenInFoodPreview).onDisappear() {
-                if productWasChosenInFoodPreview {
+            FoodPreview(product: $selectedEntry, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected)
+            .onDisappear() {
+                if foodSelected {
                     parentPresentation.wrappedValue.dismiss()
                 }
             }
+        }
+        .onAppear() {
+            self.selectedEntry = self.product
         }
     }
 }

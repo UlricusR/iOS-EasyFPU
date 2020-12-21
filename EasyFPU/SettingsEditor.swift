@@ -253,9 +253,7 @@ struct SettingsEditor: View {
                     for absorptionBlock in self.draftAbsorptionScheme.absorptionBlocks {
                         // Check if it's an existing core data entry
                         if absorptionBlock.cdAbsorptionBlock == nil { // This is a new absorption block
-                            let newCdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
-                            absorptionBlock.cdAbsorptionBlock = newCdAbsorptionBlock
-                            let _ = absorptionBlock.updateCdAbsorptionBlock()
+                            let newCdAbsorptionBlock = AbsorptionBlock.create(from: absorptionBlock)
                             self.editedAbsorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
                         } else { // This is an existing absorption block, so just update values
                             let _ = absorptionBlock.updateCdAbsorptionBlock()
@@ -265,16 +263,12 @@ struct SettingsEditor: View {
                     // Remove deleted absorption blocks
                     for absorptionBlockToBeDeleted in self.absorptionBlocksToBeDeleted {
                         if absorptionBlockToBeDeleted.cdAbsorptionBlock != nil {
-                            self.editedAbsorptionScheme.removeFromAbsorptionBlocks(absorptionBlockToBeDeleted: absorptionBlockToBeDeleted.cdAbsorptionBlock!)
-                            self.managedObjectContext.delete(absorptionBlockToBeDeleted.cdAbsorptionBlock!)
+                            AbsorptionBlock.remove(absorptionBlockToBeDeleted.cdAbsorptionBlock!, from: editedAbsorptionScheme)
                         }
                     }
                     
                     // Reset typical amounts to be deleted
                     self.absorptionBlocksToBeDeleted.removeAll()
-                    
-                    // Save new absorption blocks
-                    try? AppDelegate.viewContext.save()
                     
                     // Save new user settings
                     if !(

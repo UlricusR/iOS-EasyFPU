@@ -61,7 +61,7 @@ class UserSettings: ObservableObject {
     
     // MARK: - Dynamic user settings are treated here
     @Published var disclaimerAccepted: Bool
-    @Published var foodDatabaseUseAtOwnRiskAccepted : Bool
+    @Published var foodDatabaseUseAtOwnRiskAccepted: Bool
     @Published var absorptionTimeSugarsDelayInMinutes: Int
     @Published var absorptionTimeSugarsIntervalInMinutes: Int
     @Published var absorptionTimeSugarsDurationInHours: Double
@@ -77,6 +77,10 @@ class UserSettings: ObservableObject {
     @Published var foodDatabase: FoodDatabase
     @Published var searchWorldwide: Bool
     @Published var countryCode: String?
+    
+    // The ComposedFoodItems
+    @Published var composedMeal = ComposedFoodItemViewModel(name: NSLocalizedString(ProductsListView.composedFoodItemName, comment: ""), category: .product, favorite: false)
+    @Published var composedProduct = ComposedFoodItemViewModel(name: NSLocalizedString(IngredientsListView.composedFoodItemName, comment: ""), category: .ingredient, favorite: false)
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
@@ -169,6 +173,10 @@ class UserSettings: ObservableObject {
         // Synchronize
         UserSettings.keyStore.synchronize()
         return true
+    }
+    
+    static func remove(_ key: String) {
+        UserSettings.keyStore.removeObject(forKey: key)
     }
     
     static func getValue(for key: UserDefaultsBoolKey) -> Bool? {

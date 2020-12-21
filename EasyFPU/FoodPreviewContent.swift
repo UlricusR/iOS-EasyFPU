@@ -92,10 +92,10 @@ struct FoodPreviewContent: View {
     private func sheetContent(_ state: FoodPreviewContentSheets.State) -> some View {
         switch state {
         case .front:
-            if let url = selectedEntry.imageFront?.thumb {
+            if selectedEntry.imageFront != nil {
                 NavigationView {
                     GeometryReader { reader in
-                        getImageView(url: url, for: reader)
+                        getImageView(url: selectedEntry.imageFront!.image, for: reader)
                         .navigationBarTitle(selectedEntry.name)
                         .navigationBarItems(trailing: Button(action: {
                             self.activeSheet = nil
@@ -106,10 +106,10 @@ struct FoodPreviewContent: View {
                 }
             }
         case .nutriments:
-            if let url = selectedEntry.imageNutriments?.thumb {
+            if selectedEntry.imageNutriments != nil {
                 NavigationView {
                     GeometryReader { reader in
-                        getImageView(url: url, for: reader)
+                        getImageView(url: selectedEntry.imageNutriments!.image, for: reader)
                         .navigationBarTitle(selectedEntry.name)
                         .navigationBarItems(trailing: Button(action: {
                             self.activeSheet = nil
@@ -120,10 +120,10 @@ struct FoodPreviewContent: View {
                 }
             }
         case .ingredients:
-            if let url = selectedEntry.imageIngredients?.thumb {
+            if selectedEntry.imageIngredients != nil {
                 NavigationView {
                     GeometryReader { reader in
-                        getImageView(url: url, for: reader)
+                        getImageView(url: selectedEntry.imageIngredients!.image, for: reader)
                         .navigationBarTitle(selectedEntry.name)
                         .navigationBarItems(trailing: Button(action: {
                             self.activeSheet = nil
@@ -141,52 +141,53 @@ struct FoodPreviewContent: View {
         URLImage(url: url) { image in
             image
                 .resizable()
-                            .scaledToFit()
-                            .animation(.default)
-                            .offset(x: self.draggedSize.width, y: 0)
-                            .scaleEffect(self.scale)
-                            .scaleEffect(self.isTapped ? 2 : 1,
-                             anchor: UnitPoint(
-                              x: self.pointTapped.x / reader.frame(in: .global).maxX,
-                              y: self.pointTapped.y / reader.frame(in: .global).maxY
-                              ))
-                             .gesture(TapGesture(count: 2)
-                             .onEnded({
-                            self.isTapped = !self.isTapped
-                        })
-                        .simultaneously(with: DragGesture(minimumDistance: 0, coordinateSpace: .global)
-                        .onChanged({ (value) in
-                            self.pointTapped = value.startLocation
-                            self.draggedSize = CGSize(
-                                 width: value.translation.width + self.previousDragged.width,
-                                 height: value.translation.height + self.previousDragged.height)
-                        }).onEnded({ (value) in
-                            let globalMaxX = reader.frame(in: .global).maxX
-                            let offsetWidth = ((globalMaxX * self.scale) - globalMaxX) / 2
-                            let newDraggedWidth = self.draggedSize.width * self.scale
-                            if (newDraggedWidth > offsetWidth) {
-                                self.draggedSize = CGSize(
-                                    width: offsetWidth / self.scale,
-                                    height: value.translation.height + self.previousDragged.height
-                                    )
-                            } else if (newDraggedWidth < -offsetWidth) {
-                                self.draggedSize = CGSize(
-                                    width: -offsetWidth / self.scale,
-                                    height: value.translation.height + self.previousDragged.height
-                                    )
-                            } else {
-                                self.draggedSize = CGSize(
-                                    width: value.translation.width + self.previousDragged.width,
-                                    height: value.translation.height + self.previousDragged.height
-                                    )
-                            }
-                            self.previousDragged = self.draggedSize
-                            }))).gesture(MagnificationGesture()
-                            .onChanged({ (scale) in
-                            self.scale = scale.magnitude
-                        }).onEnded({ (scaleFinal) in
-                            self.scale = scaleFinal.magnitude
-                        }))
+                .scaledToFit()
+                .animation(.default)
+                .offset(x: self.draggedSize.width, y: 0)
+                .scaleEffect(self.scale)
+                .scaleEffect(self.isTapped ? 2 : 1,
+                 anchor: UnitPoint(
+                  x: self.pointTapped.x / reader.frame(in: .global).maxX,
+                  y: self.pointTapped.y / reader.frame(in: .global).maxY
+                  ))
+                 .gesture(TapGesture(count: 2)
+                 .onEnded({
+                self.isTapped = !self.isTapped
+            })
+            .simultaneously(with: DragGesture(minimumDistance: 0, coordinateSpace: .global)
+            .onChanged({ (value) in
+                self.pointTapped = value.startLocation
+                self.draggedSize = CGSize(
+                     width: value.translation.width + self.previousDragged.width,
+                     height: value.translation.height + self.previousDragged.height)
+
+            }).onEnded({ (value) in
+                let globalMaxX = reader.frame(in: .global).maxX
+                let offsetWidth = ((globalMaxX * self.scale) - globalMaxX) / 2
+                let newDraggedWidth = self.draggedSize.width * self.scale
+                if (newDraggedWidth > offsetWidth) {
+                    self.draggedSize = CGSize(
+                        width: offsetWidth / self.scale,
+                        height: value.translation.height + self.previousDragged.height
+                        )
+                } else if (newDraggedWidth < -offsetWidth) {
+                    self.draggedSize = CGSize(
+                        width: -offsetWidth / self.scale,
+                        height: value.translation.height + self.previousDragged.height
+                        )
+                } else {
+                    self.draggedSize = CGSize(
+                        width: value.translation.width + self.previousDragged.width,
+                        height: value.translation.height + self.previousDragged.height
+                        )
+                }
+                self.previousDragged = self.draggedSize
+                }))).gesture(MagnificationGesture()
+                .onChanged({ (scale) in
+                self.scale = scale.magnitude
+            }).onEnded({ (scaleFinal) in
+                self.scale = scaleFinal.magnitude
+            }))
         }
     }
 }

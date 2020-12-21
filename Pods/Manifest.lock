@@ -1,0 +1,44 @@
+PODS:
+  - ADCountryPicker (2.1.0)
+  - Charts (3.6.0):
+    - Charts/Core (= 3.6.0)
+  - Charts/Core (3.6.0)
+  - URLImage (2.1.4):
+    - URLImage/Common (= 2.1.4)
+    - URLImage/DownloadManager (= 2.1.4)
+    - URLImage/FileIndex (= 2.1.4)
+    - URLImage/ImageDecoder (= 2.1.4)
+    - URLImage/Log (= 2.1.4)
+    - URLImage/PlainDatabase (= 2.1.4)
+    - URLImage/RemoteContentView (= 2.1.4)
+  - URLImage/Common (2.1.4)
+  - URLImage/DownloadManager (2.1.4):
+    - URLImage/Log
+  - URLImage/FileIndex (2.1.4):
+    - URLImage/Common
+    - URLImage/Log
+    - URLImage/PlainDatabase
+  - URLImage/ImageDecoder (2.1.4)
+  - URLImage/Log (2.1.4)
+  - URLImage/PlainDatabase (2.1.4)
+  - URLImage/RemoteContentView (2.1.4)
+
+DEPENDENCIES:
+  - ADCountryPicker (~> 2.1.0)
+  - Charts
+  - URLImage
+
+SPEC REPOS:
+  trunk:
+    - ADCountryPicker
+    - Charts
+    - URLImage
+
+SPEC CHECKSUMS:
+  ADCountryPicker: 502cee76a30ea1c3834eb0df170ce635691655c9
+  Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
+  URLImage: 2cd062726913f11a29e04a321944c4122575d52a
+
+PODFILE CHECKSUM: d0fe0b69ed61b7b8b339a32e1d08017f986a068f
+
+COCOAPODS: 1.10.0

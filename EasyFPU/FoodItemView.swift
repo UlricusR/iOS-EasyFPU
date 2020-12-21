@@ -10,23 +10,27 @@ import SwiftUI
 
 struct FoodItemView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var foodItem: FoodItemViewModel
     var category: FoodItemCategory
+    @Binding var selectedTab: Int
     @State var activeSheet: FoodItemViewSheets.State?
+    @State var showingActionSheet: Bool = false
+    @State var editedComposedFoodItem: ComposedFoodItem? = nil
+    @State var missingFoodItems = [String]()
     
     var body: some View {
         VStack {
             // First line: amount, name, favorite
             HStack {
-                if foodItem.amount > 0 {
+                if let foodItemIndex = composedFoodItem.foodItems.firstIndex(of: foodItem) {
                     Image(systemName: "xmark.circle").foregroundColor(.red)
-                    Text(String(foodItem.amount)).font(.headline).foregroundColor(.accentColor)
+                    Text("\(composedFoodItem.foodItems[foodItemIndex].amount)").font(.headline).foregroundColor(.accentColor)
                     Text("g").font(.headline).foregroundColor(.accentColor)
                 } else {
                     Image(systemName: "plus.circle").foregroundColor(.green)
                 }
-                Text(foodItem.name).font(.headline).foregroundColor(foodItem.amount > 0 ? .accentColor : .none)
+                Text(foodItem.name).font(.headline).foregroundColor(composedFoodItem.foodItems.contains(foodItem) ? .accentColor : .none)
                 if foodItem.favorite { Image(systemName: "star.fill").foregroundColor(.yellow).imageScale(.small) }
                 Spacer()
             }
@@ -57,7 +61,7 @@ struct FoodItemView: View {
             }
         }
         .onTapGesture {
-            if self.foodItem.amount > 0 {
+            if composedFoodItem.foodItems.contains(foodItem) {
                 composedFoodItem.remove(foodItem: foodItem)
             } else {
                 activeSheet = .selectFoodItem
@@ -66,7 +70,12 @@ struct FoodItemView: View {
         .contextMenu(menuItems: {
             // Editing the food item
             Button(action: {
-                activeSheet = .editFoodItem
+                if foodItem.cdComposedFoodItem == nil { // This is a regular FoodItem, so open FoodItemEditor
+                    activeSheet = .editFoodItem
+                } else { // This is a ComposedFoodItem
+                    editedComposedFoodItem = foodItem.cdComposedFoodItem!
+                    editComposedFoodItem()
+                }
             }) {
                 Text("Edit")
             }
@@ -105,6 +114,64 @@ struct FoodItemView: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
+        .actionSheet(isPresented: $showingActionSheet) {
+            ActionSheet(
+                title: Text("Missing Ingredients"),
+                message: Text(
+                    NSLocalizedString("The following ingredients are no longer available: ", comment: "") +
+                        missingFoodItems.joined(separator: ", ") +
+                    NSLocalizedString(". Do you want to create them or remove them from your product?", comment: "")
+                ),
+                buttons: [
+                    .default(Text("Create missing ingredients")) {
+                        UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem, syncStrategy: .createMissingFoodItems)
+                        
+                        // Switch to Ingredients tab
+                        selectedTab = MainView.Tab.ingredients.rawValue
+                    },
+                    .default(Text("Remove from product")) {
+                        UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem, syncStrategy: .removeNonExistingIngredients)
+                        
+                        // Switch to Ingredients tab
+                        selectedTab = MainView.Tab.ingredients.rawValue
+                    }
+                ]
+            )
+        }
+    }
+    
+    private func editComposedFoodItem() {
+        if let ingredients = editedComposedFoodItem?.ingredients {
+            // Load ingredients
+            let loadedIngredients = ingredients.allObjects as! [Ingredient]
+            
+            // Check for missing ingredients
+            let missingFoodItems = checkForMissingFoodItems(of: loadedIngredients)
+            if missingFoodItems.isEmpty {
+                UserSettings.shared.composedProduct.fill(from: editedComposedFoodItem, syncStrategy: .createMissingFoodItems)
+                
+                // Switch to Ingredients tab
+                selectedTab = MainView.Tab.ingredients.rawValue
+            } else {
+                self.missingFoodItems = [String]()
+                for missingFoodItem in missingFoodItems {
+                    self.missingFoodItems.append(missingFoodItem.name ?? NSLocalizedString("- Unnamed -", comment: ""))
+                }
+                showingActionSheet = true
+            }
+        } else {
+            // TODO Notification
+        }
+    }
+    
+    private func checkForMissingFoodItems(of ingredients: [Ingredient]) -> [Ingredient] {
+        var ingredientsWithoutFoodItems = [Ingredient]()
+        for ingredient in ingredients {
+            if ingredient.foodItem == nil {
+                ingredientsWithoutFoodItems.append(ingredient)
+            }
+        }
+        return ingredientsWithoutFoodItems
     }
     
     @ViewBuilder
@@ -122,7 +189,7 @@ struct FoodItemView: View {
                 Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
             }
         case .selectFoodItem:
-            FoodItemSelector(draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!)
+            FoodItemSelector(draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!, composedFoodItem: composedFoodItem)
         }
     }
 }

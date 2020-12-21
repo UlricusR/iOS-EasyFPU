@@ -49,7 +49,7 @@ class CarbsRegimeCalculator: ObservableObject {
     // MARK: - Static variables / constants
     
     static let `default` = CarbsRegimeCalculator(
-        composedFoodItem: ComposedFoodItemViewModel.default,
+        composedFoodItem: UserSettings.shared.composedMeal,
         eCarbsAbsorptionTimeInHours: 5,
         includeSugars: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealSugars) ?? false,
         includeTotalMealCarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false,

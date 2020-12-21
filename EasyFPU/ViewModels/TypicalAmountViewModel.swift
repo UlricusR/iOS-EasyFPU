@@ -10,6 +10,7 @@ import Foundation
 
 class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, Identifiable {
     var id = UUID()
+    
     @Published var amountAsString: String {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
@@ -52,19 +53,17 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, I
         self.amountAsString = amountAsString
     }
     
+    init(amount: Int, comment: String) {
+        self.amount = amount
+        self.comment = comment
+        self.amountAsString = String(amount)
+    }
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         amount = try container.decode(Int.self, forKey: .amount)
         comment = try container.decode(String.self, forKey: .comment)
         amountAsString = String(amount)
-    }
-    
-    func updateCDTypicalAmount(foodItem: FoodItem?) -> Bool {
-        if cdTypicalAmount == nil { return false }
-        cdTypicalAmount!.amount = Int64(amount)
-        cdTypicalAmount!.comment = comment
-        cdTypicalAmount!.foodItem = foodItem
-        return true
     }
     
     func hash(into hasher: inout Hasher) {

@@ -9,6 +9,10 @@
 import SwiftUI
 
 struct MainView: View {
+    enum Tab: Int {
+        case products = 0, ingredients
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var userSettings = UserSettings.shared
     @FetchRequest(
@@ -44,15 +48,15 @@ struct MainView: View {
                 ZStack(alignment: .leading) {
                     GeometryReader { geometry in
                         TabView(selection: $selectedTab) {
-                            ProductsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu)
-                                .tag(0)
+                            ProductsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu, selectedTab: $selectedTab)
+                                .tag(Tab.products.rawValue)
                                 .tabItem{
                                     Text("Products")
                                 }
                                 .environment(\.managedObjectContext, managedObjectContext)
                             
-                            IngredientsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu)
-                                .tag(1)
+                            IngredientsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu, selectedTab: $selectedTab)
+                                .tag(Tab.ingredients.rawValue)
                                 .tabItem{
                                     Text("Ingredients")
                                 }
@@ -99,15 +103,8 @@ struct MainView: View {
                                 return
                             }
                             
-                            for absorptionBlock in defaultAbsorptionBlocks {
-                                let cdAbsorptionBlock = AbsorptionBlock(context: self.managedObjectContext)
-                                cdAbsorptionBlock.absorptionTime = Int64(absorptionBlock.absorptionTime)
-                                cdAbsorptionBlock.maxFpu = Int64(absorptionBlock.maxFpu)
-                                if !self.absorptionScheme.absorptionBlocks.contains(cdAbsorptionBlock) {
-                                    self.absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
-                                }
-                            }
-                            try? AppDelegate.viewContext.save()
+                            // Create absorption blocks from default
+                            AbsorptionScheme.create(from: defaultAbsorptionBlocks, for: self.absorptionScheme)
                         } else {
                             // Store absorption blocks loaded from core data
                             self.absorptionScheme.absorptionBlocks = self.absorptionBlocks.sorted()
@@ -190,7 +187,7 @@ struct MainView: View {
     private func importFoodItems() {
         if foodItemsToBeImported != nil {
             for foodItemToBeImported in foodItemsToBeImported! {
-                FoodItem.create(from: foodItemToBeImported)
+                let _ = FoodItem.create(from: foodItemToBeImported)
             }
         } else {
             errorMessage = "Could not import food list"

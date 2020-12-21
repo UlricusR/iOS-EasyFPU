@@ -28,7 +28,7 @@
 "Move to Product List" = "Zu Produkten verschieben";
 "Move to Ingredient List" = "Zu Zutaten verschieben";
 "Delete" = "Löschen";
-"Copy of" = "Kopie von";
+"Copy" = "Kopie";
 "Tap to edit" = "Zum Bearbeiten antippen";
 
 // About
@@ -99,8 +99,12 @@
 "Generate" = "Berechnen";
 "portion(s)" = "Portion(en)";
 "Cannot create typical amount: " = "Kann typische Menge nicht berechnen: ";
-"Successfully saved as" = "Erfolgreich als";
-"in your Products list" = "in der Produktliste gespeichert";
+"successfully saved in Products" = "erfolgreich in Produkten gespeichert";
+"Missing Ingredients" = "Missing Ingredients";
+"The following ingredients are no longer available: " = "Die folgenden Zutaten sind nicht mehr vorhanden: ";
+". Do you want to create them or remove them from your product?" = ". Sollen diese erstellt oder von Ihrem Produkt entfernt werden?";
+"Create missing ingredients" = "Fehlende Zutaten erstellen";
+"Remove from product" = "Vom Produkt entfernen";
 
 // Meal preview
 "e-Carbs" = "Verl. KH";
@@ -252,8 +256,10 @@
 "Link to entry in " = "Link zum Eintrag in ";
 "No food selected" = "Kein Lebensmittel ausgewählt";
 "Searching" = "Suche";
-"The nutritional values from the database may not be correct, please cross-check! Use at your own risk." = "Die Nährwerte aus der Essensdatenbank könnten nicht korrekt sein, bitte unbedingt überprüfen. Nutzung auf eigene Gefahr!";
-"Use at my own risk" = "Nutzung auf eigene Gefahr";
+"The nutritional values from the database may not be correct, please cross-check! Use at your own risk." = "Der Autor der App übernimmt keine Haftung für die Korrektheit der Nährwerte in der Datenbank. Bitte kontrollieren Sie diese! Nutzung auf eigenes Risiko!";
+"Accept and continue" = "Auf eigenes Risiko nutzen";
+"Decline and cancel" = "Ablehnen und abbrechen";
+"Typical Amounts" = "Typische Mengen";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Essensliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";
@@ -262,14 +268,24 @@
 "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "Sobald Ihre Essensliste ein oder mehrere Essen beinhaltet, können Sie eine Mahlzeit zusammenstellen. Drücken Sie dazu kurz auf ein Essen. Dies öffnet den Dialog zur Eingabe der gegessenen Menge.";
 "A green Plus icon indicates that the food item has not yet been selected." = "Ein grünes Plus-Zeichen zeigt an, dass das Essen noch nicht zu einer Mahlzeit hinzugefügt wurde.";
 "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "Ein rotes Kreuz zeigt an, dass das Essen ausgewählt wurde. Es wird nun bei der Berechnung der Gesamtmahlzeit berücksichtigt. Drücken Sie ein weiteres Mal kurz auf das Essen, um es wieder aus der Mahlzeit zu entfernen.";
-"In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:" = "Haben Sie mindestens ein Essen ausgewählt, werden die Informationen zu den drei Kohlenhydrat-Type - schnelle Kohlenhydrate aus Zucker, reguläre Kohlenhydrate und verlängerte Kohlenhydrate - im unteren Bereich angezeigt:";
+"In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:" = "Haben Sie mindestens ein Essen ausgewählt, werden die Informationen zu den drei Kohlenhydrat-Type - schnelle Kohlenhydrate aus Zucker, reguläre Kohlenhydrate und verlängerte Kohlenhydrate - in einem Schwebefenster im unteren Bereich angezeigt:";
 "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Kohlenhydrate von Zucker werden in der Regel sofort absorbiert. Sie können die Parameter im Absorptionsschema-Dialog anpassen.";
 "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Reguläre Kohlenhydrate werden langsamer als Zucker verdaut. Sie können die entsprechenden Parameter ebenfalls im Absorptionsschema-Dialog anpassen.";
 "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Verlängerte Kohlenhydrate stammen aus der Verdauung von Fett und Proteinen (und sind eigentlich keine Kohlenhydrate). Daher kann ihre Absorptionszeit spät starten und sehr lange andauern.";
 "Tapping the red X icon in the meal summary will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero." = "Mit dem roten Kreuz können Sie Ihre Gesamtmahlzeit zurücksetzen, d.h. die Mengen aller Essen und die Zeit bis zum Beginn der Mahlzeit wird auf Null zurückgestellt.";
 "Tapping the summary will open the Meal Details view." = "Drücken Sie auf die Zusammenfassung der Nährwerte, um weitere Details zu sehen.";
 "Tapping the export button in the summary will open the Meal Export view." = "Drücken Sie auf den Export-Knopf, um Ihre Mahlzeit nach Apple Health zu exportieren.";
-"Tapping the info icon in the summary will open the Meal Details view." = "Drücken Sie auf das Info-Icon, um weitere Details zu sehen.";
+"Tapping the info icon in the summary will open the Meal Details view." = "Drücken Sie auf das Pfeilsymbol, um weitere Details zu sehen.";
+
+// Ingredients list help
+"Ingredients List" = "Zutatenliste";
+"The ingredients list contains the ingredients required to compose a recipe." = "Die Zutatenliste beinahltet alle Zutaten, die zum Zubereiten eines Rezepts notwendig sind.";
+"To add a new ingredient, tap on the large Plus button in the top right corner." = "Neue Zutaten werden mit dem grünen, großen Plus-Zeichen in der oberen rechten Ecke hinzugefügt.";
+"As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount." = "Sobald mindestens eine Zutat hinzugefügt wurde, können Sie mit Ihrem Rezept beginnen. Um eine Zutat hinzuzufügen, tippen Sie einmal darauf. Dadurch öffnet sich der Zutaten-Auswahldialog.";
+"A green Plus icon indicates that the food item has not yet been selected." = "Ein grünes Plus vor der Zutat zeigt an, dass die Zutat noch nicht ausgewählt wurde.";
+"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "Ein rotes X zeigt an, dass die Zutat ausgewählt wurde. Erneutes Tippen entfernt sie wieder aus dem Rezept.";
+"In case you have selected one or more ingredients, a hovering window will appear at the bottom of the screen, showing the summary of your recipe." = "Haben Sie mindestens eine Zutat ausgewählt, erscheint ein Schwebefenster, das die Zusammenfassung Ihres Rezeptes zeigt.";
+"Tapping the red X icon in the recipe summary will clear your recipe, i.e. remove all ingredients." = "Durch Tippen des roten Kreuzes im Schwebefenster entfernen Sie alle Zutaten aus dem Rezept, ohne es zu speichern.";
 
 // Select Food Item help
 "Select Food Item" = "Essen auswählen";
@@ -322,6 +338,14 @@
 "Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above." = "Es wird nur erfahrenen Benutzern mit guter Kenntnis der diabetologischen Konsequenzen empfohlen, das Absorptionsschema anzupassen. Es kann jedoch jederzeit auf das voreingestellte Schema zurückgesetzt werden.";
 "Furthermore you may modify the delay for the extended carbs, i.e. the time your body will need to digest your meal before the extended carbs from fat and protein start to be effective. Recommendation and default is 90 minutes." = "Sie können außerdem die Verzögerung der verlängerten Kohlenhydrate einstellen, d.h. die Zeit, die Ihr Körper für die Verdauung benötigt, bevor die Kohlenhydrate aus Fett und Protein wirksam werden. Empfehlung und Voreinstellung ist 90 Minuten.";
 "Finally, the interval parameter will be used to determine the time interval between each extended carb entry in Apple Health. Default is 10 minutes. Please see the help pages of the meal export view for further details." = "Der Intervall-Parameter legt den Zeitraum zwischen den einzelnen Kohlenhydrat-Einträgen beim Export nach Apple Health fest. Voreinstellung ist 10 Minuten. Mehr dazu auf der Hilfe-Seite der Export-Ansicht.";
+
+// Food item composer help
+"Food Item Composer" = "Rezept-Editor";
+"This view summarizes your recipe. It shows the selected ingredients and lets you edit the following details:" = "Diese Ansicht fasst Ihr Rezept zusammen und lässt sie folgende Eingaben vervollständigen:";
+"- The name of the composed product / recipe" = "- Den Namen des zusammengestellten Produkts bzw. Rezepts";
+"- The total weight of the final product" = "- Das Gesamtgewicht des Essens nach Fertigstellung";
+"- Whether or not the recipe is a favorite" = "- Lieblingsessen";
+"- The number of portions" = "- Anzahl der Portionen";
 
 // Health export help
 "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "Sie können Nährwerte nach Apple Health exportieren. Wählen Sie die entsprechenden Daten mit den Auswahlknöpfen aus.";

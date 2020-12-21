@@ -11,12 +11,8 @@ import Combine
 import CodeScanner
 
 struct FoodItemEditor: View {
-    enum NotificationStatus {
-        case void
-        case searching
-        case noSearchResults
-        
-        static let duration = 4.0
+    enum NotificationState {
+        case void, searching, noSearchResults
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -26,10 +22,15 @@ struct FoodItemEditor: View {
     var editedFoodItem: FoodItem? // Working copy of the food item
     var category: FoodItemCategory
     @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
+    @State private var scanResult: FoodDatabaseEntry?
+    @State private var notificationState = NotificationState.void
     @State private var errorMessage: String = ""
     @State private var activeSheet: FoodItemEditorSheets.State?
+    @State private var foodSelected = false // We don't need this variable here
     
     @State var showingAlert = false
+    @State var activeActionSheet: FoodItemEditorSheets.ActionSheetState?
+    
     @FetchRequest(
         entity: FoodItem.entity(),
         sortDescriptors: [
@@ -71,14 +72,22 @@ struct FoodItemEditor: View {
                                         self.errorMessage = NSLocalizedString("Search term must not be empty", comment: "")
                                         self.showingAlert = true
                                     } else {
-                                        performSearch()
+                                        if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
+                                            performSearch()
+                                        } else {
+                                            activeActionSheet = .search
+                                        }
                                     }
                                 }) {
                                     Image(systemName: "magnifyingglass").imageScale(.large)
                                 }.buttonStyle(BorderlessButtonStyle())
                                 
                                 Button(action: {
-                                    activeSheet = .scan
+                                    if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
+                                        activeSheet = .scan
+                                    } else {
+                                        activeActionSheet = .scan
+                                    }
                                 }) {
                                     Image(systemName: "barcode.viewfinder").imageScale(.large)
                                 }.buttonStyle(BorderlessButtonStyle())
@@ -205,104 +214,7 @@ struct FoodItemEditor: View {
                         }.padding()
                     },
                     trailing: Button(action: {
-                        // First check if there's an unsaved typical amount
-                        if self.newTypicalAmount != "" && self.newTypicalAmountComment != "" { // We have an unsaved typical amount
-                            self.addTypicalAmount()
-                        }
-                        
-                        // Create error to store feedback from FoodItemViewModel
-                        var error = FoodItemViewModelError.name("Dummy")
-                        
-                        // Create updated food item
-                        if let updatedFoodItem = FoodItemViewModel(
-                            name: self.draftFoodItem.name,
-                            category: self.draftFoodItem.category,
-                            favorite: self.draftFoodItem.favorite,
-                            caloriesAsString: self.draftFoodItem.caloriesPer100gAsString,
-                            carbsAsString: self.draftFoodItem.carbsPer100gAsString,
-                            sugarsAsString: self.draftFoodItem.sugarsPer100gAsString,
-                            amountAsString: self.draftFoodItem.amountAsString,
-                            error: &error) { // We have a valid food item
-                            if self.editedFoodItem != nil { // We need to update an existing food item
-                                self.editedFoodItem!.name = updatedFoodItem.name
-                                self.editedFoodItem!.category = updatedFoodItem.category.rawValue
-                                self.editedFoodItem!.favorite = updatedFoodItem.favorite
-                                self.editedFoodItem!.carbsPer100g = updatedFoodItem.carbsPer100g
-                                self.editedFoodItem!.caloriesPer100g = updatedFoodItem.caloriesPer100g
-                                self.editedFoodItem!.sugarsPer100g = updatedFoodItem.sugarsPer100g
-                                self.editedFoodItem!.amount = Int64(updatedFoodItem.amount)
-                                
-                                // Update typical amounts
-                                for typicalAmount in self.draftFoodItem.typicalAmounts {
-                                    self.updateCDTypicalAmount(with: typicalAmount)
-                                }
-                                
-                                // Remove deleted typical amounts
-                                for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
-                                    if typicalAmountToBeDeleted.cdTypicalAmount != nil {
-                                        typicalAmountToBeDeleted.cdTypicalAmount!.foodItem = nil
-                                        self.editedFoodItem!.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
-                                        self.managedObjectContext.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
-                                    }
-                                }
-                                
-                                // Reset typical amounts to be deleted
-                                self.typicalAmountsToBeDeleted.removeAll()
-                            } else { // We have a new food item
-                                let newFoodItem = FoodItem(context: self.managedObjectContext)
-                                newFoodItem.id = UUID()
-                                newFoodItem.name = updatedFoodItem.name
-                                newFoodItem.category = updatedFoodItem.category.rawValue
-                                newFoodItem.favorite = updatedFoodItem.favorite
-                                newFoodItem.carbsPer100g = updatedFoodItem.carbsPer100g
-                                newFoodItem.caloriesPer100g = updatedFoodItem.caloriesPer100g
-                                newFoodItem.sugarsPer100g = updatedFoodItem.sugarsPer100g
-                                newFoodItem.amount = Int64(updatedFoodItem.amount)
-                                
-                                for typicalAmount in self.typicalAmounts {
-                                    let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-                                    typicalAmount.cdTypicalAmount = newTypicalAmount
-                                    let _ = typicalAmount.updateCDTypicalAmount(foodItem: newFoodItem)
-                                    newFoodItem.addToTypicalAmounts(newTypicalAmount)
-                                }
-                            }
-                            
-                            // Save new food item
-                            try? AppDelegate.viewContext.save()
-                            
-                            // Quit edit mode
-                            presentation.wrappedValue.dismiss()
-                        } else { // Invalid data, display alert
-                            // Evaluate error
-                            switch error {
-                            case .name(let errorMessage):
-                                self.errorMessage = errorMessage
-                                self.draftFoodItem.name = self.oldName
-                            case .calories(let errorMessage):
-                                self.errorMessage = NSLocalizedString("Calories: ", comment:"") + errorMessage
-                                self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
-                            case .carbs(let errorMessage):
-                                self.errorMessage = NSLocalizedString("Carbs: ", comment:"") + errorMessage
-                                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
-                            case .sugars(let errorMessage):
-                                self.errorMessage = NSLocalizedString("Sugars: ", comment: "") + errorMessage
-                                self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
-                            case .tooMuchCarbs(let errorMessage):
-                                self.errorMessage = errorMessage
-                                self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
-                                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
-                            case .tooMuchSugars(let errorMessage):
-                                self.errorMessage = errorMessage
-                                self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
-                                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
-                            case .amount(let errorMessage):
-                                self.errorMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
-                                self.draftFoodItem.amountAsString = self.oldAmountAsString
-                            }
-                            
-                            // Display alert and stay in edit mode
-                            self.showingAlert = true
-                        }
+                        saveFoodItem()
                     }) {
                         Text("Done")
                     }
@@ -319,6 +231,35 @@ struct FoodItemEditor: View {
             .sheet(item: $activeSheet) {
                 sheetContent($0)
             }
+            .actionSheet(item: $activeActionSheet) { state in
+                ActionSheet(
+                    title: Text("Disclaimer"),
+                    message: Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk."),
+                    buttons: [
+                        .default(Text("Accept and continue")) {
+                            var settingsError = ""
+                            if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
+                                errorMessage = settingsError
+                                showingAlert = true
+                            }
+
+                            // Set dynamic variable
+                            UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
+                            
+                            // Start activity
+                            switch state {
+                            case .scan:
+                                activeSheet = .scan
+                            case .search:
+                                performSearch()
+                            }
+                        },
+                        .default(Text("Decline and cancel")) {
+                            // Do nothing, don't take over any data
+                        }
+                    ]
+                )
+            }
             .onAppear() {
                 self.oldName = self.draftFoodItem.name
                 self.oldCaloriesPer100gAsString = self.draftFoodItem.caloriesPer100gAsString
@@ -327,10 +268,79 @@ struct FoodItemEditor: View {
                 self.oldAmountAsString = self.draftFoodItem.amountAsString
             }
             
-            // The notification view (appearing on top of the main view)
-            if notificationStatus != .void {
-                NotificationView { createNotification(for: notificationStatus) }
+            // Notification
+            if notificationState != .void {
+                NotificationView {
+                    notificationViewContent()
+                }
             }
+        }
+    }
+    
+    private func saveFoodItem() {
+        // First check if there's an unsaved typical amount
+        if self.newTypicalAmount != "" && self.newTypicalAmountComment != "" { // We have an unsaved typical amount
+            self.addTypicalAmount()
+        }
+        
+        // Create error to store feedback from FoodItemViewModel
+        var error = FoodItemViewModelError.name("Dummy")
+        
+        // Create updated food item
+        if let updatedFoodItem = FoodItemViewModel(
+            name: self.draftFoodItem.name,
+            category: self.draftFoodItem.category,
+            favorite: self.draftFoodItem.favorite,
+            caloriesAsString: self.draftFoodItem.caloriesPer100gAsString,
+            carbsAsString: self.draftFoodItem.carbsPer100gAsString,
+            sugarsAsString: self.draftFoodItem.sugarsPer100gAsString,
+            amountAsString: self.draftFoodItem.amountAsString,
+            error: &error) { // We have a valid food item
+            // Add typical amounts
+            updatedFoodItem.typicalAmounts = draftFoodItem.typicalAmounts
+            
+            if self.editedFoodItem != nil { // We need to update an existing food item
+                FoodItem.update(editedFoodItem!, with: updatedFoodItem)
+                FoodItem.remove(typicalAmountsToBeDeleted, from: editedFoodItem!)
+                
+                // Reset typical amounts to be deleted
+                self.typicalAmountsToBeDeleted.removeAll()
+            } else { // We have a new food item
+                let _ = FoodItem.create(from: updatedFoodItem)
+            }
+            
+            // Quit edit mode
+            presentation.wrappedValue.dismiss()
+        } else { // Invalid data, display alert
+            // Evaluate error
+            switch error {
+            case .name(let errorMessage):
+                self.errorMessage = errorMessage
+                self.draftFoodItem.name = self.oldName
+            case .calories(let errorMessage):
+                self.errorMessage = NSLocalizedString("Calories: ", comment:"") + errorMessage
+                self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
+            case .carbs(let errorMessage):
+                self.errorMessage = NSLocalizedString("Carbs: ", comment:"") + errorMessage
+                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+            case .sugars(let errorMessage):
+                self.errorMessage = NSLocalizedString("Sugars: ", comment: "") + errorMessage
+                self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
+            case .tooMuchCarbs(let errorMessage):
+                self.errorMessage = errorMessage
+                self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
+                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+            case .tooMuchSugars(let errorMessage):
+                self.errorMessage = errorMessage
+                self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
+                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+            case .amount(let errorMessage):
+                self.errorMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
+                self.draftFoodItem.amountAsString = self.oldAmountAsString
+            }
+            
+            // Display alert and stay in edit mode
+            self.showingAlert = true
         }
     }
     
@@ -348,18 +358,6 @@ struct FoodItemEditor: View {
             return
         }
         self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
-    }
-    
-    private func updateCDTypicalAmount(with typicalAmount: TypicalAmountViewModel) {
-        // Check if it's an existing core data entry
-        if typicalAmount.cdTypicalAmount == nil { // This is a new typical amount
-            let newTypicalAmount = TypicalAmount(context: self.managedObjectContext)
-            typicalAmount.cdTypicalAmount = newTypicalAmount
-            let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
-            self.editedFoodItem!.addToTypicalAmounts(newTypicalAmount)
-        } else { // This is an existing typical amount, so just update values
-            let _ = typicalAmount.updateCDTypicalAmount(foodItem: self.editedFoodItem!)
-        }
     }
     
     private func addTypicalAmount() {
@@ -401,21 +399,25 @@ struct FoodItemEditor: View {
         
         switch result {
         case .success(let barcode):
-            UserSettings.shared.foodDatabase.prepare(barcode) { result in
+            // Show search notification
+            notificationState = .searching
+            
+            UserSettings.shared.foodDatabase.prepare(barcode, category: category) { result in
                 switch result {
                 case .success(let networkFoodDatabaseEntry):
                     guard let foodDatabaseEntry = networkFoodDatabaseEntry else {
-                        errorMessage = NSLocalizedString("No food found", comment: "")
-                        showingAlert = true
+                        DispatchQueue.main.async { self.notificationState = .noSearchResults }
                         return
                     }
                     DispatchQueue.main.async {
-                        self.foodDatabaseResults.selectedEntry = foodDatabaseEntry
+                        self.notificationState = .void
+                        self.scanResult = foodDatabaseEntry
                         self.activeSheet = .foodPreview
                     }
                     
                     
                 case .failure(let error):
+                    DispatchQueue.main.async { self.notificationState = .void }
                     errorMessage = error.evaluate()
                     debugPrint(errorMessage)
                     showingAlert = true
@@ -428,27 +430,22 @@ struct FoodItemEditor: View {
     }
     
     private func performSearch() {
-        notificationStatus = .searching
-        UserSettings.shared.foodDatabase.search(for: draftFoodItem.name) { result in
+        notificationState = .searching
+        UserSettings.shared.foodDatabase.search(for: draftFoodItem.name, category: category) { result in
             switch result {
             case .success(let networkSearchResults):
-                guard let searchResults = networkSearchResults else {
-                    errorMessage = NSLocalizedString("No food found", comment: "")
-                    showingAlert = true
+                guard let searchResults = networkSearchResults, !searchResults.isEmpty else {
+                    DispatchQueue.main.async { self.notificationState = .noSearchResults }
                     return
                 }
                 
                 DispatchQueue.main.async {
-                    notificationStatus = searchResults.isEmpty ? .noSearchResults : .void
-                    if !searchResults.isEmpty {
-                        self.foodDatabaseResults.searchResults = searchResults
-                        self.activeSheet = .search
-                    }
+                    self.notificationState = .void
+                    self.foodDatabaseResults.searchResults = searchResults
+                    self.activeSheet = .search
                 }
             case .failure(let error):
-                DispatchQueue.main.async {
-                    notificationStatus = .void
-                }
+                DispatchQueue.main.async { self.notificationState = .void }
                 errorMessage = error.evaluate()
                 debugPrint(errorMessage)
                 showingAlert = true
@@ -457,24 +454,19 @@ struct FoodItemEditor: View {
     }
     
     @ViewBuilder
-    private func createNotification(for notificationStatus: NotificationStatus) -> some View {
-        HStack {
-            switch notificationStatus {
-            case .searching:
-                HStack {
-                    ActivityIndicatorText(staticText: NSLocalizedString("Searching", comment: ""))
-                }
-            case .noSearchResults:
-                HStack {
-                    Text("No food found")
-                }.onAppear {
-                    Timer.scheduledTimer(withTimeInterval: NotificationStatus.duration, repeats: false) { timer in
-                        self.notificationStatus = .void
+    private func notificationViewContent() -> some View {
+        switch notificationState {
+        case .searching:
+            ActivityIndicatorDynamicText(staticText: NSLocalizedString("Searching", comment: ""))
+        case .noSearchResults:
+            Text("No food found")
+                .onAppear() {
+                    Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in
+                        self.notificationState = .void
                     }
                 }
-            default:
-                EmptyView()
-            }
+        default:
+            EmptyView()
         }
     }
     
@@ -486,9 +478,9 @@ struct FoodItemEditor: View {
         case .search:
             FoodSearch(foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem, category: category)
         case .scan:
-            CodeScannerView(codeTypes: [.ean13], simulatedData: "4101530002123", completion: self.handleScan)
+            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "4101530002123", completion: self.handleScan)
         case .foodPreview:
-            FoodPreview(product: foodDatabaseResults.selectedEntry!, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, productWasChosen: $productWasChosenInFoodPreview)
+            FoodPreview(product: $scanResult, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected)
         }
     }
 }

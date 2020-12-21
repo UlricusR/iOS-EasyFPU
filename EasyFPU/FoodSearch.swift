@@ -17,36 +17,38 @@ struct FoodSearch: View {
     @State var showingAlert = false
     
     var body: some View {
-        NavigationView {
-            List {
-                if foodDatabaseResults.searchResults == nil {
-                    Text("No search results (yet)")
-                } else {
-                    ForEach(foodDatabaseResults.searchResults!) { searchResult in
+        if let searchResults = foodDatabaseResults.searchResults {
+            NavigationView {
+                List {
+                    ForEach(searchResults) { searchResult in
                         FoodSearchResultPreview(product: searchResult, foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem, category: self.category, parentPresentation: _presentation)
                     }
                 }
+                .navigationBarTitle("Food Database Search")
+                .navigationBarItems(leading: Button(action: {
+                    // Just close
+                    presentation.wrappedValue.dismiss()
+                }) {
+                    Text("Cancel")
+                }, trailing: Button(action: {
+                    if foodDatabaseResults.selectedEntry != nil {
+                        foodDatabaseResults.selectedEntry!.category = category
+                        draftFoodItem.fill(with: foodDatabaseResults.selectedEntry!)
+                    }
+                    // Close sheet
+                    presentation.wrappedValue.dismiss()
+                }) {
+                    Text("Select").disabled(foodDatabaseResults.selectedEntry == nil)
+                })
             }
-            .navigationBarTitle("Food Database Search")
-            .navigationBarItems(leading: Button(action: {
-                // Just close
-                presentation.wrappedValue.dismiss()
-            }) {
-                Text("Cancel")
-            }, trailing: Button(action: {
-                if foodDatabaseResults.selectedEntry != nil {
-                    foodDatabaseResults.selectedEntry!.category = category
-                    draftFoodItem.fill(with: foodDatabaseResults.selectedEntry!)
-                }
-                // Close sheet
-                presentation.wrappedValue.dismiss()
-            }) {
-                Text("Select").disabled(foodDatabaseResults.selectedEntry == nil)
-            })
+            .onDisappear() {
+                foodDatabaseResults.searchResults = nil
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+        } else {
+            NotificationView {
+                ActivityIndicatorSpinner()
+            }
         }
-        .onDisappear() {
-            foodDatabaseResults.searchResults = nil
-        }
-        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

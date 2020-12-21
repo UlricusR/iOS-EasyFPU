@@ -11,7 +11,7 @@ import SwiftUI
 struct ComposedFoodItemEvaluationView: View {
     @Environment(\.presentationMode) var presentation
     @ObservedObject var absorptionScheme: AbsorptionScheme
-    var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
     @State var activeSheet: ComposedFoodItemEvaluationViewSheets.State?
@@ -90,24 +90,24 @@ struct ComposedFoodItemEvaluationView: View {
             }
             .navigationBarTitle(Text(self.composedFoodItem.name), displayMode: .inline)
             .navigationBarItems(
-                leading: HStack {
-                    Button(action: {
-                        activeSheet = .help
-                    }) {
-                        Image(systemName: "questionmark.circle").imageScale(.large)
-                    }
-                
+                leading: Button(action: {
+                    activeSheet = .help
+                }) {
+                    Image(systemName: "questionmark.circle").imageScale(.large)
+                },
+                trailing: HStack {
                     Button(action: {
                         composedFoodItem.clear()
                         UserSettings.shared.mealDelayInMinutes = 0
                     }) {
                         Image(systemName: "xmark.circle").foregroundColor(.red).imageScale(.large)
-                    }.padding(.leading)
-                },
-                trailing: Button(action: {
-                    activeSheet = .exportToHealth
-                }) {
-                    HealthDataHelper.healthKitIsAvailable() ? AnyView(Image(systemName: "square.and.arrow.up").imageScale(.large)) : AnyView(EmptyView())
+                    }.padding(.trailing)
+                    
+                    Button(action: {
+                        activeSheet = .exportToHealth
+                    }) {
+                        HealthDataHelper.healthKitIsAvailable() ? AnyView(Image(systemName: "square.and.arrow.up").imageScale(.large)) : AnyView(EmptyView())
+                    }
                 }
             )
         }

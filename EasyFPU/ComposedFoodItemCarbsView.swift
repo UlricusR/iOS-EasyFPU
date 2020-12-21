@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ComposedFoodItemCarbsView: View {
-    var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
     var regularCarbsTimeAsString: String {
         let time = Date().addingTimeInterval(TimeInterval((userSettings.absorptionTimeCarbsDelayInMinutes + userSettings.mealDelayInMinutes) * 60))
