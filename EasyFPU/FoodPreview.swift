@@ -37,7 +37,6 @@ struct FoodPreview: View {
                     // Close sheet
                     foodSelected = true
                     presentation.wrappedValue.dismiss()
-                    
                 }) {
                     Text("Select")
                 })
