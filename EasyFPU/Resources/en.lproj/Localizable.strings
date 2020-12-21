@@ -267,13 +267,23 @@
 "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed.";
 "A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
 "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
-"In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:" = "In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:";
+"In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:" = "In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented in a hovering window on the bottom of the screen:";
 "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.";
 "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.";
 "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.";
 "Tapping the red X icon in the meal summary will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero." = "Tapping the red X icon in the meal summary will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero.";
 "Tapping the export button in the summary will open the Meal Export view." = "Tapping the export button in the summary will open the Meal Export view.";
-"Tapping the info icon in the summary will open the Meal Details view." = "Tapping the info icon in the summary will open the Meal Details view.";
+"Tapping the info icon in the summary will open the Meal Details view." = "Tapping the chevron icon in the summary will reveil the Meal's details.";
+
+// Ingredients list help
+"Ingredients List" = "Ingredients List";
+"The ingredients list contains the ingredients required to compose a recipe." = "The ingredients list contains the ingredients required to compose a recipe.";
+"To add a new ingredient, tap on the large Plus button in the top right corner." = "To add a new ingredient, tap on the large Plus button in the top right corner.";
+"As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount." = "As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount.";
+"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
+"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
+"In case you have selected one or more ingredients, a hovering window will appear at the bottom of the screen, showing the summary of your recipe." = "In case you have selected one or more ingredients, a hovering window will appear at the bottom of the screen, showing the summary of your recipe.";
+"Tapping the red X icon in the recipe summary will clear your recipe, i.e. remove all ingredients." = "Tapping the red X icon in the recipe summary will clear your recipe, i.e. remove all ingredients.";
 
 // Select Food Item help
 "Select Food Item" = "Select Food Item";
@@ -326,6 +336,14 @@
 "Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above." = "Editing the absorption scheme is only recommended for advanced users, who have experience in FPUs / absorption time. The absorption scheme can always be reset to the pre-defined scheme above.";
 "Furthermore you may modify the delay for the extended carbs, i.e. the time your body will need to digest your meal before the extended carbs from fat and protein start to be effective. Recommendation and default is 90 minutes." = "Furthermore you may modify the delay for the extended carbs, i.e. the time your body will need to digest your meal before the extended carbs from fat and protein start to be effective. Recommendation and default is 90 minutes.";
 "Finally, the interval parameter will be used to determine the time interval between each extended carb entry in Apple Health. Default is 10 minutes. Please see the help pages of the meal export view for further details." = "Finally, the interval parameter will be used to determine the time interval between each extended carb entry in Apple Health. Default is 10 minutes. Please see the help pages of the meal export view for further details.";
+
+// Food item composer help
+"Food Item Composer" = "Recipe Editor";
+"This view summarizes your recipe. It shows the selected ingredients and lets you edit the following details:" = "This view summarizes your recipe. It shows the selected ingredients and lets you edit the following details:";
+"- The name of the composed product / recipe" = "- The name of the composed product / recipe";
+"- The total weight of the final product" = "- The total weight of the final product";
+"- Whether or not the recipe is a favorite" = "- Whether or not the recipe is a favorite";
+"- The number of portions" = "- The number of portions";
 
 // Health export help
 "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles.";

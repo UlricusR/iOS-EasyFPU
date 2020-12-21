@@ -60,7 +60,7 @@ struct HelpViewProductsList: View {
                 }.padding()
                 
                 HStack {
-                    Image(systemName: "info.circle").foregroundColor(.accentColor)
+                    Image(systemName: "chevron.right.circle").foregroundColor(.accentColor)
                     Text("Tapping the info icon in the summary will open the Meal Details view.")
                 }.padding()
             }
