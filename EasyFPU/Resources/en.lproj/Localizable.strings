@@ -92,6 +92,7 @@
 "Weight" = "Weight";
 "Final product" = "Final product";
 "The weight of the composed product is less than the sum of its ingredients" = "The weight of the composed product is less than the sum of its ingredients";
+"The weight of the composed product is more than the sum of its ingredients" = "The weight of the composed product is more than the sum of its ingredients";
 "Save" = "Save";
 "Save anyway" = "Save anyway";
 "Generate typical amounts" = "Generate typical amounts";

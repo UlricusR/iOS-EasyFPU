@@ -107,8 +107,11 @@ struct FoodItemComposerView: View {
                         }
                         
                         Button(action: {
-                            if !weightCheck() {
+                            if weightCheck(isLess: true) {
                                 message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                                showingActionSheet = true
+                            } else if weightCheck(isLess: false) {
+                                message = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
                                 showingActionSheet = true
                             } else {
                                 saveProduct()
@@ -136,13 +139,13 @@ struct FoodItemComposerView: View {
         }
     }
     
-    private func weightCheck() -> Bool {
+    private func weightCheck(isLess: Bool) -> Bool {
         var ingredientsWeight = 0
         for ingredient in composedFoodItem.foodItems {
             ingredientsWeight += ingredient.amount
         }
         
-        return ingredientsWeight <= composedFoodItem.amount ? true : false
+        return isLess ? (ingredientsWeight <= composedFoodItem.amount ? false : true) : (ingredientsWeight > composedFoodItem.amount ? false : true)
     }
     
     private func saveProduct() {
