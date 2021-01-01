@@ -81,6 +81,7 @@
 "Cannot delete food item" = "Cannot delete food item";
 "Delay of Extended Carbs" = "Delay of Extended Carbs";
 "Cannot delete ingredient" = "Cannot delete ingredient";
+"Could not generate data export" = "Could not generate data export";
 
 // Ingredients
 "Ingredients" = "Ingredients";
@@ -92,6 +93,7 @@
 "Weight" = "Weight";
 "Final product" = "Final product";
 "The weight of the composed product is less than the sum of its ingredients" = "The weight of the composed product is less than the sum of its ingredients";
+"The weight of the composed product is more than the sum of its ingredients" = "The weight of the composed product is more than the sum of its ingredients";
 "Save" = "Save";
 "Save anyway" = "Save anyway";
 "Generate typical amounts" = "Generate typical amounts";

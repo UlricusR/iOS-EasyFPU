@@ -323,6 +323,26 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         duplicate.cdFoodItem = FoodItem.create(from: duplicate)
     }
     
+    func exportToURL() -> URL? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        guard let encoded = try? encoder.encode(self) else { return nil }
+        
+        let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        
+        guard let path = documents?.appendingPathComponent("/\(name).fooditem") else {
+            return nil
+        }
+        
+        do {
+            try encoded.write(to: path, options: .atomicWrite)
+            return path
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         var foodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)

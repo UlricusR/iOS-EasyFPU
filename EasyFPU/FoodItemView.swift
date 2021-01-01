@@ -87,12 +87,12 @@ struct FoodItemView: View {
                 Text("Duplicate")
             }
             
-            // TODO: Sharing the food item
-            /*Button(action: {
-                
+            // Sharing the food item
+            Button(action: {
+                activeSheet = .exportFoodItem
             }) {
                 Text("Share")
-            }*/
+            }
             
             // Moving the food item to another category
             Button(action: {
@@ -190,6 +190,12 @@ struct FoodItemView: View {
             }
         case .selectFoodItem:
             FoodItemSelector(draftFoodItem: self.foodItem, editedFoodItem: self.foodItem.cdFoodItem!, composedFoodItem: composedFoodItem)
+        case .exportFoodItem:
+            if let path = foodItem.exportToURL() {
+                ActivityView(activityItems: [path], applicationActivities: nil)
+            } else {
+                Text(NSLocalizedString("Could not generate data export", comment: ""))
+            }
         }
     }
 }
