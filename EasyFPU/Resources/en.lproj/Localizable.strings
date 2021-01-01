@@ -81,6 +81,7 @@
 "Cannot delete food item" = "Cannot delete food item";
 "Delay of Extended Carbs" = "Delay of Extended Carbs";
 "Cannot delete ingredient" = "Cannot delete ingredient";
+"Could not generate data export" = "Could not generate data export";
 
 // Ingredients
 "Ingredients" = "Ingredients";

@@ -12,6 +12,7 @@ class FoodItemViewSheets {
     enum State: Identifiable {
         case editFoodItem
         case selectFoodItem
+        case exportFoodItem
         
         var id: State { self }
     }

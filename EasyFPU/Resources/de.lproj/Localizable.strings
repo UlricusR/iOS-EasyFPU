@@ -81,6 +81,7 @@
 "Cannot delete food item" = "Kann Essen nicht löschen";
 "Delay of Extended Carbs" = "Verzögerung der verlängerten KH";
 "Cannot delete ingredient" = "Kann Zutat nicht löschen";
+"Could not generate data export" = "Konnte Daten nicht exportieren";
 
 // Ingredients
 "Ingredients" = "Zutaten";
