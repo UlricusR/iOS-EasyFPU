@@ -28,8 +28,7 @@ struct FoodItemEditor: View {
     @State private var activeSheet: FoodItemEditorSheets.State?
     @State private var foodSelected = false // We don't need this variable here
     
-    @State var showingAlert = false
-    @State var activeActionSheet: FoodItemEditorSheets.ActionSheetState?
+    @State var activeAlert: FoodItemEditorSheets.AlertState?
     
     @FetchRequest(
         entity: FoodItem.entity(),
@@ -70,12 +69,12 @@ struct FoodItemEditor: View {
                                 Button(action: {
                                     if draftFoodItem.name.isEmpty {
                                         self.errorMessage = NSLocalizedString("Search term must not be empty", comment: "")
-                                        self.showingAlert = true
+                                        self.activeAlert = .alertMessage
                                     } else {
                                         if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
                                             performSearch()
                                         } else {
-                                            activeActionSheet = .search
+                                            self.activeAlert = .search
                                         }
                                     }
                                 }) {
@@ -84,9 +83,9 @@ struct FoodItemEditor: View {
                                 
                                 Button(action: {
                                     if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
-                                        activeSheet = .scan
+                                        self.activeSheet = .scan
                                     } else {
-                                        activeActionSheet = .scan
+                                        self.activeAlert = .scan
                                     }
                                 }) {
                                     Image(systemName: "barcode.viewfinder").imageScale(.large)
@@ -221,44 +220,11 @@ struct FoodItemEditor: View {
                 )
             }
             .navigationViewStyle(StackNavigationViewStyle())
-            .alert(isPresented: $showingAlert) {
-                Alert(
-                    title: Text("Data alert"),
-                    message: Text(self.errorMessage),
-                    dismissButton: .default(Text("OK"))
-                )
+            .alert(item: $activeAlert) { state in
+                alertContent(state)
             }
             .sheet(item: $activeSheet) {
                 sheetContent($0)
-            }
-            .actionSheet(item: $activeActionSheet) { state in
-                ActionSheet(
-                    title: Text("Disclaimer"),
-                    message: Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk."),
-                    buttons: [
-                        .default(Text("Accept and continue")) {
-                            var settingsError = ""
-                            if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                                errorMessage = settingsError
-                                showingAlert = true
-                            }
-
-                            // Set dynamic variable
-                            UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
-                            
-                            // Start activity
-                            switch state {
-                            case .scan:
-                                activeSheet = .scan
-                            case .search:
-                                performSearch()
-                            }
-                        },
-                        .default(Text("Decline and cancel")) {
-                            // Do nothing, don't take over any data
-                        }
-                    ]
-                )
             }
             .onAppear() {
                 self.oldName = self.draftFoodItem.name
@@ -340,7 +306,7 @@ struct FoodItemEditor: View {
             }
             
             // Display alert and stay in edit mode
-            self.showingAlert = true
+            self.activeAlert = .alertMessage
         }
     }
     
@@ -371,12 +337,12 @@ struct FoodItemEditor: View {
                 self.newTypicalAmountComment = ""
                 self.updateButton = false
             } else {
-                self.showingAlert = true
+                self.activeAlert = .alertMessage
             }
         } else { // This is an existing typical amount
             guard let index = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
                 self.errorMessage = NSLocalizedString("Fatal error: Could not identify typical amount", comment: "")
-                self.showingAlert = true
+                self.activeAlert = .alertMessage
                 return
             }
             self.draftFoodItem.typicalAmounts[index].amountAsString = self.newTypicalAmount
@@ -420,12 +386,12 @@ struct FoodItemEditor: View {
                     DispatchQueue.main.async { self.notificationState = .void }
                     errorMessage = error.evaluate()
                     debugPrint(errorMessage)
-                    showingAlert = true
+                    self.activeAlert = .alertMessage
                 }
             }
         case .failure(let error):
             errorMessage = NSLocalizedString("Error scanning food: ", comment: "") + error.localizedDescription
-            showingAlert = true
+            self.activeAlert = .alertMessage
         }
     }
     
@@ -448,7 +414,7 @@ struct FoodItemEditor: View {
                 DispatchQueue.main.async { self.notificationState = .void }
                 errorMessage = error.evaluate()
                 debugPrint(errorMessage)
-                showingAlert = true
+                self.activeAlert = .alertMessage
             }
         }
     }
@@ -481,6 +447,55 @@ struct FoodItemEditor: View {
             CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "4101530002123", completion: self.handleScan)
         case .foodPreview:
             FoodPreview(product: $scanResult, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected)
+        }
+    }
+    
+    private func alertContent(_ state: FoodItemEditorSheets.AlertState) -> Alert {
+        switch state {
+        case .alertMessage:
+            return Alert(
+                title: Text("Data alert"),
+                message: Text(self.errorMessage),
+                dismissButton: .default(Text("OK"))
+            )
+        case .scan:
+            return Alert(
+                title: Text("Disclaimer"),
+                message: Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk."),
+                primaryButton: .default(Text("Accept and continue"), action: {
+                    var settingsError = ""
+                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
+                        errorMessage = settingsError
+                        self.activeAlert = .alertMessage
+                    }
+
+                    // Set dynamic variable
+                    UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
+                    
+                    // Perform scan
+                    self.activeSheet = .scan
+                }),
+                secondaryButton: .default(Text("Decline and cancel"))
+            )
+        case .search:
+            return Alert(
+                title: Text("Disclaimer"),
+                message: Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk."),
+                primaryButton: .default(Text("Accept and continue"), action:  {
+                    var settingsError = ""
+                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
+                        errorMessage = settingsError
+                        self.activeAlert = .alertMessage
+                    }
+
+                    // Set dynamic variable
+                    UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
+                    
+                    // Perform search
+                    self.performSearch()
+                }),
+                secondaryButton: .default(Text("Decline and cancel"))
+            )
         }
     }
 }
