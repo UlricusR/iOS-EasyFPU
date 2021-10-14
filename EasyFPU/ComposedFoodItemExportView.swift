@@ -81,30 +81,35 @@ struct ComposedFoodItemExportView: View {
                 Spacer()
             }
             .navigationBarTitle("Export to Health", displayMode: .inline)
-            .navigationBarItems(
-                leading: Button(action: {
-                    self.showingSheet = true
-                }) {
-                    Image(systemName: "questionmark.circle").imageScale(.large)
-                },
-                trailing: Button(action: {
-                    // Store UserDefaults
-                    if !(
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealSugars, UserSettings.UserDefaultsBoolKey.exportTotalMealSugars), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &self.errorMessage)
-                    ){
-                        // Something went terribly wrong - inform user
-                        self.showingAlert = true
-                    } else {
-                        // Close sheet
-                        presentation.wrappedValue.dismiss()
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        self.showingSheet = true
+                    }) {
+                        Image(systemName: "questionmark.circle").imageScale(.large)
                     }
-                }) {
-                    Text("Done")
                 }
-            )
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        // Store UserDefaults
+                        if !(
+                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealSugars, UserSettings.UserDefaultsBoolKey.exportTotalMealSugars), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &self.errorMessage)
+                        ){
+                            // Something went terribly wrong - inform user
+                            self.showingAlert = true
+                        } else {
+                            // Close sheet
+                            presentation.wrappedValue.dismiss()
+                        }
+                    }) {
+                        Text("Done")
+                    }
+                }
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .onAppear() {

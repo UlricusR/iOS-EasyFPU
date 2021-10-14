@@ -97,11 +97,15 @@ struct FoodPreviewContent: View {
                     GeometryReader { reader in
                         getImageView(url: selectedEntry.imageFront!.image, for: reader)
                         .navigationBarTitle(selectedEntry.name)
-                        .navigationBarItems(trailing: Button(action: {
-                            self.activeSheet = nil
-                        }) {
-                            Text("Done")
-                        })
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Button(action: {
+                                    self.activeSheet = nil
+                                }) {
+                                    Text("Done")
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -111,11 +115,15 @@ struct FoodPreviewContent: View {
                     GeometryReader { reader in
                         getImageView(url: selectedEntry.imageNutriments!.image, for: reader)
                         .navigationBarTitle(selectedEntry.name)
-                        .navigationBarItems(trailing: Button(action: {
-                            self.activeSheet = nil
-                        }) {
-                            Text("Done")
-                        })
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Button(action: {
+                                    self.activeSheet = nil
+                                }) {
+                                    Text("Done")
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -125,11 +133,15 @@ struct FoodPreviewContent: View {
                     GeometryReader { reader in
                         getImageView(url: selectedEntry.imageIngredients!.image, for: reader)
                         .navigationBarTitle(selectedEntry.name)
-                        .navigationBarItems(trailing: Button(action: {
-                            self.activeSheet = nil
-                        }) {
-                            Text("Done")
-                        })
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Button(action: {
+                                    self.activeSheet = nil
+                                }) {
+                                    Text("Done")
+                                }
+                            }
+                        }
                     }
                 }
             }

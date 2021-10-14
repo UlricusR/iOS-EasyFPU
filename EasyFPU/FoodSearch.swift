@@ -25,21 +25,29 @@ struct FoodSearch: View {
                     }
                 }
                 .navigationBarTitle("Food Database Search")
-                .navigationBarItems(leading: Button(action: {
-                    // Just close
-                    presentation.wrappedValue.dismiss()
-                }) {
-                    Text("Cancel")
-                }, trailing: Button(action: {
-                    if foodDatabaseResults.selectedEntry != nil {
-                        foodDatabaseResults.selectedEntry!.category = category
-                        draftFoodItem.fill(with: foodDatabaseResults.selectedEntry!)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            // Just close
+                            presentation.wrappedValue.dismiss()
+                        }) {
+                            Text("Cancel")
+                        }
                     }
-                    // Close sheet
-                    presentation.wrappedValue.dismiss()
-                }) {
-                    Text("Select").disabled(foodDatabaseResults.selectedEntry == nil)
-                })
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            if foodDatabaseResults.selectedEntry != nil {
+                                foodDatabaseResults.selectedEntry!.category = category
+                                draftFoodItem.fill(with: foodDatabaseResults.selectedEntry!)
+                            }
+                            // Close sheet
+                            presentation.wrappedValue.dismiss()
+                        }) {
+                            Text("Select").disabled(foodDatabaseResults.selectedEntry == nil)
+                        }
+                    }
+                }
             }
             .onDisappear() {
                 foodDatabaseResults.searchResults = nil

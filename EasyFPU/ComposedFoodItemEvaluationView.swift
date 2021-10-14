@@ -89,13 +89,16 @@ struct ComposedFoodItemEvaluationView: View {
                 Spacer()
             }
             .navigationBarTitle(Text(self.composedFoodItem.name), displayMode: .inline)
-            .navigationBarItems(
-                leading: Button(action: {
-                    activeSheet = .help
-                }) {
-                    Image(systemName: "questionmark.circle").imageScale(.large)
-                },
-                trailing: HStack {
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        activeSheet = .help
+                    }) {
+                        Image(systemName: "questionmark.circle").imageScale(.large)
+                    }
+                }
+                
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(action: {
                         composedFoodItem.clear()
                         UserSettings.shared.mealDelayInMinutes = 0
@@ -109,7 +112,7 @@ struct ComposedFoodItemEvaluationView: View {
                         HealthDataHelper.healthKitIsAvailable() ? AnyView(Image(systemName: "square.and.arrow.up").imageScale(.large)) : AnyView(EmptyView())
                     }
                 }
-            )
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(item: $activeSheet) {

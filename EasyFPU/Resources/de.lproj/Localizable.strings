@@ -35,8 +35,7 @@
 "About" = "Über";
 "About this app" = "Über diese App";
 "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "Eine iOS-App - hauptsächlich für Typ 1-Diabetiker - zum einfachen Berechnen von Kohlenhydraten aus Zucker, regulären Kohlenhydraten und Fett-Protein-Einheiten (FPE) bzw. verzögerten Kohlenhydraten (auch bekannt als e-Carbs oder Fake Carbs) - synchronisiert zwischen allen Ihren iOS-Geräten via iCloud (optional).";
-"It's free and open-source, so I'll never ask you for money. If you like this app, you can..." = "Sie kostet nichts und ist Open-Source. Wenn Sie die App mögen, dann...";
-"Buy-me-a-coffee-link" = "https://www.buymeacoffee.com/ulricus";
+"It's free and open-source, so I'll never ask you for money." = "Sie kostet nichts und ist Open-Source.";
 "Documentation on rueth.info" = "Dokumentation auf rueth.info";
 "Home-Link" = "https://rueth.info/index.php/de/easyfpe/easyfpe-fuer-ios";
 

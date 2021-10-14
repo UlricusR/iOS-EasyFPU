@@ -191,8 +191,8 @@ struct FoodItemEditor: View {
                     .animation(.easeInOut(duration: 0.16))
                 }
                 .navigationBarTitle(navigationBarTitle)
-                .navigationBarItems(
-                    leading: HStack {
+                .toolbar {
+                    ToolbarItemGroup(placement: .navigationBarLeading) {
                         Button(action: {
                             // First quit edit mode
                             presentation.wrappedValue.dismiss()
@@ -211,13 +211,16 @@ struct FoodItemEditor: View {
                         }) {
                             Image(systemName: "questionmark.circle").imageScale(.large)
                         }.padding()
-                    },
-                    trailing: Button(action: {
-                        saveFoodItem()
-                    }) {
-                        Text("Done")
                     }
-                )
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            saveFoodItem()
+                        }) {
+                            Text("Done")
+                        }
+                    }
+                }
             }
             .navigationViewStyle(StackNavigationViewStyle())
             .alert(item: $activeAlert) { state in

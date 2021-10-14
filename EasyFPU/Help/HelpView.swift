@@ -46,11 +46,15 @@ struct HelpView: View {
                 }
             }
             .navigationBarTitle(NSLocalizedString(self.helpScreen.rawValue, comment: ""))
-            .navigationBarItems(trailing: Button(action: {
-                presentation.wrappedValue.dismiss()
-            }) {
-                Text("Done")
-            })
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                    }) {
+                        Text("Done")
+                    }
+                }
+            }
         }.navigationViewStyle(StackNavigationViewStyle())
     }
 }
