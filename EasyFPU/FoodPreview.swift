@@ -23,23 +23,31 @@ struct FoodPreview: View {
             NavigationView {
                 FoodPreviewContent(selectedEntry: product)
                 .navigationBarTitle("Scanned Food")
-                .navigationBarItems(leading: Button(action: {
-                    // Just close sheet
-                    foodSelected = false
-                    presentation.wrappedValue.dismiss()
-                }) {
-                    Text("Cancel")
-                }, trailing: Button(action: {
-                    databaseResults.selectedEntry = product
-                    databaseResults.selectedEntry?.category = category
-                    draftFoodItem.fill(with: product)
-                        
-                    // Close sheet
-                    foodSelected = true
-                    presentation.wrappedValue.dismiss()
-                }) {
-                    Text("Select")
-                })
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            // Just close sheet
+                            foodSelected = false
+                            presentation.wrappedValue.dismiss()
+                        }) {
+                            Text("Cancel")
+                        }
+                    }
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            databaseResults.selectedEntry = product
+                            databaseResults.selectedEntry?.category = category
+                            draftFoodItem.fill(with: product)
+                                
+                            // Close sheet
+                            foodSelected = true
+                            presentation.wrappedValue.dismiss()
+                        }) {
+                            Text("Select")
+                        }
+                    }
+                }
             }
             .alert(isPresented: self.$showingAlert) {
                 Alert(

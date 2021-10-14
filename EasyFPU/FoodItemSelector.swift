@@ -83,8 +83,8 @@ struct FoodItemSelector: View {
                 }
             }
             .navigationBarTitle(self.draftFoodItem.name)
-            .navigationBarItems(
-                leading: HStack {
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarLeading) {
                     Button(action: {
                         // Do nothing, just quit edit mode, as food item hasn't been modified
                         presentation.wrappedValue.dismiss()
@@ -97,29 +97,32 @@ struct FoodItemSelector: View {
                     }) {
                         Image(systemName: "questionmark.circle").imageScale(.large)
                     }.padding()
-                },
-                trailing: Button(action: {
-                    // First check for unsaved typical amount
-                    if self.addToTypicalAmounts {
-                        self.addTypicalAmount()
-                    }
-                    
-                    let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
-                    switch amountResult {
-                    case .success(_):
-                        composedFoodItem.add(foodItem: draftFoodItem)
-                        
-                        // Quit edit mode
-                        presentation.wrappedValue.dismiss()
-                    case .failure(let err):
-                        // Display alert and stay in edit mode
-                        self.errorMessage = err.evaluate()
-                        self.showingAlert = true
-                    }
-                }) {
-                    Text("Done")
                 }
-            )
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        // First check for unsaved typical amount
+                        if self.addToTypicalAmounts {
+                            self.addTypicalAmount()
+                        }
+                        
+                        let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
+                        switch amountResult {
+                        case .success(_):
+                            composedFoodItem.add(foodItem: draftFoodItem)
+                            
+                            // Quit edit mode
+                            presentation.wrappedValue.dismiss()
+                        case .failure(let err):
+                            // Display alert and stay in edit mode
+                            self.errorMessage = err.evaluate()
+                            self.showingAlert = true
+                        }
+                    }) {
+                        Text("Done")
+                    }
+                }
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .alert(isPresented: self.$showingAlert) {

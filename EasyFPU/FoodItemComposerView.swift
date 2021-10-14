@@ -94,12 +94,16 @@ struct FoodItemComposerView: View {
                     }
                 }
                 .navigationBarTitle(Text("Final product"), displayMode: .inline)
-                .navigationBarItems(
-                    leading: Button(action: {
-                        activeSheet = .help
-                    }) {
-                        Image(systemName: "questionmark.circle").imageScale(.large)
-                    }, trailing: HStack {
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            activeSheet = .help
+                        }) {
+                            Image(systemName: "questionmark.circle").imageScale(.large)
+                        }
+                    }
+                    
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Button(action: {
                             composedFoodItem.clear()
                         }) {
@@ -121,7 +125,7 @@ struct FoodItemComposerView: View {
                             Text("Save")
                         }
                     }
-                )
+                }
             }
             .navigationViewStyle(StackNavigationViewStyle())
         }

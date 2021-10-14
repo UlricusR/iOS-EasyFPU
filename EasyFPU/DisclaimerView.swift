@@ -29,35 +29,40 @@ struct DisclaimerView: View {
                 Spacer()
             }
             .navigationBarTitle(Text("Disclaimer"))
-            .navigationBarItems(
-                leading: Button(action: {
-                    var settingsError = ""
-                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
-                        self.alertTitle = "Notice"
-                        self.alertMessage = settingsError
-                    } else {
-                        // Display alert
-                        self.alertTitle = "Disclaimer"
-                        self.alertMessage = "You need to accept the disclaimer to continue."
-                    }
-                    self.showingAlert = true
-                }) {
-                    Text("Decline")
-                },
-                trailing: Button(action: {
-                    var settingsError = ""
-                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
-                        self.alertTitle = "Notice"
-                        self.alertMessage = settingsError
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        var settingsError = ""
+                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
+                            self.alertTitle = "Notice"
+                            self.alertMessage = settingsError
+                        } else {
+                            // Display alert
+                            self.alertTitle = "Disclaimer"
+                            self.alertMessage = "You need to accept the disclaimer to continue."
+                        }
                         self.showingAlert = true
+                    }) {
+                        Text("Decline")
                     }
-                    
-                    // Set dynamic variable and broadcast change in UserSettings
-                    UserSettings.shared.disclaimerAccepted = true
-                }) {
-                    Text("Accept")
                 }
-            )
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        var settingsError = ""
+                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
+                            self.alertTitle = "Notice"
+                            self.alertMessage = settingsError
+                            self.showingAlert = true
+                        }
+                        
+                        // Set dynamic variable and broadcast change in UserSettings
+                        UserSettings.shared.disclaimerAccepted = true
+                    }) {
+                        Text("Accept")
+                    }
+                }
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .alert(isPresented: self.$showingAlert) {

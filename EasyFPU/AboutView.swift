@@ -33,11 +33,15 @@ struct AboutView: View {
                 Spacer()
             }
             .navigationBarTitle(Text("About this app"))
-            .navigationBarItems(trailing: Button(action: {
-                presentation.wrappedValue.dismiss()
-            }) {
-                Text("Done")
-            })
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                    }) {
+                        Text("Done")
+                    }
+                }
+            }
         }.navigationViewStyle(StackNavigationViewStyle())
     }
 }

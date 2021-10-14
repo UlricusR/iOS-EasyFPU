@@ -61,8 +61,8 @@ struct FoodItemListView: View {
                     }
                     .disabled(self.showingMenu ? true : false)
                     .navigationBarTitle(foodItemListTitle)
-                    .navigationBarItems(
-                        leading: HStack {
+                    .toolbar {
+                        ToolbarItemGroup(placement: .navigationBarLeading) {
                             Button(action: {
                                 withAnimation {
                                     self.showingMenu.toggle()
@@ -81,8 +81,9 @@ struct FoodItemListView: View {
                                 .imageScale(.large)
                                 .padding()
                             }.disabled(self.showingMenu ? true : false)
-                        },
-                        trailing: HStack {
+                        }
+                        
+                        ToolbarItemGroup(placement: .navigationBarTrailing) {
                             Button(action: {
                                 withAnimation {
                                     self.showFavoritesOnly.toggle()
@@ -108,7 +109,7 @@ struct FoodItemListView: View {
                                     .foregroundColor(.green)
                             }.disabled(self.showingMenu ? true : false)
                         }
-                    )
+                    }
                 }
                 .navigationViewStyle(StackNavigationViewStyle())
                 .sheet(item: $activeSheet) {

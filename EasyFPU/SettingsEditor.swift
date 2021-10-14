@@ -233,8 +233,8 @@ struct SettingsEditor: View {
             
             // Navigation bar
             .navigationBarTitle(Text("Settings"))
-            .navigationBarItems(
-                leading: HStack {
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarLeading) {
                     Button(action: {
                         presentation.wrappedValue.dismiss()
                     }) {
@@ -246,71 +246,73 @@ struct SettingsEditor: View {
                     }) {
                         Image(systemName: "questionmark.circle").imageScale(.large)
                     }.padding()
-                },
-                
-                trailing: Button(action: {
-                    // Update absorption block
-                    for absorptionBlock in self.draftAbsorptionScheme.absorptionBlocks {
-                        // Check if it's an existing core data entry
-                        if absorptionBlock.cdAbsorptionBlock == nil { // This is a new absorption block
-                            let newCdAbsorptionBlock = AbsorptionBlock.create(from: absorptionBlock)
-                            self.editedAbsorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
-                        } else { // This is an existing absorption block, so just update values
-                            let _ = absorptionBlock.updateCdAbsorptionBlock()
-                        }
-                    }
-                    
-                    // Remove deleted absorption blocks
-                    for absorptionBlockToBeDeleted in self.absorptionBlocksToBeDeleted {
-                        if absorptionBlockToBeDeleted.cdAbsorptionBlock != nil {
-                            AbsorptionBlock.remove(absorptionBlockToBeDeleted.cdAbsorptionBlock!, from: editedAbsorptionScheme)
-                        }
-                    }
-                    
-                    // Reset typical amounts to be deleted
-                    self.absorptionBlocksToBeDeleted.removeAll()
-                    
-                    // Save new user settings
-                    if !(
-                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delaySugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsDelay), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalSugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsInterval), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationSugars, UserSettings.UserDefaultsDoubleKey.absorptionTimeSugarsDuration), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsDelay), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsInterval), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationCarbs, UserSettings.UserDefaultsDoubleKey.absorptionTimeCarbsDuration), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedFoodDatabaseType.rawValue, UserSettings.UserDefaultsStringKey.foodDatabase), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.bool(self.searchWorldwide, UserSettings.UserDefaultsBoolKey.searchWorldwide), errorMessage: &self.errorMessage) &&
-                        UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedCountry, UserSettings.UserDefaultsStringKey.countryCode), errorMessage: &errorMessage)
-                    ) {
-                        self.showingAlert = true
-                    } else {
-                        // Set the dynamic user parameters and broadcast change
-                        UserSettings.shared.absorptionTimeSugarsDelayInMinutes = self.draftAbsorptionScheme.delaySugars
-                        UserSettings.shared.absorptionTimeSugarsIntervalInMinutes = self.draftAbsorptionScheme.intervalSugars
-                        UserSettings.shared.absorptionTimeSugarsDurationInHours = self.draftAbsorptionScheme.durationSugars
-                        UserSettings.shared.absorptionTimeCarbsDelayInMinutes = self.draftAbsorptionScheme.delayCarbs
-                        UserSettings.shared.absorptionTimeCarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalCarbs
-                        UserSettings.shared.absorptionTimeCarbsDurationInHours = self.draftAbsorptionScheme.durationCarbs
-                        UserSettings.shared.absorptionTimeECarbsDelayInMinutes = self.draftAbsorptionScheme.delayECarbs
-                        UserSettings.shared.absorptionTimeECarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalECarbs
-                        UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
-                        UserSettings.shared.treatSugarsSeparately = self.draftAbsorptionScheme.treatSugarsSeparately
-                        UserSettings.shared.foodDatabase = FoodDatabaseType.getFoodDatabase(type: self.selectedFoodDatabaseType)
-                        UserSettings.shared.searchWorldwide = self.searchWorldwide
-                        UserSettings.shared.countryCode = self.selectedCountry
-                        
-                        // Close sheet
-                        presentation.wrappedValue.dismiss()
-                    }
-                }) {
-                    // Quit edit mode
-                    Text("Done")
                 }
-            )
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        // Update absorption block
+                        for absorptionBlock in self.draftAbsorptionScheme.absorptionBlocks {
+                            // Check if it's an existing core data entry
+                            if absorptionBlock.cdAbsorptionBlock == nil { // This is a new absorption block
+                                let newCdAbsorptionBlock = AbsorptionBlock.create(from: absorptionBlock)
+                                self.editedAbsorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
+                            } else { // This is an existing absorption block, so just update values
+                                let _ = absorptionBlock.updateCdAbsorptionBlock()
+                            }
+                        }
+                        
+                        // Remove deleted absorption blocks
+                        for absorptionBlockToBeDeleted in self.absorptionBlocksToBeDeleted {
+                            if absorptionBlockToBeDeleted.cdAbsorptionBlock != nil {
+                                AbsorptionBlock.remove(absorptionBlockToBeDeleted.cdAbsorptionBlock!, from: editedAbsorptionScheme)
+                            }
+                        }
+                        
+                        // Reset typical amounts to be deleted
+                        self.absorptionBlocksToBeDeleted.removeAll()
+                        
+                        // Save new user settings
+                        if !(
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delaySugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsDelay), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalSugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsInterval), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationSugars, UserSettings.UserDefaultsDoubleKey.absorptionTimeSugarsDuration), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsDelay), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsInterval), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationCarbs, UserSettings.UserDefaultsDoubleKey.absorptionTimeCarbsDuration), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedFoodDatabaseType.rawValue, UserSettings.UserDefaultsStringKey.foodDatabase), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.searchWorldwide, UserSettings.UserDefaultsBoolKey.searchWorldwide), errorMessage: &self.errorMessage) &&
+                            UserSettings.set(UserSettings.UserDefaultsType.string(self.selectedCountry, UserSettings.UserDefaultsStringKey.countryCode), errorMessage: &errorMessage)
+                        ) {
+                            self.showingAlert = true
+                        } else {
+                            // Set the dynamic user parameters and broadcast change
+                            UserSettings.shared.absorptionTimeSugarsDelayInMinutes = self.draftAbsorptionScheme.delaySugars
+                            UserSettings.shared.absorptionTimeSugarsIntervalInMinutes = self.draftAbsorptionScheme.intervalSugars
+                            UserSettings.shared.absorptionTimeSugarsDurationInHours = self.draftAbsorptionScheme.durationSugars
+                            UserSettings.shared.absorptionTimeCarbsDelayInMinutes = self.draftAbsorptionScheme.delayCarbs
+                            UserSettings.shared.absorptionTimeCarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalCarbs
+                            UserSettings.shared.absorptionTimeCarbsDurationInHours = self.draftAbsorptionScheme.durationCarbs
+                            UserSettings.shared.absorptionTimeECarbsDelayInMinutes = self.draftAbsorptionScheme.delayECarbs
+                            UserSettings.shared.absorptionTimeECarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalECarbs
+                            UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
+                            UserSettings.shared.treatSugarsSeparately = self.draftAbsorptionScheme.treatSugarsSeparately
+                            UserSettings.shared.foodDatabase = FoodDatabaseType.getFoodDatabase(type: self.selectedFoodDatabaseType)
+                            UserSettings.shared.searchWorldwide = self.searchWorldwide
+                            UserSettings.shared.countryCode = self.selectedCountry
+                            
+                            // Close sheet
+                            presentation.wrappedValue.dismiss()
+                        }
+                    }) {
+                        // Quit edit mode
+                        Text("Done")
+                    }
+                }
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
             
