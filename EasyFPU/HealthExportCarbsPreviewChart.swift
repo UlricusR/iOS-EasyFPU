@@ -157,13 +157,13 @@ struct HealthExportCarbsPreviewChart: UIViewRepresentable {
     typealias UIViewType = BarChartView
 }
 
-class YAxisFormatter: IAxisValueFormatter {
+class YAxisFormatter: AxisValueFormatter {
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         DataHelper.doubleFormatter(numberOfDigits: value >= 100 ? 0 : (value >= 10 ? 1 : 2)).string(from: NSNumber(value: value))!
     }
 }
 
-class BarValueFormatter: IValueFormatter {
+class BarValueFormatter: ValueFormatter {
     func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int, viewPortHandler: ViewPortHandler?) -> String {
         value == 0.0 ? "" : DataHelper.doubleFormatter(numberOfDigits: value >= 100 ? 0 : (value >= 10 ? 1 : 2)).string(from: NSNumber(value: value))!
     }

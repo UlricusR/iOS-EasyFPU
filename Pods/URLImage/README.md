@@ -1,7 +1,8 @@
 # URLImage
 
-![Supported platform: iOS, macOS, tvOS, watchOS](https://img.shields.io/badge/platform-iOS%2C%20macOS%2C%20tvOS%2C%20watchOS-lightgrey)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdmytro-anokhin%2Furl-image%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/dmytro-anokhin/url-image)
 [![Follow me on Twitter](https://img.shields.io/twitter/follow/dmytroanokhin?style=social)](https://twitter.com/intent/follow?screen_name=dmytroanokhin)
+
 
 `URLImage` is a SwiftUI view that displays an image downloaded from provided URL. `URLImage` manages downloading remote image and caching it locally, both in memory and on disk, for you.
 
@@ -21,30 +22,53 @@ Take a look at some examples in [the demo app](https://github.com/dmytro-anokhin
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Cache](#cache)
-- [Options](#options)
+    - [Basics](#basics)
+    - [States](#states)
+    - [Image Information](#image-information)
+    - [Cache](#cache)
+    - [Using URLCache](#using-urlcache)
+    - [Options](#options)
+- [Fetching an Image](#fetching-an-image)
+    - [Download an Image in iOS 14 Widget](#download-an-image-in-ios-14-widget)
 - [Reporting a Bug](#reporting-a-bug)
 - [Requesting a Feature](#requesting-a-feature)
 - [Contributing](#contributing)
 
 ## Features
 - SwiftUI image view for remote images;
-- Asynchronous image loading in the background with cancellation when view disappears;
-- Local disk cache for downloaded images;
-- Download progress indication;
-- Fully customizable including placeholder, progress indication, and the image view;
-- Control over download delay for better scroll performance;
-- Images can be downloaded directly to disk or in memory.
+- Local image cache;
+- Fully customizable including placeholder, progress indication, error, and the image view;
+- Control over various download aspects for better performance.
 
 ## Installation
 
 `URLImage` can be installed using Swift Package Manager or CocoaPods.
 
+### Using Swift Package Manager
+
+Use the package URL to search for the `URLImage` package: https://github.com/dmytro-anokhin/url-image.
+
+For how-to integrate package dependencies refer to [Adding Package Dependencies to Your App](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app) documentation.
+
+### Using Cocoa Pods
+
+Add the `URLImage` pod to your Podfile:
+
+```rb
+pod 'URLImage'
+```
+
+Refer to https://cocoapods.org for information on setup Cocoa Pods for your project.
+
 ## Usage
+
+### Basics
 
 `URLImage` expects URL of the image and the content view:
 
 ```swift
+import URLImage // Import the package module
+
 URLImage(url: url,
          content: { image in
              image
@@ -52,6 +76,8 @@ URLImage(url: url,
                  .aspectRatio(contentMode: .fit)
          })
 ```
+
+### States
 
 `URLImage` transitions between 4 states:
 - Empty state, when download has not started yet, or there is nothing to display;
@@ -110,7 +136,11 @@ struct MyView: View {
 }
 ```
 
-## Cache
+### Image Information
+
+You can use `init(url: URL, content: @escaping (_ image: Image, _ info: ImageInfo) -> Content)` initializer if you need information about an image, like size, or access the underlying `CGImage` object.
+
+### Cache
 
 `URLImage`  uses two caches:
 - In memory cache for quick access;
@@ -128,7 +158,23 @@ Downloaded images expire after some time. Expired images removed in `cleanup` ro
 
 You can also remove individual or all cached images using `URLImageService`.
 
-## Options
+### Using URLCache
+
+Alternatively you can use `URLCache`. You can configure the package globally and also per view.
+
+```swift
+URLImageService.shared.defaultOptions.cachePolicy = .useProtocol
+
+// Download using `URLSessionDataTask` 
+URLImageService.shared.defaultOptions.loadOptions.formUnion(.inMemory)
+
+// Set your `NSURLRequest.CachePolicy`
+URLImageService.shared.defaultOptions.urlRequestConfiguration.cachePolicy = .returnCacheDataElseLoad
+```
+
+Using `URLCache` adds support for Cache-Control header. As a trade-off you lose some control, like in-memory caching, download delays, expiry intervals (you get it with Cache-Control header). It also only works for in-memory downloads (using `URLSessionDataTask`).
+
+### Options
 
 `URLImage` allows controlling various aspects of download and cache using `URLImageOptions` structure. You can set default options using `URLImageService.shared.defaultOptions` property. Here are the main settings:
 
@@ -152,7 +198,7 @@ The cache policy controls how the image loaded from cache.
 
 Cache policy, `URLImageOptions.CachePolicy` type, allows to specify how `URLImage` utilizes it's cache, similar to `NSURLRequest.CachePolicy`. This type also allows to specify delays for accessing disk cache and starting download.
 
-**`case returnCacheElseLoad`**
+**`returnCacheElseLoad`**
     
 Return an image from cache or download it.
 
@@ -163,6 +209,54 @@ Return an image from cache, do not download it.
 **`ignoreCache`**
 
 Ignore cached image and download remote one.
+
+---
+
+Some options are can be set globally using `URLImageService.shared.defaultOptions` property. Those are set by default:
+- `expireAfter` to 24 hours;
+- `cachePolicy` to `returnCacheElseLoad` without delays;
+- `maxPixelSize` to 1000 by 1000 pixels (300 by 300 pixels for watchOS).
+
+## Fetching an Image
+
+You may want to download an image without a view. This is possible using the `RemoteImagePublisher` object. The `RemoteImagePublisher` can cache images for future use by the `URLImage` view.
+
+Download an image as `CGImage` and ignore any errors:
+
+```swift
+cancellable = URLImageService.shared.remoteImagePublisher(url)
+    .tryMap { $0.cgImage }
+    .catch { _ in
+        Just(nil)
+    }
+    .sink { image in
+        // image is CGImage or nil
+    }
+```
+
+Download multiple images as an array of `[CGImage?]`:
+
+```swift
+let publishers = urls.map { URLImageService.shared.remoteImagePublisher($0) }
+
+cancellable = Publishers.MergeMany(publishers)
+    .tryMap { $0.cgImage }
+    .catch { _ in
+        Just(nil)
+    }
+    .collect()
+    .sink { images in
+        // images is [CGImage?]
+    }
+```
+
+When downloading image using the `RemoteImagePublisher` object all options apply as they do for the `URLImage` object. Be default downloaded image will be cached on the disk. This can speedup displaying images on later stage of your app. Also, this is currently the only supported way to display images in iOS 14 widgets.
+
+### Download an Image in iOS 14 Widget
+
+Unfortunately views in WidgetKit can not run asynchronous operations: https://developer.apple.com/forums/thread/652581. The recommended way is to load your content, including images, in `TimelineProvider`.
+
+You can still use `URLImage` for this. The idea is that you load image in `TimelineProvider` using the `RemoteImagePublisher` object, and display it in the `URLImage` view.
 
 ## Reporting a Bug
 
@@ -178,6 +272,8 @@ Screenshots or video demonstrating a bug;
 Crash log;
 Sample code, try isolating it so it compiles without dependancies;
 Test data: if you use public resource provide URLs of the images.
+
+Please make sure there is a reproducible scenario. Ideally provide a sample code. And if you submit a sample code - make sure it compiles ;)
 
 ## Requesting a Feature
 

@@ -5,10 +5,11 @@
 //  Created by Dmytro Anokhin on 09/08/2020.
 //
 
-import Combine
 import Foundation
+import Combine
 
 
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public protocol RemoteContent : ObservableObject {
 
     associatedtype Value

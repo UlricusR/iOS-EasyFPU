@@ -13,6 +13,8 @@ import Foundation
  */
 public struct Download {
 
+    public var url: URL
+
     public var id: UUID
 
     public enum Destination : Codable, Hashable {
@@ -82,13 +84,30 @@ public struct Download {
 
     public var downloadPolicy: DownloadPolicy
 
-    public var url: URL
+    public struct URLRequestConfiguration : Hashable, Codable {
 
-    public init(id: UUID = UUID(), destination: Destination = .inMemory, downloadPolicy: DownloadPolicy = [], url: URL) {
+        public var allHTTPHeaderFields: [String : String]?
+
+        public var cachePolicy: URLRequest.CachePolicy
+
+        public init(allHTTPHeaderFields: [String : String]? = nil, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy) {
+            self.allHTTPHeaderFields = allHTTPHeaderFields
+            self.cachePolicy = cachePolicy
+        }
+    }
+
+    public var urlRequestConfiguration: URLRequestConfiguration
+
+    public init(url: URL,
+                id: UUID = UUID(),
+                destination: Destination = .inMemory,
+                downloadPolicy: DownloadPolicy = [],
+                urlRequestConfiguration: URLRequestConfiguration = URLRequestConfiguration()) {
+        self.url = url
         self.id = id
         self.destination = destination
         self.downloadPolicy = downloadPolicy
-        self.url = url
+        self.urlRequestConfiguration = urlRequestConfiguration
     }
 }
 
@@ -96,3 +115,5 @@ extension Download : CustomStringConvertible {}
 extension Download : Identifiable {}
 extension Download : Hashable {}
 extension Download : Codable {}
+
+extension URLRequest.CachePolicy : Codable {}

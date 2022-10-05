@@ -30,21 +30,32 @@ public struct URLImage<Empty, InProgress, Failure, Content> : View where Empty :
 
     let options: URLImageOptions
 
-    let empty: () -> Empty
+    public var body: some View {
+        RemoteContentView(remoteContent: remoteImage,
+                          loadOptions: RemoteContentViewLoadOptions(options.loadOptions),
+                          empty: empty,
+                          inProgress: inProgress,
+                          failure: failure,
+                          content: content)
+    }
 
-    let inProgress: (_ progress: Float?) -> InProgress
+    private let empty: () -> Empty
+    private let inProgress: (_ progress: Float?) -> InProgress
+    private let failure: (_ error: Error, _ retry: @escaping () -> Void) -> Failure
+    private let content: (_ image: TransientImageType) -> Content
 
-    let failure: (_ error: Error, _ retry: @escaping () -> Void) -> Failure
+    private let remoteImage: RemoteImage
 
-    let content: (_ image: Image) -> Content
+    private init(url: URL,
+         options: URLImageOptions,
+         empty: @escaping () -> Empty,
+         inProgress: @escaping (_ progress: Float?) -> InProgress,
+         failure: @escaping (_ error: Error, _ retry: @escaping () -> Void) -> Failure,
+         content: @escaping (_ transientImage: TransientImageType) -> Content) {
 
-    public init(url: URL,
-                options: URLImageOptions = URLImageOptions(),
-                empty: @escaping () -> Empty,
-                inProgress: @escaping (_ progress: Float?) -> InProgress,
-                failure: @escaping (_ error: Error, _ retry: @escaping () -> Void) -> Failure,
-                content: @escaping (_ image: Image) -> Content)
-    {
+        assert(options.loadOptions.contains(.loadImmediately) || options.loadOptions.contains(.loadOnAppear),
+               "Options must specify how to load the image")
+
         self.url = url
         self.options = options
         self.empty = empty
@@ -52,29 +63,36 @@ public struct URLImage<Empty, InProgress, Failure, Content> : View where Empty :
         self.failure = failure
         self.content = content
 
-        let download: Download
+        remoteImage = URLImageService.shared.makeRemoteImage(url: url, options: options)
+    }
+}
 
-        if options.isInMemoryDownload {
-            download = Download(url: url)
-        }
-        else {
-            let path = FileManager.default.tmpFilePathInCachesDirectory()
-            download = Download(destination: .onDisk(path), url: url)
-        }
 
-        remoteImage = RemoteImage(service: URLImageService.shared,
-                                  download: download,
-                                  options: options)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+public extension URLImage {
+
+    init(url: URL,
+         options: URLImageOptions = URLImageService.shared.defaultOptions,
+         empty: @escaping () -> Empty,
+         inProgress: @escaping (_ progress: Float?) -> InProgress,
+         failure: @escaping (_ error: Error, _ retry: @escaping () -> Void) -> Failure,
+         content: @escaping (_ image: Image) -> Content) {
+
+        self.init(url: url, options: options, empty: empty, inProgress: inProgress, failure: failure) { (transientImage: TransientImageType) -> Content in
+            content(transientImage.image)
+        }
     }
 
-    let remoteImage: RemoteImage
+    init(url: URL,
+         options: URLImageOptions = URLImageService.shared.defaultOptions,
+         empty: @escaping () -> Empty,
+         inProgress: @escaping (_ progress: Float?) -> InProgress,
+         failure: @escaping (_ error: Error, _ retry: @escaping () -> Void) -> Failure,
+         content: @escaping (_ image: Image, _ info: ImageInfo) -> Content) {
 
-    public var body: some View {
-        RemoteContentView(remoteContent: remoteImage,
-                          empty: empty,
-                          inProgress: inProgress,
-                          failure: failure,
-                          content: content)
+        self.init(url: url, options: options, empty: empty, inProgress: inProgress, failure: failure) { (transientImage: TransientImageType) -> Content in
+            content(transientImage.image, transientImage.info)
+        }
     }
 }
 
@@ -83,11 +101,25 @@ public struct URLImage<Empty, InProgress, Failure, Content> : View where Empty :
 public extension URLImage where Empty == EmptyView {
 
     init(url: URL,
-         options: URLImageOptions = URLImageOptions(),
+         options: URLImageOptions = URLImageService.shared.defaultOptions,
          inProgress: @escaping (_ progress: Float?) -> InProgress,
          failure: @escaping (_ error: Error, _ retry: @escaping () -> Void) -> Failure,
-         content: @escaping (_ image: Image) -> Content)
-    {
+         content: @escaping (_ image: Image) -> Content) {
+
+        self.init(url: url,
+                  options: options,
+                  empty: { EmptyView() },
+                  inProgress: inProgress,
+                  failure: failure,
+                  content: content)
+    }
+
+    init(url: URL,
+         options: URLImageOptions = URLImageService.shared.defaultOptions,
+         inProgress: @escaping (_ progress: Float?) -> InProgress,
+         failure: @escaping (_ error: Error, _ retry: @escaping () -> Void) -> Failure,
+         content: @escaping (_ image: Image, _ info: ImageInfo) -> Content) {
+
         self.init(url: url,
                   options: options,
                   empty: { EmptyView() },
@@ -103,10 +135,23 @@ public extension URLImage where Empty == EmptyView,
                                 InProgress == ActivityIndicator {
 
     init(url: URL,
-         options: URLImageOptions = URLImageOptions(),
+         options: URLImageOptions = URLImageService.shared.defaultOptions,
          failure: @escaping (_ error: Error, _ retry: @escaping () -> Void) -> Failure,
-         content: @escaping (_ image: Image) -> Content)
-    {
+         content: @escaping (_ image: Image) -> Content) {
+
+        self.init(url: url,
+                  options: options,
+                  empty: { EmptyView() },
+                  inProgress: { _ in ActivityIndicator() },
+                  failure: failure,
+                  content: content)
+    }
+
+    init(url: URL,
+         options: URLImageOptions = URLImageService.shared.defaultOptions,
+         failure: @escaping (_ error: Error, _ retry: @escaping () -> Void) -> Failure,
+         content: @escaping (_ image: Image, _ info: ImageInfo) -> Content) {
+
         self.init(url: url,
                   options: options,
                   empty: { EmptyView() },
@@ -123,9 +168,21 @@ public extension URLImage where Empty == EmptyView,
                                 Failure == EmptyView {
 
     init(url: URL,
-         options: URLImageOptions = URLImageOptions(),
-         content: @escaping (_ image: Image) -> Content)
-    {
+         options: URLImageOptions = URLImageService.shared.defaultOptions,
+         content: @escaping (_ image: Image) -> Content) {
+
+        self.init(url: url,
+                  options: options,
+                  empty: { EmptyView() },
+                  inProgress: { _ in ActivityIndicator() },
+                  failure: { _, _ in EmptyView() },
+                  content: content)
+    }
+
+    init(url: URL,
+         options: URLImageOptions = URLImageService.shared.defaultOptions,
+         content: @escaping (_ image: Image, _ info: ImageInfo) -> Content) {
+
         self.init(url: url,
                   options: options,
                   empty: { EmptyView() },
@@ -134,10 +191,3 @@ public extension URLImage where Empty == EmptyView,
                   content: content)
     }
 }
-
-//@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-//struct URLImage_Previews: PreviewProvider {
-//    static var previews: some View {
-//        URLImage()
-//    }
-//}

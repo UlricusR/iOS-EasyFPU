@@ -5,8 +5,8 @@
 //  Created by Dmytro Anokhin on 25/08/2020.
 //
 
-import Combine
 import SwiftUI
+import Combine
 
 #if canImport(DownloadManager)
 import DownloadManager
@@ -42,7 +42,7 @@ public final class RemoteImage : RemoteContent {
         self.options = options
     }
 
-    public typealias LoadingState = RemoteContentLoadingState<Image, Float?>
+    public typealias LoadingState = RemoteContentLoadingState<TransientImageType, Float?>
 
     /// External loading state used to update the view
     @Published public private(set) var loadingState: LoadingState = .initial {
@@ -109,6 +109,9 @@ public final class RemoteImage : RemoteContent {
             case .ignoreCache(let delay):
                 // Always download
                 scheduleDownload(afterDelay: delay)
+
+            case .useProtocol:
+                scheduleDownload(secondCacheLookup: false)
         }
     }
 
@@ -144,6 +147,7 @@ public final class RemoteImage : RemoteContent {
 }
 
 
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 extension RemoteImage {
 
     private var isLoadedSuccessfully: Bool {
@@ -188,7 +192,7 @@ extension RemoteImage {
     }
 
     // Second cache lookup is necessary, for some caching policies, for a case if the same image was downloaded by another instance of RemoteImage.
-    private func scheduleDownload(afterDelay delay: TimeInterval?, secondCacheLookup: Bool = false) {
+    private func scheduleDownload(afterDelay delay: TimeInterval? = nil, secondCacheLookup: Bool = false) {
         guard let delay = delay else {
             // Start download immediately if no delay needed
             startDownload()
@@ -230,6 +234,7 @@ extension RemoteImage {
                         break
 
                     case .failure(let error):
+                        // This route happens when download fails
                         self.updateLoadingState(.failure(error))
                 }
             }
@@ -243,10 +248,13 @@ extension RemoteImage {
                         self.updateLoadingState(.inProgress(progress))
                     case .completion(let result):
                         do {
-                            let transientImage = try self.decode(result: result)
+                            let transientImage = try self.service.decode(result: result,
+                                                                         download: self.download,
+                                                                         options: self.options)
                             self.updateLoadingState(.success(transientImage))
                         }
                         catch {
+                            // This route happens when download succeeds, but decoding fails
                             self.updateLoadingState(.failure(error))
                         }
                 }
@@ -259,7 +267,7 @@ extension RemoteImage {
 
         service.diskCache
             .getImagePublisher(withIdentifier: options.identifier, orURL: download.url, maxPixelSize: options.maxPixelSize)
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .catch { _ in
                 Just(nil)
             }
@@ -287,65 +295,6 @@ extension RemoteImage {
             .store(in: &cancellables)
     }
 
-    private func decode(result: DownloadResult) throws -> TransientImageType {
-        switch result {
-            case .data(let data):
-
-                guard let transientImage = TransientImage(data: data, maxPixelSize: options.maxPixelSize) else {
-                    throw URLImageError.decode
-                }
-
-                let fileName = UUID().uuidString
-                let fileExtension = ImageDecoder.preferredFileExtension(forTypeIdentifier: transientImage.uti)
-
-                service.diskCache.cacheImageData(data,
-                                                 url: download.url,
-                                                 identifier: options.identifier,
-                                                 fileName: fileName,
-                                                 fileExtension: fileExtension,
-                                                 expireAfter: options.expiryInterval)
-
-                service.inMemoryCache.cacheTransientImage(transientImage,
-                                                          withURL: download.url,
-                                                          identifier: options.identifier,
-                                                          expireAfter: options.expiryInterval)
-
-                return transientImage
-
-            case .file(let path):
-
-                let location = URL(fileURLWithPath: path)
-
-                guard let transientImage = TransientImage(location: location, maxPixelSize: options.maxPixelSize) else {
-                    throw URLImageError.decode
-                }
-
-                let fileName = UUID().uuidString
-                let fileExtension: String?
-
-                if !location.pathExtension.isEmpty {
-                    fileExtension = location.pathExtension
-                }
-                else {
-                    fileExtension = ImageDecoder.preferredFileExtension(forTypeIdentifier: transientImage.uti)
-                }
-
-                service.diskCache.cacheImageFile(at: location,
-                                                 url: download.url,
-                                                 identifier: options.identifier,
-                                                 fileName: fileName,
-                                                 fileExtension: fileExtension,
-                                                 expireAfter: options.expiryInterval)
-
-                service.inMemoryCache.cacheTransientImage(transientImage,
-                                                          withURL: download.url,
-                                                          identifier: options.identifier,
-                                                          expireAfter: options.expiryInterval)
-
-                return transientImage
-        }
-    }
-
     private func updateLoadingState(_ loadingState: LoadingState) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
@@ -354,13 +303,5 @@ extension RemoteImage {
 
             self.loadingState = loadingState
         }
-    }
-}
-
-
-private extension RemoteContentLoadingState where Value == Image {
-
-    static func success(_ transientImage: TransientImageType) -> RemoteContentLoadingState<Value, Progress> {
-        .success(transientImage.image)
     }
 }
