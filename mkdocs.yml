@@ -1,0 +1,15 @@
+site_name: EasyFPU for iOS
+
+theme:
+  name: material
+  palette:
+    primary: red
+  logo: assets/images/logo_white_small.png
+
+plugins:
+  - search
+  - i18n:
+      default_language: en
+      languages:
+        en: English
+        de: Deutsch
