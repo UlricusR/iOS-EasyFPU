@@ -3,8 +3,31 @@ site_name: EasyFPU for iOS
 theme:
   name: material
   palette:
-    primary: red
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font: false # To avoid utilization of Google fonts
   logo: assets/images/logo_white_small.png
+  favicon: assets/images/favicon.png
+  features:
+    - toc.follow
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/UlricusR
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/ulrichrueth/
 
 plugins:
   - search
@@ -13,3 +36,8 @@ plugins:
       languages:
         en: English
         de: Deutsch
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
