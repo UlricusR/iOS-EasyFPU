@@ -8,4 +8,12 @@
          <xhtml:link rel="alternate" hreflang="de" href="Nonede/"/>
          
     </url>
+    <url>
+         <loc>Nonevideotutorials/</loc>
+         <lastmod>2022-11-01</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="Noneen/videotutorials/"/>
+         <xhtml:link rel="alternate" hreflang="de" href="Nonede/videotutorials/"/>
+         
+    </url>
 </urlset>
