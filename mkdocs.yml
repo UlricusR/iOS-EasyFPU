@@ -6,6 +6,7 @@ theme:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: red
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
@@ -13,14 +14,17 @@ theme:
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: red
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
   font: false # To avoid utilization of Google fonts
   logo: assets/images/logo_white_small.png
   favicon: assets/images/favicon.png
-  features:
-    - toc.follow
+
+nav:
+  - 'index.md'
+  - 'videotutorials.md'
 
 extra:
   social:
