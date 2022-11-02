@@ -40,8 +40,11 @@ plugins:
       languages:
         en: English
         de: Deutsch
+  - glightbox
 
 markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - attr_list
+  - md_in_html
