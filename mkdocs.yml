@@ -25,6 +25,7 @@ theme:
 nav:
   - 'index.md'
   - 'videotutorials.md'
+  - 'manual.md'
 
 extra:
   social:
