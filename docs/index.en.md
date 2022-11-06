@@ -1,8 +1,8 @@
-# EasyFPU for iOS
+# What is EasyFPU about?
 
 ![EasyFPU app icon](assets/images/pizza_small.png){ align=left }
 
-An iOS app - mainly for Type 1 Diabetes patients - to ease the calculation of carbs, fat-protein-units (FPUs) (aka extended carbs, e-carbs or fake carbs) and their matching absorption time - synchronized across all your iOS devices via iCloud (optional).
+EasyFPU is an iOS app - mainly for Type 1 Diabetes patients - to ease the calculation of carbs, fat-protein-units (FPUs) (aka extended carbs, e-carbs or fake carbs) and their matching absorption time - synchronized across all your iOS devices via iCloud (optional).
 
 ## Disclaimer
 

@@ -22,25 +22,30 @@ theme:
   logo: assets/images/logo_white_small.png
   favicon: assets/images/favicon.png
 
-nav:
-  - 'index.md'
-  - 'videotutorials.md'
-  - 'manual.md'
-
 extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/UlricusR
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/ulrichrueth/
+  homepage: https://ulricusr.github.io
+
+nav:
+  - 'index.md'
+  - 'videotutorials.md'
+  - 'manual.md'
 
 plugins:
-  - search
   - i18n:
       default_language: en
       languages:
-        en: English
-        de: Deutsch
+        en:
+          name: English
+          site_name: EasyFPU for iOS
+        de:
+          name: Deutsch
+          site_name: EasyFPE für iOS
+  - search
   - glightbox
 
 markdown_extensions:
