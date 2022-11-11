@@ -44,11 +44,15 @@ EasyFPE gibt es auch für Android, wobei die iOS-Variante die neuere ist mit deu
 
 ## Datenschutzerklärung
 
+!!! note "Hinweis"
+
+    Dieser Abschnitt beinhaltet die Datenschutzerklärung der iOS-App. Die Datenschutzerklärung der Webseite finden [an dieser Stelle](https://ulricusr.github.io/de/legal/).
+
 Die iOS-App EasyFPE speichert keinerlei persönliche Informationen und nutzt auch keinen Drittanbieter-Service, der dies tut.
 
 Die Essensliste wird auf Ihrem Smartphone gespeichert und über iCloud mit Ihren anderen Geräten synchronisiert, sofern Sie in Ihrem persönlichen iCloud-Account eingeloggt sind. Diese Liste enthält keinerlei persönliche Informationen.
 
-## Bekannte Probleme und Wünsche
+## Probleme und Wünsche
 
 [Diese Probleme und Wünsche](https://github.com/UlricusR/iOS-EasyFPU/issues){:target="_blank"} sind mir bekannt und werden in künftigen Versionen angegangen. Sollten Sie über neue Probleme stolpern, die mir noch nicht bekannt sind, oder Wünsche und Anregungen zur Verbesserung der App haben, können Sie unter gleichem Link ein Issue öffnen.
 

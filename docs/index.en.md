@@ -36,11 +36,15 @@ EasyFPU is also available for Android. The iOS version is the newer one with mor
 
 ## Privacy Policy
 
+!!! note
+
+    This section contains the privacy policy of the iOS app. The privacy policy of this website can be [found here](https://ulricusr.github.io/legal/).
+
 The iOS App EasyFPU doesn't store any personal data, nor does it use any third party service that might store personal data.
 
 The food list is stored locally on your smartphone and synchronized with your other iOS devices via iCloud, if you're logged into your personal iCloud account. It does not contain any personal data.
 
-## Known Issues and Requests
+## Issues and Requests
 
 [These issues and requests](https://github.com/UlricusR/iOS-EasyFPU/issues){:target="_blank"} are known and will be addressed in future versions. Should you stumble over new issues or have any other suggestion, please submit an issue via the same link.
 
