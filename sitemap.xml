@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
          <loc>None.</loc>
-         <lastmod>2022-11-06</lastmod>
+         <lastmod>2022-11-11</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="Noneen/"/>
          <xhtml:link rel="alternate" hreflang="de" href="Nonede/"/>
@@ -10,7 +10,7 @@
     </url>
     <url>
          <loc>Nonemanual/</loc>
-         <lastmod>2022-11-06</lastmod>
+         <lastmod>2022-11-11</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="Noneen/manual/"/>
          <xhtml:link rel="alternate" hreflang="de" href="Nonede/manual/"/>
@@ -18,7 +18,7 @@
     </url>
     <url>
          <loc>Nonevideotutorials/</loc>
-         <lastmod>2022-11-06</lastmod>
+         <lastmod>2022-11-11</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="Noneen/videotutorials/"/>
          <xhtml:link rel="alternate" hreflang="de" href="Nonede/videotutorials/"/>
