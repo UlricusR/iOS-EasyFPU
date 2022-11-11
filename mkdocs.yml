@@ -21,6 +21,8 @@ theme:
   font: false # To avoid utilization of Google fonts
   logo: assets/images/logo_white_small.png
   favicon: assets/images/favicon.png
+  features:
+    - navigation.top
 
 extra:
   social:
