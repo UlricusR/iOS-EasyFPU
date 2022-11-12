@@ -26,7 +26,7 @@ Just a few hints from our personal experience:
 
 The motivation to program EasyFPU was to ease the calculation of Fat-Protein-Units especially for children with Type 1 Diabetes. Furthermore I was kept asking if I could provide the EasyFPU app, which is available for Android already for quite a while, for iOS. And as I've always been curious to learn a new programming language and system, here we go!
 
-Although carbs are as well calculated, this can be done by many apps today. However, meals with a high portion of fat or protein lead to a late increase in blood glucose. Modern pump therapies can counter this by a delayed bolus. The calculation of the amount of FPUs and the corresponding absorption time is not trivial - and this is exactly what this app is doing.
+Although carbs are calculated as well, this can be done by many apps today. However, meals with a high portion of fat or protein lead to a late increase in blood glucose. Modern pump therapies can counter this by a delayed bolus. The calculation of the amount of FPUs and the corresponding absorption time is not trivial - and this is exactly what this app is doing.
 
 The concept is simple: The user picks one or more food items from a list and enters their amount - optionally he can pick a pre-defined typical amounts. With this information the app will calculate FPUs.
 
