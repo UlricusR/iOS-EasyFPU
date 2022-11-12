@@ -1,9 +1,6 @@
 name: gh-deploy
 
-on:
-  push:
-    branches:
-      - 'site-sources'
+on: workflow_dispatch
 
 jobs:
   build:
