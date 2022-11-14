@@ -30,7 +30,6 @@ extra:
       link: https://github.com/UlricusR
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/ulrichrueth/
-  homepage: https://ulricusr.github.io
 
 nav:
   - 'index.md'
@@ -44,9 +43,11 @@ plugins:
         en:
           name: English
           site_name: EasyFPU for iOS
+          homepage: https://ulricusr.github.io/en
         de:
           name: Deutsch
           site_name: EasyFPE für iOS
+          homepage: https://ulricusr.github.io/de
   - search
   - glightbox
 
