@@ -1,6 +1,7 @@
 site_name: EasyFPU for iOS
 site_url: https://ulricusr.github.io/iOS-EasyFPU
 repo_url: https://github.com/UlricusR/iOS-EasyFPU
+edit_uri: edit/site-sources/docs/
 
 theme:
   name: material
