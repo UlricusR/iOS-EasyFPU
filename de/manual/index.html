@@ -14,12 +14,15 @@
 <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
             html.glightbox-open { overflow: initial; height: 100%; }
-            .gdesc-inner { font-size: 0.75rem; }
             .gslide-title { margin-top: 0px; user-select: text; }
             .gslide-desc { color: #666; user-select: text; }
             .gslide-image img { background: white; }
             
                 .gscrollbar-fixer { padding-right: 15px; }
+                .gdesc-inner { font-size: 0.75rem; }
+                body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+                body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+                body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
                 </style><script src="../../assets/javascripts/glightbox.min.js"></script></head>
 <body data-md-color-accent="" data-md-color-primary="red" data-md-color-scheme="default" dir="ltr">
 <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
@@ -511,19 +514,19 @@
 <p>Die App ist im Apple App Store verfügbar:</p>
 <p><a href="https://apps.apple.com/de/app/easyfpu/id1529949520" target="_blank"><img alt="Apple App Store" class="off-glb" src="../assets/images/appstore.png"/></a></p>
 <h2 id="der-hauptbildschirm-mit-der-essensliste">Der Hauptbildschirm mit der Essensliste</h2>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/01_FoodList.png"><img _="," align="right" alt="Die Essensliste" src="../assets/images/01_FoodList.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/01_FoodList.png"><img _="," align="right" alt="Die Essensliste" src="../assets/images/01_FoodList.png" style="width:100px"/></a></p>
 <p>Der Hauptbildschirm erscheint beim Öffnen der App und enthält eine Liste mit Essen. Diese ist beim allerersten Öffnen zunächst leer - nach einem Update wird die vorhandene Liste mit Essen übernommen.</p>
 <p>In dieser App ist mit einem Essen eine einzelne Komponente einer Mahlzeit gemeint, die in sich „homogen“ ist. Mehrere Essen können dann zu einer Mahlzeit zusammengestellt werden. So bestünde z.B. die Mahlzeit Schnitzel mit Pommes und Ketchup aus drei Essen, nämlich dem Schnitzel, den Pommes und dem Ketchup.</p>
 <p>Die Essensliste auf dem Hauptbildschirm ist alphabetisch sortiert. Es empfiehlt sich, jedem Essen einen eindeutigen Namen zu geben und nicht zweimal denselben Namen zu verwenden, auch wenn das möglich ist (es wird von der App nicht verhindert).</p>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/02_FoodList-filtered.png"><img _="," align="left" alt="Die gefilterte Essensliste" src="../assets/images/02_FoodList-filtered.png" style="width:100px"/></a>
-<a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/02_FoodList-search.png"><img _="," align="left" alt="Die Suche in der Essensliste" src="../assets/images/02_FoodList-search.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/02_FoodList-filtered.png"><img _="," align="left" alt="Die gefilterte Essensliste" src="../assets/images/02_FoodList-filtered.png" style="width:100px"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/02_FoodList-search.png"><img _="," align="left" alt="Die Suche in der Essensliste" src="../assets/images/02_FoodList-search.png" style="width:100px"/></a></p>
 <p>Klickt man auf den kleinen Stern rechts über der Essensliste, werden nur die Essen angezeigt, die als Favoriten markiert wurden. Außerdem kann man über das Suchfeld nach Essen suchen (beliebige Suche innerhalb der Essensnamen).</p>
 <p>Langes Drücken eines Essens öffnet den Dialog zur Bearbeitung des Essens.</p>
 <p>Durch Wischen nach links kann ein Essen aus der Liste gelöscht werden.</p>
 <h2 id="anlegen-von-essen">Anlegen von Essen</h2>
 <p>Zum Anlegen von neuem Essen tippt man auf das große, grüne Plus-Symbol in der oberen rechten Ecke. Es gibt drei Möglichkeiten um Anlegen von neuem Essen.</p>
 <h3 id="option-1-manueller-eintrag">Option 1: Manueller Eintrag</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/10_FoodEdit.png"><img _="," align="right" alt="Neues Essen anlegen / Essen bearbeiten" src="../assets/images/10_FoodEdit.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/10_FoodEdit.png"><img _="," align="right" alt="Neues Essen anlegen / Essen bearbeiten" src="../assets/images/10_FoodEdit.png" style="width:100px"/></a></p>
 <p>Es öffnet sich ein Dialog zur Eingabe der notwendigen Daten:</p>
 <ul>
 <li>Name (Pflichtfeld): Der Name des Essens</li>
@@ -536,8 +539,8 @@
 <p>Die typischen Mengen werden später bei der Auswahl des Essens im Berechnungsdialog angezeigt. Die Eingabe der typischen Menge ist besonders bei vorher bekannten Mengen nützlich (z.B. abgepacktes Essen oder „4 Stück“ ChickenMcNuggets) und erleichtert die spätere Nutzung der App insbesondere für Kinder.</p>
 <p>Nach dem Abspeichern erscheint das neu angelegte Essen in der Essensliste (alphabetisch sortiert) am Hauptbildschirm.</p>
 <h3 id="option-2-suche-in-der-lebensmitteldatenbank">Option 2: Suche in der Lebensmitteldatenbank</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/03_FoodSearch-results.png"><img _="," align="left" alt="Die Ergebnisliste der Suche" src="../assets/images/03_FoodSearch-results.png" style="width:100px"/></a>
-<a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/03_FoodSearch-details.png"><img _="," align="left" alt="Die Detailansicht der Suche / des Scans" src="../assets/images/03_FoodSearch-details.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/03_FoodSearch-results.png"><img _="," align="left" alt="Die Ergebnisliste der Suche" src="../assets/images/03_FoodSearch-results.png" style="width:100px"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/03_FoodSearch-details.png"><img _="," align="left" alt="Die Detailansicht der Suche / des Scans" src="../assets/images/03_FoodSearch-details.png" style="width:100px"/></a></p>
 <p>Seit Version 2.0.0 kann ein Essen in einer Lebensmitteldatenbank gesucht werden. Geben Sie dazu den Suchbegriff in das Namensfeld ein und tippen Sie anschließend auf das Such-Symbol.</p>
 <p>Derzeit ist nur eine Lebensmitteldatenbank angebunden, nämlich <a href="https://world.openfoodfacts.org/" target="blank">OpenFoodFacts</a>. OpenFoodFacts ist eine offene Lebensmitteldatenbank, d.h. jeder kann beitragen. Das bedeutet, dass dort auch falsche Nährwerte eingetragen sein können. Überprüfen Sie daher bitte immer, ob die in der Datenbank gefundenen Nährwerte auch den tatsächlichen Nährwerten entsprechen. Nutzen Sie hierzu das Detailanzeigefenster, wo Sie auch Produktbilder finden, in die Sie hineinzoomen können.</p>
 <h3 id="option-3-scannen-des-barcodes">Option 3: Scannen des Barcodes</h3>
@@ -545,13 +548,13 @@
 <p>Sollte kein Scan möglich sein, wischen Sie das Kamerafenster einfach von oben nach unten weg.</p>
 <h2 id="zusammenstellen-einer-mahlzeit">Zusammenstellen einer Mahlzeit</h2>
 <h3 id="auswahl-von-essen">Auswahl von Essen</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/03_FoodSelect.png"><img _="," align="right" alt="Gegessene Menge eingeben oder auswählen" src="../assets/images/03_FoodSelect.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/03_FoodSelect.png"><img _="," align="right" alt="Gegessene Menge eingeben oder auswählen" src="../assets/images/03_FoodSelect.png" style="width:100px"/></a></p>
 <p>Eine Mahlzeit besteht aus mindestens einem Essen. Zum Berechnen der Mahlzeit wählt man also aus der Essensliste zunächst ein Essen aus. Es erscheint ein Dialog zur Eingabe der Essensmenge.</p>
 <p>Wurden beim Anlegen des Essens typische Mengen festgelegt, kann nun eine typische Menge gewählt oder immer auch eine eigene Mengenangabe gemacht werden. Alternativ stehen grüne Knöpfe zur Verfügung, die ihren abgebildeten Wert zur bereits eingestellten Menge addieren. Die hier eingegegebene Menge sollte der tatsächlich gegessenen Menge des Essens in Gramm entsprechen.</p>
 <p>Außerdem besteht die Möglichkeit, die aktuell eingegebene Menge als neue typische Menge abzuspeichern. Dazu tippt man auf "Zu typischen Mengen hinzufügen", gibt man einen Kommentar ein und bestätigt mit dem grünen Plus-Symbol. Die Pflege oder Änderung von typischen Mengen geschieht im Dialog zum Bearbeiten von Essen.</p>
 <p>Diesen Vorgang wiederholt man optional für weitere Essensbestandteile seiner Mahlzeit.</p>
 <h3 id="die-zusammenfassung-der-mahlzeit">Die Zusammenfassung der Mahlzeit</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/04_MealSummary.png"><img _="," align="left" alt="Die Zusammenfassung der Kohlenhydrate aus Zucker" src="../assets/images/04_MealSummary.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/04_MealSummary.png"><img _="," align="left" alt="Die Zusammenfassung der Kohlenhydrate aus Zucker" src="../assets/images/04_MealSummary.png" style="width:100px"/></a></p>
 <p>Haben Sie mindestens ein Essen ausgewählt, erscheint ein Schwebefenster. Wenn Sie dieses ganz öffnen durch "Hochwischen", werden Ihnen die drei Arten von Kohlenhydraten - Zucker, reguläre und verlängerte Kohlenhydrate - als Zusammenfassung angezeigt:</p>
 <ul>
 <li>Rotes Zuckerwürfelsymbol: Kohlenhydrate aus Zucker werden in der Regel am schnellsten absorbiert. Sie können die entsprechenden Parameter in den Einstellungen anpassen.</li>
@@ -561,10 +564,10 @@
 <p>Sie können an dieser Stelle auch den Spritz-Ess-Abstand einstellen.</p>
 <p>Durch Antippen des roten Kreuzes in der Zusammenfassung der Mahlzeit können Sie die Mahlzeit zurücksetzen, d.h. alle Essensbestandteile sowie der "Mahlzeit beginnt in x Minuten"-Parameter werden auf Null gesetzt.</p>
 <h3 id="die-details-der-mahlzeit">Die Details der Mahlzeit</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/08_MealDetails_full.png"><img _="," align="right" alt="Die Details des Essens inkl. Zusatzinformation" src="../assets/images/08_MealDetails_full.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/08_MealDetails_full.png"><img _="," align="right" alt="Die Details des Essens inkl. Zusatzinformation" src="../assets/images/08_MealDetails_full.png" style="width:100px"/></a></p>
 <p>Tippen Sie auf das Pfeil-Icon in der Zusammenfassung, öffnet sich die Ansicht mit den Details der Mahlzeit. Hier können Sie nochmal die Bestandteile Ihrer Mahlzeit anzeigen lassen.</p>
 <h2 id="export-nach-apple-health">Export nach Apple Health</h2>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/09_HealthExport.png"><img _="," align="left" alt="Die Vorschau des Exports nach Apple Health" src="../assets/images/09_HealthExport.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/09_HealthExport.png"><img _="," align="left" alt="Die Vorschau des Exports nach Apple Health" src="../assets/images/09_HealthExport.png" style="width:100px"/></a></p>
 <p>Durch Tippen des Export-Knopfes (ein Rechteck mit Pfeil nach oben) können Sie die berechneten Kohlenhydrate, aber auch die Kalorien der Mahlzeit nach Apple Health exportieren.</p>
 <p>Durch An- oder Abwählen der Schalter wählen Sie aus, welche Daten exportiert werden.</p>
 <p>Außerdem können Sie den "Mahlzeit beginnt in x-Minuten"-Parameter einstellen, was in der Regel der Spritz-Ess-Abstand ist.</p>
@@ -583,16 +586,16 @@
 <h2 id="eigene-rezepte-verwalten">Eigene Rezepte verwalten</h2>
 <p>Seit Version 2.0.0 ist es möglich, eigene Rezepte in EasyFPE zu verwalten. Das soll hier anhand eines Beispiels gezeigt werden - wir backen gemeinsam einen Marmorkuchen.</p>
 <h3 id="schritt-1-zutaten-anlegen">Schritt 1: Zutaten anlegen</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/06_IngredientList.png"><img _="," align="right" alt="Die Liste der Zutaten" src="../assets/images/06_IngredientList.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/06_IngredientList.png"><img _="," align="right" alt="Die Liste der Zutaten" src="../assets/images/06_IngredientList.png" style="width:100px"/></a></p>
 <p>Um ein Rezept abbilden zu können, benötigt man zunächst all seine Zutaten in der Zutatenliste. Die Zutatenliste befindet sich im Reiter "Zutaten" rechts neben den Produkten. Zutaten können mittels Kontextmenü (langes Drücken) zwischen der Produkt- und der Zutatenliste verschoben werden.</p>
 <p>Das Anlegen von Zutaten funktioniert identisch wie das <a href="#anlegen-von-essen">Anlegen von Produkten</a> - per manueller Eingabe, per Suche in einer Essensdatenbank oder per Scan eines Barcodes. Der einzige Unterschied besteht in der Auswahl der Kategorie "Zutat" statt "Produkt".</p>
 <h3 id="schritt-2-zutaten-eines-rezepts-auswahlen">Schritt 2: Zutaten eines Rezepts auswählen</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/07_ComposedProduct-min.png"><img _="," align="left" alt='Das "weggewischte" Schwebefenster' src="../assets/images/07_ComposedProduct-min.png" style="width:100px"/></a>
-<a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/07_ComposedProduct-half.png"><img _="," align="left" alt="Das Schwebefenster mit der Zusammenfassung des Rezepts" src="../assets/images/07_ComposedProduct-half.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/07_ComposedProduct-min.png"><img _="," align="left" alt='Das "weggewischte" Schwebefenster' src="../assets/images/07_ComposedProduct-min.png" style="width:100px"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/07_ComposedProduct-half.png"><img _="," align="left" alt="Das Schwebefenster mit der Zusammenfassung des Rezepts" src="../assets/images/07_ComposedProduct-half.png" style="width:100px"/></a></p>
 <p>Genauso wie auf der Produktliste wählt man nun alle Zutaten eines Rezepts per Antippen aus. Im Gegensatz zum Zusammenstellen einer Mahlzeit erscheint nun aber nicht das Schwebefenster mit der Zusammenfassung der Mahlzeit, sondern ein Schwebefenster mit der Zusammenfassung des Rezepts. Dies kann man zunächst einmal nach unten "wegwischen", so dass die gesamte Zutatenliste gut zugänglich ist.</p>
 <p>Gibt man eine Menge falsch ein, tippt man einfach ein zweites Mal auf die ausgewählte Zutat, wodurch diese aus dem Rezept entfernt wird. Anschließend fügt man dieselbe Zutat mit korrigierter Menge wieder hinzu.</p>
 <h3 id="schritt-3-name-gesamtgewicht-und-anzahl-der-portionen-festlegen">Schritt 3: Name, Gesamtgewicht und Anzahl der Portionen festlegen</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/07_ComposedProduct-full.png"><img _="," align="right" alt="Eingabe eines Namens, des Gesamtgewichts und der Anzahl der Portionen" src="../assets/images/07_ComposedProduct-full.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/07_ComposedProduct-full.png"><img _="," align="right" alt="Eingabe eines Namens, des Gesamtgewichts und der Anzahl der Portionen" src="../assets/images/07_ComposedProduct-full.png" style="width:100px"/></a></p>
 <p>Für den nächsten wichtigen Schritt öffnet man das Schwebefenster komplett mit einem Wisch von unten nach oben. Folgende Daten sind einzugeben:</p>
 <ul>
 <li>Der Name des Rezepts, z.B. "Marmorkuchen mit Schokoglasur"</li>
@@ -600,15 +603,15 @@
 <li>Falls die automatische Erstellung von typischen Mengen ausgewählt ist, muss noch die Anzahl der Portionen eingegeben werden, die aus dem fertigen Produkt (möglichst gleichmäßig) geschnitten wird</li>
 </ul>
 <h3 id="schritt-4-speichern-des-produkts">Schritt 4: Speichern des Produkts</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/07_ComposedProduct-confirmweight.png"><img _="," align="left" alt="Abweichende Mengen müssen bestätigt werden" src="../assets/images/07_ComposedProduct-confirmweight.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/07_ComposedProduct-confirmweight.png"><img _="," align="left" alt="Abweichende Mengen müssen bestätigt werden" src="../assets/images/07_ComposedProduct-confirmweight.png" style="width:100px"/></a></p>
 <p>Zum Speichern des fertigen Produkts tippt man auf "Speichern". Damit wird das Produkt - genauso wie fertige Produkte auch - in der Liste der Produkte abgelegt. Sollte das Gesamtgewicht des zusammengestellten Produkts von der Summe seiner Zutaten abweichen, muss dies noch bestätigt werden.</p>
 <h3 id="schritt-5-bearbeiten-eines-rezepts">Schritt 5: Bearbeiten eines Rezepts</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/08_Product-context.png"><img _="," align="right" alt="Das Kontextmenü eines Produkts" src="../assets/images/08_Product-context.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/08_Product-context.png"><img _="," align="right" alt="Das Kontextmenü eines Produkts" src="../assets/images/08_Product-context.png" style="width:100px"/></a></p>
 <p>Will man ein Rezept bearbeiten, so wählt man es in der Produktliste mittels langem Tippen aus (Kontextmenü). Will man es anpassen, ohne das Originalrezept zu verändern, muss man vorher "Duplizieren" wählen, ansonsten wird das Originalrezept überschrieben.</p>
 <h2 id="das-haupt-und-das-kontextmenu">Das Haupt- und das Kontextmenü</h2>
 <h3 id="das-hauptmenu">Das Hauptmenü</h3>
 <p>Öffnet man das Hauptmenü mittels der drei vertikalen Striche in der oberen linken Ecke der App, hat man folgende Auswahlmöglichkeiten:</p>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/11_Menu.png"><img _="," align="left" alt="Das Hauptmenü" src="../assets/images/11_Menu.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/11_Menu.png"><img _="," align="left" alt="Das Hauptmenü" src="../assets/images/11_Menu.png" style="width:100px"/></a></p>
 <ul>
 <li>Einstellungen: Öffnet den Dialog zum Bearbeiten der Absorptionsschemata und weiterer Einstellungen</li>
 <li>Importieren (Format: JSON): Importiert die Datenbank aus einer JSON-Datei - Sie können im Anschluss wählen, ob Sie die bestehende Essensliste ersetzen oder ergänzen wollen</li>
@@ -619,7 +622,7 @@
 </ul>
 <p>Zum Schließen des Hauptmenüs tippt man auf das Kreuz-Symbol oder wischt man das Menü nach links weg.</p>
 <h3 id="das-kontextmenu">Das Kontextmenü</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/08_Product-context.png"><img _="," align="right" alt="Das Kontextmenü eines Produkts" src="../assets/images/08_Product-context.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/08_Product-context.png"><img _="," align="right" alt="Das Kontextmenü eines Produkts" src="../assets/images/08_Product-context.png" style="width:100px"/></a></p>
 <p>Das Kontextmenü jedes Produkts oder jeder Zutat öffnet sich durch langes Drücken. Folgende Aktionen stehen zur Verfügung:</p>
 <ul>
 <li>Bearbeiten: Öffnet den Dialog zum Bearbeiten eines Produkts oder Rezepts</li>
@@ -629,7 +632,7 @@
 <li>Löschen: Löscht das Produkt bzw. die Zutat</li>
 </ul>
 <h2 id="das-absorptionsschema-und-weitere-einstellungen">Das Absorptionsschema und weitere Einstellungen</h2>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/12_Settings.png"><img _="," align="left" alt="Absorptionsschemata und Einstellungen bearbeiten" src="../assets/images/12_Settings.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/12_Settings.png"><img _="," align="left" alt="Absorptionsschemata und Einstellungen bearbeiten" src="../assets/images/12_Settings.png" style="width:100px"/></a></p>
 <p>In den Einstellungen können Sie die Absorptionsschemata für Kohlenhydrate aus Zucker, reguläre Kohlenhydrate und verlängerte Kohlenhydrate bearbeiten.</p>
 <p>Jedes dieser Absorptionsschemata hat drei Parameter:</p>
 <ul>
@@ -710,5 +713,5 @@
 </div>
 <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.top"], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.config.lang": "de", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Suche", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version.title": "Version ausw\u00e4hlen"}}</script>
 <script src="../../assets/javascripts/bundle.d6c3db9e.min.js"></script>
-<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom"});})</script></body>
+<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
 </html>

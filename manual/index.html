@@ -14,12 +14,15 @@
 <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
             html.glightbox-open { overflow: initial; height: 100%; }
-            .gdesc-inner { font-size: 0.75rem; }
             .gslide-title { margin-top: 0px; user-select: text; }
             .gslide-desc { color: #666; user-select: text; }
             .gslide-image img { background: white; }
             
                 .gscrollbar-fixer { padding-right: 15px; }
+                .gdesc-inner { font-size: 0.75rem; }
+                body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+                body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+                body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
                 </style><script src="../assets/javascripts/glightbox.min.js"></script></head>
 <body data-md-color-accent="" data-md-color-primary="red" data-md-color-scheme="default" dir="ltr">
 <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
@@ -483,11 +486,11 @@
 <p>Get the app from Apple's App Store:</p>
 <p><a href="https://apps.apple.com/de/app/easyfpu/id1529949520" target="_blank"><img alt="Apple App Store" class="off-glb" src="../assets/images/appstore.png"/></a></p>
 <h2 id="the-main-screen-with-the-food-list">The Main Screen with the Food List</h2>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/01_FoodList.png"><img _="," align="right" alt="The main screen with the food list" src="../assets/images/01_FoodList.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/01_FoodList.png"><img _="," align="right" alt="The main screen with the food list" src="../assets/images/01_FoodList.png" style="width:100px"/></a></p>
 <p>The main screen appears when opening the app and contains a list of food items. It will be empty after first installation - after updating the app, the existing list will be taken over.</p>
 <p>A food item in the sense of this app represents one component of a meal, which is „homogenous“ in itself. Several food items make up a meal. For example: A Schnitzel with French Fries and Ketchup (the meal) consists of the Schnitzel, the Fries and Ketchup (the food items).</p>
 <p>The food list on the main screen is sorted in alphabetical order. It is recommended to assign unique names to each food item and not repeat existing names, although the app won‘t hinder you to do so.</p>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/02_FoodList-filtered.png"><img _="," align="left" alt="The food list filtered by favorites" src="../assets/images/02_FoodList-filtered.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/02_FoodList-filtered.png"><img _="," align="left" alt="The food list filtered by favorites" src="../assets/images/02_FoodList-filtered.png" style="width:100px"/></a></p>
 <p>When clicking the small star in the top right corner of the food list, only food items marked as favorites will be displayed. Favorites can be defined in the Edit Food dialog. Furthermore you may search for food using the search field (any string in the food name).</p>
 <p>Long pressing a food item opens the dialog to edit the food item.</p>
 <p>Swipe left to delete a food item.</p>
@@ -495,7 +498,7 @@
 <p>Tapping the large green Plus symbol on top right corner of the main screen opens a dialog to add a new food item.</p>
 <p>You have three ways how to add a new food item (Product or Ingredient):</p>
 <h3 id="option-1-manual-entry">Option 1: Manual entry</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/10_FoodEdit.png"><img _="," align="right" alt="Add a new or edit a food item" src="../assets/images/10_FoodEdit.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/10_FoodEdit.png"><img _="," align="right" alt="Add a new or edit a food item" src="../assets/images/10_FoodEdit.png" style="width:100px"/></a></p>
 <p>The following entries are mandatory:</p>
 <ul>
 <li>Name: The (unique) name of the food item.</li>
@@ -507,8 +510,8 @@
 <p>Optionally you can define as many typical amounts as required for each food item, and you can comment each of them. The respective comment will later be displayed in the dialog to define a new meal and allows users to easily select a certain amount. Typical amounts can be used for defined food sizes and ease the use especially for children.</p>
 <p>After saving a new food item, it will be displayed in the food list (sorted by alphabet).</p>
 <h3 id="option-2-search-in-a-food-database">Option 2: Search in a Food Database</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/03_FoodSearch-results.png"><img _="," align="left" alt="The search results" src="../assets/images/03_FoodSearch-results.png" style="width:100px"/></a>
-<a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/03_FoodSearch-details.png"><img _="," align="left" alt="The detail view of a search or scan result" src="../assets/images/03_FoodSearch-details.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/03_FoodSearch-results.png"><img _="," align="left" alt="The search results" src="../assets/images/03_FoodSearch-results.png" style="width:100px"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/03_FoodSearch-details.png"><img _="," align="left" alt="The detail view of a search or scan result" src="../assets/images/03_FoodSearch-details.png" style="width:100px"/></a></p>
 <p>As of version 2.0.0, searching a food database is supported. To do so, enter a search term in the name field and hit the search icon.</p>
 <p>The currently only available food database is <a href="https://world.openfoodfacts.org/" target="blank">OpenFoodFacts</a>. As OpenFoodFacts is an open food database, i.e. everybody can contribute just like in Wikipedia, please make sure that you cross-check the entries, as they might be wrong. You may use the details view for this, where pictures of the nutritional data will be displayed and can be zoomed.</p>
 <h3 id="option-3-scan-the-barcode-of-a-product">Option 3: Scan the Barcode of a Product</h3>
@@ -516,14 +519,14 @@
 <p>If no scan is possible, simply wipe away the camera window from top to bottom.</p>
 <h2 id="composing-a-meal">Composing a Meal</h2>
 <h3 id="selection-of-food-items">Selection of Food Items</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/03_FoodSelect.png"><img _="," align="right" alt="Entering the consumed amount" src="../assets/images/03_FoodSelect.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/03_FoodSelect.png"><img _="," align="right" alt="Entering the consumed amount" src="../assets/images/03_FoodSelect.png" style="width:100px"/></a></p>
 <p>A meal consists of at least one food item. To calculate a meal, start with selecting a food item from the food list on the main screen. A dialog appears to enter the consumed amount.</p>
 <p>If typical amounts have been defined while adding the food item, these can now be selected. Alternatively you can enter your own consumed amount. This amount should represent the actually consumed amount.</p>
 <p>Alternatively, you may use the green buttons to add the amount shown on the respective button to the actually entered amount.</p>
 <p>In addition, you may store the actually entered amount as new typical amount. To do so, tap "Add to typical amounts", enter a comment and confirm by hitting the green Plus button.</p>
 <p>Repeat these steps for each food item you want to add to your meal.</p>
 <h3 id="the-meal-summary">The Meal Summary</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/04_MealSummary.png"><img _="," align="left" alt="The e-carbs summary" src="../assets/images/04_MealSummary.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/04_MealSummary.png"><img _="," align="left" alt="The e-carbs summary" src="../assets/images/04_MealSummary.png" style="width:100px"/></a></p>
 <p>In case you have selected one or more food items, a hovering window will appear at the bottom of the screen. If you open this window by swiping it up from the bottom, you'll find the following information:</p>
 <p>Red sugar icon: Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Settings dialog.</p>
 <p>Green hare icon: Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Settings dialog.</p>
@@ -531,10 +534,10 @@
 Here you can as well set the "Meal starts in x minutes" parameter, which normally is the waiting time between your insulin injection and the start of your meal.</p>
 <p>You can clear a meal by tapping the red X symbol in the Meal Summary. Clearing a meal means that the amounts of all food items as well as the "Meal starts in x minutes" parameter will be set to zero.</p>
 <h3 id="the-meal-details">The Meal Details</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/08_MealDetails_full.png"><img _="," align="right" alt="The meal details showing additional information" src="../assets/images/08_MealDetails_full.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/08_MealDetails_full.png"><img _="," align="right" alt="The meal details showing additional information" src="../assets/images/08_MealDetails_full.png" style="width:100px"/></a></p>
 <p>Tapping the chevron icon in the summary will open the Meal Details view. You can verify which food items are part of your meal.</p>
 <h2 id="export-to-apple-health">Export to Apple Health</h2>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/09_HealthExport.png"><img _="," align="left" alt="The preview of carbs exported to Apple Health" src="../assets/images/09_HealthExport.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/09_HealthExport.png"><img _="," align="left" alt="The preview of carbs exported to Apple Health" src="../assets/images/09_HealthExport.png" style="width:100px"/></a></p>
 <p>By tapping the Export button (the rectangle with the upward pointing arrow) you can export the calculated carbs as well as the total meal calories to Apple Health.</p>
 <p>By toggling the switches, you can select or deselect the data to be exported to Apple Health.</p>
 <p>Furthermore, you can set the "Meal starts in x minutes" parameter, which normally is the waiting time between your insulin injection and the start of your meal.</p>
@@ -553,16 +556,16 @@ Here you can as well set the "Meal starts in x minutes" parameter, which normall
 <h2 id="manage-own-recipes">Manage own recipes</h2>
 <p>As of version 2.0.0, it is possible to manage own recipes in EasyFPU. The following steps demonstrate this using the recipe of a marble cake.</p>
 <h3 id="step-1-add-ingredients">Step 1: Add Ingredients</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/06_IngredientList.png"><img _="," align="right" alt="The list of Ingredients" src="../assets/images/06_IngredientList.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/06_IngredientList.png"><img _="," align="right" alt="The list of Ingredients" src="../assets/images/06_IngredientList.png" style="width:100px"/></a></p>
 <p>For composing a recipe, all ingredients need to be entered first. The ingredients can be found on the tab right beside the Products list. It is possible to move a food item from one list to the other using the context menu (longpressing the item).</p>
 <p>Adding new ingredients is identical to adding new products: Either manually or using the food database search or scanning a barcode. The only difference is that the ingredient's category is set to "Ingredient", not to "Product".</p>
 <h3 id="step-2-select-the-ingredients-of-a-recipe">Step 2: Select the Ingredients of a Recipe</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/07_ComposedProduct-min.png"><img _="," align="left" alt="The hovering window - wiped away" src="../assets/images/07_ComposedProduct-min.png" style="width:100px"/></a>
-<a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/07_ComposedProduct-half.png"><img _="," align="left" alt="The hovering window with the summary of the recipe" src="../assets/images/07_ComposedProduct-half.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/07_ComposedProduct-min.png"><img _="," align="left" alt="The hovering window - wiped away" src="../assets/images/07_ComposedProduct-min.png" style="width:100px"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/07_ComposedProduct-half.png"><img _="," align="left" alt="The hovering window with the summary of the recipe" src="../assets/images/07_ComposedProduct-half.png" style="width:100px"/></a></p>
 <p>Just like selecting products for composing a meal, you need to select ingredients for composing a recipe. The difference is that the hovering window, which appears as soon as one ingredient has been selected, will display a summary of the recipe instead of the summary of a meal. You may wipe this hovering window away towards the bottom to have full access to the ingredients list.</p>
 <p>If you enter a wrong amount, just type the ingredient a second time, which will remove it from the recipe. Then re-select it with the correct amount.</p>
 <h3 id="step-3-enter-name-total-weight-and-number-of-portions">Step 3: Enter Name, Total Weight and Number of Portions</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/07_ComposedProduct-full.png"><img _="," align="right" alt="Entry of name, total weight and number of portions" src="../assets/images/07_ComposedProduct-full.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/07_ComposedProduct-full.png"><img _="," align="right" alt="Entry of name, total weight and number of portions" src="../assets/images/07_ComposedProduct-full.png" style="width:100px"/></a></p>
 <p>For the next important step, open the hovering window completely by wiping it up from the bottom. Enter the following data:</p>
 <ul>
 <li>The name of the recipe, e.g. "Marble Cake"</li>
@@ -570,15 +573,15 @@ Here you can as well set the "Meal starts in x minutes" parameter, which normall
 <li>If you have enabled the generation of typical amounts, enter the number of portions you will cut out of your composed meal</li>
 </ul>
 <h3 id="step-4-save-the-product">Step 4: Save the Product</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/07_ComposedProduct-confirmweight.png"><img _="," align="left" alt="A non-matching total weight needs to be confirmed" src="../assets/images/07_ComposedProduct-confirmweight.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/07_ComposedProduct-confirmweight.png"><img _="," align="left" alt="A non-matching total weight needs to be confirmed" src="../assets/images/07_ComposedProduct-confirmweight.png" style="width:100px"/></a></p>
 <p>To save the product, just hit the "Save" button. In case the total weight differs from the sum of all ingredients, this needs to be explicitely confirmed.</p>
 <h3 id="step-5-edit-a-recipe">Step 5: Edit a Recipe</h3>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/08_Product-context.png"><img _="," align="right" alt="The context menu of a product" src="../assets/images/08_Product-context.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/08_Product-context.png"><img _="," align="right" alt="The context menu of a product" src="../assets/images/08_Product-context.png" style="width:100px"/></a></p>
 <p>To edit a recipe, longpress it in the Products list and select "Edit" in the context menu. If you want to keep the original recipe, please duplicate the product before editing it, otherwise the original recipe will be overwritten.</p>
 <h2 id="the-main-and-the-context-menu">The Main and the Context Menu</h2>
 <p>The Main Menu</p>
 <p>Opening the main menu using the three vertical lines in the top left corner of the main screen gives you the following options:</p>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/11_Menu.png"><img _="," align="left" alt="The main menu" src="../assets/images/11_Menu.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/11_Menu.png"><img _="," align="left" alt="The main menu" src="../assets/images/11_Menu.png" style="width:100px"/></a></p>
 <ul>
 <li>Settings: Opens the dialog to edit the absorption schemes and further settings</li>
 <li>Import (format: JSON): Lets you import a food list - you can decide whether to append to or replace the existing food list</li>
@@ -589,7 +592,7 @@ Here you can as well set the "Meal starts in x minutes" parameter, which normall
 </ul>
 <p>Swipe left or hit the X to close the menu.</p>
 <p>The Context Menu</p>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/08_Product-context.png"><img _="," align="right" alt="The context menu of a product" src="../assets/images/08_Product-context.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/08_Product-context.png"><img _="," align="right" alt="The context menu of a product" src="../assets/images/08_Product-context.png" style="width:100px"/></a></p>
 <p>The context menu of each product or ingredient opens by long-pressing it. You have the following options:</p>
 <ul>
 <li>Edit: Opens the dialog to edit the product or recipe</li>
@@ -599,7 +602,7 @@ Here you can as well set the "Meal starts in x minutes" parameter, which normall
 <li>Delete: Deletes the product or ingredient</li>
 </ul>
 <h2 id="the-absorption-scheme-and-further-settings">The Absorption Scheme and further Settings</h2>
-<p><a class="glightbox" data-desc-position="bottom" data-description="" data-height="auto" data-title="" data-width="100%" href="../assets/images/12_Settings.png"><img _="," align="left" alt="Edit the absorption schemes and other settings" src="../assets/images/12_Settings.png" style="width:100px"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/12_Settings.png"><img _="," align="left" alt="Edit the absorption schemes and other settings" src="../assets/images/12_Settings.png" style="width:100px"/></a></p>
 <p>The settings editor allows to set the values required for determining the absorption schemes for sugars, regular carbs and e-carbs.</p>
 <p>Each absorption scheme consists of three parameters:</p>
 <ul>
@@ -688,5 +691,5 @@ Here you can as well set the "Meal starts in x minutes" parameter, which normall
 </div>
 <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top"], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
 <script src="../assets/javascripts/bundle.d6c3db9e.min.js"></script>
-<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom"});})</script></body>
+<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
 </html>
