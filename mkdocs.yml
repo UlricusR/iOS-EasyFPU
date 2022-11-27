@@ -5,6 +5,8 @@ edit_uri: edit/site-sources/docs/
 
 theme:
   name: material
+  features:
+    - navigation.tabs
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
@@ -60,3 +62,5 @@ markdown_extensions:
   - pymdownx.superfences
   - attr_list
   - md_in_html
+  - pymdownx.tabbed:
+      alternate_style: true
