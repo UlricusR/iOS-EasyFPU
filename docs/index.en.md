@@ -32,7 +32,7 @@ The concept is simple: The user picks one or more food items from a list and ent
 
 Before being able to use the app, the user (or the user’s parents) need to invest a bit of time and effort to define the food items. The food list is deliberately empty when first installing the app, as every user has his own preferred food ([sample data](manual.md#sample-data) can be downloaded). You may limit your food list to food with a high fat or protein portion, like pizza, McDonals food, etc.
 
-EasyFPU is also available for Android. The iOS version is the newer one with more features, as I'm using it myself as part of an insulin therapy within my family. Whether I'll ever be updating the Android version, I cannot tell - it's a spare time activity!
+EasyFPU is also available for Android. The iOS version is the newer one [with more features](https://ulricusr.github.io/#feature-overview), as I'm using it myself as part of an insulin therapy within my family.
 
 ## Privacy Policy
 
