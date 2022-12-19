@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-         <loc>https://ulricusr.github.io/iOS-EasyFPU/</loc>
-         <lastmod>2022-12-11</lastmod>
+         <loc>https://www.rueth.info/iOS-EasyFPU/</loc>
+         <lastmod>2022-12-19</lastmod>
          <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://ulricusr.github.io/iOS-EasyFPU/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/"/>
          
          
     </url>
     <url>
-         <loc>https://ulricusr.github.io/iOS-EasyFPU/manual/</loc>
-         <lastmod>2022-12-11</lastmod>
+         <loc>https://www.rueth.info/iOS-EasyFPU/manual/</loc>
+         <lastmod>2022-12-19</lastmod>
          <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://ulricusr.github.io/iOS-EasyFPU/en/manual/"/>
-         <xhtml:link rel="alternate" hreflang="de" href="https://ulricusr.github.io/iOS-EasyFPU/de/manual/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/en/manual/"/>
+         <xhtml:link rel="alternate" hreflang="de" href="https://www.rueth.info/iOS-EasyFPU/de/manual/"/>
          
     </url>
     <url>
-         <loc>https://ulricusr.github.io/iOS-EasyFPU/videotutorials/</loc>
-         <lastmod>2022-12-11</lastmod>
+         <loc>https://www.rueth.info/iOS-EasyFPU/videotutorials/</loc>
+         <lastmod>2022-12-19</lastmod>
          <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://ulricusr.github.io/iOS-EasyFPU/en/videotutorials/"/>
-         <xhtml:link rel="alternate" hreflang="de" href="https://ulricusr.github.io/iOS-EasyFPU/de/videotutorials/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/en/videotutorials/"/>
+         <xhtml:link rel="alternate" hreflang="de" href="https://www.rueth.info/iOS-EasyFPU/de/videotutorials/"/>
          
     </url>
 </urlset>
