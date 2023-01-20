@@ -98,6 +98,10 @@ Tippen Sie auf das Pfeil-Icon in der Zusammenfassung, öffnet sich die Ansicht m
 
 ## Export nach Apple Health
 
+EasyFPE kann schnelle und normale Kohlenhydrate, die aus den Fett-Protein-Einheiten berechneten "verlängerten" Kohlenhydrate und die Kalorien nach Apple Health exportieren. Dies ist dann sinnvoll, wenn die Daten von anderen Apps (z.B. Ernährungs-Apps), insbesondere aber von [Loop](https://loopkit.github.io/loopdocs/){:target="_blank"}, einer App zur Steuerung von Insulinpumpen, genutzt werden sollen.
+
+### Daten-Export
+
 ![Die Vorschau des Exports nach Apple Health](assets/images/09_HealthExport.png){style="width:100px", align=left }
 
 Durch Tippen des Export-Knopfes (ein Rechteck mit Pfeil nach oben) können Sie die berechneten Kohlenhydrate, aber auch die Kalorien der Mahlzeit nach Apple Health exportieren.
@@ -109,6 +113,19 @@ Außerdem können Sie den "Mahlzeit beginnt in x-Minuten"-Parameter einstellen, 
 Für die Kohlenhydrate wird eine Vorschau erstellt, die zeigt, zu welchem Zeitpunkt welcher Kohlenhydratanteil welcher Art exportiert werden wird. In rot werden die Kohlenhydrate aus Zucker dargestellt, in grün die regulären Kohlenhydrate und in blau die verlängerten Kohlenhydrate.
 
 In wievielen kleinen Teilmengen die jeweiligen Kohlenhydrate über die Zeitspanne der Absorptionszeit verteilt werden, regelt man mit den jeweiligen Intervall-Parametern in den Einstellungen.
+
+### Loop-Anbindung
+
+Sollten Sie die von EasyFPE berechneten Kohlenhydrate in Loop nutzen wollen, so müssen Sie Loop erlauben, auf Apple Health zuzugreifen:
+
+- [Loop 2.2.x Apple Health Permissions](https://loopkit.github.io/loopdocs/build/health/){:target="_blank"}
+- [Loop 3 Apple Health Permissions](https://loopkit.github.io/loopdocs/loop-3/onboarding/#apple-health-permissions){:target="_blank"}
+
+!!! warning "Wichtiger Hinweis für Loop 3"
+
+    Seit Loop Version 3 muss das Lesen von Daten aus Apple Health beim Kompilieren der Loop-App explizit erlaubt werden, sonst funktionert der Datentransfer nicht. Dazu müssen Sie [das Build-Feature "OBSERVE_HEALTH_KIT_CARB_SAMPLES_FROM_OTHER_APPS_ENABLED"](https://loopkit.github.io/loopdocs/build/code_customization/#build-time-features){:target="_blank"} setzen.
+
+Sobald EasyFPE die Daten exportiert hat, öffnen Sie Loop und lassen Sie sich einen Bolusvorschlag anzeigen. Die Kohlenhydrate aus EasyFPE werden nun mit eingerechnet, es ist keine manuelle Dateneingabe mehr notwendig.
 
 !!! warning "Wichtige Hinweise für Looper"
 

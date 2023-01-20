@@ -100,6 +100,10 @@ Tapping the chevron icon in the summary will open the Meal Details view. You can
 
 ## Export to Apple Health
 
+EasyFPU can export fast and regular carbs, the extended carbs calculated from fat-protein-units, as well as calories to Apple Health. This is a useful feature if other apps, e.g., dietary management apps, require these data. It's especially useful for Loopers, who control their insulin pumps using the [Loop App](https://loopkit.github.io/loopdocs/){:target="_blank"}.
+
+### Data Export
+
 ![The preview of carbs exported to Apple Health](assets/images/09_HealthExport.png){style="width:100px", align=left }
 
 By tapping the Export button (the rectangle with the upward pointing arrow) you can export the calculated carbs as well as the total meal calories to Apple Health.
@@ -111,6 +115,19 @@ Furthermore, you can set the "Meal starts in x minutes" parameter, which normall
 For carbs, a preview of data is generated representing your selection. It shows at which point in time which carbs portions of which type will be exported. Red bars represent sugars, green bars regular carbs, and blue bars e-carbs. Zoom in our out to see more or less details.
 
 You may control the amount of "carbs chunks" via the interval parameters in the Settings dialog.
+
+### Loop Integration
+
+Are you planning to use the carbs calculated by EasyFPU directly in your Loop app, then you need to allow Loop to access Apple Health data:
+
+- [Loop 2.2.x Apple Health Permissions](https://loopkit.github.io/loopdocs/build/health/){:target="_blank"}
+- [Loop 3 Apple Health Permissions](https://loopkit.github.io/loopdocs/loop-3/onboarding/#apple-health-permissions){:target="_blank"}
+
+!!! warning "Important hint for Loop 3"
+
+    Since Loop version 3 you have to explicitely enable using external carbs at buildtime, otherwise data transfer will not happen. To do so, you need to set [the build feature "OBSERVE_HEALTH_KIT_CARB_SAMPLES_FROM_OTHER_APPS_ENABLED"](https://loopkit.github.io/loopdocs/build/code_customization/#build-time-features){:target="_blank"}.
+
+Once EasyFPU has exported the data, open Loop and hit the bolus button. The carbs from EasyFPU are automatically accounted for and do not need to be entered manually.
 
 !!! warning "Important hints for Loopers"
 
