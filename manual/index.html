@@ -8,7 +8,7 @@
 <link href="https://www.rueth.info/iOS-EasyFPU/manual/" rel="canonical"/>
 <link href="../videotutorials/" rel="prev"/>
 <link href="../assets/images/favicon.png" rel="icon"/>
-<meta content="mkdocs-1.4.2, mkdocs-material-9.0.5" name="generator"/>
+<meta content="mkdocs-1.4.2, mkdocs-material-9.0.6" name="generator"/>
 <title>User Manual - EasyFPU for iOS</title>
 <link href="../assets/stylesheets/main.558e4712.min.css" rel="stylesheet"/>
 <link href="../assets/stylesheets/palette.2505c338.min.css" rel="stylesheet"/>
@@ -245,6 +245,20 @@
 <a class="md-nav__link" href="#export-to-apple-health">
     Export to Apple Health
   </a>
+<nav aria-label="Export to Apple Health" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-export">
+    Data Export
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#loop-integration">
+    Loop Integration
+  </a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#manage-own-recipes">
@@ -398,6 +412,20 @@
 <a class="md-nav__link" href="#export-to-apple-health">
     Export to Apple Health
   </a>
+<nav aria-label="Export to Apple Health" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-export">
+    Data Export
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#loop-integration">
+    Loop Integration
+  </a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#manage-own-recipes">
@@ -535,12 +563,25 @@ Here you can as well set the "Meal starts in x minutes" parameter, which normall
 <p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/08_MealDetails_full.png"><img _="," align="right" alt="The meal details showing additional information" src="../assets/images/08_MealDetails_full.png" style="width:100px"/></a></p>
 <p>Tapping the chevron icon in the summary will open the Meal Details view. You can verify which food items are part of your meal.</p>
 <h2 id="export-to-apple-health">Export to Apple Health</h2>
+<p>EasyFPU can export fast and regular carbs, the extended carbs calculated from fat-protein-units, as well as calories to Apple Health. This is a useful feature if other apps, e.g., dietary management apps, require these data. It's especially useful for Loopers, who control their insulin pumps using the <a href="https://loopkit.github.io/loopdocs/" target="_blank">Loop App</a>.</p>
+<h3 id="data-export">Data Export</h3>
 <p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-width="100%" href="../assets/images/09_HealthExport.png"><img _="," align="left" alt="The preview of carbs exported to Apple Health" src="../assets/images/09_HealthExport.png" style="width:100px"/></a></p>
 <p>By tapping the Export button (the rectangle with the upward pointing arrow) you can export the calculated carbs as well as the total meal calories to Apple Health.</p>
 <p>By toggling the switches, you can select or deselect the data to be exported to Apple Health.</p>
 <p>Furthermore, you can set the "Meal starts in x minutes" parameter, which normally is the waiting time between your insulin injection and the start of your meal.</p>
 <p>For carbs, a preview of data is generated representing your selection. It shows at which point in time which carbs portions of which type will be exported. Red bars represent sugars, green bars regular carbs, and blue bars e-carbs. Zoom in our out to see more or less details.</p>
 <p>You may control the amount of "carbs chunks" via the interval parameters in the Settings dialog.</p>
+<h3 id="loop-integration">Loop Integration</h3>
+<p>Are you planning to use the carbs calculated by EasyFPU directly in your Loop app, then you need to allow Loop to access Apple Health data:</p>
+<ul>
+<li><a href="https://loopkit.github.io/loopdocs/build/health/" target="_blank">Loop 2.2.x Apple Health Permissions</a></li>
+<li><a href="https://loopkit.github.io/loopdocs/loop-3/onboarding/#apple-health-permissions" target="_blank">Loop 3 Apple Health Permissions</a></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Important hint for Loop 3</p>
+<p>Since Loop version 3 you have to explicitely enable using external carbs at buildtime, otherwise data transfer will not happen. To do so, you need to set <a href="https://loopkit.github.io/loopdocs/build/code_customization/#build-time-features" target="_blank">the build feature "OBSERVE_HEALTH_KIT_CARB_SAMPLES_FROM_OTHER_APPS_ENABLED"</a>.</p>
+</div>
+<p>Once EasyFPU has exported the data, open Loop and hit the bolus button. The carbs from EasyFPU are automatically accounted for and do not need to be entered manually.</p>
 <div class="admonition warning">
 <p class="admonition-title">Important hints for Loopers</p>
 <p>This feature might be useful for T1D patients using the Loop app to steer their insulin pump, as Loop can read the carbs exported from EasyFPU and consider those in the insulin therapy - if you allow Loop to read Apple Health data in the Apple Health settings. Do in this case not enter your meal a second time in Loop, as this will cause double entries and could lead to a low blood glucose.</p>
