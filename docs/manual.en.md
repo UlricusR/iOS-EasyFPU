@@ -185,7 +185,7 @@ To edit a recipe, longpress it in the Products list and select "Edit" in the con
 
 ## The Main and the Context Menu
 
-The Main Menu
+### The Main Menu
 
 !!! note
 
@@ -202,7 +202,7 @@ The Main Menu
 
 Swipe left or hit the X to close the menu.
 
-The Context Menu
+### The Context Menu
 
 ![The context menu of a product](assets/images/08_Product-context.png){style="width:100px", align=right }
 
