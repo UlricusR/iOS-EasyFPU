@@ -185,7 +185,9 @@ Will man ein Rezept bearbeiten, so wählt man es in der Produktliste mittels lan
 
 ### Das Hauptmenü
 
-Öffnet man das Hauptmenü mittels der drei vertikalen Striche in der oberen linken Ecke der App, hat man folgende Auswahlmöglichkeiten:
+!!! note "Hinweis"
+
+    Anders als im Screenshot dargestellt, ist das Hauptmenü mittlerweile als dritter Reiter im unteren Bildschirmbereich angeordnet, wie bei den meisten iOS-Apps. Es hat ein Zahnradsymbol und ist als "Einstellungen" bezeichnet.
 
 ![Das Hauptmenü](assets/images/11_Menu.png){style="width:100px", align=left }
 

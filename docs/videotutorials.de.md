@@ -1,5 +1,9 @@
 # Video-Anleitungen
 
+!!! note "Hinweis"
+
+    Die folgenden Videoanleitungen wurden mit einer älteren Version von EasyFPE aufgezeichnet. Der einzige wirkliche Unterschied ist jedoch, dass das Menü in der neuen Version nicht mehr auf der linken Seite erscheint, sondern als dritter Reiter im unteren Menü zu finden ist.
+
 ## Tutorial Nr. 1: Essen und Mahlzeiten
 
 In diesem Tutorial wird erklärt, wie man Essen anlegt und verwaltet, um daraus dann eine Mahlzeit zusammenzustellen.

@@ -187,7 +187,9 @@ To edit a recipe, longpress it in the Products list and select "Edit" in the con
 
 The Main Menu
 
-Opening the main menu using the three vertical lines in the top left corner of the main screen gives you the following options:
+!!! note
+
+    Unlike shown on the screenshot, the Main Menu has moved from the left side of the screen to the tabbed menu on the bottom, like in most other iOS apps. It has a gear symbol and is named "Settings".
 
 ![The main menu](assets/images/11_Menu.png){style="width:100px", align=left }
 

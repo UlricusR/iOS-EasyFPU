@@ -1,5 +1,9 @@
 # Video Tutorials
 
+!!! note
+
+    The following video tutorials were recorded with an older version. The only real difference, however, is that the menu has moved from a side menu on the left side to the tabbed menu in the bottom.
+
 ## Tutorial No. 1: Products and Meals
 
 This tutorial explains how to add and maintain products in order to compose a meal from it.
