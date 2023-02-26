@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MainView: View {
     enum Tab: Int {
-        case products = 0, ingredients
+        case products = 0, ingredients, settings
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -23,58 +23,43 @@ struct MainView: View {
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     @ObservedObject var absorptionScheme = AbsorptionScheme()
     @State private var foodItemsToBeImported: [FoodItemViewModel]?
-    @State private var showingMenu = false
     @State private var showActionSheet = false
     @State private var selectedTab: Int = 0
     @State private var showingAlert = false
     @State private var errorMessage = ""
     
     var body: some View {
-        let drag = DragGesture()
-        .onEnded {
-            if $0.translation.width < -100 {
-                withAnimation {
-                    self.showingMenu = false
-                }
-            }
-        }
-        
         if !userSettings.disclaimerAccepted {
             return AnyView(
                 DisclaimerView()
             )
         } else {
             return AnyView(
-                ZStack(alignment: .leading) {
-                    GeometryReader { geometry in
-                        TabView(selection: $selectedTab) {
-                            ProductsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu, selectedTab: $selectedTab)
-                                .tag(Tab.products.rawValue)
-                                .tabItem{
-                                    Image(systemName: "birthday.cake")
-                                    Text("Products")
-                                }
-                                .environment(\.managedObjectContext, managedObjectContext)
-                            
-                            IngredientsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu, selectedTab: $selectedTab)
-                                .tag(Tab.ingredients.rawValue)
-                                .tabItem{
-                                    Image(systemName: "carrot")
-                                    Text("Ingredients")
-                                }
-                                .environment(\.managedObjectContext, managedObjectContext)
+                TabView(selection: $selectedTab) {
+                    ProductsListView(absorptionScheme: absorptionScheme, selectedTab: $selectedTab)
+                        .tag(Tab.products.rawValue)
+                        .tabItem{
+                            Image(systemName: "birthday.cake")
+                            Text("Products")
                         }
-                        .frame(width: geometry.size.width, height: geometry.size.height)
-                        .offset(x: self.showingMenu ? geometry.size.width/2 : 0)
-                        
-                        if self.showingMenu {
-                            MenuView(isPresented: $showingMenu, draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON, exportDirectory: self.exportJSON)
-                                .frame(width: geometry.size.width/2)
-                                .transition(.move(edge: .leading))
+                        .environment(\.managedObjectContext, managedObjectContext)
+                    
+                    IngredientsListView(absorptionScheme: absorptionScheme, selectedTab: $selectedTab)
+                        .tag(Tab.ingredients.rawValue)
+                        .tabItem{
+                            Image(systemName: "carrot")
+                            Text("Ingredients")
                         }
-                    }
+                        .environment(\.managedObjectContext, managedObjectContext)
+                    
+                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON, exportDirectory: self.exportJSON)
+                        .tag(Tab.settings.rawValue)
+                        .tabItem{
+                            Image(systemName: "gear")
+                            Text("Settings")
+                        }
+                        .environment(\.managedObjectContext, managedObjectContext)
                 }
-                .gesture(drag)
                 .alert(isPresented: self.$showingAlert) {
                     Alert(
                         title: Text("Notice"),
@@ -183,7 +168,6 @@ struct MainView: View {
             errorMessage = NSLocalizedString("Failed to export food list to: ", comment: "") + fileName
             showingAlert = true
         }
-        withAnimation { showingMenu = false }
     }
     
     private func importFoodItems() {
@@ -194,9 +178,6 @@ struct MainView: View {
         } else {
             errorMessage = "Could not import food list"
             showingAlert = true
-        }
-        withAnimation {
-            self.showingMenu = false
         }
     }
 }

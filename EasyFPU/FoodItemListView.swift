@@ -19,7 +19,6 @@ struct FoodItemListView: View {
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var helpSheet: FoodItemListViewSheets.State
     var foodItemListTitle: String
-    @Binding var showingMenu: Bool
     @Binding var selectedTab: Int
     @State private var searchString = ""
     @State private var showCancelButton: Bool = false
@@ -59,19 +58,9 @@ struct FoodItemListView: View {
                             }
                         }
                     }
-                    .disabled(self.showingMenu ? true : false)
                     .navigationBarTitle(foodItemListTitle)
                     .toolbar {
                         ToolbarItemGroup(placement: .navigationBarLeading) {
-                            Button(action: {
-                                withAnimation {
-                                    self.showingMenu.toggle()
-                                }
-                            }) {
-                                Image(systemName: self.showingMenu ? "xmark" : "line.horizontal.3")
-                                .imageScale(.large)
-                            }
-                            
                             Button(action: {
                                 withAnimation {
                                     self.activeSheet = helpSheet
@@ -80,7 +69,7 @@ struct FoodItemListView: View {
                                 Image(systemName: "questionmark.circle")
                                 .imageScale(.large)
                                 .padding()
-                            }.disabled(self.showingMenu ? true : false)
+                            }
                         }
                         
                         ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -98,7 +87,7 @@ struct FoodItemListView: View {
                                     .foregroundColor(Color.gray)
                                     .padding()
                                 }
-                            }.disabled(self.showingMenu ? true : false)
+                            }
                             
                             Button(action: {
                                 // Add new food item
@@ -107,7 +96,7 @@ struct FoodItemListView: View {
                                 Image(systemName: "plus.circle")
                                     .imageScale(.large)
                                     .foregroundColor(.green)
-                            }.disabled(self.showingMenu ? true : false)
+                            }
                         }
                     }
                 }

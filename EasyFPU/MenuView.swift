@@ -11,7 +11,6 @@ import UniformTypeIdentifiers
 
 struct MenuView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Binding var isPresented: Bool
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var absorptionScheme: AbsorptionScheme
     var filePicked: (URL) -> ()
@@ -63,9 +62,6 @@ struct MenuView: View {
                 if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &alertMessage) {
                     self.showingAlert = true
                 }
-                
-                // Close menu
-                self.isPresented = false
                 
                 // Display disclaimer
                 UserSettings.shared.disclaimerAccepted = false
