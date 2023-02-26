@@ -154,7 +154,7 @@ struct FoodPreviewContent: View {
             image
                 .resizable()
                 .scaledToFit()
-                .animation(.default)
+                .animation(.default, value: self.pointTapped)
                 .offset(x: self.draggedSize.width, y: 0)
                 .scaleEffect(self.scale)
                 .scaleEffect(self.isTapped ? 2 : 1,

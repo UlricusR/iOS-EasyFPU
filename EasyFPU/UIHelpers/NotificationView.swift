@@ -10,6 +10,7 @@ import SwiftUI
 
 struct NotificationView<Content: View>: View {
     let content: Content
+    @State private var animate = false
     
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -21,6 +22,7 @@ struct NotificationView<Content: View>: View {
             .background(Color(.tertiarySystemBackground))
             .cornerRadius(16)
             .transition(.move(edge: .top))
-            .animation(.spring())
+            .animation(.spring(), value: animate)
+            .onAppear { animate = true }
     }
 }

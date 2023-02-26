@@ -23,7 +23,7 @@ struct ActivityIndicatorSpinner: View {
                     style: style
                 )
                 .rotationEffect(Angle(degrees: animate ? 360 : 0))
-                .animation(Animation.linear(duration: 0.7).repeatForever(autoreverses: false))
+                .animation(Animation.linear(duration: 0.7).repeatForever(autoreverses: false), value: animate)
         }
         .onAppear() {
             self.animate.toggle()

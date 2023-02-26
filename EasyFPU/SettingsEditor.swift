@@ -229,7 +229,6 @@ struct SettingsEditor: View {
                     }
                 }
             }
-            .animation(.easeInOut(duration: 0.16))
             
             // Navigation bar
             .navigationBarTitle(Text("Settings"))

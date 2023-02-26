@@ -83,7 +83,7 @@ struct ComposedFoodItemEvaluationView: View {
                             ComposedFoodItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundColorName: Color.accentColor)
                         }
                     }
-                    .animation(.easeInOut)
+                    .animation(.easeInOut, value: showDetails)
                 }
                 
                 Spacer()

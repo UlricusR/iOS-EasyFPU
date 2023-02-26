@@ -188,7 +188,6 @@ struct FoodItemEditor: View {
                             }
                         }
                     }
-                    .animation(.easeInOut(duration: 0.16))
                 }
                 .navigationBarTitle(navigationBarTitle)
                 .toolbar {
