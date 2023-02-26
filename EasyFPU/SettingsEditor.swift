@@ -231,7 +231,7 @@ struct SettingsEditor: View {
             }
             
             // Navigation bar
-            .navigationBarTitle(Text("Settings"))
+            .navigationBarTitle(Text("App Settings"))
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Button(action: {

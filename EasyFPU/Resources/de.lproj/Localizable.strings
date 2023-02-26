@@ -175,6 +175,7 @@
 "Search worldwide" = "Weltweit suchen";
 
 // Menu actions
+"App Settings" = "App-Einstellungen";
 "Settings" = "Einstellungen";
 "Import from JSON" = "Importieren (Format: JSON)";
 "Export to JSON" = "Exportieren (Format: JSON)";

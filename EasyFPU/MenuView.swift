@@ -20,72 +20,66 @@ struct MenuView: View {
     @State private var alertMessage = ""
     
     var body: some View {
-        VStack(alignment: .leading) {
-            // Absorption Scheme
-            Button(action: {
-                activeSheet = .editAbsorptionScheme
-            }) {
-                Text("Settings")
-            }
-            .foregroundColor(.gray)
-            .padding(.top, 50)
-            
-            // Import
-            Button(action: {
-                activeSheet = .pickFileToImport
-            }) {
-                Text("Import from JSON")
-            }
-            .foregroundColor(.gray)
-            .padding(.top, 40)
-            
-            // Export
-            Button(action: {
-                activeSheet = .pickExportDirectory
-            }) {
-                Text("Export to JSON")
-            }
-            .foregroundColor(.gray)
-            .padding(.top, 15)
-            
-            // About
-            Button(action: {
-                activeSheet = .about
-            }) {
-                Text("About")
-            }
-            .foregroundColor(.gray)
-            .padding(.top, 40)
-            
-            // Disclaimer
-            Button(action: {
-                if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &alertMessage) {
-                    self.showingAlert = true
+        NavigationView {
+            VStack(alignment: .leading) {
+                // Absorption Scheme
+                Button(action: {
+                    activeSheet = .editAbsorptionScheme
+                }) {
+                    Text("App Settings")
                 }
+                .padding(.top, 50)
                 
-                // Display disclaimer
-                UserSettings.shared.disclaimerAccepted = false
-            }) {
-                Text("Disclaimer")
+                // Import
+                Button(action: {
+                    activeSheet = .pickFileToImport
+                }) {
+                    Text("Import from JSON")
+                }
+                .padding(.top, 40)
+                
+                // Export
+                Button(action: {
+                    activeSheet = .pickExportDirectory
+                }) {
+                    Text("Export to JSON")
+                }
+                .padding(.top, 15)
+                
+                // About
+                Button(action: {
+                    activeSheet = .about
+                }) {
+                    Text("About")
+                }
+                .padding(.top, 40)
+                
+                // Disclaimer
+                Button(action: {
+                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &alertMessage) {
+                        self.showingAlert = true
+                    }
+                    
+                    // Display disclaimer
+                    UserSettings.shared.disclaimerAccepted = false
+                }) {
+                    Text("Disclaimer")
+                }
+                .padding(.top, 15)
+                
+                // Web help
+                Button(action: {
+                    UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
+                }) {
+                    Text("Help on the Web")
+                }
+                .padding(.top, 15)
+                
+                Spacer()
             }
-            .foregroundColor(.gray)
-            .padding(.top, 15)
-            
-            // Web help
-            Button(action: {
-                UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
-            }) {
-                Text("Help on the Web")
-            }
-            .foregroundColor(.gray)
-            .padding(.top, 15)
-            
-            Spacer()
+            .navigationBarTitle("Settings")
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(red: 32/255, green: 32/255, blue: 32/255))
-        .edgesIgnoringSafeArea(.all)
+        .navigationViewStyle(StackNavigationViewStyle())
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
