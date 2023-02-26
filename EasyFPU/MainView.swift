@@ -51,6 +51,7 @@ struct MainView: View {
                             ProductsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu, selectedTab: $selectedTab)
                                 .tag(Tab.products.rawValue)
                                 .tabItem{
+                                    Image(systemName: "birthday.cake")
                                     Text("Products")
                                 }
                                 .environment(\.managedObjectContext, managedObjectContext)
@@ -58,6 +59,7 @@ struct MainView: View {
                             IngredientsListView(absorptionScheme: absorptionScheme, showingMenu: $showingMenu, selectedTab: $selectedTab)
                                 .tag(Tab.ingredients.rawValue)
                                 .tabItem{
+                                    Image(systemName: "carrot")
                                     Text("Ingredients")
                                 }
                                 .environment(\.managedObjectContext, managedObjectContext)
