@@ -11,24 +11,37 @@ import SwiftUI
 struct HelpViewMealDetails: View {
     var body: some View {
         VStack(alignment: .leading) {
-            Text("This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid. It displays the same information as the Meal Summary on the Food List view, plus - on request - the details about all selected food items.").padding()
+            Text("This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid.").padding()
             
             Text("With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal.").padding()
             
-            Text("For each of the three carbs type, the same set of information is displayed:").padding()
-            
             Group {
-                Text("- How much? - The total amount of carbs of that type").padding([.leading, .trailing])
-                Text("- When? - The time when these carbs start to impact your blood glucose level").padding([.leading, .trailing])
-                Text("- How long? - The time interval during which these carbs will be absorbed, impacting your blood glucose level").padding([.leading, .trailing])
+                HStack {
+                    Image(systemName: "cube.fill").foregroundColor(Color(ComposedFoodItemSugarsView.color))
+                    Text("Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.")
+                }.padding()
+                
+                HStack {
+                    Image(systemName: "hare.fill").foregroundColor(Color(ComposedFoodItemCarbsView.color))
+                    Text("Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.")
+                }.padding()
+                
+                HStack {
+                    Image(systemName: "tortoise.fill").foregroundColor(Color(ComposedFoodItemECarbsView.color))
+                    Text("Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.")
+                }.padding()
+                
+                Text("Tapping 'Clear' will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero.")
+                .padding()
+                
+                HStack {
+                    Image(systemName: "square.and.arrow.up").foregroundColor(.accentColor)
+                    Text("Tapping the export button in the summary will open the Meal Export view.")
+                }.padding()
+                
+                Text("Tapping 'More Details' will open the Meal Details view.")
+                .padding()
             }
-            
-            HStack {
-                Image(systemName: "square.and.arrow.up").imageScale(.large)
-                Text("You may export the extended carbs to the Apple Health app")
-            }.padding()
-            
-            Text("Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above.").padding()
         }
     }
 }

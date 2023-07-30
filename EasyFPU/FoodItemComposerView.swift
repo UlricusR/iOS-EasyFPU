@@ -93,23 +93,24 @@ struct FoodItemComposerView: View {
                         }
                     }
                 }
-                .navigationBarTitle(Text("Final product"), displayMode: .inline)
+                .navigationBarTitle(Text("Final product"))
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
+                    ToolbarItemGroup(placement: .navigationBarLeading) {
                         Button(action: {
                             activeSheet = .help
                         }) {
                             Image(systemName: "questionmark.circle").imageScale(.large)
                         }
+                        
+                        Button(action: {
+                            composedFoodItem.clear()
+                            presentation.wrappedValue.dismiss()
+                        }) {
+                            Text("Clear")
+                        }
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            composedFoodItem.clear()
-                        }) {
-                            Image(systemName: "xmark.circle").foregroundColor(.red).imageScale(.large).padding(.trailing)
-                        }
-                        
                         Button(action: {
                             if weightCheck(isLess: true) {
                                 message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
@@ -123,6 +124,12 @@ struct FoodItemComposerView: View {
                             }
                         }) {
                             Text("Save")
+                        }
+                        
+                        Button(action: {
+                            presentation.wrappedValue.dismiss()
+                        }) {
+                            Text("Close")
                         }
                     }
                 }

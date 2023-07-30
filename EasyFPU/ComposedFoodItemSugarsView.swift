@@ -18,36 +18,38 @@ struct ComposedFoodItemSugarsView: View {
     static let color = UIColor.red
     
     var body: some View {
-        HStack {
-            VStack(alignment: .center) {
+        VStack {
+            HStack(alignment: .center) {
                 Image(systemName: "cube.fill")
                 Text("Sugars").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
             .foregroundColor(Color(ComposedFoodItemSugarsView.color))
-            .padding(.trailing)
+            .padding(.bottom)
             
-            VStack(alignment: .trailing) { // Questions
-                Text("How much?")
-                Text("When?")
-                Text("How long?")
-            }.foregroundColor(Color(ComposedFoodItemSugarsView.color))
-            
-            VStack(alignment: .leading) { // Answers
-                HStack { // How much?
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.getSugars(when: userSettings.treatSugarsSeparately)))!)
-                    Text("g Carbs")
-                }
-                HStack {
-                    Text("In")
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: userSettings.absorptionTimeSugarsDelayInMinutes + userSettings.mealDelayInMinutes))!)
-                    Text("min at")
-                    Text(self.sugarsTimeAsString)
-                }
-                HStack {
-                    Text("For")
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeSugarsDurationInHours))!)
-                    Text("h")
+            HStack {
+                VStack(alignment: .trailing) { // Questions
+                    Text("How much?")
+                    Text("When?")
+                    Text("How long?")
+                }.foregroundColor(Color(ComposedFoodItemSugarsView.color))
+                
+                VStack(alignment: .leading) { // Answers
+                    HStack { // How much?
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.getSugars(when: userSettings.treatSugarsSeparately)))!)
+                        Text("g Carbs")
+                    }
+                    HStack {
+                        Text("In")
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: userSettings.absorptionTimeSugarsDelayInMinutes + userSettings.mealDelayInMinutes))!)
+                        Text("min at")
+                        Text(self.sugarsTimeAsString)
+                    }
+                    HStack {
+                        Text("For")
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeSugarsDurationInHours))!)
+                        Text("h")
+                    }
                 }
             }
         }

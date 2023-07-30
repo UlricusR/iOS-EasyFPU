@@ -29,15 +29,10 @@ struct HelpViewIngredientsList: View {
                 Image(systemName: "xmark.circle").foregroundColor(.red)
                 Text("A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.")
             }.padding()
-            
-            Group {
-                Text("In case you have selected one or more ingredients, a hovering window will appear at the bottom of the screen, showing the summary of your recipe.").padding()
-                
-                HStack {
-                    Image(systemName: "xmark.circle").foregroundColor(.red)
-                    Text("Tapping the red X icon in the recipe summary will clear your recipe, i.e. remove all ingredients.")
-                }.padding()
-            }
+            HStack {
+                Image(systemName: "arrowshape.turn.up.forward.fill").foregroundColor(.red)
+                Text("In case you have selected one or more ingredients, the arrow in the top right corner turns red. Click it to view and edit the summary of your recipe and to save it to your products.")
+            }.padding()
         }
     }
 }

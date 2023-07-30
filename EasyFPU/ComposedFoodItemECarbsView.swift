@@ -26,36 +26,38 @@ struct ComposedFoodItemECarbsView: View {
     static var color = UIColor.blue
     
     var body: some View {
-        HStack {
-            VStack(alignment: .center) {
+        VStack {
+            HStack(alignment: .center) {
                 Image(systemName: "tortoise.fill")
                 Text("e-Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
             .foregroundColor(Color(ComposedFoodItemECarbsView.color))
-            .padding(.trailing)
+            .padding(.bottom)
             
-            VStack(alignment: .trailing) { // Questions
-                Text("How much?")
-                Text("When?")
-                Text("How long?")
-            }.foregroundColor(Color(ComposedFoodItemECarbsView.color))
-            
-            VStack(alignment: .leading) { // Answers
-                HStack {
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.fpus.getExtendedCarbs()))!)
-                    Text("g Carbs")
-                }
-                HStack {
-                    Text("In")
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: userSettings.absorptionTimeECarbsDelayInMinutes + userSettings.mealDelayInMinutes))!)
-                    Text("min at")
-                    Text(self.extendedCarbsTimeAsString)
-                }
-                HStack {
-                    Text("For")
-                    Text(self.absorptionTimeAsString)
-                    Text("h")
+            HStack {
+                VStack(alignment: .trailing) { // Questions
+                    Text("How much?")
+                    Text("When?")
+                    Text("How long?")
+                }.foregroundColor(Color(ComposedFoodItemECarbsView.color))
+                
+                VStack(alignment: .leading) { // Answers
+                    HStack {
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.fpus.getExtendedCarbs()))!)
+                        Text("g Carbs")
+                    }
+                    HStack {
+                        Text("In")
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: userSettings.absorptionTimeECarbsDelayInMinutes + userSettings.mealDelayInMinutes))!)
+                        Text("min at")
+                        Text(self.extendedCarbsTimeAsString)
+                    }
+                    HStack {
+                        Text("For")
+                        Text(self.absorptionTimeAsString)
+                        Text("h")
+                    }
                 }
             }
         }

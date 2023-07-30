@@ -51,7 +51,7 @@ struct HelpView: View {
                     Button(action: {
                         presentation.wrappedValue.dismiss()
                     }) {
-                        Text("Done")
+                        Text("Close")
                     }
                 }
             }

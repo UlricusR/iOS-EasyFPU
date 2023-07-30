@@ -84,7 +84,7 @@ struct FoodItemListView: View {
                                     .padding()
                                 } else {
                                     Image(systemName: "star")
-                                    .foregroundColor(Color.gray)
+                                    .foregroundColor(Color.blue)
                                     .padding()
                                 }
                             }
@@ -96,6 +96,23 @@ struct FoodItemListView: View {
                                 Image(systemName: "plus.circle")
                                     .imageScale(.large)
                                     .foregroundColor(.green)
+                            }
+                            
+                            Button(action: {
+                                if !self.composedFoodItem.foodItems.isEmpty {
+                                    // Show food item summary
+                                    activeSheet = .foodItemSummary
+                                }
+                            }) {
+                                if self.composedFoodItem.foodItems.isEmpty {
+                                    Image(systemName: "arrowshape.turn.up.forward")
+                                    .foregroundColor(Color.gray)
+                                    .padding()
+                                } else {
+                                    Image(systemName: "arrowshape.turn.up.forward.fill")
+                                    .foregroundColor(Color.red)
+                                    .padding()
+                                }
                             }
                         }
                     }
@@ -111,13 +128,6 @@ struct FoodItemListView: View {
                         dismissButton: .default(Text("OK"))
                     )
                 }
-                
-                // The Bottom Sheet
-                if !self.composedFoodItem.foodItems.isEmpty {
-                    BottomSheetView(maxHeight: geometry.size.height * 0.95) {
-                        bottomSheetContent()
-                    }
-                }
             }.edgesIgnoringSafeArea(.all)
             
             // Notification
@@ -126,16 +136,6 @@ struct FoodItemListView: View {
                     notificationViewContent()
                 }
             }
-        }
-    }
-    
-    @ViewBuilder
-    private func bottomSheetContent() -> some View {
-        switch category {
-        case .product:
-            ComposedFoodItemEvaluationView(absorptionScheme: absorptionScheme, composedFoodItem: composedFoodItem)
-        case .ingredient:
-            FoodItemComposerView(composedFoodItem: composedFoodItem, notificationState: $notificationState)
         }
     }
     
@@ -159,6 +159,13 @@ struct FoodItemListView: View {
     @ViewBuilder
     private func sheetContent(_ state: FoodItemListViewSheets.State) -> some View {
         switch state {
+        case .foodItemSummary:
+            switch category {
+            case .product:
+                ComposedFoodItemEvaluationView(absorptionScheme: absorptionScheme, composedFoodItem: composedFoodItem)
+            case .ingredient:
+                FoodItemComposerView(composedFoodItem: composedFoodItem, notificationState: $notificationState)
+            }
         case .addFoodItem:
             FoodItemEditor(
                 navigationBarTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),

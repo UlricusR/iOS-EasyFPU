@@ -10,6 +10,7 @@ import Foundation
 
 class FoodItemListViewSheets {
     enum State: Identifiable {
+        case foodItemSummary
         case addFoodItem
         case productsListHelp
         case ingredientsListHelp

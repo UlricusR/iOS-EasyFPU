@@ -17,6 +17,10 @@ struct HelpFoodItemComposer: View {
             Text("- The total weight of the final product").padding(.horizontal)
             Text("- Whether or not the recipe is a favorite").padding(.horizontal)
             Text("- The number of portions").padding(.horizontal)
+            
+            Text("Tapping 'Save' in the recipe summary will save your recipe as a product in the product list").padding()
+            
+            Text("Tapping 'Clear' in the recipe summary will clear your recipe, i.e. remove all ingredients.").padding()
         }
     }
 }
