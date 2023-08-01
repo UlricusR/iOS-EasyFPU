@@ -175,6 +175,8 @@ struct MainView: View {
             for foodItemToBeImported in foodItemsToBeImported! {
                 let _ = FoodItem.create(from: foodItemToBeImported)
             }
+            errorMessage = "Successfully imported food list"
+            showingAlert = true
         } else {
             errorMessage = "Could not import food list"
             showingAlert = true
