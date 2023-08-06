@@ -18,7 +18,7 @@ struct FoodItemEditor: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.presentationMode) var presentation
     var navigationBarTitle: String
-    @ObservedObject var draftFoodItem: FoodItemViewModel
+    @ObservedObject var draftFoodItemVM: FoodItemViewModel
     var editedFoodItem: FoodItem? // Working copy of the food item
     var category: FoodItemCategory
     @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
@@ -37,7 +37,7 @@ struct FoodItemEditor: View {
         ]
     ) var foodItems: FetchedResults<FoodItem>
     
-    var typicalAmounts: [TypicalAmountViewModel] { draftFoodItem.typicalAmounts.sorted() }
+    var typicalAmounts: [TypicalAmountViewModel] { draftFoodItemVM.typicalAmounts.sorted() }
     
     @State private var oldName = ""
     @State private var oldCaloriesPer100gAsString = ""
@@ -63,11 +63,11 @@ struct FoodItemEditor: View {
                         Section {
                             HStack {
                                 // Name
-                                CustomTextField(titleKey: "Name", text: $draftFoodItem.name, keyboardType: .default)
+                                CustomTextField(titleKey: "Name", text: $draftFoodItemVM.name, keyboardType: .default)
                                 
                                 // Search and Scan buttons
                                 Button(action: {
-                                    if draftFoodItem.name.isEmpty {
+                                    if draftFoodItemVM.name.isEmpty {
                                         self.errorMessage = NSLocalizedString("Search term must not be empty", comment: "")
                                         self.activeAlert = .alertMessage
                                     } else {
@@ -93,31 +93,31 @@ struct FoodItemEditor: View {
                             }
                             
                             // Category
-                            Picker("Category", selection: $draftFoodItem.category) {
+                            Picker("Category", selection: $draftFoodItemVM.category) {
                                 Text("Product").tag(FoodItemCategory.product)
                                 Text("Ingredient").tag(FoodItemCategory.ingredient)
                             }
                             
                             // Favorite
-                            Toggle("Favorite", isOn: $draftFoodItem.favorite)
+                            Toggle("Favorite", isOn: $draftFoodItemVM.favorite)
                         }
                         
                         Section(header: Text("Nutritional values per 100g:")) {
                             // Calories
                             HStack {
-                                CustomTextField(titleKey: "Calories per 100g", text: $draftFoodItem.caloriesPer100gAsString, keyboardType: .decimalPad)
+                                CustomTextField(titleKey: "Calories per 100g", text: $draftFoodItemVM.caloriesPer100gAsString, keyboardType: .decimalPad)
                                 Text("kcal")
                             }
                             
                             // Carbs
                             HStack {
-                                CustomTextField(titleKey: "Carbs per 100g", text: $draftFoodItem.carbsPer100gAsString, keyboardType: .decimalPad)
+                                CustomTextField(titleKey: "Carbs per 100g", text: $draftFoodItemVM.carbsPer100gAsString, keyboardType: .decimalPad)
                                 Text("g Carbs")
                             }
                             
                             // Sugars
                             HStack {
-                                CustomTextField(titleKey: "Thereof Sugars per 100g", text: $draftFoodItem.sugarsPer100gAsString, keyboardType: .decimalPad)
+                                CustomTextField(titleKey: "Thereof Sugars per 100g", text: $draftFoodItemVM.sugarsPer100gAsString, keyboardType: .decimalPad)
                                 Text("g Sugars")
                             }
                         }
@@ -179,7 +179,7 @@ struct FoodItemEditor: View {
                                     presentation.wrappedValue.dismiss()
                                     
                                     // Delete food item
-                                    if let foodItemToBeDeleted = self.draftFoodItem.cdFoodItem {
+                                    if let foodItemToBeDeleted = self.draftFoodItemVM.cdFoodItem {
                                         FoodItem.delete(foodItemToBeDeleted)
                                     }
                                 }) {
@@ -198,7 +198,7 @@ struct FoodItemEditor: View {
                             
                             // Then undo the changes made to typical amounts
                             for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
-                                self.draftFoodItem.typicalAmounts.append(typicalAmountToBeDeleted)
+                                self.draftFoodItemVM.typicalAmounts.append(typicalAmountToBeDeleted)
                             }
                             self.typicalAmountsToBeDeleted.removeAll()
                         }) {
@@ -229,11 +229,11 @@ struct FoodItemEditor: View {
                 sheetContent($0)
             }
             .onAppear() {
-                self.oldName = self.draftFoodItem.name
-                self.oldCaloriesPer100gAsString = self.draftFoodItem.caloriesPer100gAsString
-                self.oldCarbsPer100gAsString = self.draftFoodItem.carbsPer100gAsString
-                self.oldSugarsPer100gAsString = self.draftFoodItem.sugarsPer100gAsString
-                self.oldAmountAsString = self.draftFoodItem.amountAsString
+                self.oldName = self.draftFoodItemVM.name
+                self.oldCaloriesPer100gAsString = self.draftFoodItemVM.caloriesPer100gAsString
+                self.oldCarbsPer100gAsString = self.draftFoodItemVM.carbsPer100gAsString
+                self.oldSugarsPer100gAsString = self.draftFoodItemVM.sugarsPer100gAsString
+                self.oldAmountAsString = self.draftFoodItemVM.amountAsString
             }
             
             // Notification
@@ -255,26 +255,26 @@ struct FoodItemEditor: View {
         var error = FoodItemViewModelError.name("Dummy")
         
         // Create updated food item
-        if let updatedFoodItem = FoodItemViewModel(
-            name: self.draftFoodItem.name,
-            category: self.draftFoodItem.category,
-            favorite: self.draftFoodItem.favorite,
-            caloriesAsString: self.draftFoodItem.caloriesPer100gAsString,
-            carbsAsString: self.draftFoodItem.carbsPer100gAsString,
-            sugarsAsString: self.draftFoodItem.sugarsPer100gAsString,
-            amountAsString: self.draftFoodItem.amountAsString,
+        if let updatedFoodItemVM = FoodItemViewModel(
+            id: self.editedFoodItem != nil ? self.editedFoodItem!.id : UUID(),
+            name: self.draftFoodItemVM.name,
+            category: self.draftFoodItemVM.category,
+            favorite: self.draftFoodItemVM.favorite,
+            caloriesAsString: self.draftFoodItemVM.caloriesPer100gAsString,
+            carbsAsString: self.draftFoodItemVM.carbsPer100gAsString,
+            sugarsAsString: self.draftFoodItemVM.sugarsPer100gAsString,
+            amountAsString: self.draftFoodItemVM.amountAsString,
             error: &error) { // We have a valid food item
             // Add typical amounts
-            updatedFoodItem.typicalAmounts = draftFoodItem.typicalAmounts
+            updatedFoodItemVM.typicalAmounts = draftFoodItemVM.typicalAmounts
             
             if self.editedFoodItem != nil { // We need to update an existing food item
-                FoodItem.update(editedFoodItem!, with: updatedFoodItem)
-                FoodItem.remove(typicalAmountsToBeDeleted, from: editedFoodItem!)
+                FoodItem.update(editedFoodItem!, with: updatedFoodItemVM, typicalAmountsToBeDeleted)
                 
                 // Reset typical amounts to be deleted
                 self.typicalAmountsToBeDeleted.removeAll()
             } else { // We have a new food item
-                let _ = FoodItem.create(from: updatedFoodItem)
+                let _ = FoodItem.create(from: updatedFoodItemVM)
             }
             
             // Quit edit mode
@@ -284,27 +284,27 @@ struct FoodItemEditor: View {
             switch error {
             case .name(let errorMessage):
                 self.errorMessage = errorMessage
-                self.draftFoodItem.name = self.oldName
+                self.draftFoodItemVM.name = self.oldName
             case .calories(let errorMessage):
                 self.errorMessage = NSLocalizedString("Calories: ", comment:"") + errorMessage
-                self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
+                self.draftFoodItemVM.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
             case .carbs(let errorMessage):
                 self.errorMessage = NSLocalizedString("Carbs: ", comment:"") + errorMessage
-                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+                self.draftFoodItemVM.carbsPer100gAsString = self.oldCarbsPer100gAsString
             case .sugars(let errorMessage):
                 self.errorMessage = NSLocalizedString("Sugars: ", comment: "") + errorMessage
-                self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
+                self.draftFoodItemVM.sugarsPer100gAsString = self.oldSugarsPer100gAsString
             case .tooMuchCarbs(let errorMessage):
                 self.errorMessage = errorMessage
-                self.draftFoodItem.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
-                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+                self.draftFoodItemVM.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
+                self.draftFoodItemVM.carbsPer100gAsString = self.oldCarbsPer100gAsString
             case .tooMuchSugars(let errorMessage):
                 self.errorMessage = errorMessage
-                self.draftFoodItem.sugarsPer100gAsString = self.oldSugarsPer100gAsString
-                self.draftFoodItem.carbsPer100gAsString = self.oldCarbsPer100gAsString
+                self.draftFoodItemVM.sugarsPer100gAsString = self.oldSugarsPer100gAsString
+                self.draftFoodItemVM.carbsPer100gAsString = self.oldCarbsPer100gAsString
             case .amount(let errorMessage):
                 self.errorMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
-                self.draftFoodItem.amountAsString = self.oldAmountAsString
+                self.draftFoodItemVM.amountAsString = self.oldAmountAsString
             }
             
             // Display alert and stay in edit mode
@@ -321,18 +321,18 @@ struct FoodItemEditor: View {
     
     private func deleteTypicalAmount(_ typicalAmountToBeDeleted: TypicalAmountViewModel) {
         typicalAmountsToBeDeleted.append(typicalAmountToBeDeleted)
-        guard let originalIndex = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
+        guard let originalIndex = self.draftFoodItemVM.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
             self.errorMessage = NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment
             return
         }
-        self.draftFoodItem.typicalAmounts.remove(at: originalIndex)
+        self.draftFoodItemVM.typicalAmounts.remove(at: originalIndex)
     }
     
     private func addTypicalAmount() {
         if newTypicalAmountId == nil { // This is a new typical amount
             if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.newTypicalAmount, comment: self.newTypicalAmountComment, errorMessage: &self.errorMessage) {
                 // Add new typical amount to typical amounts of food item
-                self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
+                self.draftFoodItemVM.typicalAmounts.append(newTypicalAmount)
                 
                 // Reset text fields
                 self.newTypicalAmount = ""
@@ -342,13 +342,13 @@ struct FoodItemEditor: View {
                 self.activeAlert = .alertMessage
             }
         } else { // This is an existing typical amount
-            guard let index = self.draftFoodItem.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
+            guard let index = self.draftFoodItemVM.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
                 self.errorMessage = NSLocalizedString("Fatal error: Could not identify typical amount", comment: "")
                 self.activeAlert = .alertMessage
                 return
             }
-            self.draftFoodItem.typicalAmounts[index].amountAsString = self.newTypicalAmount
-            self.draftFoodItem.typicalAmounts[index].comment = self.newTypicalAmountComment
+            self.draftFoodItemVM.typicalAmounts[index].amountAsString = self.newTypicalAmount
+            self.draftFoodItemVM.typicalAmounts[index].comment = self.newTypicalAmountComment
             
             // Reset text fields and typical amount id
             self.newTypicalAmount = ""
@@ -357,7 +357,7 @@ struct FoodItemEditor: View {
             self.newTypicalAmountId = nil
             
             // Broadcast changed object
-            self.draftFoodItem.objectWillChange.send()
+            self.draftFoodItemVM.objectWillChange.send()
         }
     }
     
@@ -399,7 +399,7 @@ struct FoodItemEditor: View {
     
     private func performSearch() {
         notificationState = .searching
-        UserSettings.shared.foodDatabase.search(for: draftFoodItem.name, category: category) { result in
+        UserSettings.shared.foodDatabase.search(for: draftFoodItemVM.name, category: category) { result in
             switch result {
             case .success(let networkSearchResults):
                 guard let searchResults = networkSearchResults, !searchResults.isEmpty else {
@@ -444,11 +444,11 @@ struct FoodItemEditor: View {
         case .help:
             HelpView(helpScreen: self.helpScreen)
         case .search:
-            FoodSearch(foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem, category: category)
+            FoodSearch(foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItemVM, category: category)
         case .scan:
             CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "4101530002123", completion: self.handleScan)
         case .foodPreview:
-            FoodPreview(product: $scanResult, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected)
+            FoodPreview(product: $scanResult, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItemVM, category: category, foodSelected: $foodSelected)
         }
     }
     

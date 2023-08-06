@@ -18,11 +18,7 @@ enum FoodItemCategory: String {
 }
 
 class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, VariableAmountItem {
-    var id: UUID? {
-        // We reuse the id of the Core Data FoodItem - or return nil
-        cdFoodItem?.id
-    }
-    
+    var id: UUID
     @Published var name: String
     @Published var favorite: Bool
     @Published var caloriesPer100gAsString: String = "" {
@@ -80,15 +76,16 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     @Published var amount: Int = 0
     @Published var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
-    var cdComposedFoodItem: ComposedFoodItem?
+    var composedFoodItemVM: ComposedFoodItemViewModel?
     
     enum CodingKeys: String, CodingKey {
         case foodItem
-        case amount, caloriesPer100g, carbsPer100g, sugarsPer100g, favorite, name, typicalAmounts, category
+        case id, amount, caloriesPer100g, carbsPer100g, sugarsPer100g, favorite, name, typicalAmounts, category
         case composedFoodItem
     }
     
-    init(name: String, category: FoodItemCategory, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, sugarsPer100g: Double, amount: Int) {
+    init(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, sugarsPer100g: Double, amount: Int) {
+        self.id = id
         self.name = name
         self.category = category
         self.favorite = favorite
@@ -101,6 +98,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     }
     
     init(from cdFoodItem: FoodItem) {
+        // Use ID from Core Date FoodItem
+        self.id = cdFoodItem.id
         self.name = cdFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
         self.category = FoodItemCategory.init(rawValue: cdFoodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
         self.favorite = cdFoodItem.favorite
@@ -109,7 +108,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.sugarsPer100g = cdFoodItem.sugarsPer100g
         self.cdFoodItem = cdFoodItem
         if let cdComposedFoodItem = cdFoodItem.composedFoodItem {
-            self.cdComposedFoodItem = cdComposedFoodItem
+            self.composedFoodItemVM = ComposedFoodItemViewModel(from: cdComposedFoodItem)
         }
         
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
@@ -123,19 +122,21 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     }
     
     init(from cdIngredient: Ingredient) {
-        self.name = cdIngredient.name ?? NSLocalizedString("- Unnamned -", comment: "")
-        self.category = FoodItemCategory.init(rawValue: cdIngredient.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
-        self.favorite = cdIngredient.favorite
-        self.caloriesPer100g = cdIngredient.caloriesPer100g
-        self.carbsPer100g = cdIngredient.carbsPer100g
-        self.sugarsPer100g = cdIngredient.sugarsPer100g
+        // Use ID from related Core Data FoodItem
+        self.id = cdIngredient.foodItem.id
+        self.name = cdIngredient.foodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
+        self.category = FoodItemCategory.init(rawValue: cdIngredient.foodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
+        self.favorite = cdIngredient.foodItem.favorite
+        self.caloriesPer100g = cdIngredient.foodItem.caloriesPer100g
+        self.carbsPer100g = cdIngredient.foodItem.carbsPer100g
+        self.sugarsPer100g = cdIngredient.foodItem.sugarsPer100g
         self.amount = Int(cdIngredient.amount)
         self.cdFoodItem = cdIngredient.foodItem
         
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
     }
     
-    init?(name: String, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError) {
+    init?(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError) {
         // Check for a correct name
         let foodName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         if foodName == "" {
@@ -144,6 +145,9 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         } else {
             self.name = foodName
         }
+        
+        // Generate ID
+        self.id = id
         
         // Set category
         self.category = category
@@ -215,6 +219,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let foodItem = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)
+        let uuidString = try foodItem.decode(String.self, forKey: .id)
+        id = UUID(uuidString: uuidString) ?? UUID()
         category = try FoodItemCategory.init(rawValue: foodItem.decode(String.self, forKey: .category)) ?? .product
         amount = try foodItem.decode(Int.self, forKey: .amount)
         caloriesPer100g = try foodItem.decode(Double.self, forKey: .caloriesPer100g)
@@ -238,7 +244,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.amountAsString = amountAsString
         
         if let composedFoodItemVM = try? foodItem.decode(ComposedFoodItemViewModel.self, forKey: .composedFoodItem) {
-            self.cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItemVM)
+            self.composedFoodItemVM = composedFoodItemVM
         }
     }
     
@@ -300,9 +306,13 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         }
     }
     
+    /**
+     Duplicates a FoodItem.
+     */
     func duplicate() {
         let nameOfDuplicate = "\(name) - \(NSLocalizedString("Copy", comment: ""))"
         let duplicate = FoodItemViewModel(
+            id: UUID(),
             name: nameOfDuplicate,
             category: category,
             favorite: favorite,
@@ -313,14 +323,15 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         )
         duplicate.typicalAmounts = typicalAmounts
         
-        // Check if this was associated to a ComposedFoodItem
-        if let cdComposedFoodItem = cdComposedFoodItem {
-            duplicate.cdComposedFoodItem = ComposedFoodItem.create(from: cdComposedFoodItem)
-            duplicate.cdComposedFoodItem?.name = nameOfDuplicate
-        }
+        // Create new Core Data FoodItem
+        let newCDFoodItem = FoodItem.create(from: duplicate)
         
-        // Create new FoodItem in CoreData
-        duplicate.cdFoodItem = FoodItem.create(from: duplicate)
+        // Check if this was associated to a ComposedFoodItem
+        if let composedFoodItemVM = self.composedFoodItemVM {
+            duplicate.composedFoodItemVM = composedFoodItemVM
+            duplicate.composedFoodItemVM?.cdComposedFoodItem = ComposedFoodItem.duplicate(composedFoodItemVM, for: newCDFoodItem)
+            duplicate.composedFoodItemVM?.name = nameOfDuplicate
+        }
     }
     
     func exportToURL() -> URL? {
@@ -346,6 +357,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         var foodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)
+        try foodItem.encode(id.uuidString, forKey: .id)
         try foodItem.encode(category.rawValue, forKey: .category)
         try foodItem.encode(amount, forKey: .amount)
         try foodItem.encode(caloriesPer100g, forKey: .caloriesPer100g)
@@ -355,15 +367,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         try foodItem.encode(name, forKey: .name)
         try foodItem.encode(typicalAmounts, forKey: .typicalAmounts)
         
-        if let cdComposedFoodItem = cdComposedFoodItem {
-            let composedFoodItemVM = ComposedFoodItemViewModel(
-                name: cdComposedFoodItem.name ?? NSLocalizedString("- Unnamed -", comment: ""),
-                category: FoodItemCategory.init(rawValue: cdComposedFoodItem.category ?? FoodItemCategory.product.rawValue) ?? .product,
-                favorite: cdComposedFoodItem.favorite
-            )
-            
-            composedFoodItemVM.fill(from: cdComposedFoodItem, syncStrategy: .createMissingFoodItems)
-            
+        if let composedFoodItemVM = self.composedFoodItemVM {
             try foodItem.encode(composedFoodItemVM, forKey: .composedFoodItem)
         }
     }

@@ -30,11 +30,17 @@ public class FoodItem: NSManagedObject {
         try? viewContext.save()
     }
     
+    /**
+     Creates a new Core Data FoodItem. It does not account for associated ComposedFoodItems, but only creates a "plain" FoodItem!
+     
+     - Parameter foodItedVM: The source FoodItemViewModel.
+     */
     static func create(from foodItemVM: FoodItemViewModel) -> FoodItem {
         let moc = AppDelegate.viewContext
         
         // Create the FoodItem
         let cdFoodItem = FoodItem(context: moc)
+        cdFoodItem.id = foodItemVM.id
         
         // Fill data
         cdFoodItem.name = foodItemVM.name
@@ -43,7 +49,6 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
         cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
         cdFoodItem.favorite = foodItemVM.favorite
-        cdFoodItem.id = foodItemVM.id ?? UUID()
         
         // Add typical amounts
         for typicalAmount in foodItemVM.typicalAmounts {
@@ -51,39 +56,21 @@ public class FoodItem: NSManagedObject {
             cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
         }
         
-        // Add ComposedFoodItem if available
-        if let cdComposedFoodItem = foodItemVM.cdComposedFoodItem {
-            cdFoodItem.composedFoodItem = cdComposedFoodItem
-        }
-        
         // Save new food item
         try? moc.save()
         
         return cdFoodItem
     }
     
-    static func create(from ingredient: Ingredient) -> FoodItem {
-        let moc = AppDelegate.viewContext
-        
-        // Create the FoodItem
-        let cdFoodItem = FoodItem(context: moc)
-        
-        // Fill data
-        cdFoodItem.name = ingredient.name
-        cdFoodItem.category = ingredient.category
-        cdFoodItem.caloriesPer100g = ingredient.caloriesPer100g
-        cdFoodItem.carbsPer100g = ingredient.carbsPer100g
-        cdFoodItem.sugarsPer100g = ingredient.sugarsPer100g
-        cdFoodItem.favorite = ingredient.favorite
-        cdFoodItem.id = UUID()
-        cdFoodItem.composedFoodItem = ingredient.composedFoodItem
-        
-        // Save new food item
-        try? moc.save()
-        
-        return cdFoodItem
-    }
-    
+    /**
+     Creates a Core Data FoodItem from a ComposedFoodItemViewModel. Called from the FoodItemComposerView.
+     
+     - Parameters:
+        - composedFoodItem: The source ComposedFoodItemViewModel.
+        - generateTypicalAmounts: If true, TypicalAmounts will be added to the FoodItem.
+     
+     - Returns: A new Core Data FoodItem.
+     */
     static func create(from composedFoodItem: ComposedFoodItemViewModel, generateTypicalAmounts: Bool) -> FoodItem {
         debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         let moc = AppDelegate.viewContext
@@ -98,10 +85,12 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.carbsPer100g = composedFoodItem.carbsPer100g
         cdFoodItem.sugarsPer100g = composedFoodItem.sugarsPer100g
         cdFoodItem.favorite = composedFoodItem.favorite
-        cdFoodItem.composedFoodItem = composedFoodItem.cdComposedFoodItem
         
         // Set category to product
         cdFoodItem.category = FoodItemCategory.product.rawValue
+        
+        // Create relationships
+        cdFoodItem.composedFoodItem = composedFoodItem.cdComposedFoodItem
         
         // Add typical amounts
         if generateTypicalAmounts {
@@ -118,29 +107,61 @@ public class FoodItem: NSManagedObject {
         return cdFoodItem
     }
     
-    static func update(_ cdFoodItem: FoodItem?, with foodItemVM: FoodItemViewModel) {
+    /**
+     Updates a Core Data FoodItem with the values from a FoodItemViewModel.
+     
+     - Parameters:
+        - cdFoodItem: The Core Data FoodItem to be updated.
+        - foodItemVM: The source FoodItemViewModel.
+        - typicalAmountsToBeDeleted: The TypicalAmounts to be deleted from the FoodItem.
+     */
+    static func update(_ cdFoodItem: FoodItem, with foodItemVM: FoodItemViewModel, _ typicalAmountsToBeDeleted: [TypicalAmountViewModel]) {
         let moc = AppDelegate.viewContext
-        var foodItem: FoodItem
-        if cdFoodItem != nil {
-            foodItem = cdFoodItem!
-        } else {
-            foodItem = FoodItem(context: moc)
-            foodItem.id = UUID()
+        cdFoodItem.name = foodItemVM.name
+        cdFoodItem.category = foodItemVM.category.rawValue
+        cdFoodItem.favorite = foodItemVM.favorite
+        cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
+        cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
+        cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
+        
+        // Remove deleted typical amounts
+        for typicalAmountToBeDeleted in typicalAmountsToBeDeleted {
+            if typicalAmountToBeDeleted.cdTypicalAmount != nil {
+                cdFoodItem.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
+                moc.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
+            }
         }
-        foodItem.name = foodItemVM.name
-        foodItem.category = foodItemVM.category.rawValue
-        foodItem.favorite = foodItemVM.favorite
-        foodItem.carbsPer100g = foodItemVM.carbsPer100g
-        foodItem.caloriesPer100g = foodItemVM.caloriesPer100g
-        foodItem.sugarsPer100g = foodItemVM.sugarsPer100g
         
         // Update typical amounts
         for typicalAmountVM in foodItemVM.typicalAmounts {
             let cdTypicalAmount = TypicalAmount.update(with: typicalAmountVM)
-            foodItem.addToTypicalAmounts(cdTypicalAmount)
+            cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
         }
         
-        try? AppDelegate.viewContext.save()
+        try? moc.save()
+    }
+    
+    static func update(_ cdFoodItem: FoodItem, with composedFoodItemVM: ComposedFoodItemViewModel) {
+        let moc = AppDelegate.viewContext
+        cdFoodItem.name = composedFoodItemVM.name
+        cdFoodItem.category = composedFoodItemVM.category.rawValue
+        cdFoodItem.favorite = composedFoodItemVM.favorite
+        cdFoodItem.carbsPer100g = composedFoodItemVM.carbsPer100g
+        cdFoodItem.caloriesPer100g = composedFoodItemVM.caloriesPer100g
+        cdFoodItem.sugarsPer100g = composedFoodItemVM.sugarsPer100g
+        
+        // Delete typical amounts
+        if let oldTypicalAmounts = cdFoodItem.typicalAmounts {
+            cdFoodItem.removeFromTypicalAmounts(oldTypicalAmounts)
+        }
+        
+        // Add new typical amounts
+        for typicalAmountVM in composedFoodItemVM.typicalAmounts {
+            let cdTypicalAmount = TypicalAmount.create(from: typicalAmountVM)
+            cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
+        }
+        
+        try? moc.save()
     }
     
     static func delete(_ foodItem: FoodItem) {
@@ -156,24 +177,16 @@ public class FoodItem: NSManagedObject {
         try? moc.save()
     }
     
+    /**
+     Adds a TypicalAmount to a FoodItem.
+     
+     - Parameters:
+        - typicalAmount: The Core Data TypicalAmount to add.
+        - foodItem: The Core Data FoodItem the TypicalAmount should be added to.
+     */
     static func add(_ typicalAmount: TypicalAmount, to foodItem: FoodItem) {
         foodItem.addToTypicalAmounts(typicalAmount)
         try? AppDelegate.viewContext.save()
-    }
-    
-    static func remove(_ typicalAmountVMs: [TypicalAmountViewModel], from foodItem: FoodItem) {
-        let moc = AppDelegate.viewContext
-        
-        // Remove deleted typical amounts
-        for typicalAmountToBeDeleted in typicalAmountVMs {
-            if typicalAmountToBeDeleted.cdTypicalAmount != nil {
-                typicalAmountToBeDeleted.cdTypicalAmount!.foodItem = nil
-                foodItem.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
-                moc.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
-            }
-        }
-        
-        try? moc.save()
     }
     
     static func setCategory(_ foodItem: FoodItem?, to category: String) {
@@ -183,5 +196,24 @@ public class FoodItem: NSManagedObject {
             moc.refresh(foodItem, mergeChanges: true)
             try? moc.save()
         }
+    }
+    
+    /**
+     Returns the Core Data FoodItem with the given id.
+     
+     - Parameter id: The Core Data entry id.
+     
+     - Returns: The related Core Data FoodItem, nil if not found.
+     */
+    static func getFoodItem(with id: String) -> FoodItem? {
+        let predicate = NSPredicate(format: "id = %@", id)
+        let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
+        request.predicate = predicate
+        if let result = try? AppDelegate.viewContext.fetch(request) {
+            if !result.isEmpty {
+                return result[0]
+            }
+        }
+        return nil
     }
 }

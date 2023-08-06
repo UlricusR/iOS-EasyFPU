@@ -103,11 +103,6 @@
 "portion(s)" = "Portion(en)";
 "Cannot create typical amount: " = "Kann typische Menge nicht berechnen: ";
 "successfully saved in Products" = "erfolgreich in Produkten gespeichert";
-"Missing Ingredients" = "Missing Ingredients";
-"The following ingredients are no longer available: " = "Die folgenden Zutaten sind nicht mehr vorhanden: ";
-". Do you want to create them or remove them from your product?" = ". Sollen diese erstellt oder von Ihrem Produkt entfernt werden?";
-"Create missing ingredients" = "Fehlende Zutaten erstellen";
-"Remove from product" = "Vom Produkt entfernen";
 
 // Meal preview
 "e-Carbs" = "Verlängerte KH";

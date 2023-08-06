@@ -9,10 +9,7 @@
 import Foundation
 
 class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
-    enum IngredientsSyncStrategy {
-        case createMissingFoodItems, removeNonExistingIngredients
-    }
-    
+    var id: UUID
     @Published var name: String
     var category: FoodItemCategory
     @Published var favorite: Bool
@@ -98,21 +95,47 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
         case id, amount, favorite, name, category, numberOfPortions, foodItems
     }
     
-    init(name: String, category: FoodItemCategory, favorite: Bool) {
+    init(id: UUID, name: String, category: FoodItemCategory, favorite: Bool) {
+        self.id = id
         self.name = name
         self.category = category
         self.favorite = favorite
     }
     
+    init(from cdComposedFoodItem: ComposedFoodItem) {
+        self.id = cdComposedFoodItem.id
+        self.name = cdComposedFoodItem.foodItem.name ?? NSLocalizedString("- Unnamed -", comment: "")
+        self.category = FoodItemCategory.init(rawValue: cdComposedFoodItem.foodItem.category ?? FoodItemCategory.ingredient.rawValue) ?? FoodItemCategory.ingredient
+        self.favorite = cdComposedFoodItem.foodItem.favorite
+        self.amount = Int(cdComposedFoodItem.amount)
+        self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
+        self.cdComposedFoodItem = cdComposedFoodItem
+        
+        for ingredient in cdComposedFoodItem.ingredients {
+            foodItems.append(FoodItemViewModel(from: ingredient as! Ingredient))
+        }
+    }
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let composedFoodItem = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .composedFoodItem)
+        let uuidString = try composedFoodItem.decode(String.self, forKey: .id)
+        id = UUID(uuidString: uuidString) ?? UUID()
         category = try FoodItemCategory.init(rawValue: composedFoodItem.decode(String.self, forKey: .category)) ?? .product
         amount = try composedFoodItem.decode(Int.self, forKey: .amount)
         favorite = try composedFoodItem.decode(Bool.self, forKey: .favorite)
         name = try composedFoodItem.decode(String.self, forKey: .name)
         numberOfPortions = try composedFoodItem.decode(Int.self, forKey: .numberOfPortions)
-        foodItems = try composedFoodItem.decode([FoodItemViewModel].self, forKey: .foodItems)
+        
+        // Although foodItems are stored completely, we treat them as Ingredients and only use amount, but match them to FoodItems
+        let ingredients = try composedFoodItem.decode([FoodItemViewModel].self, forKey: .foodItems)
+        for ingredient in ingredients {
+            // Search for the related Core Data FoodItem (which should have been loaded already,
+            // as ComposedFoodItems were sorted last before exporting the list of FoodItems
+            if let relatedFoodItem = FoodItem.getFoodItem(with: ingredient.id.uuidString) {
+                foodItems.append(FoodItemViewModel(from: relatedFoodItem))
+            }
+        }
     }
     
     func add(foodItem: FoodItemViewModel) {
@@ -148,41 +171,15 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
             name = NSLocalizedString(ProductsListView.composedFoodItemName, comment: "")
         }
         
+        id = UUID()
         favorite = false
         amount = 0
         numberOfPortions = 0
         cdComposedFoodItem = nil
     }
     
-    func fill(from cdComposedFoodItem: ComposedFoodItem?, syncStrategy: IngredientsSyncStrategy) {
-        if let cdComposedFoodItem = cdComposedFoodItem {
-            // First clear existing data
-            clear()
-            
-            // Check for missing FoodItems
-            if let ingredients = cdComposedFoodItem.ingredients?.allObjects as? [Ingredient] {
-                for ingredient in ingredients {
-                    if let foodItem = ingredient.foodItem { // The FoodItem hasn't been deleted
-                        foodItem.category = FoodItemCategory.ingredient.rawValue
-                        let foodItemVM = FoodItemViewModel(from: foodItem)
-                        foodItemVM.amount = Int(ingredient.amount)
-                        foodItems.append(foodItemVM)
-                    } else if syncStrategy == .createMissingFoodItems { // Create missing FoodItem
-                        let foodItem = FoodItem.create(from: ingredient)
-                        let foodItemVM = FoodItemViewModel(from: foodItem)
-                        foodItemVM.amount = Int(ingredient.amount)
-                        foodItems.append(foodItemVM)
-                    }
-                }
-            }
-            
-            // Then fill from ComposedFoodItem
-            self.name = cdComposedFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
-            self.amountAsString = String(cdComposedFoodItem.amount)
-            self.favorite = cdComposedFoodItem.favorite
-            self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
-            self.cdComposedFoodItem = cdComposedFoodItem
-        }
+    func updateAssociatedFoodItemVM() {
+        
     }
     
     func getCarbsInclSugars() -> Double {

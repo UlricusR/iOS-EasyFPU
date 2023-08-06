@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct FoodItemComposerView: View {
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @State var message: String = ""
     @State var showingActionSheet: Bool = false
     @Environment(\.presentationMode) var presentation
@@ -28,12 +28,12 @@ struct FoodItemComposerView: View {
                         Section(header: Text("Final product")) {
                             HStack {
                                 Text("Name")
-                                TextField("Name", text: self.$composedFoodItem.name)
+                                TextField("Name", text: self.$composedFoodItemVM.name)
                             }
                             
                             HStack {
                                 Text("Weight")
-                                CustomTextField(titleKey: "Weight", text: self.$composedFoodItem.amountAsString, keyboardType: .numberPad)
+                                CustomTextField(titleKey: "Weight", text: self.$composedFoodItemVM.amountAsString, keyboardType: .numberPad)
                                     .multilineTextAlignment(.trailing)
                                 Text("g")
                             }
@@ -41,16 +41,16 @@ struct FoodItemComposerView: View {
                             // Buttons to ease input
                             HStack {
                                 Spacer()
-                                NumberButton(number: 100, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
-                                NumberButton(number: 50, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
-                                NumberButton(number: 10, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
-                                NumberButton(number: 5, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
-                                NumberButton(number: 1, variableAmountItem: self.composedFoodItem, width: geometry.size.width / 7)
+                                NumberButton(number: 100, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
+                                NumberButton(number: 50, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
+                                NumberButton(number: 10, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
+                                NumberButton(number: 5, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
+                                NumberButton(number: 1, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
                                 Spacer()
                             }
                             
                             // Favorite
-                            Toggle("Favorite", isOn: $composedFoodItem.favorite)
+                            Toggle("Favorite", isOn: $composedFoodItemVM.favorite)
                         }
                         
                         
@@ -61,13 +61,13 @@ struct FoodItemComposerView: View {
                             if generateTypicalAmounts {
                                 // Number of portions
                                 HStack {
-                                    Stepper("Number of portions", value: $composedFoodItem.numberOfPortions, in: 1...100)
-                                    Text("\(composedFoodItem.numberOfPortions)")
+                                    Stepper("Number of portions", value: $composedFoodItemVM.numberOfPortions, in: 1...100)
+                                    Text("\(composedFoodItemVM.numberOfPortions)")
                                 }
                                 
-                                if !composedFoodItem.typicalAmounts.isEmpty {
+                                if !composedFoodItemVM.typicalAmounts.isEmpty {
                                     List {
-                                        ForEach(composedFoodItem.typicalAmounts) { typicalAmount in
+                                        ForEach(composedFoodItemVM.typicalAmounts) { typicalAmount in
                                             HStack {
                                                 Text(typicalAmount.amountAsString)
                                                 Text("g")
@@ -82,7 +82,7 @@ struct FoodItemComposerView: View {
                         
                         Section(header: Text("Ingredients")) {
                             List {
-                                ForEach(composedFoodItem.foodItems) { foodItem in
+                                ForEach(composedFoodItemVM.foodItems) { foodItem in
                                     HStack {
                                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
                                         Text("g")
@@ -103,7 +103,7 @@ struct FoodItemComposerView: View {
                         }
                         
                         Button(action: {
-                            composedFoodItem.clear()
+                            composedFoodItemVM.clear()
                             presentation.wrappedValue.dismiss()
                         }) {
                             Text("Clear")
@@ -152,27 +152,38 @@ struct FoodItemComposerView: View {
     
     private func weightCheck(isLess: Bool) -> Bool {
         var ingredientsWeight = 0
-        for ingredient in composedFoodItem.foodItems {
+        for ingredient in composedFoodItemVM.foodItems {
             ingredientsWeight += ingredient.amount
         }
         
-        return isLess ? (ingredientsWeight <= composedFoodItem.amount ? false : true) : (ingredientsWeight > composedFoodItem.amount ? false : true)
+        return isLess ? (ingredientsWeight <= composedFoodItemVM.amount ? false : true) : (ingredientsWeight > composedFoodItemVM.amount ? false : true)
     }
     
     private func saveProduct() {
-        // First store new ComposedFoodItem in CoreData and add it to the view model
-        let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItem)
-        composedFoodItem.cdComposedFoodItem = cdComposedFoodItem
+        // Check if this was an existing ComposedFoodItem
+        if composedFoodItemVM.cdComposedFoodItem == nil { // This is a new ComposedFoodItem
+            // First store new ComposedFoodItem in CoreData and add it to the view model
+            let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItemVM)
+            composedFoodItemVM.cdComposedFoodItem = cdComposedFoodItem
+            
+            // Next, derive regular FoodItem and associate it with the ComposedFoodItem
+            let cdFoodItem = FoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts)
+            composedFoodItemVM.cdComposedFoodItem?.foodItem = cdFoodItem
+        } else { // We edit an existing ComposedFoodItem
+            // Update the associated FoodItem
+            FoodItem.update(composedFoodItemVM.cdComposedFoodItem!.foodItem, with: composedFoodItemVM)
+            
+            // Update Core Data ComposedFoodItem
+            ComposedFoodItem.update(composedFoodItemVM.cdComposedFoodItem!, with: composedFoodItemVM, for: composedFoodItemVM.cdComposedFoodItem!.foodItem)
+        }
         
-        // Next, derive regular FoodItem and associate it with the ComposedFoodItem
-        let foodItem = FoodItem.create(from: composedFoodItem, generateTypicalAmounts: generateTypicalAmounts)
-        composedFoodItem.cdComposedFoodItem?.foodItem = foodItem
+        
         
         // Notify user of successful storage
-        notificationState = .successfullySavedFoodItem(composedFoodItem.name)
+        notificationState = .successfullySavedFoodItem(composedFoodItemVM.name)
         
         // Clear the ComposedFoodItem
-        composedFoodItem.clear()
+        composedFoodItemVM.clear()
     }
     
     @ViewBuilder

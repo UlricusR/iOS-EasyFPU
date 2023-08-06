@@ -17,14 +17,14 @@ extension ComposedFoodItem {
         return NSFetchRequest<ComposedFoodItem>(entityName: "ComposedFoodItem")
     }
 
-    @NSManaged public var name: String?
+    @NSManaged public var name: String? // unused as of 2023-08-04
     @NSManaged public var amount: Int64
     @NSManaged public var numberOfPortions: Int16
-    @NSManaged public var favorite: Bool
-    @NSManaged public var category: String?
-    @NSManaged public var id: UUID?
-    @NSManaged public var ingredients: NSSet?
-    @NSManaged public var foodItem: FoodItem?
+    @NSManaged public var favorite: Bool // unused as of 2023-08-04
+    @NSManaged public var category: String? // unused as of 2023-08-04
+    @NSManaged public var id: UUID // required as of 2023-08-04
+    @NSManaged public var ingredients: NSSet // required as of 2023-08-04
+    @NSManaged public var foodItem: FoodItem // required as of 2023-08-04
 
 }
 

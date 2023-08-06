@@ -22,7 +22,7 @@ struct MainView: View {
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     @ObservedObject var absorptionScheme = AbsorptionScheme()
-    @State private var foodItemsToBeImported: [FoodItemViewModel]?
+    @State private var foodItemVMsToBeImported: [FoodItemViewModel]?
     @State private var showActionSheet = false
     @State private var selectedTab: Int = 0
     @State private var showingAlert = false
@@ -129,7 +129,7 @@ struct MainView: View {
         let decoder = JSONDecoder()
         
         do {
-            self.foodItemsToBeImported = try decoder.decode([FoodItemViewModel].self, from: jsonData)
+            self.foodItemVMsToBeImported = try decoder.decode([FoodItemViewModel].self, from: jsonData)
             self.showActionSheet = true
         } catch DecodingError.keyNotFound(let key, let context) {
             errorMessage = NSLocalizedString("Failed to decode due to missing key ", comment: "") + key.stringValue + " - " + context.debugDescription
@@ -171,9 +171,14 @@ struct MainView: View {
     }
     
     private func importFoodItems() {
-        if foodItemsToBeImported != nil {
-            for foodItemToBeImported in foodItemsToBeImported! {
-                let _ = FoodItem.create(from: foodItemToBeImported)
+        if foodItemVMsToBeImported != nil {
+            for foodItemVMToBeImported in foodItemVMsToBeImported! {
+                let cdFoodItem = FoodItem.create(from: foodItemVMToBeImported)
+                
+                // Check if it is associated to a ComposedFoodItemVM
+                if let composedFoodItemVM = foodItemVMToBeImported.composedFoodItemVM {
+                    cdFoodItem.composedFoodItem = ComposedFoodItem.duplicate(composedFoodItemVM, for: cdFoodItem)
+                }
             }
             errorMessage = "Successfully imported food list"
             showingAlert = true

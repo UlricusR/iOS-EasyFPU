@@ -793,12 +793,14 @@
 				DEVELOPMENT_TEAM = Q4HRNRLV9A;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = EasyFPU/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = EasyFPU;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.4.1;
+				MARKETING_VERSION = 2.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -823,12 +825,14 @@
 				DEVELOPMENT_TEAM = Q4HRNRLV9A;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = EasyFPU/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = EasyFPU;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.4.1;
+				MARKETING_VERSION = 2.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

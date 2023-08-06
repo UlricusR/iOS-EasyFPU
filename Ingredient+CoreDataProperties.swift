@@ -17,16 +17,16 @@ extension Ingredient {
         return NSFetchRequest<Ingredient>(entityName: "Ingredient")
     }
 
-    @NSManaged public var name: String?
-    @NSManaged public var category: String?
-    @NSManaged public var favorite: Bool
-    @NSManaged public var caloriesPer100g: Double
-    @NSManaged public var carbsPer100g: Double
-    @NSManaged public var sugarsPer100g: Double
+    @NSManaged public var id: UUID // required as of 2023-08-04
+    @NSManaged public var name: String? // unused as of 2023-08-04
+    @NSManaged public var category: String? // unused as of 2023-08-04
+    @NSManaged public var favorite: Bool // unused as of 2023-08-04
+    @NSManaged public var caloriesPer100g: Double // unused as of 2023-08-04
+    @NSManaged public var carbsPer100g: Double // unused as of 2023-08-04
+    @NSManaged public var sugarsPer100g: Double // unused as of 2023-08-04
     @NSManaged public var amount: Int64
-    @NSManaged public var id: UUID?
-    @NSManaged public var composedFoodItem: ComposedFoodItem?
-    @NSManaged public var foodItem: FoodItem?
+    @NSManaged public var composedFoodItem: ComposedFoodItem // required as of 2023-08-04
+    @NSManaged public var foodItem: FoodItem // required as of 2023-08-04
 
 }
 

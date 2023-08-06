@@ -53,7 +53,7 @@ struct FoodItemListView: View {
                             SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
                                 .padding(.horizontal)
                             ForEach(self.filteredFoodItems) { foodItem in
-                                FoodItemView(composedFoodItem: composedFoodItem, foodItem: foodItem, category: self.category, selectedTab: $selectedTab)
+                                FoodItemView(composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, selectedTab: $selectedTab)
                                     .environment(\.managedObjectContext, self.managedObjectContext)
                             }
                         }
@@ -164,13 +164,14 @@ struct FoodItemListView: View {
             case .product:
                 ComposedFoodItemEvaluationView(absorptionScheme: absorptionScheme, composedFoodItem: composedFoodItem)
             case .ingredient:
-                FoodItemComposerView(composedFoodItem: composedFoodItem, notificationState: $notificationState)
+                FoodItemComposerView(composedFoodItemVM: composedFoodItem, notificationState: $notificationState)
             }
         case .addFoodItem:
             FoodItemEditor(
                 navigationBarTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
-                draftFoodItem: // Create new empty draftFoodItem
+                draftFoodItemVM: // Create new empty draftFoodItem
                     FoodItemViewModel(
+                        id: UUID(),
                         name: "",
                         category: category,
                         favorite: false,

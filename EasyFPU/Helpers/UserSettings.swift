@@ -79,8 +79,18 @@ class UserSettings: ObservableObject {
     @Published var countryCode: String?
     
     // The ComposedFoodItems
-    @Published var composedMeal = ComposedFoodItemViewModel(name: NSLocalizedString(ProductsListView.composedFoodItemName, comment: ""), category: .product, favorite: false)
-    @Published var composedProduct = ComposedFoodItemViewModel(name: NSLocalizedString(IngredientsListView.composedFoodItemName, comment: ""), category: .ingredient, favorite: false)
+    @Published var composedMeal = ComposedFoodItemViewModel(
+        id: UUID(),
+        name: NSLocalizedString(ProductsListView.composedFoodItemName, comment: ""),
+        category: .product,
+        favorite: false
+    )
+    @Published var composedProduct = ComposedFoodItemViewModel(
+        id: UUID(),
+        name: NSLocalizedString(IngredientsListView.composedFoodItemName, comment: ""),
+        category: .ingredient,
+        favorite: false
+    )
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,

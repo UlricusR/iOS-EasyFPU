@@ -55,11 +55,21 @@ class DataHelper {
     // MARK: - Exporting food items as JSON
     
     static func exportFoodItems(_ dir: URL, fileName: inout String) -> Bool {
+        // Get Core Data FoodItems and load them into FoodItemViewModels
         let cdFoodItems = FoodItem.fetchAll()
         var foodItems = [FoodItemViewModel]()
         for cdFoodItem in cdFoodItems {
             foodItems.append(FoodItemViewModel(from: cdFoodItem))
         }
+        
+        // Sort FoodItems such that the ones containing a ComposedFoodItem are last
+        // in order to account for importing, where Ingredients must be loaded before
+        // they are required by ComposedFoodItems
+        foodItems.sort(by: {
+            $0.composedFoodItemVM == nil && $1.composedFoodItemVM != nil
+        })
+        
+        // Encode
         fileName = "\(UUID().uuidString).json"
         do {
             let encoder = JSONEncoder()
