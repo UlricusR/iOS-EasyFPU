@@ -157,6 +157,7 @@
 		1B6B93712554008C00F0CC7D /* Ingredient+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ingredient+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedFoodItem+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		1B6B93732554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedFoodItem+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		1B71EBED2A80E21100343C89 /* EasyFPU 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "EasyFPU 2.xcdatamodel"; sourceTree = "<group>"; };
 		1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemEvaluationView.swift; sourceTree = "<group>"; };
 		1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewModel.swift; sourceTree = "<group>"; };
 		1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmountViewModel.swift; sourceTree = "<group>"; };
@@ -889,6 +890,7 @@
 		1B004A3024BA3035001E362A /* EasyFPU.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1B71EBED2A80E21100343C89 /* EasyFPU 2.xcdatamodel */,
 				1B004A3124BA3035001E362A /* EasyFPU.xcdatamodel */,
 			);
 			currentVersion = 1B004A3124BA3035001E362A /* EasyFPU.xcdatamodel */;
