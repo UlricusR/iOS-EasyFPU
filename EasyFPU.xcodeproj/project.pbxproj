@@ -61,6 +61,9 @@
 		1B6B93752554008C00F0CC7D /* Ingredient+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93712554008C00F0CC7D /* Ingredient+CoreDataProperties.swift */; };
 		1B6B93762554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */; };
 		1B6B93772554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93732554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift */; };
+		1B71EBF32A80FFC800343C89 /* Ingredient1ToIngredient2MigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B71EBF22A80FFC800343C89 /* Ingredient1ToIngredient2MigrationPolicy.swift */; };
+		1B71EBF52A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1B71EBF42A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel */; };
+		1B71EC122A817D0700343C89 /* CoreDataMigratonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B71EC112A817D0700343C89 /* CoreDataMigratonTests.swift */; };
 		1B870FC124C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */; };
 		1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */; };
 		1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */; };
@@ -99,6 +102,16 @@
 		1BF8A4C124C21A52008634DF /* FoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */; };
 		1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1B71EC0C2A817C6100343C89 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1B004A2124BA3035001E362A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1B004A2824BA3035001E362A;
+			remoteInfo = EasyFPU;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		1B004A2924BA3035001E362A /* EasyFPU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasyFPU.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -158,6 +171,10 @@
 		1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedFoodItem+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		1B6B93732554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedFoodItem+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		1B71EBED2A80E21100343C89 /* EasyFPU 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "EasyFPU 2.xcdatamodel"; sourceTree = "<group>"; };
+		1B71EBF22A80FFC800343C89 /* Ingredient1ToIngredient2MigrationPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient1ToIngredient2MigrationPolicy.swift; sourceTree = "<group>"; };
+		1B71EBF42A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = Migration1to2ModelMapping.xcmappingmodel; sourceTree = "<group>"; };
+		1B71EC082A817C6100343C89 /* EasyFPUTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EasyFPUTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B71EC112A817D0700343C89 /* CoreDataMigratonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMigratonTests.swift; sourceTree = "<group>"; };
 		1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemEvaluationView.swift; sourceTree = "<group>"; };
 		1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewModel.swift; sourceTree = "<group>"; };
 		1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmountViewModel.swift; sourceTree = "<group>"; };
@@ -213,6 +230,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1B71EC052A817C6100343C89 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -220,6 +244,7 @@
 			isa = PBXGroup;
 			children = (
 				1B004A2B24BA3035001E362A /* EasyFPU */,
+				1B71EC092A817C6100343C89 /* EasyFPUTests */,
 				1B004A2A24BA3035001E362A /* Products */,
 				1B004A4424BA338A001E362A /* Frameworks */,
 				BABA6DB766EB131AE23C7102 /* Pods */,
@@ -230,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				1B004A2924BA3035001E362A /* EasyFPU.app */,
+				1B71EC082A817C6100343C89 /* EasyFPUTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -237,6 +263,7 @@
 		1B004A2B24BA3035001E362A /* EasyFPU */ = {
 			isa = PBXGroup;
 			children = (
+				1B71EBFB2A81403100343C89 /* Migration */,
 				1B004A5224BA52E9001E362A /* Resources */,
 				1B6106B924D93325001F2284 /* Helpers */,
 				1B004A3024BA3035001E362A /* EasyFPU.xcdatamodeld */,
@@ -375,6 +402,23 @@
 			path = Help;
 			sourceTree = "<group>";
 		};
+		1B71EBFB2A81403100343C89 /* Migration */ = {
+			isa = PBXGroup;
+			children = (
+				1B71EBF42A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel */,
+				1B71EBF22A80FFC800343C89 /* Ingredient1ToIngredient2MigrationPolicy.swift */,
+			);
+			path = Migration;
+			sourceTree = "<group>";
+		};
+		1B71EC092A817C6100343C89 /* EasyFPUTests */ = {
+			isa = PBXGroup;
+			children = (
+				1B71EC112A817D0700343C89 /* CoreDataMigratonTests.swift */,
+			);
+			path = EasyFPUTests;
+			sourceTree = "<group>";
+		};
 		1B72BB4725431B95008B0B51 /* OpenFoodFacts */ = {
 			isa = PBXGroup;
 			children = (
@@ -454,19 +498,41 @@
 			productReference = 1B004A2924BA3035001E362A /* EasyFPU.app */;
 			productType = "com.apple.product-type.application";
 		};
+		1B71EC072A817C6100343C89 /* EasyFPUTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1B71EC0E2A817C6100343C89 /* Build configuration list for PBXNativeTarget "EasyFPUTests" */;
+			buildPhases = (
+				1B71EC042A817C6100343C89 /* Sources */,
+				1B71EC052A817C6100343C89 /* Frameworks */,
+				1B71EC062A817C6100343C89 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1B71EC0D2A817C6100343C89 /* PBXTargetDependency */,
+			);
+			name = EasyFPUTests;
+			productName = EasyFPUTests;
+			productReference = 1B71EC082A817C6100343C89 /* EasyFPUTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		1B004A2124BA3035001E362A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1150;
+				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Ulrich Rüth";
 				TargetAttributes = {
 					1B004A2824BA3035001E362A = {
 						CreatedOnToolsVersion = 11.5;
 						LastSwiftMigration = 1170;
+					};
+					1B71EC072A817C6100343C89 = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 1B004A2824BA3035001E362A;
 					};
 				};
 			};
@@ -488,6 +554,7 @@
 			projectRoot = "";
 			targets = (
 				1B004A2824BA3035001E362A /* EasyFPU */,
+				1B71EC072A817C6100343C89 /* EasyFPUTests */,
 			);
 		};
 /* End PBXProject section */
@@ -503,6 +570,13 @@
 				1B004A5424BA532E001E362A /* absorptionscheme_default.json in Resources */,
 				1BDBE39C24FE384C00ED61F1 /* InfoPlist.strings in Resources */,
 				1BAEE0882500E12400B4891F /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1B71EC062A817C6100343C89 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,6 +637,7 @@
 				1BAD273D25495B4100A730FB /* FoodPreviewContent.swift in Sources */,
 				1B6867E324FD22D60057EC6A /* HelpViewFoodItemEditor.swift in Sources */,
 				1B9723ED2508AC5C00E606A7 /* UserSettings.swift in Sources */,
+				1B71EBF32A80FFC800343C89 /* Ingredient1ToIngredient2MigrationPolicy.swift in Sources */,
 				1BEE525624D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift in Sources */,
 				1B377A6824FAA935005AC5C6 /* AboutView.swift in Sources */,
 				1B51B3332540BCB800064EB1 /* FoodPreview.swift in Sources */,
@@ -597,6 +672,7 @@
 				1B90D2DA24F7A8EB0059BFFA /* SearchView.swift in Sources */,
 				1B6654B52A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift in Sources */,
 				1B0868AE254EDF35005953CC /* FoodItemListViewSheets.swift in Sources */,
+				1B71EBF52A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel in Sources */,
 				1BF1A15D251AA2B2001E561C /* ComposedFoodItemCarbsView.swift in Sources */,
 				1B004A4D24BA3E7F001E362A /* AbsorptionScheme.swift in Sources */,
 				1B6B861A2517D1AC00ED10FE /* CarbsEntry.swift in Sources */,
@@ -639,7 +715,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1B71EC042A817C6100343C89 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B71EC122A817D0700343C89 /* CoreDataMigratonTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1B71EC0D2A817C6100343C89 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1B004A2824BA3035001E362A /* EasyFPU */;
+			targetProxy = 1B71EC0C2A817C6100343C89 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		1B68548524BC6FE0005ABB8B /* Localizable.strings */ = {
@@ -844,6 +936,46 @@
 			};
 			name = Release;
 		};
+		1B71EC0F2A817C6100343C89 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q4HRNRLV9A;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPUTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EasyFPU.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EasyFPU";
+			};
+			name = Debug;
+		};
+		1B71EC102A817C6100343C89 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q4HRNRLV9A;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPUTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EasyFPU.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EasyFPU";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -861,6 +993,15 @@
 			buildConfigurations = (
 				1B004A4124BA3038001E362A /* Debug */,
 				1B004A4224BA3038001E362A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1B71EC0E2A817C6100343C89 /* Build configuration list for PBXNativeTarget "EasyFPUTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B71EC0F2A817C6100343C89 /* Debug */,
+				1B71EC102A817C6100343C89 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -893,7 +1034,7 @@
 				1B71EBED2A80E21100343C89 /* EasyFPU 2.xcdatamodel */,
 				1B004A3124BA3035001E362A /* EasyFPU.xcdatamodel */,
 			);
-			currentVersion = 1B004A3124BA3035001E362A /* EasyFPU.xcdatamodel */;
+			currentVersion = 1B71EBED2A80E21100343C89 /* EasyFPU 2.xcdatamodel */;
 			path = EasyFPU.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
