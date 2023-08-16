@@ -100,7 +100,7 @@ struct FoodItemView: View {
                 foodItemVM.changeCategory(to: foodItemVM.category == .product ? .ingredient : .product)
             }) {
                 Text(NSLocalizedString("Move to \(foodItemVM.category == .product ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""))
-            }
+            }.disabled(!foodItemVM.canChangeCategory())
             
             // Delete the food item
             Button(action: {
@@ -109,7 +109,7 @@ struct FoodItemView: View {
                 }
             }) {
                 Text("Delete")
-            }
+            }.disabled(!foodItemVM.canBeDeleted())
         })
         .sheet(item: $activeSheet) {
             sheetContent($0)
