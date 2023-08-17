@@ -34,7 +34,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1B71EC072A817C6100343C89"
+               BlueprintIdentifier = "1BE506F62A8412370087DD59"
                BuildableName = "EasyFPUTests.xctest"
                BlueprintName = "EasyFPUTests"
                ReferencedContainer = "container:EasyFPU.xcodeproj">
