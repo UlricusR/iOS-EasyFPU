@@ -83,6 +83,7 @@
 "Delay of Extended Carbs" = "Verzögerung der verlängerten KH";
 "Cannot delete ingredient" = "Kann Zutat nicht löschen";
 "Could not generate data export" = "Konnte Daten nicht exportieren";
+"is not a valid data model" = "ist kein gültiges Datenmodell. Konnte Daten nicht importieren.";
 
 // Ingredients
 "Ingredients" = "Zutaten";

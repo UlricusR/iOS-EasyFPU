@@ -219,8 +219,19 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let foodItem = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)
-        let uuidString = try foodItem.decode(String.self, forKey: .id)
-        id = UUID(uuidString: uuidString) ?? UUID()
+        
+        // Data model version 1 had no ID, therefore we need to catch this separately
+        var hasID = false
+        do {
+            let uuidString = try foodItem.decode(String.self, forKey: .id)
+            
+            // Success --> we overwrite the id (and generate a new one of this goes wrong)
+            hasID = true
+            id = UUID(uuidString: uuidString) ?? UUID()
+        } catch {
+            // We generate a new UUID
+            id = UUID()
+        }
         category = try FoodItemCategory.init(rawValue: foodItem.decode(String.self, forKey: .category)) ?? .product
         amount = try foodItem.decode(Int.self, forKey: .amount)
         caloriesPer100g = try foodItem.decode(Double.self, forKey: .caloriesPer100g)
@@ -243,8 +254,11 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.sugarsPer100gAsString = sugarsAsString
         self.amountAsString = amountAsString
         
-        if let composedFoodItemVM = try? foodItem.decode(ComposedFoodItemViewModel.self, forKey: .composedFoodItem) {
-            self.composedFoodItemVM = composedFoodItemVM
+        // We only import ComposedFoodItems if this is data model 2 or beyond
+        if hasID {
+            if let composedFoodItemVM = try? foodItem.decode(ComposedFoodItemViewModel.self, forKey: .composedFoodItem) {
+                self.composedFoodItemVM = composedFoodItemVM
+            }
         }
     }
     

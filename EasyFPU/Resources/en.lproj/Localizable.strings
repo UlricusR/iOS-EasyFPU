@@ -83,6 +83,7 @@
 "Delay of Extended Carbs" = "Delay of Extended Carbs";
 "Cannot delete ingredient" = "Cannot delete ingredient";
 "Could not generate data export" = "Could not generate data export";
+"is not a valid data model" = "is not a valid data model. Could not import data.";
 
 // Ingredients
 "Ingredients" = "Ingredients";

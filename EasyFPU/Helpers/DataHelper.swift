@@ -52,7 +52,73 @@ class DataHelper {
         }
     }
     
-    // MARK: - Exporting food items as JSON
+    // MARK: - Importing and exporting food items as JSON
+    
+    static func importFoodItems(_ file: URL, foodItemVMsToBeImported: inout [FoodItemViewModel]?, errorMessage: inout String) -> Bool {
+        debugPrint("Trying to import following file: \(file)")
+        
+        // Make sure we can access file
+        guard file.startAccessingSecurityScopedResource() else {
+            debugPrint("Failed to access \(file)")
+            errorMessage = "Failed to access \(file)"
+            return false
+        }
+        defer { file.stopAccessingSecurityScopedResource() }
+        
+        // Read data
+        var jsonData: Data
+        do {
+            jsonData = try Data(contentsOf: file)
+        } catch {
+            debugPrint(error.localizedDescription)
+            errorMessage = error.localizedDescription
+            return false
+        }
+        
+        // Decode JSON
+        let decoder = JSONDecoder()
+        
+        // JSON model has changed, so we must determine data model version first
+        var dataModelVersion: DataModelVersion
+        var dataVersionFinder: DataVersionFinder
+        do {
+            dataVersionFinder = try decoder.decode(DataVersionFinder.self, from: jsonData)
+            dataModelVersion = dataVersionFinder.dataModelVersion
+        } catch DataVersionFinder.DataModelError.invalidDataModelVersion(let message) {
+            errorMessage = message
+            return false
+        } catch {
+            errorMessage = NSLocalizedString("Failed to decode - ", comment: "") + error.localizedDescription
+            return false
+        }
+        
+        do {
+            switch dataModelVersion {
+            case .version1:
+                foodItemVMsToBeImported = try decoder.decode([FoodItemViewModel].self, from: jsonData)
+            case .version2:
+                let wrappedData = try decoder.decode(DataWrapper.self, from: jsonData)
+                foodItemVMsToBeImported = wrappedData.foodItemVMs
+            }
+            // All has gone fine, we return true
+            return true
+        } catch DecodingError.keyNotFound(let key, let context) {
+            errorMessage = NSLocalizedString("Failed to decode due to missing key ", comment: "") + key.stringValue + " - " + context.debugDescription
+            return false
+        } catch DecodingError.typeMismatch(_, let context) {
+            errorMessage = NSLocalizedString("Failed to decode due to type mismatch - ", comment: "") + context.debugDescription
+            return false
+        } catch DecodingError.valueNotFound(let type, let context) {
+            errorMessage = NSLocalizedString("Failed to decode due to missing value - ", comment: "") + "\(type)" + " - " + context.debugDescription
+            return false
+        } catch DecodingError.dataCorrupted(_) {
+            errorMessage = NSLocalizedString("Failed to decode because it appears to be invalid JSON", comment: "")
+            return false
+        } catch {
+            errorMessage = NSLocalizedString("Failed to decode - ", comment: "") + error.localizedDescription
+            return false
+        }
+    }
     
     static func exportFoodItems(_ dir: URL, fileName: inout String) -> Bool {
         // Get Core Data FoodItems and load them into FoodItemViewModels
@@ -69,12 +135,15 @@ class DataHelper {
             $0.composedFoodItemVM == nil && $1.composedFoodItemVM != nil
         })
         
+        // Prepare the DataWrapper
+        let dataWrapper = DataWrapper(dataModelVersion: .version2, foodItemVMs: foodItems)
+        
         // Encode
         fileName = "\(UUID().uuidString).json"
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
-            let contents = try encoder.encode(foodItems)
+            let contents = try encoder.encode(dataWrapper)
             let fileURL = dir.appendingPathComponent(fileName)
             try contents.write(to: fileURL)
             return true

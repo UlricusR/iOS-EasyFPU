@@ -103,48 +103,10 @@ struct MainView: View {
     }
     
     private func importJSON(_ url: URL) {
-        debugPrint("Trying to import following file: \(url)")
-        
-        // Make sure we can access file
-        guard url.startAccessingSecurityScopedResource() else {
-            debugPrint("Failed to access \(url)")
-            errorMessage = "Failed to access \(url)"
-            showingAlert = true
-            return
-        }
-        defer { url.stopAccessingSecurityScopedResource() }
-        
-        // Read data
-        var jsonData: Data
-        do {
-            jsonData = try Data(contentsOf: url)
-        } catch {
-            debugPrint(error.localizedDescription)
-            errorMessage = error.localizedDescription
-            showingAlert = true
-            return
-        }
-        
-        // Decode JSON
-        let decoder = JSONDecoder()
-        
-        do {
-            self.foodItemVMsToBeImported = try decoder.decode([FoodItemViewModel].self, from: jsonData)
+        if DataHelper.importFoodItems(url, foodItemVMsToBeImported: &foodItemVMsToBeImported, errorMessage: &errorMessage) {
             self.showActionSheet = true
-        } catch DecodingError.keyNotFound(let key, let context) {
-            errorMessage = NSLocalizedString("Failed to decode due to missing key ", comment: "") + key.stringValue + " - " + context.debugDescription
-            showingAlert = true
-        } catch DecodingError.typeMismatch(_, let context) {
-            errorMessage = NSLocalizedString("Failed to decode due to type mismatch - ", comment: "") + context.debugDescription
-            showingAlert = true
-        } catch DecodingError.valueNotFound(let type, let context) {
-            errorMessage = NSLocalizedString("Failed to decode due to missing value - ", comment: "") + "\(type)" + " - " + context.debugDescription
-            showingAlert = true
-        } catch DecodingError.dataCorrupted(_) {
-            errorMessage = NSLocalizedString("Failed to decode because it appears to be invalid JSON", comment: "")
-            showingAlert = true
-        } catch {
-            errorMessage = NSLocalizedString("Failed to decode - ", comment: "") + error.localizedDescription
+        } else {
+            // Some error happened
             showingAlert = true
         }
     }
