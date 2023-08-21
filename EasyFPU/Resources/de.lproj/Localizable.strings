@@ -51,7 +51,7 @@
 "Carbs per 100g" = "Kohlenhydrate pro 100g";
 "Calories per 100g" = "Kalorien pro 100g";
 "g" = "g";
-"g Carbs" = "g KH";
+"g Carbs" = "g Kohlenhydrate";
 "g Regular Carbs" = "g reguläre KH";
 "g Sugars" = "g Zucker";
 "Carbs" = "KH";
@@ -64,7 +64,7 @@
 "e-Carbs Factor" = "e-Carbs-Faktor";
 "New Product" = "Neues Produkt";
 "Edit food item" = "Essen bearbeiten";
-"Nutritional values per 100g:" = "Nährwerte pro 100g:";
+"Nutritional values per 100g:" = "Pro 100g:";
 "Nutritional values for" = "Nährwerte für";
 "Amount consumed" = "Gegessene Menge";
 "Amount" = "Menge";
