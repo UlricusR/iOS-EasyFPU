@@ -10,6 +10,11 @@ import Foundation
 import UIKit
 import MobileCoreServices
 
+/// Publishes the main bundle internally - required to access the data model for unit testing
+internal enum DataModel {
+  internal static let bundle = Bundle.main
+}
+
 enum InvalidNumberError: Error {
     case inputError(String)
     

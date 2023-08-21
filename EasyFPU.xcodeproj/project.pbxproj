@@ -40,6 +40,7 @@
 		1B25D487253DC8DB00848C2A /* FoodSearchResultPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B25D486253DC8DB00848C2A /* FoodSearchResultPreview.swift */; };
 		1B2D99872541D72F0012EC40 /* FoodDatabaseResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2D99862541D72F0012EC40 /* FoodDatabaseResults.swift */; };
 		1B2EB5E22544808500E1B5FC /* CountryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2EB5E12544808500E1B5FC /* CountryPicker.swift */; };
+		1B33C7892A9332C400B5F32B /* CoreDataMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B33C7882A9332C400B5F32B /* CoreDataMigrationTests.swift */; };
 		1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */; };
 		1B377A6824FAA935005AC5C6 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6724FAA935005AC5C6 /* AboutView.swift */; };
 		1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */; };
@@ -105,6 +106,16 @@
 		1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		1B33C78A2A9332C400B5F32B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1B004A2124BA3035001E362A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1B004A2824BA3035001E362A;
+			remoteInfo = EasyFPU;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		1B004A2924BA3035001E362A /* EasyFPU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasyFPU.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B004A2C24BA3035001E362A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -142,6 +153,8 @@
 		1B25D486253DC8DB00848C2A /* FoodSearchResultPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodSearchResultPreview.swift; sourceTree = "<group>"; };
 		1B2D99862541D72F0012EC40 /* FoodDatabaseResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDatabaseResults.swift; sourceTree = "<group>"; };
 		1B2EB5E12544808500E1B5FC /* CountryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPicker.swift; sourceTree = "<group>"; };
+		1B33C7862A9332C400B5F32B /* EasyFPUTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EasyFPUTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B33C7882A9332C400B5F32B /* CoreDataMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMigrationTests.swift; sourceTree = "<group>"; };
 		1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 		1B377A6724FAA935005AC5C6 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbsorptionBlockViewModel.swift; sourceTree = "<group>"; };
@@ -224,6 +237,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1B33C7832A9332C400B5F32B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -231,6 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				1B004A2B24BA3035001E362A /* EasyFPU */,
+				1B33C7872A9332C400B5F32B /* EasyFPUTests */,
 				1B004A2A24BA3035001E362A /* Products */,
 				1B004A4424BA338A001E362A /* Frameworks */,
 				BABA6DB766EB131AE23C7102 /* Pods */,
@@ -241,6 +262,7 @@
 			isa = PBXGroup;
 			children = (
 				1B004A2924BA3035001E362A /* EasyFPU.app */,
+				1B33C7862A9332C400B5F32B /* EasyFPUTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -363,6 +385,14 @@
 			path = FoodDatabases;
 			sourceTree = "<group>";
 		};
+		1B33C7872A9332C400B5F32B /* EasyFPUTests */ = {
+			isa = PBXGroup;
+			children = (
+				1B33C7882A9332C400B5F32B /* CoreDataMigrationTests.swift */,
+			);
+			path = EasyFPUTests;
+			sourceTree = "<group>";
+		};
 		1B6106B924D93325001F2284 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -479,6 +509,24 @@
 			productReference = 1B004A2924BA3035001E362A /* EasyFPU.app */;
 			productType = "com.apple.product-type.application";
 		};
+		1B33C7852A9332C400B5F32B /* EasyFPUTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1B33C78E2A9332C400B5F32B /* Build configuration list for PBXNativeTarget "EasyFPUTests" */;
+			buildPhases = (
+				1B33C7822A9332C400B5F32B /* Sources */,
+				1B33C7832A9332C400B5F32B /* Frameworks */,
+				1B33C7842A9332C400B5F32B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1B33C78B2A9332C400B5F32B /* PBXTargetDependency */,
+			);
+			name = EasyFPUTests;
+			productName = EasyFPUTests;
+			productReference = 1B33C7862A9332C400B5F32B /* EasyFPUTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -492,6 +540,10 @@
 					1B004A2824BA3035001E362A = {
 						CreatedOnToolsVersion = 11.5;
 						LastSwiftMigration = 1170;
+					};
+					1B33C7852A9332C400B5F32B = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 1B004A2824BA3035001E362A;
 					};
 				};
 			};
@@ -513,6 +565,7 @@
 			projectRoot = "";
 			targets = (
 				1B004A2824BA3035001E362A /* EasyFPU */,
+				1B33C7852A9332C400B5F32B /* EasyFPUTests */,
 			);
 		};
 /* End PBXProject section */
@@ -528,6 +581,13 @@
 				1B004A5424BA532E001E362A /* absorptionscheme_default.json in Resources */,
 				1BDBE39C24FE384C00ED61F1 /* InfoPlist.strings in Resources */,
 				1BAEE0882500E12400B4891F /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1B33C7842A9332C400B5F32B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,7 +729,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1B33C7822A9332C400B5F32B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B33C7892A9332C400B5F32B /* CoreDataMigrationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1B33C78B2A9332C400B5F32B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1B004A2824BA3035001E362A /* EasyFPU */;
+			targetProxy = 1B33C78A2A9332C400B5F32B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		1B68548524BC6FE0005ABB8B /* Localizable.strings */ = {
@@ -876,6 +952,46 @@
 			};
 			name = Release;
 		};
+		1B33C78C2A9332C400B5F32B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q4HRNRLV9A;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPUTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EasyFPU.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EasyFPU";
+			};
+			name = Debug;
+		};
+		1B33C78D2A9332C400B5F32B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q4HRNRLV9A;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPUTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EasyFPU.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EasyFPU";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -893,6 +1009,15 @@
 			buildConfigurations = (
 				1B004A4124BA3038001E362A /* Debug */,
 				1B004A4224BA3038001E362A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1B33C78E2A9332C400B5F32B /* Build configuration list for PBXNativeTarget "EasyFPUTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B33C78C2A9332C400B5F32B /* Debug */,
+				1B33C78D2A9332C400B5F32B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
