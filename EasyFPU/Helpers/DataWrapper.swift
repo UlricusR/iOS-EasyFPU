@@ -24,7 +24,7 @@ class DataWrapper: Codable {
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        var dataModelVersionString = try container.decode(String.self, forKey: .dataModelVersion)
+        let dataModelVersionString = try container.decode(String.self, forKey: .dataModelVersion)
         guard let dataModelVersion = DataModelVersion(rawValue: dataModelVersionString) else {
             throw DataVersionFinder.DataModelError.invalidDataModelVersion("'" + dataModelVersionString + "' " + NSLocalizedString("is not a valid data model", comment: ""))
         }
