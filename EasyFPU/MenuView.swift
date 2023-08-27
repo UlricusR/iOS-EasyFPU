@@ -46,14 +46,6 @@ struct MenuView: View {
                 }
                 .padding(.top, 15)
                 
-                // Remove duplicates
-                Button(action: {
-                    activeSheet = .removeDuplicates
-                }) {
-                    Text("Remove duplicates")
-                }
-                .padding(.top, 40)
-                
                 // About
                 Button(action: {
                     activeSheet = .about
@@ -122,8 +114,6 @@ struct MenuView: View {
             FilePickerView(callback: self.importJSON, documentTypes: [UTType.json])
         case .pickExportDirectory:
             FilePickerView(callback: self.exportJSON, documentTypes: [UTType.folder])
-        case .removeDuplicates:
-            DuplicatesView(duplicatesViewModel: DuplicatesViewModel())
         case .about:
             AboutView()
         }
