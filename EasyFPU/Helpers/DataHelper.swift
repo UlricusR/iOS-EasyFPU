@@ -144,7 +144,10 @@ class DataHelper {
         let dataWrapper = DataWrapper(dataModelVersion: .version2, foodItemVMs: foodItems)
         
         // Encode
-        fileName = "\(UUID().uuidString).json"
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd_HH:mm:ss"
+        let timestamp = formatter.string(from: Date())
+        fileName = "EasyFPU-export_\(timestamp).json"
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
