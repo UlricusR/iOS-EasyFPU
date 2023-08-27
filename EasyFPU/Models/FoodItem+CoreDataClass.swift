@@ -31,14 +31,23 @@ public class FoodItem: NSManagedObject {
     }
     
     /**
-     Creates a new Core Data FoodItem. It does not account for associated ComposedFoodItems, but only creates a "plain" FoodItem!
+     Creates a new Core Data FoodItem or nil if the FoodItem already exists. It does not account for associated ComposedFoodItems, but only creates a "plain" FoodItem!
      
-     - Parameter foodItedVM: The source FoodItemViewModel.
+     - Parameters:
+        - foodItedVM: The source FoodItemViewModel.
+        - foodItemNotCreated: The name of the FoodItem which was not created.
      */
-    static func create(from foodItemVM: FoodItemViewModel) -> FoodItem {
-        let moc = AppDelegate.viewContext
+    static func create(from foodItemVM: FoodItemViewModel, foodItemNotCreated: inout String) -> FoodItem? {
+        // Check for duplicates
+        let allFoodItemIDs = FoodItem.fetchAll().compactMap({ $0.id })
+        if allFoodItemIDs.firstIndex(of: foodItemVM.id) != nil {
+            // cdFoodItem already exists
+            foodItemNotCreated = foodItemVM.name
+            return nil
+        }
         
         // Create the FoodItem
+        let moc = AppDelegate.viewContext
         let cdFoodItem = FoodItem(context: moc)
         cdFoodItem.id = foodItemVM.id
         
@@ -56,9 +65,8 @@ public class FoodItem: NSManagedObject {
             cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
         }
         
-        // Save new food item
+        // Save
         try? moc.save()
-        
         return cdFoodItem
     }
     

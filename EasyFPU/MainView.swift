@@ -22,8 +22,6 @@ struct MainView: View {
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     @ObservedObject var absorptionScheme = AbsorptionScheme()
-    @State private var foodItemVMsToBeImported: [FoodItemViewModel]?
-    @State private var showActionSheet = false
     @State private var selectedTab: Int = 0
     @State private var showingAlert = false
     @State private var errorMessage = ""
@@ -52,7 +50,7 @@ struct MainView: View {
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                     
-                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme, filePicked: self.importJSON, exportDirectory: self.exportJSON)
+                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme)
                         .tag(Tab.settings.rawValue)
                         .tabItem{
                             Image(systemName: "gear")
@@ -66,18 +64,6 @@ struct MainView: View {
                         message: Text(self.errorMessage),
                         dismissButton: .default(Text("OK"))
                     )
-                }
-                .actionSheet(isPresented: self.$showActionSheet) {
-                    ActionSheet(title: Text("Import food list"), message: Text("Please select"), buttons: [
-                        .default(Text("Replace")) {
-                            FoodItem.deleteAll()
-                            self.importFoodItems()
-                        },
-                        .default(Text("Append")) {
-                            self.importFoodItems()
-                        },
-                        .cancel()
-                    ])
                 }
                 .onAppear {
                     if self.absorptionScheme.absorptionBlocks.isEmpty {
@@ -99,54 +85,6 @@ struct MainView: View {
                     }
                 }
             )
-        }
-    }
-    
-    private func importJSON(_ url: URL) {
-        if DataHelper.importFoodItems(url, foodItemVMsToBeImported: &foodItemVMsToBeImported, errorMessage: &errorMessage) {
-            self.showActionSheet = true
-        } else {
-            // Some error happened
-            showingAlert = true
-        }
-    }
-    
-    private func exportJSON(_ url: URL) {
-        // Make sure we can access file
-        guard url.startAccessingSecurityScopedResource() else {
-            debugPrint("Failed to access \(url)")
-            errorMessage = "Failed to access \(url)"
-            showingAlert = true
-            return
-        }
-        defer { url.stopAccessingSecurityScopedResource() }
-        
-        // Write file
-        var fileName = ""
-        if DataHelper.exportFoodItems(url, fileName: &fileName) {
-            errorMessage = NSLocalizedString("Successfully exported food list to: ", comment: "") + fileName
-            showingAlert = true
-        } else {
-            errorMessage = NSLocalizedString("Failed to export food list to: ", comment: "") + fileName
-            showingAlert = true
-        }
-    }
-    
-    private func importFoodItems() {
-        if foodItemVMsToBeImported != nil {
-            for foodItemVMToBeImported in foodItemVMsToBeImported! {
-                let cdFoodItem = FoodItem.create(from: foodItemVMToBeImported)
-                
-                // Check if it is associated to a ComposedFoodItemVM
-                if let composedFoodItemVM = foodItemVMToBeImported.composedFoodItemVM {
-                    cdFoodItem.composedFoodItem = ComposedFoodItem.duplicate(composedFoodItemVM, for: cdFoodItem)
-                }
-            }
-            errorMessage = "Successfully imported food list"
-            showingAlert = true
-        } else {
-            errorMessage = "Could not import food list"
-            showingAlert = true
         }
     }
 }

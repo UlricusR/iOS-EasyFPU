@@ -145,7 +145,7 @@ class DataHelper {
         
         // Encode
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd_HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         let timestamp = formatter.string(from: Date())
         fileName = "EasyFPU-export_\(timestamp).json"
         do {

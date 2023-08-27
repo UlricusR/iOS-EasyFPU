@@ -350,13 +350,17 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         duplicate.typicalAmounts = typicalAmounts
         
         // Create new Core Data FoodItem
-        let newCDFoodItem = FoodItem.create(from: duplicate)
-        
-        // Check if this was associated to a ComposedFoodItem
-        if let composedFoodItemVM = self.composedFoodItemVM {
-            duplicate.composedFoodItemVM = composedFoodItemVM
-            duplicate.composedFoodItemVM?.cdComposedFoodItem = ComposedFoodItem.duplicate(composedFoodItemVM, for: newCDFoodItem)
-            duplicate.composedFoodItemVM?.name = nameOfDuplicate
+        var foodItemNotCreated = ""
+        if let newCDFoodItem = FoodItem.create(from: duplicate, foodItemNotCreated: &foodItemNotCreated) {
+            // Check if this was associated to a ComposedFoodItem
+            if let composedFoodItemVM = self.composedFoodItemVM {
+                duplicate.composedFoodItemVM = composedFoodItemVM
+                duplicate.composedFoodItemVM?.cdComposedFoodItem = ComposedFoodItem.duplicate(composedFoodItemVM, for: newCDFoodItem)
+                duplicate.composedFoodItemVM?.name = nameOfDuplicate
+            }
+        } else {
+            // This should never happen, as the error message by the FoodItem.create function is only issued if we have a duplicate id
+            print(foodItemNotCreated)
         }
     }
     

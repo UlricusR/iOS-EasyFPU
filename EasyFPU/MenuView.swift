@@ -13,11 +13,11 @@ struct MenuView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var absorptionScheme: AbsorptionScheme
-    var filePicked: (URL) -> ()
-    var exportDirectory: (URL) -> ()
+    @State private var foodItemVMsToBeImported: [FoodItemViewModel]?
     @State private var activeSheet: MenuViewSheets.State?
     @State private var showingAlert = false
     @State private var alertMessage = ""
+    @State private var showActionSheet = false
     
     var body: some View {
         NavigationView {
@@ -45,6 +45,14 @@ struct MenuView: View {
                     Text("Export to JSON")
                 }
                 .padding(.top, 15)
+                
+                // Remove duplicates
+                Button(action: {
+                    activeSheet = .removeDuplicates
+                }) {
+                    Text("Remove duplicates")
+                }
+                .padding(.top, 40)
                 
                 // About
                 Button(action: {
@@ -80,6 +88,18 @@ struct MenuView: View {
             .navigationBarTitle("Settings")
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .actionSheet(isPresented: self.$showActionSheet) {
+            ActionSheet(title: Text("Import food list"), message: Text("Please select"), buttons: [
+                .default(Text("Replace")) {
+                    FoodItem.deleteAll()
+                    self.importFoodItems()
+                },
+                .default(Text("Append")) {
+                    self.importFoodItems()
+                },
+                .cancel()
+            ])
+        }
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
@@ -99,11 +119,86 @@ struct MenuView: View {
             SettingsEditor(draftAbsorptionScheme: self.draftAbsorptionScheme, editedAbsorptionScheme: absorptionScheme)
                     .environment(\.managedObjectContext, managedObjectContext)
         case .pickFileToImport:
-            FilePickerView(callback: filePicked, documentTypes: [UTType.json])
+            FilePickerView(callback: self.importJSON, documentTypes: [UTType.json])
         case .pickExportDirectory:
-            FilePickerView(callback: exportDirectory, documentTypes: [UTType.folder])
+            FilePickerView(callback: self.exportJSON, documentTypes: [UTType.folder])
+        case .removeDuplicates:
+            DuplicatesView(duplicatesViewModel: DuplicatesViewModel())
         case .about:
             AboutView()
+        }
+    }
+    
+    private func importJSON(_ url: URL) {
+        if DataHelper.importFoodItems(url, foodItemVMsToBeImported: &foodItemVMsToBeImported, errorMessage: &alertMessage) {
+            self.showActionSheet = true
+        } else {
+            // Some error happened
+            showingAlert = true
+        }
+    }
+    
+    private func exportJSON(_ url: URL) {
+        // Make sure we can access file
+        guard url.startAccessingSecurityScopedResource() else {
+            debugPrint("Failed to access \(url)")
+            alertMessage = NSLocalizedString("Failed to access ", comment: "") + url.absoluteString
+            showingAlert = true
+            return
+        }
+        defer { url.stopAccessingSecurityScopedResource() }
+        
+        // Write file
+        var fileName = ""
+        if DataHelper.exportFoodItems(url, fileName: &fileName) {
+            alertMessage = NSLocalizedString("Successfully exported food list to: ", comment: "") + fileName
+            showingAlert = true
+        } else {
+            alertMessage = NSLocalizedString("Failed to export food list to: ", comment: "") + fileName
+            showingAlert = true
+        }
+    }
+    
+    private func importFoodItems() {
+        if foodItemVMsToBeImported != nil {
+            var foodItemsNotImported = [String]()
+            for foodItemVMToBeImported in foodItemVMsToBeImported! {
+                var foodItemNotImported = ""
+                if let cdFoodItem = FoodItem.create(from: foodItemVMToBeImported, foodItemNotCreated: &foodItemNotImported) {
+                    // Check if it is associated to a ComposedFoodItemVM
+                    if let composedFoodItemVM = foodItemVMToBeImported.composedFoodItemVM {
+                        cdFoodItem.composedFoodItem = ComposedFoodItem.duplicate(composedFoodItemVM, for: cdFoodItem)
+                    }
+                } else {
+                    // There seems to be a duplicate
+                    foodItemsNotImported.append(foodItemNotImported)
+                }
+            }
+            
+            if foodItemsNotImported.isEmpty {
+                alertMessage = NSLocalizedString("Successfully imported food list", comment: "")
+            } else {
+                alertMessage = NSLocalizedString("The following food items already exist and were not imported: ", comment: "")
+                var counter = 0
+                while counter < foodItemsNotImported.count {
+                    if counter < 5 {
+                        if counter > 0 {
+                            alertMessage.append(", ")
+                        }
+                        alertMessage.append(foodItemsNotImported[counter])
+                    } else if counter == 5 {
+                        alertMessage.append(", ... (\(foodItemsNotImported.count - counter) ")
+                        alertMessage.append(NSLocalizedString("more", comment: ""))
+                        alertMessage.append(")")
+                        break
+                    }
+                    counter = counter + 1
+                }
+            }
+            showingAlert = true
+        } else {
+            alertMessage = NSLocalizedString("Could not import food list", comment: "")
+            showingAlert = true
         }
     }
 }

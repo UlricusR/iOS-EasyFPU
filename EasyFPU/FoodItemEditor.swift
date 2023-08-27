@@ -274,7 +274,11 @@ struct FoodItemEditor: View {
                 // Reset typical amounts to be deleted
                 self.typicalAmountsToBeDeleted.removeAll()
             } else { // We have a new food item
-                let _ = FoodItem.create(from: updatedFoodItemVM)
+                var errorMessage = ""
+                if FoodItem.create(from: updatedFoodItemVM, foodItemNotCreated: &errorMessage) == nil {
+                    self.errorMessage = errorMessage
+                    self.activeAlert = .alertMessage
+                }
             }
             
             // Quit edit mode
