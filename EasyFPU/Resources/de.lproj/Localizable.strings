@@ -180,8 +180,11 @@
 "Export to JSON" = "Exportieren (Format: JSON)";
 "Successfully exported food list to: " = "Essensliste erfolgreich exportiert nach: ";
 "Failed to export food list to: " = "Konnte Essensliste nicht exportieren nach: ";
+"Failed to access " = "Zugriff nicht möglich auf ";
 "Successfully imported food list" = "Essensliste erfolgreich importiert";
 "Failed to import food list" = "Konnte Essensliste nicht importieren";
+"The following food items already exist and were not imported: " = "Folgende Essen sind bereits vorhanden und wurden nicht importiert: ";
+"more" = "weitere";
 "Notice" = "Hinweis";
 "Import food list" = "Essensliste importieren";
 "Please select" = "Bitte auswählen";

@@ -179,9 +179,12 @@
 "Import from JSON" = "Import (format: JSON)";
 "Export to JSON" = "Export (format: JSON)";
 "Successfully exported food list to: " = "Successfully exported food list to: ";
+"Failed to access " = "Failed to access ";
 "Failed to export food list to: " = "Failed to export food list to: ";
 "Successfully imported food list" = "Successfully imported food list";
 "Failed to import food list" = "Failed to import food list";
+"The following food items already exist and were not imported: " = "The following food items already exist and were not imported: ";
+"more" = "more";
 "Notice" = "Notice";
 "Import food list" = "Import food list";
 "Please select" = "Please select";
