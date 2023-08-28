@@ -71,7 +71,8 @@ public class FoodItem: NSManagedObject {
     }
     
     /**
-     Creates a Core Data FoodItem from a ComposedFoodItemViewModel. Called from the FoodItemComposerView.
+     Creates a Core Data FoodItem from a ComposedFoodItemViewModel.
+     It does not create a relationship to a ComposedFoodItem. This needs to be created manually.
      
      - Parameters:
         - composedFoodItem: The source ComposedFoodItemViewModel.
@@ -96,9 +97,6 @@ public class FoodItem: NSManagedObject {
         
         // Set category to product
         cdFoodItem.category = FoodItemCategory.product.rawValue
-        
-        // Create relationships
-        cdFoodItem.composedFoodItem = composedFoodItem.cdComposedFoodItem
         
         // Add typical amounts
         if generateTypicalAmounts {

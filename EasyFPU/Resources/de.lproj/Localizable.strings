@@ -104,6 +104,7 @@
 "portion(s)" = "Portion(en)";
 "Cannot create typical amount: " = "Kann typische Menge nicht berechnen: ";
 "successfully saved in Products" = "erfolgreich in Produkten gespeichert";
+"Could not create the composed food item" = "Das zusammengestellte Essen konnte wegen fehlender Zutaten nicht gespeichert werden. Bitte informieren Sie den App-Entwickler.";
 
 // Meal preview
 "e-Carbs" = "Verlängerte KH";

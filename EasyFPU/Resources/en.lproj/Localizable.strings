@@ -104,6 +104,7 @@
 "portion(s)" = "portions(s)";
 "Cannot create typical amount: " = "Cannot create typical amount: ";
 "successfully saved in Products" = "successfully saved in Products";
+"Could not create the composed food item" = "Could not create the composed food item due to missing ingredients. Please inform the App developer.";
 
 // Meal preview
 "e-Carbs" = "e-Carbs";

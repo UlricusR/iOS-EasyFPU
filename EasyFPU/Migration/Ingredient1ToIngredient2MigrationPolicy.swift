@@ -15,5 +15,6 @@ final class Ingredient1ToIngredient2MigrationPolicy: NSEntityMigrationPolicy {
      */
     override func createDestinationInstances(forSource sourceIngredient: NSManagedObject, in mapping: NSEntityMapping, manager: NSMigrationManager) throws {
         // Do nothing on purpose
+        debugPrint("Not migrating Ingredient with ID: \((sourceIngredient as? Ingredient)?.id.uuidString ?? "unknown")")
     }
 }

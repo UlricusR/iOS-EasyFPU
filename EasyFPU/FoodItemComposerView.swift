@@ -17,6 +17,8 @@ struct FoodItemComposerView: View {
     @State private var activeSheet: FoodItemComposerViewSheets.State?
     @Binding var notificationState: FoodItemListView.NotificationState?
     private let helpScreen = HelpScreen.foodItemComposer
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
     
     @State var generateTypicalAmounts: Bool = true
     
@@ -148,6 +150,13 @@ struct FoodItemComposerView: View {
                 .cancel()
             ])
         }
+        .alert(isPresented: self.$showingAlert) {
+            Alert(
+                title: Text("Notice"),
+                message: Text(self.alertMessage),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
     
     private func weightCheck(isLess: Bool) -> Bool {
@@ -156,31 +165,31 @@ struct FoodItemComposerView: View {
             ingredientsWeight += ingredient.amount
         }
         
-        return isLess ? (ingredientsWeight <= composedFoodItemVM.amount ? false : true) : (ingredientsWeight > composedFoodItemVM.amount ? false : true)
+        return isLess ? (composedFoodItemVM.amount < ingredientsWeight ? true : false) : (composedFoodItemVM.amount > ingredientsWeight ? true : false)
     }
     
     private func saveProduct() {
         // Check if this was an existing ComposedFoodItem
         if composedFoodItemVM.cdComposedFoodItem == nil { // This is a new ComposedFoodItem
-            // First store new ComposedFoodItem in CoreData and add it to the view model
-            let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItemVM)
-            composedFoodItemVM.cdComposedFoodItem = cdComposedFoodItem
-            
-            // Next, derive regular FoodItem and associate it with the ComposedFoodItem
-            let cdFoodItem = FoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts)
-            composedFoodItemVM.cdComposedFoodItem?.foodItem = cdFoodItem
+            // Store new ComposedFoodItem in CoreData
+            if let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts) {
+                // Notify user of successful storage
+                notificationState = .successfullySavedFoodItem(composedFoodItemVM.name)
+            } else {
+                // We're missing ingredients, the composedFoodItem could not be saved - this should not happen!
+                alertMessage = NSLocalizedString("Could not create the composed food item", comment: "")
+                showingAlert = true
+            }
         } else { // We edit an existing ComposedFoodItem
             // Update the associated FoodItem
             FoodItem.update(composedFoodItemVM.cdComposedFoodItem!.foodItem, with: composedFoodItemVM)
             
             // Update Core Data ComposedFoodItem
             ComposedFoodItem.update(composedFoodItemVM.cdComposedFoodItem!, with: composedFoodItemVM, for: composedFoodItemVM.cdComposedFoodItem!.foodItem)
+            
+            // Notify user of successful storage
+            notificationState = .successfullySavedFoodItem(composedFoodItemVM.name)
         }
-        
-        
-        
-        // Notify user of successful storage
-        notificationState = .successfullySavedFoodItem(composedFoodItemVM.name)
         
         // Clear the ComposedFoodItem
         composedFoodItemVM.clear()

@@ -15,5 +15,6 @@ final class ComposedFoodItem1ToComposedFoodItem2MigrationPolicy: NSEntityMigrati
      */
     override func createDestinationInstances(forSource sourceComposedFoodItem: NSManagedObject, in mapping: NSEntityMapping, manager: NSMigrationManager) throws {
         // Do nothing on purpose
+        debugPrint("Not migrating ComposedFoodItem with ID: \((sourceComposedFoodItem as? ComposedFoodItem)?.id.uuidString ?? "unknown")")
     }
 }

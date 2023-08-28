@@ -30,13 +30,15 @@ public class ComposedFoodItem: NSManagedObject {
     }
     
     /**
-     Creates a new ComposedFoodItem.
+     Creates a new ComposedFoodItem from the ComposedFoodItemViewModel.
+     Creates the related FoodItem and the Ingredients.
+     Creates all relationships.
      
      - Parameter composedFoodItemVM: The source view model.
      
      - Returns: A Core Data ComposedFoodItem; nil if there are no Ingredients.
      */
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem? {
+    static func create(from composedFoodItemVM: ComposedFoodItemViewModel, generateTypicalAmounts: Bool) -> ComposedFoodItem? {
         debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         let moc = AppDelegate.viewContext
         
@@ -50,8 +52,14 @@ public class ComposedFoodItem: NSManagedObject {
         cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
         cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
         
-        // Create relationship to FoodItem
-        cdComposedFoodItem.foodItem = composedFoodItemVM.cdComposedFoodItem!.foodItem
+        // Create the related FoodItem
+        let cdFoodItem = FoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts)
+        
+        // Relate both
+        cdComposedFoodItem.foodItem = cdFoodItem
+        
+        // Add cdComposedFoodItem to composedFoodItemVM
+        composedFoodItemVM.cdComposedFoodItem = cdComposedFoodItem
         
         // Save before adding Ingredients, otherwise this could lead to an NSInvalidArgumentException
         try? moc.save()
@@ -68,6 +76,7 @@ public class ComposedFoodItem: NSManagedObject {
         } else {
             // There are no ingredients, therefore we delete it again and return nil
             moc.delete(cdComposedFoodItem)
+            try? moc.save()
             return nil
         }
     }
