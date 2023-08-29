@@ -172,8 +172,8 @@ struct FoodItemComposerView: View {
         // Check if this was an existing ComposedFoodItem
         if composedFoodItemVM.cdComposedFoodItem == nil { // This is a new ComposedFoodItem
             // Store new ComposedFoodItem in CoreData
-            if let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts) {
-                // Notify user of successful storage
+            if ComposedFoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts) != nil {
+                // Notify user of successful creation
                 notificationState = .successfullySavedFoodItem(composedFoodItemVM.name)
             } else {
                 // We're missing ingredients, the composedFoodItem could not be saved - this should not happen!
@@ -181,14 +181,14 @@ struct FoodItemComposerView: View {
                 showingAlert = true
             }
         } else { // We edit an existing ComposedFoodItem
-            // Update the associated FoodItem
-            FoodItem.update(composedFoodItemVM.cdComposedFoodItem!.foodItem, with: composedFoodItemVM)
-            
             // Update Core Data ComposedFoodItem
-            ComposedFoodItem.update(composedFoodItemVM.cdComposedFoodItem!, with: composedFoodItemVM, for: composedFoodItemVM.cdComposedFoodItem!.foodItem)
-            
-            // Notify user of successful storage
-            notificationState = .successfullySavedFoodItem(composedFoodItemVM.name)
+            if ComposedFoodItem.update(composedFoodItemVM) != nil {
+                // Notify user of successful update
+                notificationState = .successfullySavedFoodItem(composedFoodItemVM.name)
+            } else {
+                alertMessage = NSLocalizedString("Could not update the composed food item", comment: "")
+                showingAlert = true
+            }
         }
         
         // Clear the ComposedFoodItem

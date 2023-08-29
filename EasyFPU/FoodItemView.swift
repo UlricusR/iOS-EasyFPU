@@ -131,7 +131,7 @@ struct FoodItemView: View {
                 Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
             }
         case .selectFoodItem:
-            FoodItemSelector(draftFoodItem: self.foodItemVM, editedFoodItem: self.foodItemVM.cdFoodItem!, composedFoodItem: composedFoodItemVM)
+            FoodItemSelector(draftFoodItem: self.foodItemVM, editedFoodItem: self.foodItemVM.cdFoodItem!, composedFoodItem: composedFoodItemVM, category: self.category)
         case .exportFoodItem:
             if let path = foodItemVM.exportToURL() {
                 ActivityView(activityItems: [path], applicationActivities: nil)

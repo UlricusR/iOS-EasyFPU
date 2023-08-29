@@ -66,8 +66,9 @@
 "Edit food item" = "Essen bearbeiten";
 "Nutritional values per 100g:" = "Pro 100g:";
 "Nutritional values for" = "Nährwerte für";
-"Amount consumed" = "Gegessene Menge";
 "Amount" = "Menge";
+"Amount consumed" = "Gegessene Menge";
+"Amount used" = "Verwendete Menge";
 "h Absorption Time" = "h Absorptionszeit";
 "Absorption Time" = "Absorptionszeit";
 "Total nutritional values" = "Gesamt-Nährwerte";
@@ -77,7 +78,9 @@
 "Add to typical amounts" = "Zu typischen Mengen hinzufügen";
 "Comment" = "Kommentar";
 "Enter amount consumed or select typical amount" = "Gegessene Menge eingeben oder typische Menge auswählen";
+"Enter amount used or select typical amount" = "Verwendete Menge eingeben oder typische Menge auswählen";
 "Enter amount consumed" = "Gegessene Menge eingeben";
+"Enter amount used" = "Verwendete Menge eingeben";
 "Select amount" = "Menge auswählen";
 "Cannot delete food item" = "Kann Essen nicht löschen";
 "Delay of Extended Carbs" = "Verzögerung der verlängerten KH";
@@ -105,6 +108,7 @@
 "Cannot create typical amount: " = "Kann typische Menge nicht berechnen: ";
 "successfully saved in Products" = "erfolgreich in Produkten gespeichert";
 "Could not create the composed food item" = "Das zusammengestellte Essen konnte wegen fehlender Zutaten nicht gespeichert werden. Bitte informieren Sie den App-Entwickler.";
+"Could not update the composed food item" = "Das zusammengestellte Essen konnte nicht aktualisiert werden.";
 
 // Meal preview
 "e-Carbs" = "Verlängerte KH";

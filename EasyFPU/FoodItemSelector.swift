@@ -14,6 +14,7 @@ struct FoodItemSelector: View {
     @ObservedObject var draftFoodItem: FoodItemViewModel
     var editedFoodItem: FoodItem
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    var category: FoodItemCategory
     @State private var showingAlert = false
     @State private var errorMessage = ""
     @State private var newTypicalAmountComment = ""
@@ -26,10 +27,10 @@ struct FoodItemSelector: View {
         NavigationView {
             GeometryReader { geometry in
                 Form {
-                    Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text("Enter amount consumed") : Text("Enter amount consumed or select typical amount")) {
+                    Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text(category == .product ? "Enter amount consumed" : "Enter amount used") : Text(category == .product ? "Enter amount consumed or select typical amount" : "Enter amount used or select typical amount")) {
                         HStack {
-                            Text("Amount consumed")
-                            CustomTextField(titleKey: "Amount consumed", text: self.$draftFoodItem.amountAsString, keyboardType: .numberPad)
+                            Text(category == .product ? "Amount consumed": "Amount used")
+                            CustomTextField(titleKey: category == .product ? "Amount consumed" : "Amount used", text: self.$draftFoodItem.amountAsString, keyboardType: .numberPad)
                                 .multilineTextAlignment(.trailing)
                             Text("g")
                         }

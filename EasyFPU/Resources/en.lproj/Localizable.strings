@@ -68,6 +68,7 @@
 "Nutritional values for" = "Nutritional values for";
 "Amount" = "Amount";
 "Amount consumed" = "Amount consumed";
+"Amount used" = "Amount used";
 "h Absorption Time" = "h Absorption Time";
 "Absorption Time" = "Absorption Time";
 "Total nutritional values" = "Total nutritional values";
@@ -77,7 +78,9 @@
 "Add to typical amounts" = "Add to typical amounts";
 "Comment" = "Comment";
 "Enter amount consumed or select typical amount" = "Enter amount consumed or select typical amount";
+"Enter amount used or select typical amount" = "Enter amount used or select typical amount";
 "Enter amount consumed" = "Enter amount consumed";
+"Enter amount used" = "Enter amount used";
 "Select amount" = "Select amount";
 "Cannot delete food item" = "Cannot delete food item";
 "Delay of Extended Carbs" = "Delay of Extended Carbs";
@@ -105,6 +108,7 @@
 "Cannot create typical amount: " = "Cannot create typical amount: ";
 "successfully saved in Products" = "successfully saved in Products";
 "Could not create the composed food item" = "Could not create the composed food item due to missing ingredients. Please inform the App developer.";
+"Could not update the composed food item" = "Could not update the composed food item.";
 
 // Meal preview
 "e-Carbs" = "e-Carbs";

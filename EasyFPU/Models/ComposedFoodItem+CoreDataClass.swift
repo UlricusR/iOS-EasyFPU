@@ -61,9 +61,6 @@ public class ComposedFoodItem: NSManagedObject {
         // Add cdComposedFoodItem to composedFoodItemVM
         composedFoodItemVM.cdComposedFoodItem = cdComposedFoodItem
         
-        // Save before adding Ingredients, otherwise this could lead to an NSInvalidArgumentException
-        try? moc.save()
-        
         // Add new ingredients
         if let cdIngredients = Ingredient.create(from: composedFoodItemVM) {
             cdComposedFoodItem.addToIngredients(NSSet(array: cdIngredients))
@@ -117,31 +114,45 @@ public class ComposedFoodItem: NSManagedObject {
     }
     
     /**
-     Updates an existing Core Data ComposedFoodItem.
+     Updates an existing Core Data ComposedFoodItem. Also updates the associated FoodItem.
      
      - Parameters:
         - cdComposedFoodItem: The Core Data ComposedFoodItem to be updated.
         - composedFoodItemVM: The source ComposedFoodItemViewModel.
         - cdFoodItem: The Core Data FoodItem related to the Core Data ComposedFoodItem.
+     - Returns: The updated Core Data ComposedFoodItem, nil if it couldn't be updated
      */
-    static func update(_ cdComposedFoodItem: ComposedFoodItem, with composedFoodItemVM: ComposedFoodItemViewModel, for cdFoodItem: FoodItem) {
-        // Fill data
-        cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
-        cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
-        
-        // Update relationship to FoodItem
-        cdComposedFoodItem.foodItem = cdFoodItem
-        
-        // Remove existing Ingredients
-        cdComposedFoodItem.removeFromIngredients(cdComposedFoodItem.ingredients)
-        
-        // Add new ingredients
-        if let ingredients = Ingredient.create(from: composedFoodItemVM) {
-            cdComposedFoodItem.addToIngredients(NSSet(array: ingredients))
+    static func update(_ composedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem? {
+        if let cdComposedFoodItem = composedFoodItemVM.cdComposedFoodItem {
+            let moc = AppDelegate.viewContext
+            
+            // Update the associated FoodItem
+            FoodItem.update(cdComposedFoodItem.foodItem, with: composedFoodItemVM)
+            
+            // Update data
+            cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
+            cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
+            
+            // Delete the existing Ingredients
+            for ingredient in cdComposedFoodItem.ingredients {
+                if let ingredientToBeDeleted = ingredient as? NSManagedObject {
+                    moc.delete(ingredientToBeDeleted)
+                }
+            }
+            
+            // Add new ingredients
+            if let ingredients = Ingredient.create(from: composedFoodItemVM) {
+                cdComposedFoodItem.addToIngredients(NSSet(array: ingredients))
+            }
+            
+            // Save updated composed food item
+            try? AppDelegate.viewContext.save()
+            
+            return cdComposedFoodItem
+        } else {
+            // No Core Data ComposedFoodItem found - this should never happen!
+            return nil
         }
-        
-        // Save updated composed food item
-        try? AppDelegate.viewContext.save()
     }
     
     static func delete(_ composedFoodItem: ComposedFoodItem) {

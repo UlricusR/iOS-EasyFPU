@@ -158,7 +158,12 @@ public class FoodItem: NSManagedObject {
         
         // Delete typical amounts
         if let oldTypicalAmounts = cdFoodItem.typicalAmounts {
-            cdFoodItem.removeFromTypicalAmounts(oldTypicalAmounts)
+            // Delete the existing typical amounts
+            for oldTypicalAmount in oldTypicalAmounts {
+                if let oldTypicalAmountToBeDeleted = oldTypicalAmount as? NSManagedObject {
+                    moc.delete(oldTypicalAmountToBeDeleted)
+                }
+            }
         }
         
         // Add new typical amounts
