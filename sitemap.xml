@@ -1,27 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-         <loc>https://www.rueth.info/iOS-EasyFPU/</loc>
-         <lastmod>2023-02-27</lastmod>
-         <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/"/>
-         
-         
+        <loc>https://www.rueth.info/iOS-EasyFPU/</loc>
+        <lastmod>2023-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://www.rueth.info/iOS-EasyFPU/dede/"/>
     </url>
     <url>
-         <loc>https://www.rueth.info/iOS-EasyFPU/manual/</loc>
-         <lastmod>2023-02-27</lastmod>
-         <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/en/manual/"/>
-         <xhtml:link rel="alternate" hreflang="de" href="https://www.rueth.info/iOS-EasyFPU/de/manual/"/>
-         
+        <loc>https://www.rueth.info/iOS-EasyFPU/manual/</loc>
+        <lastmod>2023-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/manual/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://www.rueth.info/iOS-EasyFPU/dede/manual/"/>
     </url>
     <url>
-         <loc>https://www.rueth.info/iOS-EasyFPU/videotutorials/</loc>
-         <lastmod>2023-02-27</lastmod>
-         <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/en/videotutorials/"/>
-         <xhtml:link rel="alternate" hreflang="de" href="https://www.rueth.info/iOS-EasyFPU/de/videotutorials/"/>
-         
+        <loc>https://www.rueth.info/iOS-EasyFPU/videotutorials/</loc>
+        <lastmod>2023-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/videotutorials/"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://www.rueth.info/iOS-EasyFPU/dede/videotutorials/"/>
+    </url>
+    <url>
+        <loc>https://www.rueth.info/iOS-EasyFPU/de/de/</loc>
+        <lastmod>2023-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://www.rueth.info/iOS-EasyFPU/de/de/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/de"/>
+    </url>
+    <url>
+        <loc>https://www.rueth.info/iOS-EasyFPU/de/de/manual/</loc>
+        <lastmod>2023-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://www.rueth.info/iOS-EasyFPU/de/de/manual/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/demanual/"/>
+    </url>
+    <url>
+        <loc>https://www.rueth.info/iOS-EasyFPU/de/de/videotutorials/</loc>
+        <lastmod>2023-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://www.rueth.info/iOS-EasyFPU/de/de/videotutorials/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.rueth.info/iOS-EasyFPU/devideotutorials/"/>
     </url>
 </urlset>
