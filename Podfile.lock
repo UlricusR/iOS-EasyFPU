@@ -1,10 +1,8 @@
 PODS:
-  - Charts (4.1.0):
-    - Charts/Core (= 4.1.0)
-  - Charts/Core (4.1.0):
-    - SwiftAlgorithms (~> 1.0)
+  - DGCharts (5.1.0):
+    - DGCharts/Core (= 5.1.0)
+  - DGCharts/Core (5.1.0)
   - SKCountryPicker (4.0.0)
-  - SwiftAlgorithms (1.0.0)
   - URLImage (2.2.5):
     - URLImage/Common (= 2.2.5)
     - URLImage/DownloadManager (= 2.2.5)
@@ -26,23 +24,21 @@ PODS:
   - URLImage/RemoteContentView (2.2.5)
 
 DEPENDENCIES:
-  - Charts
+  - DGCharts
   - SKCountryPicker
   - URLImage
 
 SPEC REPOS:
   trunk:
-    - Charts
+    - DGCharts
     - SKCountryPicker
-    - SwiftAlgorithms
     - URLImage
 
 SPEC CHECKSUMS:
-  Charts: ce0768268078eee0336f122c3c4ca248e4e204c5
+  DGCharts: 1c6daf585b6cfc78807af44ea690d357c410627f
   SKCountryPicker: 22b45e7fa797ef1ed6f453e66c78ce5a2ee96c55
-  SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   URLImage: 36a66c03ba2a9ccbbf06bc83431f2cef171008e8
 
-PODFILE CHECKSUM: ad89709b7d55095b3b34f994cadd638e7517a9e7
+PODFILE CHECKSUM: b4abd37128b08d8fbd33eaa1ebda0292e1390130
 
 COCOAPODS: 1.15.2

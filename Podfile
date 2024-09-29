@@ -6,7 +6,7 @@ target 'EasyFPU' do
   use_frameworks!
 
   # Pods for EasyFPU
-  pod 'Charts'
+  pod 'DGCharts'
   pod 'SKCountryPicker'
   pod 'URLImage'
   

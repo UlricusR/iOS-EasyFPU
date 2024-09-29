@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import Charts
+import DGCharts
 
 struct HealthExportCarbsPreviewChart: UIViewRepresentable {
     @ObservedObject var carbsRegime: CarbsRegime
