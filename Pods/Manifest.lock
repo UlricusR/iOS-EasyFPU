@@ -1,9 +1,9 @@
 PODS:
-  - ADCountryPicker (2.1.0)
   - Charts (4.1.0):
     - Charts/Core (= 4.1.0)
   - Charts/Core (4.1.0):
     - SwiftAlgorithms (~> 1.0)
+  - SKCountryPicker (4.0.0)
   - SwiftAlgorithms (1.0.0)
   - URLImage (2.2.5):
     - URLImage/Common (= 2.2.5)
@@ -26,23 +26,23 @@ PODS:
   - URLImage/RemoteContentView (2.2.5)
 
 DEPENDENCIES:
-  - ADCountryPicker
   - Charts
+  - SKCountryPicker
   - URLImage
 
 SPEC REPOS:
   trunk:
-    - ADCountryPicker
     - Charts
+    - SKCountryPicker
     - SwiftAlgorithms
     - URLImage
 
 SPEC CHECKSUMS:
-  ADCountryPicker: 502cee76a30ea1c3834eb0df170ce635691655c9
   Charts: ce0768268078eee0336f122c3c4ca248e4e204c5
+  SKCountryPicker: 22b45e7fa797ef1ed6f453e66c78ce5a2ee96c55
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   URLImage: 36a66c03ba2a9ccbbf06bc83431f2cef171008e8
 
-PODFILE CHECKSUM: 01f5b8f54e2c52c54ff35567f9f86fb7bacc61e3
+PODFILE CHECKSUM: ad89709b7d55095b3b34f994cadd638e7517a9e7
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2

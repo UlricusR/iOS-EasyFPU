@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -39,7 +39,6 @@
 		1B25D483253DB0A900848C2A /* FoodSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B25D482253DB0A900848C2A /* FoodSearch.swift */; };
 		1B25D487253DC8DB00848C2A /* FoodSearchResultPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B25D486253DC8DB00848C2A /* FoodSearchResultPreview.swift */; };
 		1B2D99872541D72F0012EC40 /* FoodDatabaseResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2D99862541D72F0012EC40 /* FoodDatabaseResults.swift */; };
-		1B2EB5E22544808500E1B5FC /* CountryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2EB5E12544808500E1B5FC /* CountryPicker.swift */; };
 		1B33C7892A9332C400B5F32B /* CoreDataMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B33C7882A9332C400B5F32B /* CoreDataMigrationTests.swift */; };
 		1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */; };
 		1B377A6824FAA935005AC5C6 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6724FAA935005AC5C6 /* AboutView.swift */; };
@@ -50,6 +49,7 @@
 		1B3EEB16253368B3004C110A /* HealthExportCarbsPreviewChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */; };
 		1B51B3302540B31300064EB1 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 1B51B32F2540B31300064EB1 /* CodeScanner */; };
 		1B51B3332540BCB800064EB1 /* FoodPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B51B3322540BCB800064EB1 /* FoodPreview.swift */; };
+		1B5B91062CA9B6B200135569 /* CountryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B91052CA9B6B200135569 /* CountryPickerView.swift */; };
 		1B6106BB24D93346001F2284 /* DataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6106BA24D93346001F2284 /* DataHelper.swift */; };
 		1B6654B52A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6654B42A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift */; };
 		1B68548324BC6FE0005ABB8B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1B68548524BC6FE0005ABB8B /* Localizable.strings */; };
@@ -152,7 +152,6 @@
 		1B25D482253DB0A900848C2A /* FoodSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodSearch.swift; sourceTree = "<group>"; };
 		1B25D486253DC8DB00848C2A /* FoodSearchResultPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodSearchResultPreview.swift; sourceTree = "<group>"; };
 		1B2D99862541D72F0012EC40 /* FoodDatabaseResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDatabaseResults.swift; sourceTree = "<group>"; };
-		1B2EB5E12544808500E1B5FC /* CountryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPicker.swift; sourceTree = "<group>"; };
 		1B33C7862A9332C400B5F32B /* EasyFPUTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EasyFPUTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B33C7882A9332C400B5F32B /* CoreDataMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMigrationTests.swift; sourceTree = "<group>"; };
 		1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
@@ -162,6 +161,7 @@
 		1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionSchemeViewModel.swift; sourceTree = "<group>"; };
 		1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthExportCarbsPreviewChart.swift; sourceTree = "<group>"; };
 		1B51B3322540BCB800064EB1 /* FoodPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodPreview.swift; sourceTree = "<group>"; };
+		1B5B91052CA9B6B200135569 /* CountryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPickerView.swift; sourceTree = "<group>"; };
 		1B6106BA24D93346001F2284 /* DataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataHelper.swift; sourceTree = "<group>"; };
 		1B6654B42A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemDetailsView.swift; sourceTree = "<group>"; };
 		1B68548424BC6FE0005ABB8B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -313,7 +313,7 @@
 				1B1CC90E24DC4F390014DD7D /* MenuView.swift */,
 				1B1CC91024DC57300014DD7D /* MenuViewSheets.swift */,
 				1B3CEB9A24D32D38001D64DA /* SettingsEditor.swift */,
-				1B2EB5E12544808500E1B5FC /* CountryPicker.swift */,
+				1B5B91052CA9B6B200135569 /* CountryPickerView.swift */,
 				1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */,
 				1B90D2D924F7A8EB0059BFFA /* SearchView.swift */,
 				1B004A3524BA3038001E362A /* Assets.xcassets */,
@@ -657,7 +657,6 @@
 				1B0AB0DF254F760D00A7BFBD /* HelpFoodItemComposer.swift in Sources */,
 				1B6867E124FD0C6B0057EC6A /* HelpViewFoodItemSelector.swift in Sources */,
 				1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */,
-				1B2EB5E22544808500E1B5FC /* CountryPicker.swift in Sources */,
 				1B1CC91124DC57300014DD7D /* MenuViewSheets.swift in Sources */,
 				1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */,
 				1B004A2D24BA3035001E362A /* AppDelegate.swift in Sources */,
@@ -711,6 +710,7 @@
 				1B188447253B32DE00B671A2 /* FoodDatabase.swift in Sources */,
 				1B870FC124C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift in Sources */,
 				1BBD6C4924C9D5700025AB84 /* FoodItemViewSheets.swift in Sources */,
+				1B5B91062CA9B6B200135569 /* CountryPickerView.swift in Sources */,
 				1B004A2F24BA3035001E362A /* SceneDelegate.swift in Sources */,
 				1B25D483253DB0A900848C2A /* FoodSearch.swift in Sources */,
 				1BA2F762259F8AA9004300A4 /* ActivityView.swift in Sources */,
@@ -903,7 +903,7 @@
 				INFOPLIST_FILE = EasyFPU/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = EasyFPU;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -936,7 +936,7 @@
 				INFOPLIST_FILE = EasyFPU/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = EasyFPU;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

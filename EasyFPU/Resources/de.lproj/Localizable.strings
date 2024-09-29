@@ -176,6 +176,7 @@
 "Alert duration between exports" = "Hinweis-Dauer zwischen Exporten";
 "Country" = "Land";
 "Select food database country" = "Land für Lebensmitteldatenbank wählen";
+"Select country" = "Land auswählen";
 "Search worldwide" = "Weltweit suchen";
 
 // Menu actions
