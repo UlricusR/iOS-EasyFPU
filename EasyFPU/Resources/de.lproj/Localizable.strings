@@ -106,9 +106,12 @@
 "Generate" = "Berechnen";
 "portion(s)" = "Portion(en)";
 "Cannot create typical amount: " = "Kann typische Menge nicht berechnen: ";
-"successfully saved in Products" = "erfolgreich in Produkten gespeichert";
-"Could not create the composed food item" = "Das zusammengestellte Essen konnte wegen fehlender Zutaten nicht gespeichert werden. Bitte informieren Sie den App-Entwickler.";
-"Could not update the composed food item" = "Das zusammengestellte Essen konnte nicht aktualisiert werden.";
+"successfully saved in Products" = "erfolgreich als Rezept und in Produkten gespeichert";
+"successfully saved as Recipe" = "erfolgreich als Rezept gespeichert, aber nicht als Produkt";
+"successfully updated in Products" = "erfolgreich als Rezept und Produkt aktualisiert";
+"successfully updated as Recipe" = "erfolgreich als Rezept (aber nicht als Produkt) aktualisiert";
+"Could not create the composed food item" = "Hoppla! Das zusammengestellte Essen konnte wegen fehlender Zutaten nicht gespeichert werden. Das sollte nicht passieren. Bitte informieren Sie das Entwicklungsteam.";
+"Could not update the composed food item" = "Hoppla! Das zusammengestellte Essen konnte nicht aktualisiert werden wegen eines fehlenden Rezepts. Das sollte nicht passieren. Bitte informieren Sie das Entwicklungsteam.";
 
 // Meal preview
 "e-Carbs" = "Verlängerte KH";
@@ -142,6 +145,14 @@
 "Sugars exceed carbs" = "Zucker übersteigt Kohlenhydrate";
 "Thereof" = "Davon";
 "Search term must not be empty" = "Suchbegriff darf nicht leer sein";
+" - new" = " - neu";
+"Error: No existing food item found - please inform the app developer" = "Fehler: Kein bestehendes Essen gefunden - bitte informieren Sie das Entwicklungsteam";
+"This should not have happened - please inform the app developer" = "Hoppla! Das hätte nicht passieren dürfen - bitte informieren Sie das Entwicklungsteam";
+"There's already a product with the same name. What do you want to do?" = "Es gibt bereits ein Produkt mit diesem Namen. Bitte wählen:";
+"Did not find a matching product with the same name. What do you want to do?" = "Es gibt kein Produkt mit diesem Namen. Bitte wählen:";
+
+// Recipe editor
+"Recipes" = "Rezepte";
 
 // Settings editor
 "Absorption scheme" = "Absorptionsschema";
@@ -160,9 +171,9 @@
 "Absorption time is equals or less than the one of the block before" = "Absorptionszeit ist gleich oder kleiner als die des vorherigen Blocks";
 "Absorption time must be between previous and following block" = "Absorptionszeit muss zwischen vorherigem und nachfolgendem Block liegen";
 "At least one absorption block required" = "Mindestens ein Absorptionsblock benötigt";
-"Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fataler Fehler: Kann Absorptionsblock-Index nicht festlegen, bitte informieren Sie den App-Entwickler";
-"Fatal error: Cannot convert numbers into string, please contact app developer" = "Fataler Fehler: Kann Zahlen nicht in String umwandeln, bitte informieren Sie den App-Entwickler";
-"Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fataler Fehler: Konnte das CoreData FoodItem nicht finden, bitte informieren Sie den App-Entwickler";
+"Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fataler Fehler: Kann Absorptionsblock-Index nicht festlegen, bitte informieren Sie das Entwicklungsteam";
+"Fatal error: Cannot convert numbers into string, please contact app developer" = "Fataler Fehler: Kann Zahlen nicht in String umwandeln, bitte informieren Sie das Entwicklungsteam";
+"Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fataler Fehler: Konnte das CoreData FoodItem nicht finden, bitte informieren Sie das Entwicklungsteam";
 "Reset to default" = "Auf Voreinstellungen zurücksetzen";
 "Absorption Time Parameters for Sugars" = "Absorptionsparameter für Zucker-KH";
 "Absorption Time Parameters for Carbs" = "Absorptionsparameter für reguläre KH";
@@ -196,6 +207,9 @@
 "Please select" = "Bitte auswählen";
 "Replace" = "Ersetzen";
 "Append" = "Anhängen";
+"Keep both" = "Beide behalten";
+"Create Food Item" = "Essen erstellen";
+"Only update Composed Food Item" = "Nur das Rezept aktualisieren";
 "Unable to open URL: " = "Kann folgende URL nicht öffnen: ";
 "Failed to decode due to missing key " = "Konnte nicht entschlüsseln wegen fehlendem Schlüssel ";
 "Failed to decode due to type mismatch - " = "Konnte nicht entschlüsseln wegen Typfehler - ";
@@ -217,7 +231,7 @@
 "Total Meal Carbs" = "Kohlenhydrate Gesamtmahlzeit";
 "Total Meal Calories" = "Kalorien Gesamtmahlzeit";
 "Please select at least one entry to export" = "Bitte mindestens einen Eintrag zum Export auswählen";
-"Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fataler Fehler, kann Daten nicht exportieren, bitte den App-Entwickler informieren: Absorptionsschema hat keine Absorptionsblöcke";
+"Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fataler Fehler, kann Daten nicht exportieren, bitte das Entwicklungsteam informieren: Absorptionsschema hat keine Absorptionsblöcke";
 "Preview of exported carbs in g" = "Vorschau der exportierten Kohlenhydrate in g";
 "Delay until meal" = "Mahlzeit beginnt in";
 "LastSugarsExport" = "Zucker";

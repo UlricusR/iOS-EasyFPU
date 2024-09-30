@@ -18,10 +18,13 @@ extension Ingredient {
     }
 
     @NSManaged public var id: UUID // required as of 2023-08-04
+    @NSManaged public var name: String
+    @NSManaged public var favorite: Bool
     @NSManaged public var amount: Int64
+    @NSManaged public var caloriesPer100g: Double
+    @NSManaged public var carbsPer100g: Double
+    @NSManaged public var sugarsPer100g: Double
     @NSManaged public var composedFoodItem: ComposedFoodItem // required as of 2023-08-04
-    @NSManaged public var foodItem: FoodItem // required as of 2023-08-04
-
 }
 
 extension Ingredient : Identifiable {

@@ -24,8 +24,8 @@
 		1B0868B9254F1CE4005953CC /* IngredientsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0868B8254F1CE4005953CC /* IngredientsListView.swift */; };
 		1B0AB0DC254F755000A7BFBD /* FoodItemComposerViewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0AB0DB254F755000A7BFBD /* FoodItemComposerViewSheets.swift */; };
 		1B0AB0DF254F760D00A7BFBD /* HelpFoodItemComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0AB0DE254F760D00A7BFBD /* HelpFoodItemComposer.swift */; };
+		1B0C20D42CAAAA8000F302AA /* FoodItemComposerViewActionSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0C20D32CAAAA8000F302AA /* FoodItemComposerViewActionSheets.swift */; };
 		1B0CE2BA250663B5008B04E3 /* HealthDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0CE2B9250663B5008B04E3 /* HealthDataHelper.swift */; };
-		1B12690B2A8E020C0047B1F5 /* ComposedFoodItem1toComposedFoodItem2MigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B12690A2A8E020C0047B1F5 /* ComposedFoodItem1toComposedFoodItem2MigrationPolicy.swift */; };
 		1B12690D2A8E52B40047B1F5 /* DataWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B12690C2A8E52B40047B1F5 /* DataWrapper.swift */; };
 		1B12690F2A8E699C0047B1F5 /* DataVersionFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B12690E2A8E699C0047B1F5 /* DataVersionFinder.swift */; };
 		1B188444253B329000B671A2 /* OpenFoodFacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B188443253B329000B671A2 /* OpenFoodFacts.swift */; };
@@ -65,8 +65,11 @@
 		1B6B93752554008C00F0CC7D /* Ingredient+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93712554008C00F0CC7D /* Ingredient+CoreDataProperties.swift */; };
 		1B6B93762554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */; };
 		1B6B93772554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93732554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift */; };
-		1B71EBF32A80FFC800343C89 /* Ingredient1ToIngredient2MigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B71EBF22A80FFC800343C89 /* Ingredient1ToIngredient2MigrationPolicy.swift */; };
-		1B71EBF52A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1B71EBF42A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel */; };
+		1B816B4F2CAB2FCF008670B5 /* RecipeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B4E2CAB2FCF008670B5 /* RecipeListView.swift */; };
+		1B816B512CAB3078008670B5 /* RecipeListViewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B502CAB3078008670B5 /* RecipeListViewSheets.swift */; };
+		1B816B532CAB345C008670B5 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B522CAB345C008670B5 /* RecipeView.swift */; };
+		1B816B552CAB3BE2008670B5 /* RecipeViewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B542CAB3BE2008670B5 /* RecipeViewSheets.swift */; };
+		1B816B572CAB4675008670B5 /* HelpViewRecipeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B562CAB4675008670B5 /* HelpViewRecipeList.swift */; };
 		1B870FC124C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */; };
 		1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */; };
 		1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */; };
@@ -135,8 +138,8 @@
 		1B0868B8254F1CE4005953CC /* IngredientsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsListView.swift; sourceTree = "<group>"; };
 		1B0AB0DB254F755000A7BFBD /* FoodItemComposerViewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemComposerViewSheets.swift; sourceTree = "<group>"; };
 		1B0AB0DE254F760D00A7BFBD /* HelpFoodItemComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpFoodItemComposer.swift; sourceTree = "<group>"; };
+		1B0C20D32CAAAA8000F302AA /* FoodItemComposerViewActionSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemComposerViewActionSheets.swift; sourceTree = "<group>"; };
 		1B0CE2B9250663B5008B04E3 /* HealthDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataHelper.swift; sourceTree = "<group>"; };
-		1B12690A2A8E020C0047B1F5 /* ComposedFoodItem1toComposedFoodItem2MigrationPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItem1toComposedFoodItem2MigrationPolicy.swift; sourceTree = "<group>"; };
 		1B12690C2A8E52B40047B1F5 /* DataWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataWrapper.swift; sourceTree = "<group>"; };
 		1B12690E2A8E699C0047B1F5 /* DataVersionFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataVersionFinder.swift; sourceTree = "<group>"; };
 		1B188443253B329000B671A2 /* OpenFoodFacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFacts.swift; sourceTree = "<group>"; };
@@ -177,8 +180,11 @@
 		1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ComposedFoodItem+CoreDataClass.swift"; path = "EasyFPU/Models/ComposedFoodItem+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		1B6B93732554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ComposedFoodItem+CoreDataProperties.swift"; path = "EasyFPU/Models/ComposedFoodItem+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		1B71EBED2A80E21100343C89 /* EasyFPU 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "EasyFPU 2.xcdatamodel"; sourceTree = "<group>"; };
-		1B71EBF22A80FFC800343C89 /* Ingredient1ToIngredient2MigrationPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient1ToIngredient2MigrationPolicy.swift; sourceTree = "<group>"; };
-		1B71EBF42A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = Migration1to2ModelMapping.xcmappingmodel; sourceTree = "<group>"; };
+		1B816B4E2CAB2FCF008670B5 /* RecipeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListView.swift; sourceTree = "<group>"; };
+		1B816B502CAB3078008670B5 /* RecipeListViewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListViewSheets.swift; sourceTree = "<group>"; };
+		1B816B522CAB345C008670B5 /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
+		1B816B542CAB3BE2008670B5 /* RecipeViewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewSheets.swift; sourceTree = "<group>"; };
+		1B816B562CAB4675008670B5 /* HelpViewRecipeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewRecipeList.swift; sourceTree = "<group>"; };
 		1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemEvaluationView.swift; sourceTree = "<group>"; };
 		1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewModel.swift; sourceTree = "<group>"; };
 		1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmountViewModel.swift; sourceTree = "<group>"; };
@@ -266,7 +272,6 @@
 		1B004A2B24BA3035001E362A /* EasyFPU */ = {
 			isa = PBXGroup;
 			children = (
-				1B71EBFB2A81403100343C89 /* Migration */,
 				1B004A5224BA52E9001E362A /* Resources */,
 				1B6106B924D93325001F2284 /* Helpers */,
 				1B004A3024BA3035001E362A /* EasyFPU.xcdatamodeld */,
@@ -304,6 +309,11 @@
 				1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */,
 				1BC7524E254AFD5D001C4D27 /* FoodItemComposerView.swift */,
 				1B0AB0DB254F755000A7BFBD /* FoodItemComposerViewSheets.swift */,
+				1B0C20D32CAAAA8000F302AA /* FoodItemComposerViewActionSheets.swift */,
+				1B816B4E2CAB2FCF008670B5 /* RecipeListView.swift */,
+				1B816B502CAB3078008670B5 /* RecipeListViewSheets.swift */,
+				1B816B522CAB345C008670B5 /* RecipeView.swift */,
+				1B816B542CAB3BE2008670B5 /* RecipeViewSheets.swift */,
 				1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */,
 				1B377A6724FAA935005AC5C6 /* AboutView.swift */,
 				1B1CC90E24DC4F390014DD7D /* MenuView.swift */,
@@ -404,6 +414,7 @@
 			children = (
 				1BB631D924FBDA9400B75EF3 /* HelpView.swift */,
 				1B6867DE24FD00F40057EC6A /* HelpViewProductsList.swift */,
+				1B816B562CAB4675008670B5 /* HelpViewRecipeList.swift */,
 				1BC75245254AF8CF001C4D27 /* HelpViewIngredientsList.swift */,
 				1B6867E024FD0C6B0057EC6A /* HelpViewFoodItemSelector.swift */,
 				1B6867E224FD22D60057EC6A /* HelpViewFoodItemEditor.swift */,
@@ -413,16 +424,6 @@
 				1B0AB0DE254F760D00A7BFBD /* HelpFoodItemComposer.swift */,
 			);
 			path = Help;
-			sourceTree = "<group>";
-		};
-		1B71EBFB2A81403100343C89 /* Migration */ = {
-			isa = PBXGroup;
-			children = (
-				1B71EBF42A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel */,
-				1B71EBF22A80FFC800343C89 /* Ingredient1ToIngredient2MigrationPolicy.swift */,
-				1B12690A2A8E020C0047B1F5 /* ComposedFoodItem1toComposedFoodItem2MigrationPolicy.swift */,
-			);
-			path = Migration;
 			sourceTree = "<group>";
 		};
 		1B72BB4725431B95008B0B51 /* OpenFoodFacts */ = {
@@ -638,22 +639,24 @@
 				1BCC1BEF2519036F00920264 /* CarbsRegime.swift in Sources */,
 				1BF21B072552813000590068 /* ActivityIndicatorDynamicText.swift in Sources */,
 				1BD0693C254D97DD00B0E15A /* VariableAmountItem.swift in Sources */,
+				1B816B552CAB3BE2008670B5 /* RecipeViewSheets.swift in Sources */,
 				1B6106BB24D93346001F2284 /* DataHelper.swift in Sources */,
 				1B0868AB254EDDC0005953CC /* FoodItemListView.swift in Sources */,
 				1BAD273D25495B4100A730FB /* FoodPreviewContent.swift in Sources */,
 				1B6867E324FD22D60057EC6A /* HelpViewFoodItemEditor.swift in Sources */,
 				1B9723ED2508AC5C00E606A7 /* UserSettings.swift in Sources */,
-				1B71EBF32A80FFC800343C89 /* Ingredient1ToIngredient2MigrationPolicy.swift in Sources */,
 				1BEE525624D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift in Sources */,
 				1B377A6824FAA935005AC5C6 /* AboutView.swift in Sources */,
 				1B51B3332540BCB800064EB1 /* FoodPreview.swift in Sources */,
 				1BB631DA24FBDA9400B75EF3 /* HelpView.swift in Sources */,
 				1B90D2DE24F7BAB40059BFFA /* ComposedFoodItemView.swift in Sources */,
+				1B816B512CAB3078008670B5 /* RecipeListViewSheets.swift in Sources */,
 				1B0AB0DF254F760D00A7BFBD /* HelpFoodItemComposer.swift in Sources */,
 				1B6867E124FD0C6B0057EC6A /* HelpViewFoodItemSelector.swift in Sources */,
 				1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */,
 				1B1CC91124DC57300014DD7D /* MenuViewSheets.swift in Sources */,
 				1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */,
+				1B816B4F2CAB2FCF008670B5 /* RecipeListView.swift in Sources */,
 				1B004A2D24BA3035001E362A /* AppDelegate.swift in Sources */,
 				1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */,
 				1B2D99872541D72F0012EC40 /* FoodDatabaseResults.swift in Sources */,
@@ -663,6 +666,7 @@
 				1B12690F2A8E699C0047B1F5 /* DataVersionFinder.swift in Sources */,
 				1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */,
 				1B0AB0DC254F755000A7BFBD /* FoodItemComposerViewSheets.swift in Sources */,
+				1B816B532CAB345C008670B5 /* RecipeView.swift in Sources */,
 				1B68548824BC70ED005ABB8B /* FoodItemEditor.swift in Sources */,
 				1BF8A4C024C21A52008634DF /* FoodItem+CoreDataClass.swift in Sources */,
 				1B6B93742554008C00F0CC7D /* Ingredient+CoreDataClass.swift in Sources */,
@@ -673,13 +677,12 @@
 				1B6B93762554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift in Sources */,
 				1BA963E22507E03100375650 /* ComposedFoodItemEvaluationViewSheets.swift in Sources */,
 				1B0868B5254F0EEF005953CC /* ProductsListView.swift in Sources */,
-				1B12690B2A8E020C0047B1F5 /* ComposedFoodItem1toComposedFoodItem2MigrationPolicy.swift in Sources */,
+				1B816B572CAB4675008670B5 /* HelpViewRecipeList.swift in Sources */,
 				1BF8A4C124C21A52008634DF /* FoodItem+CoreDataProperties.swift in Sources */,
 				1B12690D2A8E52B40047B1F5 /* DataWrapper.swift in Sources */,
 				1B6867E524FD37F80057EC6A /* HelpViewMealDetails.swift in Sources */,
 				1B6654B52A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift in Sources */,
 				1B0868AE254EDF35005953CC /* FoodItemListViewSheets.swift in Sources */,
-				1B71EBF52A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel in Sources */,
 				1BF1A15D251AA2B2001E561C /* ComposedFoodItemCarbsView.swift in Sources */,
 				1B004A4D24BA3E7F001E362A /* AbsorptionScheme.swift in Sources */,
 				1B6B861A2517D1AC00ED10FE /* CarbsEntry.swift in Sources */,
@@ -713,6 +716,7 @@
 				1B25D480253DAFDD00848C2A /* FoodItemEditorSheets.swift in Sources */,
 				1B6867DF24FD00F40057EC6A /* HelpViewProductsList.swift in Sources */,
 				1B1CC90F24DC4F390014DD7D /* MenuView.swift in Sources */,
+				1B0C20D42CAAAA8000F302AA /* FoodItemComposerViewActionSheets.swift in Sources */,
 				1B6B93752554008C00F0CC7D /* Ingredient+CoreDataProperties.swift in Sources */,
 				1BEE525524D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift in Sources */,
 				1B004A4B24BA36C1001E362A /* FPU.swift in Sources */,

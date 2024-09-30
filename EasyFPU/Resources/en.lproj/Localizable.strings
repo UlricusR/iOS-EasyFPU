@@ -106,9 +106,12 @@
 "Generate" = "Generate";
 "portion(s)" = "portions(s)";
 "Cannot create typical amount: " = "Cannot create typical amount: ";
-"successfully saved in Products" = "successfully saved in Products";
-"Could not create the composed food item" = "Could not create the composed food item due to missing ingredients. Please inform the App developer.";
-"Could not update the composed food item" = "Could not update the composed food item.";
+"successfully saved in Products" = "successfully saved as Recipe and added to Products";
+"successfully saved as Recipe" = "successfully saved as Recipe, but not added to Products";
+"successfully updated in Products" = "successfully updated as Recipe and in Products";
+"successfully updated as Recipe" = "successfully updated as Recipe, but not in Products";
+"Could not create the composed food item" = "Oops! Could not create the composed food item due to missing ingredients. This should not happen. Please inform the App developer.";
+"Could not update the composed food item" = "Oops! Could not update the composed food item, as no Recipe was found. This should not happen. Please inform the App developer.";
 
 // Meal preview
 "e-Carbs" = "e-Carbs";
@@ -142,6 +145,14 @@
 "Sugars exceed carbs" = "Sugars exceed carbs";
 "Thereof" = "Thereof";
 "Search term must not be empty" = "Search term must not be empty";
+" - new" = " - new";
+"Error: No existing food item found - please inform the app developer" = "Error: No existing food item found - please inform the app developer";
+"This should not have happened - please inform the app developer" = "Oops! This should not have happened - please inform the app developer";
+"There's already a product with the same name. What do you want to do?" = "There's already a product with the same name. What do you want to do?";
+"Did not find a matching product with the same name. What do you want to do?" = "Did not find a matching product with the same name. What do you want to do?";
+
+// Recipe editor
+"Recipes" = "Recipes";
 
 // Settings editor
 "Absorption scheme" = "Absorption scheme";
@@ -196,6 +207,9 @@
 "Please select" = "Please select";
 "Replace" = "Replace";
 "Append" = "Add";
+"Keep both" = "Keep both";
+"Create Food Item" = "Create Food Item";
+"Only update Composed Food Item" = "Only update Composed Food Item";
 "Unable to open URL: " = "Unable to open URL: ";
 "Failed to decode due to missing key " = "Failed to decode due to missing key ";
 "Failed to decode due to type mismatch - " = "Failed to decode due to type mismatch - ";

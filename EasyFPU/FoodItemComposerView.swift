@@ -10,15 +10,17 @@ import SwiftUI
 
 struct FoodItemComposerView: View {
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
-    @State var message: String = ""
-    @State var showingActionSheet: Bool = false
     @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
     @State private var activeSheet: FoodItemComposerViewSheets.State?
+    @State private var activeActionSheet: FoodItemComposerViewActionSheets.State?
     @Binding var notificationState: FoodItemListView.NotificationState?
     private let helpScreen = HelpScreen.foodItemComposer
-    @State private var showingAlert = false
-    @State private var alertMessage = ""
+    @State private var showingAlert: Bool = false
+    @State private var alertMessage: String = ""
+    @State private var showingActionSheet: Bool = false
+    @State private var actionSheetMessage: String = ""
+    @State private var existingFoodItem: FoodItem?
     
     @State var generateTypicalAmounts: Bool = true
     
@@ -115,14 +117,15 @@ struct FoodItemComposerView: View {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Button(action: {
                             if weightCheck(isLess: true) {
-                                message = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                                activeActionSheet = .weightDifference
+                                actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
                                 showingActionSheet = true
                             } else if weightCheck(isLess: false) {
-                                message = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
+                                activeActionSheet = .weightDifference
+                                actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
                                 showingActionSheet = true
                             } else {
-                                saveProduct()
-                                presentation.wrappedValue.dismiss()
+                                saveComposedFoodItem()
                             }
                         }) {
                             Text("Save")
@@ -141,15 +144,7 @@ struct FoodItemComposerView: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .actionSheet(isPresented: self.$showingActionSheet) {
-            ActionSheet(title: Text("Notice"), message: Text(message), buttons: [
-                .default(Text("Save anyway")) {
-                    saveProduct()
-                    presentation.wrappedValue.dismiss()
-                },
-                .cancel()
-            ])
-        }
+        .actionSheet(isPresented: self.$showingActionSheet, content: actionSheetContent)
         .alert(isPresented: self.$showingAlert) {
             Alert(
                 title: Text("Notice"),
@@ -168,13 +163,13 @@ struct FoodItemComposerView: View {
         return isLess ? (composedFoodItemVM.amount < ingredientsWeight ? true : false) : (composedFoodItemVM.amount > ingredientsWeight ? true : false)
     }
     
-    private func saveProduct() {
+    private func saveComposedFoodItem() {
         // Check if this was an existing ComposedFoodItem
         if composedFoodItemVM.cdComposedFoodItem == nil { // This is a new ComposedFoodItem
             // Store new ComposedFoodItem in CoreData
             if ComposedFoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts) != nil {
-                // Notify user of successful creation
-                notificationState = .successfullySavedFoodItem(composedFoodItemVM.name)
+                // We have created a new ComposedFoodItem, now we need to add it to the Products (where we don't expect one)
+                saveFoodItem(existingFoodItemExpected: false)
             } else {
                 // We're missing ingredients, the composedFoodItem could not be saved - this should not happen!
                 alertMessage = NSLocalizedString("Could not create the composed food item", comment: "")
@@ -183,16 +178,63 @@ struct FoodItemComposerView: View {
         } else { // We edit an existing ComposedFoodItem
             // Update Core Data ComposedFoodItem
             if ComposedFoodItem.update(composedFoodItemVM) != nil {
-                // Notify user of successful update
-                notificationState = .successfullySavedFoodItem(composedFoodItemVM.name)
+                // We have updated the ComposedFoodItem, now we need to update it in the Products (where we expect one)
+                saveFoodItem(existingFoodItemExpected: true)
             } else {
+                // No Core Data ComposedFoodItem found - this should never happen!
                 alertMessage = NSLocalizedString("Could not update the composed food item", comment: "")
                 showingAlert = true
             }
         }
+    }
+    
+    private func saveFoodItem(existingFoodItemExpected: Bool) {
+        if let existingFoodItem = FoodItem.getFoodItemByName(name: composedFoodItemVM.name) {
+            // There's already a FoodItem with the same name in the database, so ...
+            if existingFoodItemExpected {
+                // ... replace it if this was expected
+                replaceExistingFoodItem(existingFoodItem)
+                
+                // Notify user of successful update of both the ComposedFoodItem as well as the FoodItem
+                presentation.wrappedValue.dismiss()
+                notificationState = .successfullyUpdatedFoodItem(composedFoodItemVM.name)
+                
+                // Clear the ComposedFoodItem
+                composedFoodItemVM.clear()
+            } else {
+                // ... ask what to do if this was not expected
+                self.existingFoodItem = existingFoodItem
+                activeActionSheet = .existingProduct
+                actionSheetMessage = NSLocalizedString("There's already a product with the same name. What do you want to do?", comment: "")
+                showingActionSheet = true
+            }
+        } else {
+            // No existing FoodItem ...
+            if existingFoodItemExpected {
+                // ... although expected, so ask what to do
+                activeActionSheet = .missingProduct
+                actionSheetMessage = NSLocalizedString("Did not find a matching product with the same name. What do you want to do?", comment: "")
+                showingActionSheet = true
+            } else {
+                // ... as expected, so create new one
+                _ = FoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts)
+                
+                // Notify user of successful creation both as ComposedFoodItem as well as FoodItem
+                presentation.wrappedValue.dismiss()
+                notificationState = .successfullySavedNewFoodItem(composedFoodItemVM.name)
+                
+                // Clear the ComposedFoodItem
+                composedFoodItemVM.clear()
+            }
+        }
+    }
+    
+    private func replaceExistingFoodItem(_ existingFoodItem: FoodItem) {
+        // Remove existing FoodItem
+        FoodItem.delete(existingFoodItem)
         
-        // Clear the ComposedFoodItem
-        composedFoodItemVM.clear()
+        // Create new FoodItem
+        _ = FoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts)
     }
     
     @ViewBuilder
@@ -200,6 +242,86 @@ struct FoodItemComposerView: View {
         switch state {
         case .help:
             HelpView(helpScreen: self.helpScreen)
+        }
+    }
+    
+    private func actionSheetContent() -> ActionSheet {
+        switch activeActionSheet {
+        case .existingProduct:
+            return ActionSheet(title: Text("Notice"), message: Text(actionSheetMessage), buttons: [
+                .default(Text("Keep both")) {
+                    // Append " - new" to the name of the ComposedFoodItem
+                    composedFoodItemVM.name += NSLocalizedString(" - new", comment: "")
+                    composedFoodItemVM.cdComposedFoodItem?.name += NSLocalizedString(" - new", comment: "")
+                    
+                    // Create new FoodItem
+                    _ = FoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts)
+                    
+                    // Notify user of successful creation both as ComposedFoodItem as well as FoodItem
+                    presentation.wrappedValue.dismiss()
+                    notificationState = .successfullySavedNewFoodItem(composedFoodItemVM.name)
+                    
+                    // Clear the ComposedFoodItem
+                    composedFoodItemVM.clear()
+                },
+                .default(Text("Replace")) {
+                    if existingFoodItem != nil {
+                        // Replace existing FoodItem
+                        replaceExistingFoodItem(existingFoodItem!)
+                        
+                        // Notify user of successful creation both as ComposedFoodItem as well as FoodItem
+                        presentation.wrappedValue.dismiss()
+                        notificationState = .successfullySavedNewFoodItem(composedFoodItemVM.name)
+                        
+                        // Clear the ComposedFoodItem
+                        composedFoodItemVM.clear()
+                    } else {
+                        // No existing food item found - this should not happen!
+                        alertMessage = NSLocalizedString("Error: No existing food item found - please inform the app developer", comment: "")
+                        showingAlert = true
+                    }
+                },
+                .cancel() {
+                    // The ComposedFoodItem was not saved as FoodItem
+                    presentation.wrappedValue.dismiss()
+                    notificationState = .successfullySavedNewComposedFoodItemOnly(composedFoodItemVM.name)
+                    
+                    // Clear the ComposedFoodItem
+                    composedFoodItemVM.clear()
+                }
+            ])
+        case .missingProduct:
+            return ActionSheet(title: Text("Notice"), message: Text(actionSheetMessage), buttons: [
+                .default(Text("Create Food Item")) {
+                    // Create new FoodItem
+                    _ = FoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts)
+                    
+                    // Notify user of successful update of ComposedFoodItem and creation of new FoodItem
+                    presentation.wrappedValue.dismiss()
+                    notificationState = .successfullyUpdatedFoodItem(composedFoodItemVM.name)
+                    
+                    // Clear the ComposedFoodItem
+                    composedFoodItemVM.clear()
+                },
+                .default(Text("Only update Composed Food Item")) {
+                    // Only the ComposedFoodItem was updated
+                    presentation.wrappedValue.dismiss()
+                    notificationState = .successfullyUpdatedComposedFoodItemOnly(composedFoodItemVM.name)
+                    
+                    // Clear the ComposedFoodItem
+                    composedFoodItemVM.clear()
+                }
+            ])
+        case .weightDifference:
+            return ActionSheet(title: Text("Notice"), message: Text(actionSheetMessage), buttons: [
+                .default(Text("Save anyway")) {
+                    saveComposedFoodItem()
+                    presentation.wrappedValue.dismiss()
+                },
+                .cancel()
+            ])
+        case .none:
+            return ActionSheet(title: Text("Error"), message: Text("This should not have happened - please inform the app developer"))
         }
     }
 }

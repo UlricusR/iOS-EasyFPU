@@ -31,7 +31,7 @@ public class FoodItem: NSManagedObject {
     }
     
     /**
-     Creates a new Core Data FoodItem or nil if the FoodItem already exists. It does not account for associated ComposedFoodItems, but only creates a "plain" FoodItem!
+     Creates a new Core Data FoodItem or nil if the FoodItem already exists.
      
      - Parameters:
         - foodItedVM: The source FoodItemViewModel.
@@ -150,7 +150,7 @@ public class FoodItem: NSManagedObject {
     static func update(_ cdFoodItem: FoodItem, with composedFoodItemVM: ComposedFoodItemViewModel) {
         let moc = AppDelegate.viewContext
         cdFoodItem.name = composedFoodItemVM.name
-        cdFoodItem.category = composedFoodItemVM.category.rawValue
+        cdFoodItem.category = FoodItemCategory.product.rawValue
         cdFoodItem.favorite = composedFoodItemVM.favorite
         cdFoodItem.carbsPer100g = composedFoodItemVM.carbsPer100g
         cdFoodItem.caloriesPer100g = composedFoodItemVM.caloriesPer100g
@@ -216,8 +216,27 @@ public class FoodItem: NSManagedObject {
      
      - Returns: The related Core Data FoodItem, nil if not found.
      */
-    static func getFoodItem(with id: String) -> FoodItem? {
+    static func getFoodItemByID(_ id: String) -> FoodItem? {
         let predicate = NSPredicate(format: "id = %@", id)
+        let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
+        request.predicate = predicate
+        if let result = try? AppDelegate.viewContext.fetch(request) {
+            if !result.isEmpty {
+                return result[0]
+            }
+        }
+        return nil
+    }
+    
+    /**
+     Returns the Core Data FoodItem with the given name.
+     
+     - Parameter name: The Core Data entry name.
+     
+     - Returns: The related Core Data FoodItem, nil if not found.
+     */
+    static func getFoodItemByName(name: String) -> FoodItem? {
+        let predicate = NSPredicate(format: "name = %@", name)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.predicate = predicate
         if let result = try? AppDelegate.viewContext.fetch(request) {

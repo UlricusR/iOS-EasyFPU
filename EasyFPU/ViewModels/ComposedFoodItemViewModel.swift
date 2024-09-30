@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
+class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, VariableAmountItem {
     var id: UUID
     @Published var name: String
     var category: FoodItemCategory
@@ -104,9 +104,9 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
     
     init(from cdComposedFoodItem: ComposedFoodItem) {
         self.id = cdComposedFoodItem.id
-        self.name = cdComposedFoodItem.foodItem.name ?? NSLocalizedString("- Unnamed -", comment: "")
-        self.category = FoodItemCategory.init(rawValue: cdComposedFoodItem.foodItem.category ?? FoodItemCategory.ingredient.rawValue) ?? FoodItemCategory.ingredient
-        self.favorite = cdComposedFoodItem.foodItem.favorite
+        self.name = cdComposedFoodItem.name
+        self.category = FoodItemCategory.product
+        self.favorite = cdComposedFoodItem.favorite
         self.amount = Int(cdComposedFoodItem.amount)
         self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
         self.cdComposedFoodItem = cdComposedFoodItem
@@ -121,7 +121,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
         let composedFoodItem = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .composedFoodItem)
         let uuidString = try composedFoodItem.decode(String.self, forKey: .id)
         id = UUID(uuidString: uuidString) ?? UUID()
-        category = try FoodItemCategory.init(rawValue: composedFoodItem.decode(String.self, forKey: .category)) ?? .product
+        category = .product
         amount = try composedFoodItem.decode(Int.self, forKey: .amount)
         favorite = try composedFoodItem.decode(Bool.self, forKey: .favorite)
         name = try composedFoodItem.decode(String.self, forKey: .name)
@@ -132,7 +132,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
         for ingredient in ingredients {
             // Search for the related Core Data FoodItem (which should have been loaded already,
             // as ComposedFoodItems were sorted last before exporting the list of FoodItems
-            if let relatedFoodItem = FoodItem.getFoodItem(with: ingredient.id.uuidString) {
+            if let relatedFoodItem = FoodItem.getFoodItemByID(ingredient.id.uuidString) {
                 foodItems.append(FoodItemViewModel(from: relatedFoodItem))
             }
         }
@@ -158,28 +158,57 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
         }
     }
     
+    func duplicate() {
+        // Create the duplicate
+        let nameOfDuplicate = "\(name) - \(NSLocalizedString("Copy", comment: ""))"
+        let duplicate = ComposedFoodItemViewModel(
+            id: UUID(),
+            name: nameOfDuplicate,
+            category: category,
+            favorite: favorite
+        )
+        
+        // Add number of portions
+        duplicate.numberOfPortions = numberOfPortions
+        
+        // Append the related food items
+        duplicate.foodItems = foodItems
+        
+        // Create new Core Data ComposedFoodItem
+        _ = ComposedFoodItem.create(from: duplicate, generateTypicalAmounts: false)
+    }
+    
+    func exportToURL() -> URL? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        guard let encoded = try? encoder.encode(self) else { return nil }
+        
+        let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        
+        guard let path = documents?.appendingPathComponent("/\(name).recipe") else {
+            return nil
+        }
+        
+        do {
+            try encoded.write(to: path, options: .atomicWrite)
+            return path
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
     func clear() {
         for foodItem in foodItems {
             foodItem.amountAsString = "0"
         }
         foodItems.removeAll()
         
-        switch category {
-        case .ingredient:
-            name = NSLocalizedString(IngredientsListView.composedFoodItemName, comment: "")
-        case .product:
-            name = NSLocalizedString(ProductsListView.composedFoodItemName, comment: "")
-        }
-        
         id = UUID()
         favorite = false
         amount = 0
         numberOfPortions = 0
         cdComposedFoodItem = nil
-    }
-    
-    func updateAssociatedFoodItemVM() {
-        
     }
     
     func getCarbsInclSugars() -> Double {
@@ -201,7 +230,6 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, VariableAmountItem {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         var composedFoodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .composedFoodItem)
-        try composedFoodItem.encode(category.rawValue, forKey: .category)
         try composedFoodItem.encode(amount, forKey: .amount)
         try composedFoodItem.encode(favorite, forKey: .favorite)
         try composedFoodItem.encode(name, forKey: .name)

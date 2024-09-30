@@ -10,7 +10,10 @@ import SwiftUI
 
 struct FoodItemListView: View {
     enum NotificationState {
-        case successfullySavedFoodItem(String)
+        case successfullySavedNewFoodItem(String)
+        case successfullySavedNewComposedFoodItemOnly(String)
+        case successfullyUpdatedFoodItem(String)
+        case successfullyUpdatedComposedFoodItemOnly(String)
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -21,7 +24,6 @@ struct FoodItemListView: View {
     var foodItemListTitle: String
     @Binding var selectedTab: Int
     @State private var searchString = ""
-    @State private var showCancelButton: Bool = false
     @State private var showFavoritesOnly = false
     @State private var activeSheet: FoodItemListViewSheets.State?
     @State private var showingAlert: Bool = false
@@ -136,9 +138,36 @@ struct FoodItemListView: View {
     @ViewBuilder
     private func notificationViewContent() -> some View {
         switch notificationState {
-        case .successfullySavedFoodItem(let name):
+        case .successfullySavedNewFoodItem(let name):
             HStack {
                 Text("'\(name)' \(NSLocalizedString("successfully saved in Products", comment: ""))")
+            }
+            .onAppear() {
+                Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in
+                    self.notificationState = nil
+                }
+            }
+        case .successfullySavedNewComposedFoodItemOnly(let name):
+            HStack {
+                Text("'\(name)' \(NSLocalizedString("successfully saved as Recipe", comment: ""))")
+            }
+            .onAppear() {
+                Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in
+                    self.notificationState = nil
+                }
+            }
+        case .successfullyUpdatedFoodItem(let name):
+            HStack {
+                Text("'\(name)' \(NSLocalizedString("successfully updated in Products", comment: ""))")
+            }
+            .onAppear() {
+                Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in
+                    self.notificationState = nil
+                }
+            }
+        case .successfullyUpdatedComposedFoodItemOnly(let name):
+            HStack {
+                Text("'\(name)' \(NSLocalizedString("successfully updated as Recipe", comment: ""))")
             }
             .onAppear() {
                 Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in

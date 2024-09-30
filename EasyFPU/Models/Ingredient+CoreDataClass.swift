@@ -58,11 +58,15 @@ public class Ingredient: NSManagedObject {
                 
                 // Fill data
                 cdIngredient.id = UUID()
+                cdIngredient.name = ingredient.name
+                cdIngredient.favorite = ingredient.favorite
                 cdIngredient.amount = Int64(ingredient.amount)
+                cdIngredient.caloriesPer100g = ingredient.caloriesPer100g
+                cdIngredient.carbsPer100g = ingredient.carbsPer100g
+                cdIngredient.sugarsPer100g = ingredient.sugarsPer100g
                 
-                // Create references (both 1:1)
+                // Create 1:1 references to ComposedFoodItem
                 cdIngredient.composedFoodItem = composedFoodItemVM.cdComposedFoodItem!
-                cdIngredient.foodItem = ingredient.cdFoodItem!
                 
                 // Save new Ingredient
                 try? moc.save()
@@ -89,11 +93,17 @@ public class Ingredient: NSManagedObject {
         
         // Create Ingredient
         let cdIngredient = Ingredient(context: moc)
-        cdIngredient.id = UUID()
         
         // Fill data
-        cdIngredient.amount = existingIngredient.amount
-        cdIngredient.foodItem = existingIngredient.foodItem
+        cdIngredient.id = UUID()
+        cdIngredient.name = existingIngredient.name
+        cdIngredient.favorite = existingIngredient.favorite
+        cdIngredient.amount = Int64(existingIngredient.amount)
+        cdIngredient.caloriesPer100g = existingIngredient.caloriesPer100g
+        cdIngredient.carbsPer100g = existingIngredient.carbsPer100g
+        cdIngredient.sugarsPer100g = existingIngredient.sugarsPer100g
+        
+        // Create 1:1 references to ComposedFoodItem
         cdIngredient.composedFoodItem = newCDComposedFoodItem
         
         // Save new Ingredient

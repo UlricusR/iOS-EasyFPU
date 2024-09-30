@@ -76,7 +76,6 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     @Published var amount: Int = 0
     @Published var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
-    var composedFoodItemVM: ComposedFoodItemViewModel?
     
     enum CodingKeys: String, CodingKey {
         case foodItem
@@ -107,9 +106,6 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.carbsPer100g = cdFoodItem.carbsPer100g
         self.sugarsPer100g = cdFoodItem.sugarsPer100g
         self.cdFoodItem = cdFoodItem
-        if let cdComposedFoodItem = cdFoodItem.composedFoodItem {
-            self.composedFoodItemVM = ComposedFoodItemViewModel(from: cdComposedFoodItem)
-        }
         
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
         
@@ -122,16 +118,15 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     }
     
     init(from cdIngredient: Ingredient) {
-        // Use ID from related Core Data FoodItem
-        self.id = cdIngredient.foodItem.id
-        self.name = cdIngredient.foodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
-        self.category = FoodItemCategory.init(rawValue: cdIngredient.foodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
-        self.favorite = cdIngredient.foodItem.favorite
-        self.caloriesPer100g = cdIngredient.foodItem.caloriesPer100g
-        self.carbsPer100g = cdIngredient.foodItem.carbsPer100g
-        self.sugarsPer100g = cdIngredient.foodItem.sugarsPer100g
+        // Use new ID
+        self.id = UUID()
+        self.name = cdIngredient.name
+        self.category = FoodItemCategory.ingredient // Default is ingredient
+        self.favorite = cdIngredient.favorite
+        self.caloriesPer100g = cdIngredient.caloriesPer100g
+        self.carbsPer100g = cdIngredient.carbsPer100g
+        self.sugarsPer100g = cdIngredient.sugarsPer100g
         self.amount = Int(cdIngredient.amount)
-        self.cdFoodItem = cdIngredient.foodItem
         
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
     }
@@ -221,12 +216,10 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         let foodItem = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)
         
         // Data model version 1 had no ID, therefore we need to catch this separately
-        var hasID = false
         do {
             let uuidString = try foodItem.decode(String.self, forKey: .id)
             
             // Success --> we overwrite the id (and generate a new one of this goes wrong)
-            hasID = true
             id = UUID(uuidString: uuidString) ?? UUID()
         } catch {
             // We generate a new UUID
@@ -253,13 +246,6 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.carbsPer100gAsString = carbsAsString
         self.sugarsPer100gAsString = sugarsAsString
         self.amountAsString = amountAsString
-        
-        // We only import ComposedFoodItems if this is data model 2 or beyond
-        if hasID {
-            if let composedFoodItemVM = try? foodItem.decode(ComposedFoodItemViewModel.self, forKey: .composedFoodItem) {
-                self.composedFoodItemVM = composedFoodItemVM
-            }
-        }
     }
     
     private func initStringRepresentations(amount: Int, carbsPer100g: Double, caloriesPer100g: Double, sugarsPer100g: Double) {
@@ -313,18 +299,6 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         return FPU(fpu: fpus)
     }
     
-    /// FoodItem can only be deleted if it has no relationship to an Ingredient
-    /// Returns: true if no relationship to an Ingredient is found
-    func canBeDeleted() -> Bool {
-        return !(cdFoodItem?.ingredients != nil && cdFoodItem!.ingredients!.count > 0)
-    }
-    
-    /// A FoodItem category can always be changed from Product to Ingredient, but
-    /// cannot be changed from Ingredient to Product if it has relationships to Ingredients
-    func canChangeCategory() -> Bool {
-        return self.category == .product ? true : !(cdFoodItem?.ingredients != nil && cdFoodItem!.ingredients!.count > 0)
-    }
-    
     func changeCategory(to newCategory: FoodItemCategory) {
         if category != newCategory {
             category = newCategory
@@ -351,14 +325,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         
         // Create new Core Data FoodItem
         var foodItemNotCreated = ""
-        if let newCDFoodItem = FoodItem.create(from: duplicate, foodItemNotCreated: &foodItemNotCreated) {
-            // Check if this was associated to a ComposedFoodItem
-            if let composedFoodItemVM = self.composedFoodItemVM {
-                duplicate.composedFoodItemVM = composedFoodItemVM
-                duplicate.composedFoodItemVM?.cdComposedFoodItem = ComposedFoodItem.duplicate(composedFoodItemVM, for: newCDFoodItem)
-                duplicate.composedFoodItemVM?.name = nameOfDuplicate
-            }
-        } else {
+        if FoodItem.create(from: duplicate, foodItemNotCreated: &foodItemNotCreated) != nil {
             // This should never happen, as the error message by the FoodItem.create function is only issued if we have a duplicate id
             print(foodItemNotCreated)
         }
@@ -396,10 +363,6 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         try foodItem.encode(favorite, forKey: .favorite)
         try foodItem.encode(name, forKey: .name)
         try foodItem.encode(typicalAmounts, forKey: .typicalAmounts)
-        
-        if let composedFoodItemVM = self.composedFoodItemVM {
-            try foodItem.encode(composedFoodItemVM, forKey: .composedFoodItem)
-        }
     }
     
     static func == (lhs: FoodItemViewModel, rhs: FoodItemViewModel) -> Bool {

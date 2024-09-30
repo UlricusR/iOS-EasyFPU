@@ -154,12 +154,7 @@ struct MenuView: View {
             var foodItemsNotImported = [String]()
             for foodItemVMToBeImported in foodItemVMsToBeImported! {
                 var foodItemNotImported = ""
-                if let cdFoodItem = FoodItem.create(from: foodItemVMToBeImported, foodItemNotCreated: &foodItemNotImported) {
-                    // Check if it is associated to a ComposedFoodItemVM
-                    if let composedFoodItemVM = foodItemVMToBeImported.composedFoodItemVM {
-                        cdFoodItem.composedFoodItem = ComposedFoodItem.duplicate(composedFoodItemVM, for: cdFoodItem)
-                    }
-                } else {
+                if FoodItem.create(from: foodItemVMToBeImported, foodItemNotCreated: &foodItemNotImported) == nil {
                     // There seems to be a duplicate
                     foodItemsNotImported.append(foodItemNotImported)
                 }

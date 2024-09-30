@@ -11,6 +11,7 @@ import SwiftUI
 enum HelpScreen: String {
     case productsList = "Product List"
     case ingredientsList = "Ingredients List"
+    case recipeList = "Recipe List"
     case foodItemSelector = "Select Food Item"
     case foodItemEditor = "Edit Food Item"
     case mealDetails = "Meal Details"
@@ -31,6 +32,8 @@ struct HelpView: View {
                     return AnyView(HelpViewProductsList())
                 case .ingredientsList:
                     return AnyView(HelpViewIngredientsList())
+                case .recipeList:
+                    return AnyView(HelpViewRecipeList())
                 case .foodItemSelector:
                     return AnyView(HelpViewFoodItemSelector())
                 case .foodItemEditor:

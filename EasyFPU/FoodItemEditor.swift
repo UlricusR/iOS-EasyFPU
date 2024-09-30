@@ -96,7 +96,7 @@ struct FoodItemEditor: View {
                             Picker("Category", selection: $draftFoodItemVM.category) {
                                 Text("Product").tag(FoodItemCategory.product)
                                 Text("Ingredient").tag(FoodItemCategory.ingredient)
-                            }.disabled(!draftFoodItemVM.canChangeCategory())
+                            }
                             
                             // Favorite
                             Toggle("Favorite", isOn: $draftFoodItemVM.favorite)
@@ -184,7 +184,7 @@ struct FoodItemEditor: View {
                                     }
                                 }) {
                                     Text("Delete food item")
-                                }.disabled(!self.draftFoodItemVM.canBeDeleted())
+                                }
                             }
                         }
                     }

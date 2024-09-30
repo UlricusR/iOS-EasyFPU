@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MainView: View {
     enum Tab: Int {
-        case products = 0, ingredients, settings
+        case products = 0, ingredients, recipes, settings
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -47,6 +47,14 @@ struct MainView: View {
                         .tabItem{
                             Image(systemName: "carrot")
                             Text("Ingredients")
+                        }
+                        .environment(\.managedObjectContext, managedObjectContext)
+                    
+                    RecipeListView(composedFoodItem: UserSettings.shared.composedMeal, helpSheet: RecipeListViewSheets.State.recipeListHelp, selectedTab: $selectedTab)
+                        .tag(Tab.recipes.rawValue)
+                        .tabItem{
+                            Image(systemName: "frying.pan")
+                            Text("Recipes")
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                     
