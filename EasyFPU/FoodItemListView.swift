@@ -45,90 +45,84 @@ struct FoodItemListView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            GeometryReader { geometry in
-                NavigationView {
-                    VStack {
-                        List {
-                            // Search view
-                            SearchView(searchString: self.$searchString, showCancelButton: self.$showCancelButton)
-                                .padding(.horizontal)
-                            ForEach(self.filteredFoodItems) { foodItem in
-                                FoodItemView(composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, selectedTab: $selectedTab)
-                                    .environment(\.managedObjectContext, self.managedObjectContext)
+            NavigationStack {
+                List {
+                    ForEach(self.filteredFoodItems) { foodItem in
+                        FoodItemView(composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, selectedTab: $selectedTab)
+                            .environment(\.managedObjectContext, self.managedObjectContext)
+                    }
+                }
+                .navigationBarTitle(foodItemListTitle)
+                .toolbar {
+                    ToolbarItemGroup(placement: .navigationBarLeading) {
+                        Button(action: {
+                            withAnimation {
+                                self.activeSheet = helpSheet
                             }
+                        }) {
+                            Image(systemName: "questionmark.circle")
+                            .imageScale(.large)
+                            .padding()
                         }
                     }
-                    .navigationBarTitle(foodItemListTitle)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .navigationBarLeading) {
-                            Button(action: {
-                                withAnimation {
-                                    self.activeSheet = helpSheet
-                                }
-                            }) {
-                                Image(systemName: "questionmark.circle")
-                                .imageScale(.large)
+                    
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            withAnimation {
+                                self.showFavoritesOnly.toggle()
+                            }
+                        }) {
+                            if self.showFavoritesOnly {
+                                Image(systemName: "star.fill")
+                                .foregroundColor(Color.yellow)
+                                .padding()
+                            } else {
+                                Image(systemName: "star")
+                                .foregroundColor(Color.blue)
                                 .padding()
                             }
                         }
                         
-                        ToolbarItemGroup(placement: .navigationBarTrailing) {
-                            Button(action: {
-                                withAnimation {
-                                    self.showFavoritesOnly.toggle()
-                                }
-                            }) {
-                                if self.showFavoritesOnly {
-                                    Image(systemName: "star.fill")
-                                    .foregroundColor(Color.yellow)
-                                    .padding()
-                                } else {
-                                    Image(systemName: "star")
-                                    .foregroundColor(Color.blue)
-                                    .padding()
-                                }
+                        Button(action: {
+                            // Add new food item
+                            activeSheet = .addFoodItem
+                        }) {
+                            Image(systemName: "plus.circle")
+                                .imageScale(.large)
+                                .foregroundColor(.green)
+                        }
+                        
+                        Button(action: {
+                            if !self.composedFoodItem.foodItems.isEmpty {
+                                // Show food item summary
+                                activeSheet = .foodItemSummary
                             }
-                            
-                            Button(action: {
-                                // Add new food item
-                                activeSheet = .addFoodItem
-                            }) {
-                                Image(systemName: "plus.circle")
-                                    .imageScale(.large)
-                                    .foregroundColor(.green)
-                            }
-                            
-                            Button(action: {
-                                if !self.composedFoodItem.foodItems.isEmpty {
-                                    // Show food item summary
-                                    activeSheet = .foodItemSummary
-                                }
-                            }) {
-                                if self.composedFoodItem.foodItems.isEmpty {
-                                    Image(systemName: "arrowshape.turn.up.forward")
-                                    .foregroundColor(Color.gray)
-                                    .padding()
-                                } else {
-                                    Image(systemName: "arrowshape.turn.up.forward.fill")
-                                    .foregroundColor(Color.red)
-                                    .padding()
-                                }
+                        }) {
+                            if self.composedFoodItem.foodItems.isEmpty {
+                                Image(systemName: "arrowshape.turn.up.forward")
+                                .foregroundColor(Color.gray)
+                                .padding()
+                            } else {
+                                Image(systemName: "arrowshape.turn.up.forward.fill")
+                                .foregroundColor(Color.red)
+                                .padding()
                             }
                         }
                     }
                 }
-                .navigationViewStyle(StackNavigationViewStyle())
-                .sheet(item: $activeSheet) {
-                    sheetContent($0)
-                }
-                .alert(isPresented: self.$showingAlert) {
-                    Alert(
-                        title: Text("Notice"),
-                        message: Text(self.errorMessage),
-                        dismissButton: .default(Text("OK"))
-                    )
-                }
-            }.edgesIgnoringSafeArea(.all)
+            }
+            .searchable(text: self.$searchString)
+            .navigationViewStyle(StackNavigationViewStyle())
+            .sheet(item: $activeSheet) {
+                sheetContent($0)
+            }
+            .alert(isPresented: self.$showingAlert) {
+                Alert(
+                    title: Text("Notice"),
+                    message: Text(self.errorMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
             
             // Notification
             if notificationState != nil {

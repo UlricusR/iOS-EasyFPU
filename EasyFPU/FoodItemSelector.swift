@@ -120,7 +120,7 @@ struct FoodItemSelector: View {
                             self.showingAlert = true
                         }
                     }) {
-                        Text("Done")
+                        Text("Add")
                     }
                 }
             }

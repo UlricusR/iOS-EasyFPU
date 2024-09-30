@@ -70,8 +70,6 @@
 		1B870FC124C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */; };
 		1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */; };
 		1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */; };
-		1B90D2DA24F7A8EB0059BFFA /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2D924F7A8EB0059BFFA /* SearchView.swift */; };
-		1B90D2DC24F7A9660059BFFA /* ResignKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2DB24F7A9660059BFFA /* ResignKeyboard.swift */; };
 		1B90D2DE24F7BAB40059BFFA /* ComposedFoodItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2DD24F7BAB40059BFFA /* ComposedFoodItemView.swift */; };
 		1B919950254894370049672D /* FoodPreviewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B91994F254894370049672D /* FoodPreviewSheets.swift */; };
 		1B9723ED2508AC5C00E606A7 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9723EC2508AC5C00E606A7 /* UserSettings.swift */; };
@@ -184,8 +182,6 @@
 		1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemEvaluationView.swift; sourceTree = "<group>"; };
 		1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewModel.swift; sourceTree = "<group>"; };
 		1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmountViewModel.swift; sourceTree = "<group>"; };
-		1B90D2D924F7A8EB0059BFFA /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
-		1B90D2DB24F7A9660059BFFA /* ResignKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResignKeyboard.swift; sourceTree = "<group>"; };
 		1B90D2DD24F7BAB40059BFFA /* ComposedFoodItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemView.swift; sourceTree = "<group>"; };
 		1B91994F254894370049672D /* FoodPreviewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodPreviewSheets.swift; sourceTree = "<group>"; };
 		1B9723EC2508AC5C00E606A7 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
@@ -315,7 +311,6 @@
 				1B3CEB9A24D32D38001D64DA /* SettingsEditor.swift */,
 				1B5B91052CA9B6B200135569 /* CountryPickerView.swift */,
 				1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */,
-				1B90D2D924F7A8EB0059BFFA /* SearchView.swift */,
 				1B004A3524BA3038001E362A /* Assets.xcassets */,
 				1B004A3D24BA3038001E362A /* Info.plist */,
 				1BDBE39E24FE384C00ED61F1 /* InfoPlist.strings */,
@@ -454,7 +449,6 @@
 		1BAEE0892500E15600B4891F /* UIHelpers */ = {
 			isa = PBXGroup;
 			children = (
-				1B90D2DB24F7A9660059BFFA /* ResignKeyboard.swift */,
 				1BBFA9A22523B2FE00FB78D3 /* CustomViews.swift */,
 				1B0868B1254F0D3E005953CC /* NotificationView.swift */,
 				1BA97D8F29ABB5A5006D6754 /* ActivityIndicatorSpinner.swift */,
@@ -682,7 +676,6 @@
 				1BF8A4C124C21A52008634DF /* FoodItem+CoreDataProperties.swift in Sources */,
 				1B12690D2A8E52B40047B1F5 /* DataWrapper.swift in Sources */,
 				1B6867E524FD37F80057EC6A /* HelpViewMealDetails.swift in Sources */,
-				1B90D2DA24F7A8EB0059BFFA /* SearchView.swift in Sources */,
 				1B6654B52A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift in Sources */,
 				1B0868AE254EDF35005953CC /* FoodItemListViewSheets.swift in Sources */,
 				1B71EBF52A8102FD00343C89 /* Migration1to2ModelMapping.xcmappingmodel in Sources */,
@@ -703,7 +696,6 @@
 				1BC75246254AF8CF001C4D27 /* HelpViewIngredientsList.swift in Sources */,
 				1B004A4F24BA3EF1001E362A /* AbsorptionBlockFromJson.swift in Sources */,
 				1B188444253B329000B671A2 /* OpenFoodFacts.swift in Sources */,
-				1B90D2DC24F7A9660059BFFA /* ResignKeyboard.swift in Sources */,
 				1BAD2740254A008000A730FB /* MainView.swift in Sources */,
 				1B0868B2254F0D3E005953CC /* NotificationView.swift in Sources */,
 				1BBFA9A32523B2FE00FB78D3 /* CustomViews.swift in Sources */,
