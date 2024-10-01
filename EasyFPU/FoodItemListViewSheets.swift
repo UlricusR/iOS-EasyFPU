@@ -10,10 +10,11 @@ import Foundation
 
 class FoodItemListViewSheets {
     enum State: Identifiable {
-        case foodItemSummary
         case addFoodItem
-        case productsListHelp
-        case ingredientsListHelp
+        case productSelectionListHelp
+        case productMaintenanceListHelp
+        case ingredientSelectionListHelp
+        case ingredientMaintenanceListHelp
         
         var id: State { self }
     }

@@ -9,26 +9,23 @@
 import SwiftUI
 
 struct FoodItemListView: View {
-    enum NotificationState {
-        case successfullySavedNewFoodItem(String)
-        case successfullySavedNewComposedFoodItemOnly(String)
-        case successfullyUpdatedFoodItem(String)
-        case successfullyUpdatedComposedFoodItemOnly(String)
+    enum FoodItemListType {
+        case maintenance
+        case selection
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.presentationMode) var presentation
     var category: FoodItemCategory
+    var listType: FoodItemListType
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
-    @ObservedObject var absorptionScheme: AbsorptionScheme
     var helpSheet: FoodItemListViewSheets.State
     var foodItemListTitle: String
-    @Binding var selectedTab: Int
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
     @State private var activeSheet: FoodItemListViewSheets.State?
     @State private var showingAlert: Bool = false
     @State private var errorMessage: String = ""
-    @State private var notificationState: NotificationState?
     
     @FetchRequest(
         entity: FoodItem.entity(),
@@ -50,7 +47,7 @@ struct FoodItemListView: View {
             NavigationStack {
                 List {
                     ForEach(self.filteredFoodItems) { foodItem in
-                        FoodItemView(composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, selectedTab: $selectedTab)
+                        FoodItemView(composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
                             .environment(\.managedObjectContext, self.managedObjectContext)
                     }
                 }
@@ -85,29 +82,21 @@ struct FoodItemListView: View {
                             }
                         }
                         
-                        Button(action: {
-                            // Add new food item
-                            activeSheet = .addFoodItem
-                        }) {
-                            Image(systemName: "plus.circle")
-                                .imageScale(.large)
-                                .foregroundColor(.green)
+                        if listType == .maintenance {
+                            Button(action: {
+                                // Add new food item
+                                activeSheet = .addFoodItem
+                            }) {
+                                Image(systemName: "plus.circle")
+                                    .imageScale(.large)
+                                    .foregroundColor(.green)
+                            }
                         }
                         
-                        Button(action: {
-                            if !self.composedFoodItem.foodItems.isEmpty {
-                                // Show food item summary
-                                activeSheet = .foodItemSummary
-                            }
-                        }) {
-                            if self.composedFoodItem.foodItems.isEmpty {
-                                Image(systemName: "arrowshape.turn.up.forward")
-                                .foregroundColor(Color.gray)
-                                .padding()
-                            } else {
-                                Image(systemName: "arrowshape.turn.up.forward.fill")
-                                .foregroundColor(Color.red)
-                                .padding()
+                        if listType == .selection {
+                            Button("Done") {
+                                // Close sheet
+                                presentation.wrappedValue.dismiss()
                             }
                         }
                     }
@@ -125,70 +114,12 @@ struct FoodItemListView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
-            
-            // Notification
-            if notificationState != nil {
-                NotificationView {
-                    notificationViewContent()
-                }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private func notificationViewContent() -> some View {
-        switch notificationState {
-        case .successfullySavedNewFoodItem(let name):
-            HStack {
-                Text("'\(name)' \(NSLocalizedString("successfully saved in Products", comment: ""))")
-            }
-            .onAppear() {
-                Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in
-                    self.notificationState = nil
-                }
-            }
-        case .successfullySavedNewComposedFoodItemOnly(let name):
-            HStack {
-                Text("'\(name)' \(NSLocalizedString("successfully saved as Recipe", comment: ""))")
-            }
-            .onAppear() {
-                Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in
-                    self.notificationState = nil
-                }
-            }
-        case .successfullyUpdatedFoodItem(let name):
-            HStack {
-                Text("'\(name)' \(NSLocalizedString("successfully updated in Products", comment: ""))")
-            }
-            .onAppear() {
-                Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in
-                    self.notificationState = nil
-                }
-            }
-        case .successfullyUpdatedComposedFoodItemOnly(let name):
-            HStack {
-                Text("'\(name)' \(NSLocalizedString("successfully updated as Recipe", comment: ""))")
-            }
-            .onAppear() {
-                Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in
-                    self.notificationState = nil
-                }
-            }
-        default:
-            EmptyView()
         }
     }
     
     @ViewBuilder
     private func sheetContent(_ state: FoodItemListViewSheets.State) -> some View {
         switch state {
-        case .foodItemSummary:
-            switch category {
-            case .product:
-                ComposedFoodItemEvaluationView(absorptionScheme: absorptionScheme, composedFoodItem: composedFoodItem)
-            case .ingredient:
-                FoodItemComposerView(composedFoodItemVM: composedFoodItem, notificationState: $notificationState)
-            }
         case .addFoodItem:
             FoodItemEditor(
                 navigationBarTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
@@ -205,10 +136,14 @@ struct FoodItemListView: View {
                     ),
                 category: category
             ).environment(\.managedObjectContext, managedObjectContext)
-        case .productsListHelp:
-            HelpView(helpScreen: .productsList)
-        case .ingredientsListHelp:
-            HelpView(helpScreen: .ingredientsList)
+        case .productMaintenanceListHelp:
+            HelpView(helpScreen: .productMaintenanceList)
+        case .productSelectionListHelp:
+            HelpView(helpScreen: .productSelectionList)
+        case .ingredientMaintenanceListHelp:
+            HelpView(helpScreen: .ingredientMaintenanceList)
+        case .ingredientSelectionListHelp:
+            HelpView(helpScreen: .ingredientSelectionList)
         }
     }
 }

@@ -13,21 +13,23 @@ struct FoodItemView: View {
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @ObservedObject var foodItemVM: FoodItemViewModel
     var category: FoodItemCategory
-    @Binding var selectedTab: Int
+    var listType: FoodItemListView.FoodItemListType
     @State var activeSheet: FoodItemViewSheets.State?
     
     var body: some View {
         VStack {
             // First line: amount, name, favorite
             HStack {
-                if let foodItemIndex = composedFoodItemVM.foodItems.firstIndex(of: foodItemVM) {
-                    Image(systemName: "xmark.circle").foregroundColor(.red)
-                    Text("\(composedFoodItemVM.foodItems[foodItemIndex].amount)").font(.headline).foregroundColor(.accentColor)
-                    Text("g").font(.headline).foregroundColor(.accentColor)
-                } else {
-                    Image(systemName: "plus.circle").foregroundColor(.green)
+                if listType == .selection {
+                    if let foodItemIndex = composedFoodItemVM.foodItems.firstIndex(of: foodItemVM) {
+                        Image(systemName: "xmark.circle").foregroundColor(.red)
+                        Text("\(composedFoodItemVM.foodItems[foodItemIndex].amount)").font(.headline).foregroundColor(.accentColor)
+                        Text("g").font(.headline).foregroundColor(.accentColor)
+                    } else {
+                        Image(systemName: "plus.circle").foregroundColor(.green)
+                    }
                 }
-                Text(foodItemVM.name).font(.headline).foregroundColor(composedFoodItemVM.foodItems.contains(foodItemVM) ? .accentColor : .none)
+                Text(foodItemVM.name).font(.headline).foregroundColor(listType == .selection && composedFoodItemVM.foodItems.contains(foodItemVM) ? .accentColor : .none)
                 if foodItemVM.favorite { Image(systemName: "star.fill").foregroundColor(.yellow).imageScale(.small) }
                 Spacer()
             }
@@ -58,49 +60,53 @@ struct FoodItemView: View {
             }
         }
         .onTapGesture {
-            if composedFoodItemVM.foodItems.contains(foodItemVM) {
-                composedFoodItemVM.remove(foodItem: foodItemVM)
-            } else {
-                activeSheet = .selectFoodItem
+            if listType == .selection {
+                if composedFoodItemVM.foodItems.contains(foodItemVM) {
+                    composedFoodItemVM.remove(foodItem: foodItemVM)
+                } else {
+                    activeSheet = .selectFoodItem
+                }
             }
         }
         .contextMenu(menuItems: {
-            // Editing the food item
-            Button(action: {
-                activeSheet = .editFoodItem
-            }) {
-                Text("Edit")
-            }
-            
-            // Duplicating the food item
-            Button(action: {
-                foodItemVM.duplicate()
-            }) {
-                Text("Duplicate")
-            }
-            
-            // Sharing the food item
-            Button(action: {
-                activeSheet = .exportFoodItem
-            }) {
-                Text("Share")
-            }
-            
-            // Moving the food item to another category
-            Button(action: {
-                composedFoodItemVM.remove(foodItem: foodItemVM)
-                foodItemVM.changeCategory(to: foodItemVM.category == .product ? .ingredient : .product)
-            }) {
-                Text(NSLocalizedString("Move to \(foodItemVM.category == .product ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""))
-            }
-            
-            // Delete the food item
-            Button(action: {
-                if let foodItemToBeDeleted = foodItemVM.cdFoodItem {
-                    FoodItem.delete(foodItemToBeDeleted)
+            if listType == .maintenance {
+                // Editing the food item
+                Button(action: {
+                    activeSheet = .editFoodItem
+                }) {
+                    Text("Edit")
                 }
-            }) {
-                Text("Delete")
+                
+                // Duplicating the food item
+                Button(action: {
+                    foodItemVM.duplicate()
+                }) {
+                    Text("Duplicate")
+                }
+                
+                // Sharing the food item
+                Button(action: {
+                    activeSheet = .exportFoodItem
+                }) {
+                    Text("Share")
+                }
+                
+                // Moving the food item to another category
+                Button(action: {
+                    composedFoodItemVM.remove(foodItem: foodItemVM)
+                    foodItemVM.changeCategory(to: foodItemVM.category == .product ? .ingredient : .product)
+                }) {
+                    Text(NSLocalizedString("Move to \(foodItemVM.category == .product ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""))
+                }
+                
+                // Delete the food item
+                Button(action: {
+                    if let foodItemToBeDeleted = foodItemVM.cdFoodItem {
+                        FoodItem.delete(foodItemToBeDeleted)
+                    }
+                }) {
+                    Text("Delete")
+                }
             }
         })
         .sheet(item: $activeSheet) {

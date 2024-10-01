@@ -10,6 +10,7 @@ import Foundation
 
 class RecipeViewSheets {
     enum State: Identifiable {
+        case editRecipe
         case exportRecipe
         
         var id: State { self }

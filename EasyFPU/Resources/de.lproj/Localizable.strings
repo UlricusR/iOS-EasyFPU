@@ -41,9 +41,14 @@
 "Documentation on rueth.info" = "Dokumentation auf rueth.info";
 "Home-Link" = "https://www.rueth.info/iOS-EasyFPU/de/";
 
+// Calculate Meal
+"Calculate meal" = "Mahlzeit berechnen";
+"Total meal" = "Meine Mahlzeit";
+"Start by adding some products to your meal" = "Füge Produkte zur Mahlzeit hinzu";
+
 // Products List
 "Food List" = "Essensliste";
-"Products" = "Produkte";
+"Products" = "Meine Produkte";
 "Product" = "Produkt";
 "Product List" = "Produktliste";
 "Name" = "Name";
@@ -72,7 +77,6 @@
 "h Absorption Time" = "h Absorptionszeit";
 "Absorption Time" = "Absorptionszeit";
 "Total nutritional values" = "Gesamt-Nährwerte";
-"Total meal" = "Gesamtmahlzeit";
 "Typical amount" = "Typische Menge";
 "Typical amounts:" = "Typische Mengen:";
 "Add to typical amounts" = "Zu typischen Mengen hinzufügen";
@@ -89,12 +93,12 @@
 "is not a valid data model" = "ist kein gültiges Datenmodell. Konnte Daten nicht importieren.";
 
 // Ingredients
-"Ingredients" = "Zutaten";
+"Ingredients" = "Meine Zutaten";
 "Ingredient" = "Zutat";
 "Ingredient List" = "Zutatenliste";
 "New Ingredient" = "Neue Zutat";
 "Category" = "Kategorie";
-"Composed product" = "Zusammengestelltes Produkt";
+"Composed product" = "Mein Rezept";
 "Weight" = "Gewicht";
 "Final product" = "Endprodukt";
 "The weight of the composed product is less than the sum of its ingredients" = "Das Gewicht des Produkts is kleiner als das seiner Zutaten";
@@ -114,6 +118,7 @@
 "Could not update the composed food item" = "Hoppla! Das zusammengestellte Essen konnte nicht aktualisiert werden wegen eines fehlenden Rezepts. Das sollte nicht passieren. Bitte informieren Sie das Entwicklungsteam.";
 
 // Meal preview
+"Eat" = "Essen";
 "e-Carbs" = "Verlängerte KH";
 "Regular Carbs" = "Reguläre KH";
 "How much?" = "Wieviel?";
@@ -152,6 +157,7 @@
 "Did not find a matching product with the same name. What do you want to do?" = "Es gibt kein Produkt mit diesem Namen. Bitte wählen:";
 
 // Recipe editor
+"Cook" = "Kochen";
 "Recipes" = "Rezepte";
 
 // Settings editor

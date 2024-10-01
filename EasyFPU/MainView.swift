@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MainView: View {
     enum Tab: Int {
-        case products = 0, ingredients, recipes, settings
+        case eat = 0, cook, products, ingredients, settings
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -34,7 +34,23 @@ struct MainView: View {
         } else {
             return AnyView(
                 TabView(selection: $selectedTab) {
-                    ProductsListView(absorptionScheme: absorptionScheme, selectedTab: $selectedTab)
+                    ComposedFoodItemEvaluationView(absorptionScheme: absorptionScheme, composedFoodItem: UserSettings.shared.composedMeal, selectedTab: $selectedTab)
+                        .tag(Tab.eat.rawValue)
+                        .tabItem{
+                            Image(systemName: "fork.knife")
+                            Text("Eat")
+                        }
+                        .environment(\.managedObjectContext, managedObjectContext)
+                    
+                    RecipeListView(composedFoodItem: UserSettings.shared.composedMeal, helpSheet: RecipeListViewSheets.State.recipeListHelp, selectedTab: $selectedTab)
+                        .tag(Tab.cook.rawValue)
+                        .tabItem{
+                            Image(systemName: "frying.pan")
+                            Text("Cook")
+                        }
+                        .environment(\.managedObjectContext, managedObjectContext)
+                    
+                    ProductMaintenanceListView()
                         .tag(Tab.products.rawValue)
                         .tabItem{
                             Image(systemName: "birthday.cake")
@@ -42,19 +58,11 @@ struct MainView: View {
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                     
-                    IngredientsListView(absorptionScheme: absorptionScheme, selectedTab: $selectedTab)
+                    IngredientMaintenanceListView()
                         .tag(Tab.ingredients.rawValue)
                         .tabItem{
                             Image(systemName: "carrot")
                             Text("Ingredients")
-                        }
-                        .environment(\.managedObjectContext, managedObjectContext)
-                    
-                    RecipeListView(composedFoodItem: UserSettings.shared.composedMeal, helpSheet: RecipeListViewSheets.State.recipeListHelp, selectedTab: $selectedTab)
-                        .tag(Tab.recipes.rawValue)
-                        .tabItem{
-                            Image(systemName: "frying.pan")
-                            Text("Recipes")
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                     

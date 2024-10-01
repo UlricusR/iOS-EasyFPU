@@ -9,8 +9,10 @@
 import SwiftUI
 
 enum HelpScreen: String {
-    case productsList = "Product List"
-    case ingredientsList = "Ingredients List"
+    case productMaintenanceList = "Product Maintenance List"
+    case productSelectionList = "Product Selection List"
+    case ingredientMaintenanceList = "Ingredient Maintenance List"
+    case ingredientSelectionList = "Ingredient Selection List"
     case recipeList = "Recipe List"
     case foodItemSelector = "Select Food Item"
     case foodItemEditor = "Edit Food Item"
@@ -28,10 +30,14 @@ struct HelpView: View {
         NavigationView {
             ScrollView<AnyView> {
                 switch helpScreen {
-                case .productsList:
-                    return AnyView(HelpViewProductsList())
-                case .ingredientsList:
-                    return AnyView(HelpViewIngredientsList())
+                case .productMaintenanceList:
+                    return AnyView(HelpViewProductsList()) // TODO review
+                case .productSelectionList:
+                    return AnyView(HelpViewProductsList()) // TODO create own
+                case .ingredientMaintenanceList:
+                    return AnyView(HelpViewIngredientsList()) // TODO review
+                case .ingredientSelectionList:
+                    return AnyView(HelpViewIngredientsList()) // TODO create own
                 case .recipeList:
                     return AnyView(HelpViewRecipeList())
                 case .foodItemSelector:

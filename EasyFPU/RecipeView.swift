@@ -12,6 +12,7 @@ struct RecipeView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @Binding var selectedTab: Int
+    @Binding var notificationState: RecipeListView.NotificationState?
     @State var activeSheet: RecipeViewSheets.State?
 
     var body: some View {
@@ -28,7 +29,7 @@ struct RecipeView: View {
                 UserSettings.shared.composedProduct = composedFoodItemVM
                 
                 // Switch to Ingredients tab
-                selectedTab = MainView.Tab.ingredients.rawValue
+                activeSheet = .editRecipe
             }) {
                 Text("Edit")
             }
@@ -64,6 +65,15 @@ struct RecipeView: View {
     @ViewBuilder
     private func sheetContent(_ state: RecipeViewSheets.State) -> some View {
         switch state {
+        case .editRecipe:
+            if self.composedFoodItemVM.cdComposedFoodItem != nil {
+                FoodItemComposerView(
+                    composedFoodItemVM: self.composedFoodItemVM,
+                    notificationState: $notificationState
+                ).environment(\.managedObjectContext, managedObjectContext)
+            } else {
+                Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
+            }
         case .exportRecipe:
             if let path = composedFoodItemVM.exportToURL() {
                 ActivityView(activityItems: [path], applicationActivities: nil)

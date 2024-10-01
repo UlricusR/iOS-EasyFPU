@@ -14,7 +14,7 @@ struct FoodItemComposerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @State private var activeSheet: FoodItemComposerViewSheets.State?
     @State private var activeActionSheet: FoodItemComposerViewActionSheets.State?
-    @Binding var notificationState: FoodItemListView.NotificationState?
+    @Binding var notificationState: RecipeListView.NotificationState?
     private let helpScreen = HelpScreen.foodItemComposer
     @State private var showingAlert: Bool = false
     @State private var alertMessage: String = ""

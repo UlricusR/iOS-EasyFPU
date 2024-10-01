@@ -12,6 +12,7 @@ class ComposedFoodItemEvaluationViewSheets {
     enum State: Identifiable {
         case help
         case exportToHealth
+        case addProduct
         case details
         
         var id: State { self }

@@ -9,39 +9,62 @@
 import SwiftUI
 
 struct ComposedFoodItemEvaluationView: View {
-    @Environment(\.presentationMode) var presentation
     @ObservedObject var absorptionScheme: AbsorptionScheme
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
+    @Binding var selectedTab: Int
     private let helpScreen = HelpScreen.mealDetails
     @State var activeSheet: ComposedFoodItemEvaluationViewSheets.State?
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
-                VStack {
-                    // The meal delay stepper
-                    HStack {
-                        Stepper("Delay until meal", value: $userSettings.mealDelayInMinutes, in: 0...60, step: 5)
-                        Text("\(userSettings.mealDelayInMinutes)")
-                        Text("min")
+                if composedFoodItem.foodItems.isEmpty {
+                    Button {
+                        // Add new product to composed food item
+                        activeSheet = .addProduct
+                    } label: {
+                        VStack {
+                            Image("cutlery-color").padding()
+                            HStack {
+                                Image(systemName: "plus.circle")
+                                    .imageScale(.large)
+                                    .foregroundColor(.green)
+                                    .bold()
+                                Text("Start by adding some products to your meal")
+                            }
+                        }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .fill(.yellow)
+                        )
+                    }
+                } else {
+                    VStack {
+                        // The meal delay stepper
+                        HStack {
+                            Stepper("Delay until meal", value: $userSettings.mealDelayInMinutes, in: 0...60, step: 5)
+                            Text("\(userSettings.mealDelayInMinutes)")
+                            Text("min")
+                        }.padding()
+                        
+                        // The carbs views
+                        if userSettings.treatSugarsSeparately { ComposedFoodItemSugarsView(composedFoodItem: self.composedFoodItem) }
+                        ComposedFoodItemCarbsView(composedFoodItem: self.composedFoodItem).padding(.top)
+                        ComposedFoodItemECarbsView(composedFoodItem: self.composedFoodItem, absorptionScheme: self.absorptionScheme).padding(.top)
                     }.padding()
                     
-                    // The carbs views
-                    if userSettings.treatSugarsSeparately { ComposedFoodItemSugarsView(composedFoodItem: self.composedFoodItem) }
-                    ComposedFoodItemCarbsView(composedFoodItem: self.composedFoodItem).padding(.top)
-                    ComposedFoodItemECarbsView(composedFoodItem: self.composedFoodItem, absorptionScheme: self.absorptionScheme).padding(.top)
-                }.padding()
-                
-                Button(action: {
-                    activeSheet = .details
-                }) {
-                    Text("Further details")
-                }.padding()
-                
-                Spacer()
+                    Button(action: {
+                        activeSheet = .details
+                    }) {
+                        Text("Further details")
+                    }.padding()
+                    
+                    Spacer()
+                }
             }
-            .navigationBarTitle(Text(self.composedFoodItem.name))
+            .navigationBarTitle(Text("Calculate meal"))
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Button(action: {
@@ -50,12 +73,13 @@ struct ComposedFoodItemEvaluationView: View {
                         Image(systemName: "questionmark.circle").imageScale(.large)
                     }
                     
-                    Button(action: {
-                        composedFoodItem.clear()
-                        UserSettings.shared.mealDelayInMinutes = 0
-                        presentation.wrappedValue.dismiss()
-                    }) {
-                        Text("Clear")
+                    if !composedFoodItem.foodItems.isEmpty {
+                        Button(action: {
+                            composedFoodItem.clear()
+                            UserSettings.shared.mealDelayInMinutes = 0
+                        }) {
+                            Text("Clear")
+                        }
                     }
                 }
                 
@@ -64,12 +88,15 @@ struct ComposedFoodItemEvaluationView: View {
                         activeSheet = .exportToHealth
                     }) {
                         HealthDataHelper.healthKitIsAvailable() ? AnyView(Image(systemName: "square.and.arrow.up").imageScale(.large)) : AnyView(EmptyView())
-                    }
+                    }.disabled(composedFoodItem.foodItems.isEmpty)
                     
                     Button(action: {
-                        presentation.wrappedValue.dismiss()
+                        // Add new product to composed food item
+                        activeSheet = .addProduct
                     }) {
-                        Text("Close")
+                        Image(systemName: "plus.circle")
+                            .imageScale(.large)
+                            .foregroundColor(.green)
                     }
                 }
             }
@@ -87,6 +114,8 @@ struct ComposedFoodItemEvaluationView: View {
             HelpView(helpScreen: self.helpScreen)
         case .exportToHealth:
             ComposedFoodItemExportView(composedFoodItem: composedFoodItem, absorptionScheme: absorptionScheme)
+        case .addProduct:
+            ProductSelectionListView()
         case .details:
             ComposedFoodItemDetailsView(absorptionScheme: absorptionScheme, composedFoodItem: composedFoodItem, userSettings: userSettings)
         }
