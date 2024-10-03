@@ -32,13 +32,13 @@ public class ComposedFoodItem: NSManagedObject {
     /**
      Creates a new ComposedFoodItem from the ComposedFoodItemViewModel.
      Creates the Ingredients and relates them to the new ComposedFoodItem.
+     Also creates a new FoodItem and relates it to the new ComposedFoodItem and vice versa.
      
      - Parameter composedFoodItemVM: The source view model.
      
      - Returns: A Core Data ComposedFoodItem; nil if there are no Ingredients.
      */
     static func create(from composedFoodItemVM: ComposedFoodItemViewModel, generateTypicalAmounts: Bool) -> ComposedFoodItem? {
-        debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         let moc = AppDelegate.viewContext
         
         // Create new ComposedFoodItem
@@ -55,6 +55,10 @@ public class ComposedFoodItem: NSManagedObject {
         
         // Add cdComposedFoodItem to composedFoodItemVM
         composedFoodItemVM.cdComposedFoodItem = cdComposedFoodItem
+        
+        // Create a related FoodItem and relate it to the ComposedFoodItem and vice versa
+        cdComposedFoodItem.foodItem = FoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts)
+        cdComposedFoodItem.foodItem!.composedFoodItem = cdComposedFoodItem
         
         // Add new ingredients
         if let cdIngredients = Ingredient.create(from: composedFoodItemVM) {
@@ -82,27 +86,12 @@ public class ComposedFoodItem: NSManagedObject {
      
      - Returns: A new Core Data ComposedFoodItem linked to the passed FoodItem.
      */
-    static func duplicate(_ existingComposedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem {
-        let moc = AppDelegate.viewContext
-        let cdComposedFoodItem = ComposedFoodItem(context: moc)
-        cdComposedFoodItem.id = UUID()
+    static func duplicate(_ existingComposedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem? {
+        // Create a new ComposedFoodItem from the existing view model
+        let cdComposedFoodItem = ComposedFoodItem.create(from: existingComposedFoodItemVM, generateTypicalAmounts: !existingComposedFoodItemVM.typicalAmounts.isEmpty)
         
-        // Fill data
-        cdComposedFoodItem.name = existingComposedFoodItemVM.name
-        cdComposedFoodItem.favorite = existingComposedFoodItemVM.favorite
-        cdComposedFoodItem.amount = Int64(existingComposedFoodItemVM.amount)
-        cdComposedFoodItem.numberOfPortions = Int16(existingComposedFoodItemVM.numberOfPortions)
-        
-        // Add ingredients
-        if let existingIngredients = existingComposedFoodItemVM.cdComposedFoodItem?.ingredients.allObjects as? [Ingredient] {
-            for ingredient in existingIngredients {
-                let cdIngredient = Ingredient.duplicate(ingredient, for: cdComposedFoodItem)
-                cdComposedFoodItem.addToIngredients(cdIngredient)
-            }
-        }
-        
-        // Save new composed food item
-        try? moc.save()
+        // Rename
+        cdComposedFoodItem?.name += NSLocalizedString(" - Copy", comment: "")
         
         return cdComposedFoodItem
     }
@@ -111,20 +100,25 @@ public class ComposedFoodItem: NSManagedObject {
      Updates an existing Core Data ComposedFoodItem.
      
      - Parameters:
-        - cdComposedFoodItem: The Core Data ComposedFoodItem to be updated.
         - composedFoodItemVM: The source ComposedFoodItemViewModel.
-        - cdFoodItem: The Core Data FoodItem related to the Core Data ComposedFoodItem.
-     - Returns: The updated Core Data ComposedFoodItem, nil if it couldn't be updated
+     - Returns: The updated Core Data ComposedFoodItem, nil if no related Core Data ComposedFoodItem was found (shouldn't happen)
      */
     static func update(_ composedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem? {
         if let cdComposedFoodItem = composedFoodItemVM.cdComposedFoodItem {
             let moc = AppDelegate.viewContext
             
-            // Update data
+            // Update data in cdComposedFoodItem
             cdComposedFoodItem.name = composedFoodItemVM.name
             cdComposedFoodItem.favorite = composedFoodItemVM.favorite
             cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
             cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
+            
+            // Update related cdFoodItem
+            cdComposedFoodItem.foodItem?.name = composedFoodItemVM.name
+            cdComposedFoodItem.foodItem?.favorite = composedFoodItemVM.favorite
+            cdComposedFoodItem.foodItem?.caloriesPer100g = composedFoodItemVM.caloriesPer100g
+            cdComposedFoodItem.foodItem?.carbsPer100g = composedFoodItemVM.carbsPer100g
+            cdComposedFoodItem.foodItem?.sugarsPer100g = composedFoodItemVM.sugarsPer100g
             
             // Delete the existing Ingredients
             for ingredient in cdComposedFoodItem.ingredients {

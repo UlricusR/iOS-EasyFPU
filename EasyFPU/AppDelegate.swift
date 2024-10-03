@@ -17,13 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        //
-        // Updates for version 2.4.2:
-        // - Delete all ComposedFoodItems and Ingredients
-        //
-        Ingredient.deleteAll()
-        ComposedFoodItem.deleteAll()
-        
         return true
     }
 

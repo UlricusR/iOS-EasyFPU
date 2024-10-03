@@ -53,7 +53,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let jsonData = try Data(contentsOf: url)
             let decoder = JSONDecoder()
             let foodItemToBeImported = try decoder.decode(FoodItemViewModel.self, from: jsonData)
-            if FoodItem.create(from: foodItemToBeImported, foodItemNotCreated: &foodItemNotImported) == nil {
+            if FoodItem.create(from: foodItemToBeImported, allowDuplicate: false, foodItemNotCreated: &foodItemNotImported) == nil {
                 debugPrint("The following food item could not be imported, as it already exists: " + foodItemNotImported)
             }
             try FileManager.default.removeItem(at: url)

@@ -32,6 +32,7 @@
 "Delete" = "Delete";
 "Copy" = "Copy";
 "Tap to edit" = "Tap to edit";
+" - Copy" = " - Copy";
 
 // About
 "About" = "About";
@@ -44,7 +45,9 @@
 // Calculate Meal
 "Calculate meal" = "Calculate meal";
 "Total meal" = "My meal";
-"Start by adding some products to your meal" = "Start by adding some products to your meal";
+"This is where you will see the nutritial data of your meal and where you can export it to Loop." = "This is where you will see the nutritial data of your meal and where you can export it to Loop.";
+"Make sure that you have your favorite products added to 'My Products' before you start adding some to your meal." = "Make sure that you have your favorite products added to 'My Products' before you start adding some to your meal.";
+"Add products to your meal" = "Add products to your meal";
 
 // Products List
 "Food List" = "Food List";
@@ -157,8 +160,14 @@
 "Did not find a matching product with the same name. What do you want to do?" = "Did not find a matching product with the same name. What do you want to do?";
 
 // Recipe editor
-"Cook" = "Cook";
-"Recipes" = "Recipes";
+"Cook" = "Cook & Bake";
+"Recipes" = "My recipes";
+"Oops! No recipe yet! Then let's go!" = "Oops! No recipe yet! Then let's go!";
+"Start cooking or baking" = "Start cooking or baking";
+"Your yummy recipe will appear here once you add some ingredients." = "Your yummy recipe will appear here once you add some ingredients.";
+"Have you added ingredients to 'My Ingredients'?" = "Have you added ingredients to 'My Ingredients'?";
+"Add ingredients" = "Add ingredients";
+"No associated cdComposedFoodItem" = "No associated cdComposedFoodItem - should not happen - please contact the app developer";
 
 // Settings editor
 "Absorption scheme" = "Absorption scheme";

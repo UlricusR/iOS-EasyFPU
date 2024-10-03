@@ -12,7 +12,6 @@ struct ComposedFoodItemEvaluationView: View {
     @ObservedObject var absorptionScheme: AbsorptionScheme
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
-    @Binding var selectedTab: Int
     private let helpScreen = HelpScreen.mealDetails
     @State var activeSheet: ComposedFoodItemEvaluationViewSheets.State?
     
@@ -20,19 +19,19 @@ struct ComposedFoodItemEvaluationView: View {
         NavigationStack {
             VStack {
                 if composedFoodItem.foodItems.isEmpty {
+                    // No products selected for the meal, so display empty state info and a call for action button
+                    Image("cutlery-color").padding()
+                    Text("This is where you will see the nutritial data of your meal and where you can export it to Loop.").padding()
                     Button {
                         // Add new product to composed food item
                         activeSheet = .addProduct
                     } label: {
-                        VStack {
-                            Image("cutlery-color").padding()
-                            HStack {
-                                Image(systemName: "plus.circle")
-                                    .imageScale(.large)
-                                    .foregroundColor(.green)
-                                    .bold()
-                                Text("Start by adding some products to your meal")
-                            }
+                        HStack {
+                            Image(systemName: "plus.circle")
+                                .imageScale(.large)
+                                .foregroundColor(.green)
+                                .bold()
+                            Text("Add products to your meal")
                         }
                         .padding()
                         .background(
@@ -41,6 +40,7 @@ struct ComposedFoodItemEvaluationView: View {
                         )
                     }
                 } else {
+                    // Summarize the meal
                     VStack {
                         // The meal delay stepper
                         HStack {

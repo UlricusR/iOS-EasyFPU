@@ -31,6 +31,7 @@ public class Ingredient: NSManagedObject {
     
     /**
      Creates a list of Ingredients from a ComposedFoodItemViewModel.
+     Contains a reference to the related FoodItem and stores the ID of this FoodItem as separate value for export/import purposes.
 
      - Parameter composedFoodItemVM: The source view model, the FoodItemViewModels of which are used as Ingredients,
      i.e., only amount and reference to Core Data FoodItem is used
@@ -57,7 +58,8 @@ public class Ingredient: NSManagedObject {
                 let cdIngredient = Ingredient(context: moc)
                 
                 // Fill data
-                cdIngredient.id = UUID()
+                // We use the identical UUID as the FoodItem, so that we can identify the related FoodItem later
+                cdIngredient.id = ingredient.cdFoodItem!.id // The id of the related FoodItem
                 cdIngredient.name = ingredient.name
                 cdIngredient.favorite = ingredient.favorite
                 cdIngredient.amount = Int64(ingredient.amount)
@@ -65,8 +67,9 @@ public class Ingredient: NSManagedObject {
                 cdIngredient.carbsPer100g = ingredient.carbsPer100g
                 cdIngredient.sugarsPer100g = ingredient.sugarsPer100g
                 
-                // Create 1:1 references to ComposedFoodItem
+                // Create 1:1 references to ComposedFoodItem and FoodItem
                 cdIngredient.composedFoodItem = composedFoodItemVM.cdComposedFoodItem!
+                cdIngredient.foodItem = ingredient.cdFoodItem
                 
                 // Save new Ingredient
                 try? moc.save()
@@ -81,6 +84,7 @@ public class Ingredient: NSManagedObject {
     
     /**
      Creates new Ingredient from existing one - used to duplicate an Ingredient.
+     Contains a reference to the related FoodItem and stores the ID of this FoodItem as separate value for export/import purposes.
      
      - Parameters:
         - existingIngredient: The Ingredient to be duplicated.
@@ -95,7 +99,7 @@ public class Ingredient: NSManagedObject {
         let cdIngredient = Ingredient(context: moc)
         
         // Fill data
-        cdIngredient.id = UUID()
+        cdIngredient.id = existingIngredient.id // The id of the related FoodItem
         cdIngredient.name = existingIngredient.name
         cdIngredient.favorite = existingIngredient.favorite
         cdIngredient.amount = Int64(existingIngredient.amount)
@@ -103,8 +107,9 @@ public class Ingredient: NSManagedObject {
         cdIngredient.carbsPer100g = existingIngredient.carbsPer100g
         cdIngredient.sugarsPer100g = existingIngredient.sugarsPer100g
         
-        // Create 1:1 references to ComposedFoodItem
+        // Create 1:1 references to ComposedFoodItem and FoodItem
         cdIngredient.composedFoodItem = newCDComposedFoodItem
+        cdIngredient.foodItem = existingIngredient.foodItem
         
         // Save new Ingredient
         try? moc.save()

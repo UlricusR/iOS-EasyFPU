@@ -21,8 +21,9 @@ extension ComposedFoodItem {
     @NSManaged public var favorite: Bool
     @NSManaged public var amount: Int64
     @NSManaged public var numberOfPortions: Int16
-    @NSManaged public var id: UUID // required as of 2023-08-04
-    @NSManaged public var ingredients: NSSet // required as of 2023-08-04
+    @NSManaged public var id: UUID
+    @NSManaged public var foodItem: FoodItem?
+    @NSManaged public var ingredients: NSSet
     
 }
 

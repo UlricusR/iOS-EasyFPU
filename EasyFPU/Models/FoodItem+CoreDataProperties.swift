@@ -17,14 +17,16 @@ extension FoodItem {
         return NSFetchRequest<FoodItem>(entityName: "FoodItem")
     }
 
+    @NSManaged public var id: UUID
+    @NSManaged public var name: String?
+    @NSManaged public var favorite: Bool
+    @NSManaged public var category: String?
     @NSManaged public var caloriesPer100g: Double
     @NSManaged public var carbsPer100g: Double
     @NSManaged public var sugarsPer100g: Double
-    @NSManaged public var favorite: Bool
-    @NSManaged public var id: UUID // required as of 2023-08-04
-    @NSManaged public var name: String?
+    @NSManaged public var composedFoodItem: ComposedFoodItem?
     @NSManaged public var typicalAmounts: NSSet?
-    @NSManaged public var category: String?
+    @NSManaged public var ingredients: NSSet?
 }
 
 // MARK: Generated accessors for typicalAmounts
@@ -41,6 +43,23 @@ extension FoodItem {
 
     @objc(removeTypicalAmounts:)
     @NSManaged public func removeFromTypicalAmounts(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for ingredients
+extension FoodItem {
+
+    @objc(addIngredientsObject:)
+    @NSManaged public func addToIngredients(_ value: Ingredient)
+
+    @objc(removeIngredientsObject:)
+    @NSManaged public func removeFromIngredients(_ value: Ingredient)
+
+    @objc(addIngredients:)
+    @NSManaged public func addToIngredients(_ values: NSSet)
+
+    @objc(removeIngredients:)
+    @NSManaged public func removeFromIngredients(_ values: NSSet)
 
 }
 

@@ -14,13 +14,13 @@ struct RecipeListView: View {
         case successfullySavedNewComposedFoodItemOnly(String)
         case successfullyUpdatedFoodItem(String)
         case successfullyUpdatedComposedFoodItemOnly(String)
+        case errorMessage(String)
     }
     @State private var notificationState: NotificationState?
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     var helpSheet: RecipeListViewSheets.State
-    @Binding var selectedTab: Int
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
     @State private var activeSheet: RecipeListViewSheets.State?
@@ -43,14 +43,38 @@ struct RecipeListView: View {
     var body: some View {
         ZStack(alignment: .top) {
             NavigationStack {
-                List {
-                    ForEach(self.filteredComposedFoodItems) { composedFoodItem in
-                        RecipeView(
-                            composedFoodItemVM: composedFoodItem,
-                            selectedTab: $selectedTab,
-                            notificationState: $notificationState
-                        )
-                        .environment(\.managedObjectContext, self.managedObjectContext)
+                VStack {
+                    if composedFoodItems.isEmpty {
+                        // No recipe yet, so display info and a call for action button
+                        Image("cooking-book-color").padding()
+                        Text("Oops! No recipe yet! Then let's go!").padding()
+                        Button {
+                            // Start new recipe
+                            activeSheet = .createRecipe
+                        } label: {
+                            HStack {
+                                Image(systemName: "plus.circle")
+                                    .imageScale(.large)
+                                    .foregroundColor(.green)
+                                    .bold()
+                                Text("Start cooking or baking")
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    .fill(.yellow)
+                            )
+                        }
+                    } else {
+                        List {
+                            ForEach(self.filteredComposedFoodItems) { composedFoodItem in
+                                RecipeView(
+                                    composedFoodItemVM: composedFoodItem,
+                                    notificationState: $notificationState
+                                )
+                                .environment(\.managedObjectContext, self.managedObjectContext)
+                            }
+                        }
                     }
                 }
                 .navigationBarTitle("Recipes")
@@ -62,8 +86,8 @@ struct RecipeListView: View {
                             }
                         }) {
                             Image(systemName: "questionmark.circle")
-                            .imageScale(.large)
-                            .padding()
+                                .imageScale(.large)
+                                .padding()
                         }
                     }
                     
@@ -75,13 +99,21 @@ struct RecipeListView: View {
                         }) {
                             if self.showFavoritesOnly {
                                 Image(systemName: "star.fill")
-                                .foregroundColor(Color.yellow)
-                                .padding()
+                                    .foregroundColor(Color.yellow)
+                                    .padding()
                             } else {
                                 Image(systemName: "star")
-                                .foregroundColor(Color.blue)
-                                .padding()
+                                    .foregroundColor(Color.blue)
+                                    .padding()
                             }
+                        }
+                        
+                        Button(action: {
+                            activeSheet = .createRecipe
+                        }) {
+                            Image(systemName: "plus.circle")
+                                .imageScale(.large)
+                                .foregroundColor(.green)
                         }
                     }
                 }
@@ -140,7 +172,16 @@ struct RecipeListView: View {
                     self.notificationState = nil
                 }
             }
-        default:
+        case .errorMessage(let message):
+            HStack {
+                Text(message)
+            }
+            .onAppear() {
+                Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in
+                    self.notificationState = nil
+                }
+            }
+        case .none:
             EmptyView()
         }
     }
@@ -148,6 +189,10 @@ struct RecipeListView: View {
     @ViewBuilder
     private func sheetContent(_ state: RecipeListViewSheets.State) -> some View {
         switch state {
+        case .createRecipe:
+            FoodItemComposerView(
+                composedFoodItemVM: UserSettings.shared.composedProduct,
+                notificationState: $notificationState)
         case .recipeListHelp:
             HelpView(helpScreen: .recipeList)
         }

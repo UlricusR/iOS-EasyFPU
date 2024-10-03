@@ -32,6 +32,7 @@
 "Delete" = "Löschen";
 "Copy" = "Kopie";
 "Tap to edit" = "Zum Bearbeiten antippen";
+" - Copy" = " - Kopie";
 
 // About
 "About" = "Über";
@@ -44,7 +45,9 @@
 // Calculate Meal
 "Calculate meal" = "Mahlzeit berechnen";
 "Total meal" = "Meine Mahlzeit";
-"Start by adding some products to your meal" = "Füge Produkte zur Mahlzeit hinzu";
+"This is where you will see the nutritial data of your meal and where you can export it to Loop." = "Hier werden die Nährwertangaben Deiner Mahlzeit erscheinen, die Du dann nach Loop exportieren kannst.";
+"Make sure that you have your favorite products added to 'My Products' before you start adding some to your meal." = "Stelle sicher, dass Du Deine Lieblingsspeisen in 'Meine Produkte' hinzugefügt hast, bevor Du sie hier Deiner Mahlzeit hinzufügst.";
+"Add products to your meal" = "Füge Produkte zur Mahlzeit hinzu";
 
 // Products List
 "Food List" = "Essensliste";
@@ -157,8 +160,14 @@
 "Did not find a matching product with the same name. What do you want to do?" = "Es gibt kein Produkt mit diesem Namen. Bitte wählen:";
 
 // Recipe editor
-"Cook" = "Kochen";
-"Recipes" = "Rezepte";
+"Cook" = "Kochen & Backen";
+"Recipes" = "Meine Rezepte";
+"Oops! No recipe yet! Then let's go!" = "Hoppla! Noch kein Rezept vorhanden! Dann aber ran!";
+"Start cooking or baking" = "Jetzt kochen oder backen";
+"Your yummy recipe will appear here once you add some ingredients." = "Dein leckeres Rezept wird hier erscheinen, sobald Du Zutaten hinzufügst.";
+"Have you added ingredients to 'My Ingredients'?" = "Hast Du Zutaten zu 'Meine Zutaten' hinzugefügt?";
+"Add ingredients" = "Zutaten hinzufügen";
+"No associated cdComposedFoodItem" = "Kein assoziiertes cdComposedFoodItem - das sollte nicht passieren - bitte das Entwicklungsteam informieren";
 
 // Settings editor
 "Absorption scheme" = "Absorptionsschema";

@@ -11,8 +11,6 @@ import Foundation
 class FoodItemComposerViewActionSheets {
     enum State: Identifiable {
         case weightDifference
-        case existingProduct
-        case missingProduct
         
         var id: State { self }
     }

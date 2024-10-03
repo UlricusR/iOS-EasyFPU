@@ -10,6 +10,7 @@ import Foundation
 
 class FoodItemComposerViewSheets {
     enum State: Identifiable {
+        case addIngredients
         case help
         
         var id: State { self }

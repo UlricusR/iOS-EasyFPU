@@ -27,6 +27,7 @@ struct MainView: View {
     @State private var errorMessage = ""
     
     var body: some View {
+        debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         if !userSettings.disclaimerAccepted {
             return AnyView(
                 DisclaimerView()
@@ -34,7 +35,7 @@ struct MainView: View {
         } else {
             return AnyView(
                 TabView(selection: $selectedTab) {
-                    ComposedFoodItemEvaluationView(absorptionScheme: absorptionScheme, composedFoodItem: UserSettings.shared.composedMeal, selectedTab: $selectedTab)
+                    ComposedFoodItemEvaluationView(absorptionScheme: absorptionScheme, composedFoodItem: UserSettings.shared.composedMeal)
                         .tag(Tab.eat.rawValue)
                         .tabItem{
                             Image(systemName: "fork.knife")
@@ -42,7 +43,7 @@ struct MainView: View {
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                     
-                    RecipeListView(composedFoodItem: UserSettings.shared.composedMeal, helpSheet: RecipeListViewSheets.State.recipeListHelp, selectedTab: $selectedTab)
+                    RecipeListView(composedFoodItem: UserSettings.shared.composedMeal, helpSheet: RecipeListViewSheets.State.recipeListHelp)
                         .tag(Tab.cook.rawValue)
                         .tabItem{
                             Image(systemName: "frying.pan")

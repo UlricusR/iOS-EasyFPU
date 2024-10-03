@@ -11,7 +11,6 @@ import SwiftUI
 struct RecipeView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
-    @Binding var selectedTab: Int
     @Binding var notificationState: RecipeListView.NotificationState?
     @State var activeSheet: RecipeViewSheets.State?
 
@@ -25,11 +24,16 @@ struct RecipeView: View {
         .contextMenu(menuItems: {
             // Editing the recipe
             Button(action: {
-                // Prepare the composed product by filling it with the selected ComposedFoodItem
-                UserSettings.shared.composedProduct = composedFoodItemVM
-                
-                // Switch to Ingredients tab
-                activeSheet = .editRecipe
+                if composedFoodItemVM.cdComposedFoodItem != nil {
+                    // Prepare the composed product by filling it with the selected ComposedFoodItem
+                    UserSettings.shared.composedProduct = ComposedFoodItemViewModel(from: composedFoodItemVM.cdComposedFoodItem!)
+                    
+                    // Switch to Ingredients tab
+                    activeSheet = .editRecipe
+                } else {
+                    // No associated cdComposedFoodItem - this should not happen!
+                    notificationState = .errorMessage(NSLocalizedString("No associated cdComposedFoodItem", comment: ""))
+                }
             }) {
                 Text("Edit")
             }

@@ -154,7 +154,7 @@ struct MenuView: View {
             var foodItemsNotImported = [String]()
             for foodItemVMToBeImported in foodItemVMsToBeImported! {
                 var foodItemNotImported = ""
-                if FoodItem.create(from: foodItemVMToBeImported, foodItemNotCreated: &foodItemNotImported) == nil {
+                if FoodItem.create(from: foodItemVMToBeImported, allowDuplicate: false, foodItemNotCreated: &foodItemNotImported) == nil {
                     // There seems to be a duplicate
                     foodItemsNotImported.append(foodItemNotImported)
                 }

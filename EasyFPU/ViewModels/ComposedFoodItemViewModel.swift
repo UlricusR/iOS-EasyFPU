@@ -103,7 +103,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     }
     
     init(from cdComposedFoodItem: ComposedFoodItem) {
-        self.id = cdComposedFoodItem.id
+        self.id = cdComposedFoodItem.id // TODO check
         self.name = cdComposedFoodItem.name
         self.category = FoodItemCategory.product
         self.favorite = cdComposedFoodItem.favorite
@@ -112,7 +112,23 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         self.cdComposedFoodItem = cdComposedFoodItem
         
         for ingredient in cdComposedFoodItem.ingredients {
-            foodItems.append(FoodItemViewModel(from: ingredient as! Ingredient))
+            let ingredient = ingredient as! Ingredient
+            var newCDFoodItem: FoodItem
+            if let cdFoodItem = FoodItem.getFoodItemByID(ingredient.id.uuidString) {
+                // A FoodItem exists, so use it
+                newCDFoodItem = cdFoodItem
+            } else {
+                // Create a new FoodItem
+                newCDFoodItem = FoodItem.create(from: self, generateTypicalAmounts: false)
+            }
+            
+            // Add the amount
+            let foodItemVM = FoodItemViewModel(from: newCDFoodItem)
+            let amount = Int(ingredient.amount)
+            foodItemVM.amount = amount
+            
+            // Add FoodItemVM to ComposedFoodItemVM
+            foodItems.append(foodItemVM)
         }
     }
     
@@ -159,23 +175,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     }
     
     func duplicate() {
-        // Create the duplicate
-        let nameOfDuplicate = "\(name) - \(NSLocalizedString("Copy", comment: ""))"
-        let duplicate = ComposedFoodItemViewModel(
-            id: UUID(),
-            name: nameOfDuplicate,
-            category: category,
-            favorite: favorite
-        )
-        
-        // Add number of portions
-        duplicate.numberOfPortions = numberOfPortions
-        
-        // Append the related food items
-        duplicate.foodItems = foodItems
-        
-        // Create new Core Data ComposedFoodItem
-        _ = ComposedFoodItem.create(from: duplicate, generateTypicalAmounts: false)
+        // Create the duplicate in Core Data
+        _ = ComposedFoodItem.duplicate(self)
     }
     
     func exportToURL() -> URL? {

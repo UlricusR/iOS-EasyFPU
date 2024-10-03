@@ -10,6 +10,7 @@ import Foundation
 
 class RecipeListViewSheets {
     enum State: Identifiable {
+        case createRecipe
         case recipeListHelp
         
         var id: State { self }

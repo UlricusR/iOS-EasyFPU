@@ -119,7 +119,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     
     init(from cdIngredient: Ingredient) {
         // Use new ID
-        self.id = UUID()
+        self.id = cdIngredient.id // The id of the related FoodItem
         self.name = cdIngredient.name
         self.category = FoodItemCategory.ingredient // Default is ingredient
         self.favorite = cdIngredient.favorite
@@ -310,25 +310,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
      Duplicates a FoodItem.
      */
     func duplicate() {
-        let nameOfDuplicate = "\(name) - \(NSLocalizedString("Copy", comment: ""))"
-        let duplicate = FoodItemViewModel(
-            id: UUID(),
-            name: nameOfDuplicate,
-            category: category,
-            favorite: favorite,
-            caloriesPer100g: caloriesPer100g,
-            carbsPer100g: carbsPer100g,
-            sugarsPer100g: sugarsPer100g,
-            amount: 0
-        )
-        duplicate.typicalAmounts = typicalAmounts
-        
-        // Create new Core Data FoodItem
-        var foodItemNotCreated = ""
-        if FoodItem.create(from: duplicate, foodItemNotCreated: &foodItemNotCreated) != nil {
-            // This should never happen, as the error message by the FoodItem.create function is only issued if we have a duplicate id
-            print(foodItemNotCreated)
-        }
+        _ = FoodItem.duplicate(self)
     }
     
     func exportToURL() -> URL? {

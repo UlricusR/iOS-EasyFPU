@@ -31,17 +31,18 @@ public class FoodItem: NSManagedObject {
     }
     
     /**
-     Creates a new Core Data FoodItem or nil if the FoodItem already exists.
+     Creates a new Core Data FoodItem.
      
      - Parameters:
-        - foodItedVM: The source FoodItemViewModel.
-        - foodItemNotCreated: The name of the FoodItem which was not created.
+        - foodItedVM: the source FoodItemViewModel.
+        - duplicate: if true, duplicates are allowed, but they will get their own UUID.
+        - foodItemNotCreated: the name of the FoodItem which was not created.
+     
+     - Returns: the new Core Data FoodItem, nil if a duplicate was found and but is not allowed
      */
-    static func create(from foodItemVM: FoodItemViewModel, foodItemNotCreated: inout String) -> FoodItem? {
-        // Check for duplicates
-        let allFoodItemIDs = FoodItem.fetchAll().compactMap({ $0.id })
-        if allFoodItemIDs.firstIndex(of: foodItemVM.id) != nil {
-            // cdFoodItem already exists
+    static func create(from foodItemVM: FoodItemViewModel, allowDuplicate: Bool, foodItemNotCreated: inout String) -> FoodItem? {
+        let foundDuplicate = FoodItem.getFoodItemByID(foodItemVM.id.uuidString) != nil
+        if !allowDuplicate && foundDuplicate {
             foodItemNotCreated = foodItemVM.name
             return nil
         }
@@ -49,7 +50,9 @@ public class FoodItem: NSManagedObject {
         // Create the FoodItem
         let moc = AppDelegate.viewContext
         let cdFoodItem = FoodItem(context: moc)
-        cdFoodItem.id = foodItemVM.id
+        
+        // If we have a duplicate, then a new UUID is required
+        cdFoodItem.id = foundDuplicate ? UUID() : foodItemVM.id
         
         // Fill data
         cdFoodItem.name = foodItemVM.name
@@ -81,7 +84,6 @@ public class FoodItem: NSManagedObject {
      - Returns: A new Core Data FoodItem.
      */
     static func create(from composedFoodItem: ComposedFoodItemViewModel, generateTypicalAmounts: Bool) -> FoodItem {
-        debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         let moc = AppDelegate.viewContext
         
         // Create new FoodItem
@@ -173,6 +175,31 @@ public class FoodItem: NSManagedObject {
         }
         
         try? moc.save()
+    }
+    
+    /**
+     Duplicates the FoodItem represented by the existingFoodItemVM
+     
+     - Parameters:
+        - existingFoodItemVM: the FoodItemViewModel to be duplicated
+     
+     - Returns: the new Core Data FoodItem, nil should never happen
+     */
+    static func duplicate(_ existingFoodItemVM: FoodItemViewModel) -> FoodItem? {
+        let moc = AppDelegate.viewContext
+        var foodItemNotCreated = ""
+        let cdFoodItem = FoodItem.create(from: existingFoodItemVM, allowDuplicate: true, foodItemNotCreated: &foodItemNotCreated)
+        
+        // Rename
+        cdFoodItem?.name = (cdFoodItem?.name ?? "") + NSLocalizedString(" - Copy", comment: "")
+        
+        for typicalAmountVM in existingFoodItemVM.typicalAmounts {
+            _ = TypicalAmount.create(from: typicalAmountVM)
+        }
+        
+        try? moc.save()
+        
+        return cdFoodItem
     }
     
     static func delete(_ foodItem: FoodItem) {

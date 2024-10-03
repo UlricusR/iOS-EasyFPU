@@ -275,7 +275,7 @@ struct FoodItemEditor: View {
                 self.typicalAmountsToBeDeleted.removeAll()
             } else { // We have a new food item
                 var errorMessage = ""
-                if FoodItem.create(from: updatedFoodItemVM, foodItemNotCreated: &errorMessage) == nil {
+                if FoodItem.create(from: updatedFoodItemVM, allowDuplicate: false, foodItemNotCreated: &errorMessage) == nil {
                     self.errorMessage = errorMessage
                     self.activeAlert = .alertMessage
                 }
