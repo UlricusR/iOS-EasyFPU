@@ -49,6 +49,9 @@ struct RecipeListView: View {
                         Image("cooking-book-color").padding()
                         Text("Oops! No recipe yet! Then let's go!").padding()
                         Button {
+                            // Reset the shared ComposedViewVM
+                            UserSettings.shared.composedProduct.clear()
+                            
                             // Start new recipe
                             activeSheet = .createRecipe
                         } label: {
@@ -109,6 +112,9 @@ struct RecipeListView: View {
                         }
                         
                         Button(action: {
+                            // Reset the shared ComposedViewVM
+                            UserSettings.shared.composedProduct.clear()
+                            
                             activeSheet = .createRecipe
                         }) {
                             Image(systemName: "plus.circle")

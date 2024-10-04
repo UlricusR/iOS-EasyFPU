@@ -46,23 +46,25 @@ struct FoodItemSelector: View {
                             Spacer()
                         }
                         
-                        // Add to typical amounts
-                        if self.addToTypicalAmounts {
-                            // User wants to add amount to typical amounts, so comment is required
-                            HStack {
-                                CustomTextField(titleKey: "Comment", text: self.$newTypicalAmountComment, keyboardType: .default)
-                                Button(action: {
-                                    self.addTypicalAmount()
-                                }) {
-                                    Image(systemName: "plus.circle").foregroundColor(.green)
+                        // Add to typical amounts (only if not connected to a ComposedFoodItem)
+                        if draftFoodItem.cdFoodItem?.composedFoodItem == nil {
+                            if self.addToTypicalAmounts {
+                                // User wants to add amount to typical amounts, so comment is required
+                                HStack {
+                                    CustomTextField(titleKey: "Comment", text: self.$newTypicalAmountComment, keyboardType: .default)
+                                    Button(action: {
+                                        self.addTypicalAmount()
+                                    }) {
+                                        Image(systemName: "plus.circle").foregroundColor(.green)
+                                    }
                                 }
-                            }
-                        } else {
-                            // Give user possibility to add the entered amount to typical amounts
-                            Button(action: {
-                                self.addToTypicalAmounts = true
-                            }) {
-                                Text("Add to typical amounts")
+                            } else {
+                                // Give user possibility to add the entered amount to typical amounts
+                                Button(action: {
+                                    self.addToTypicalAmounts = true
+                                }) {
+                                    Text("Add to typical amounts")
+                                }
                             }
                         }
                     }
@@ -121,7 +123,7 @@ struct FoodItemSelector: View {
                         }
                     }) {
                         Text("Add")
-                    }
+                    }.disabled(draftFoodItem.amount <= 0)
                 }
             }
         }

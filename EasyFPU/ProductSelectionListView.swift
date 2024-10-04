@@ -9,11 +9,13 @@
 import SwiftUI
 
 struct ProductSelectionListView: View {
+    @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
+    
     var body: some View {
         FoodItemListView(
             category: .product,
             listType: FoodItemListView.FoodItemListType.selection,
-            composedFoodItem: UserSettings.shared.composedMeal,
+            composedFoodItem: composedFoodItemVM,
             helpSheet: FoodItemListViewSheets.State.productSelectionListHelp,
             foodItemListTitle: NSLocalizedString("Products", comment: "")
         )

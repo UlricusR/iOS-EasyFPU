@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ComposedFoodItemEvaluationView: View {
     @ObservedObject var absorptionScheme: AbsorptionScheme
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
     @State var activeSheet: ComposedFoodItemEvaluationViewSheets.State?
@@ -18,7 +18,7 @@ struct ComposedFoodItemEvaluationView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                if composedFoodItem.foodItems.isEmpty {
+                if composedFoodItemVM.foodItems.isEmpty {
                     // No products selected for the meal, so display empty state info and a call for action button
                     Image("cutlery-color").padding()
                     Text("This is where you will see the nutritial data of your meal and where you can export it to Loop.").padding()
@@ -50,9 +50,9 @@ struct ComposedFoodItemEvaluationView: View {
                         }.padding()
                         
                         // The carbs views
-                        if userSettings.treatSugarsSeparately { ComposedFoodItemSugarsView(composedFoodItem: self.composedFoodItem) }
-                        ComposedFoodItemCarbsView(composedFoodItem: self.composedFoodItem).padding(.top)
-                        ComposedFoodItemECarbsView(composedFoodItem: self.composedFoodItem, absorptionScheme: self.absorptionScheme).padding(.top)
+                        if userSettings.treatSugarsSeparately { ComposedFoodItemSugarsView(composedFoodItem: self.composedFoodItemVM) }
+                        ComposedFoodItemCarbsView(composedFoodItem: self.composedFoodItemVM).padding(.top)
+                        ComposedFoodItemECarbsView(composedFoodItem: self.composedFoodItemVM, absorptionScheme: self.absorptionScheme).padding(.top)
                     }.padding()
                     
                     Button(action: {
@@ -73,12 +73,14 @@ struct ComposedFoodItemEvaluationView: View {
                         Image(systemName: "questionmark.circle").imageScale(.large)
                     }
                     
-                    if !composedFoodItem.foodItems.isEmpty {
+                    if !composedFoodItemVM.foodItems.isEmpty {
                         Button(action: {
-                            composedFoodItem.clear()
+                            composedFoodItemVM.clear()
                             UserSettings.shared.mealDelayInMinutes = 0
                         }) {
-                            Text("Clear")
+                            Image(systemName: "xmark.circle").foregroundColor(.red)
+                                .imageScale(.large)
+                                .padding()
                         }
                     }
                 }
@@ -88,7 +90,7 @@ struct ComposedFoodItemEvaluationView: View {
                         activeSheet = .exportToHealth
                     }) {
                         HealthDataHelper.healthKitIsAvailable() ? AnyView(Image(systemName: "square.and.arrow.up").imageScale(.large)) : AnyView(EmptyView())
-                    }.disabled(composedFoodItem.foodItems.isEmpty)
+                    }.disabled(composedFoodItemVM.foodItems.isEmpty)
                     
                     Button(action: {
                         // Add new product to composed food item
@@ -113,11 +115,11 @@ struct ComposedFoodItemEvaluationView: View {
         case .help:
             HelpView(helpScreen: self.helpScreen)
         case .exportToHealth:
-            ComposedFoodItemExportView(composedFoodItem: composedFoodItem, absorptionScheme: absorptionScheme)
+            ComposedFoodItemExportView(composedFoodItem: composedFoodItemVM, absorptionScheme: absorptionScheme)
         case .addProduct:
-            ProductSelectionListView()
+            ProductSelectionListView(composedFoodItemVM: composedFoodItemVM)
         case .details:
-            ComposedFoodItemDetailsView(absorptionScheme: absorptionScheme, composedFoodItem: composedFoodItem, userSettings: userSettings)
+            ComposedFoodItemDetailsView(absorptionScheme: absorptionScheme, composedFoodItem: composedFoodItemVM, userSettings: userSettings)
         }
     }
 }

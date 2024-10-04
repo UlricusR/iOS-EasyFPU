@@ -94,6 +94,7 @@
 "Cannot delete ingredient" = "Cannot delete ingredient";
 "Could not generate data export" = "Could not generate data export";
 "is not a valid data model" = "is not a valid data model. Could not import data.";
+"This product is created from a recipe, please open it in the recipe editor" = "This product is created from a recipe, please open it in the recipe editor";
 
 // Ingredients
 "Ingredients" = "My Ingredients";
@@ -103,15 +104,16 @@
 "Category" = "Category";
 "Composed product" = "My recipe";
 "Weight" = "Weight";
-"Final product" = "Final product";
+"Final product" = "My recipe";
 "The weight of the composed product is less than the sum of its ingredients" = "The weight of the composed product is less than the sum of its ingredients";
 "The weight of the composed product is more than the sum of its ingredients" = "The weight of the composed product is more than the sum of its ingredients";
 "Save" = "Save";
 "Save anyway" = "Save anyway";
-"Generate typical amounts" = "Generate typical amounts";
 "Number of portions" = "Number of portions";
+"If the number of portions is set to 0, no typical amounts will be created." = "If the number of portions is set to 0, no typical amounts will be created.";
 "Generate" = "Generate";
 "portion(s)" = "portions(s)";
+"per portion" = "per portion";
 "Cannot create typical amount: " = "Cannot create typical amount: ";
 "successfully saved in Products" = "successfully saved as Recipe and added to Products";
 "successfully saved as Recipe" = "successfully saved as Recipe, but not added to Products";
@@ -154,10 +156,8 @@
 "Thereof" = "Thereof";
 "Search term must not be empty" = "Search term must not be empty";
 " - new" = " - new";
-"Error: No existing food item found - please inform the app developer" = "Error: No existing food item found - please inform the app developer";
 "This should not have happened - please inform the app developer" = "Oops! This should not have happened - please inform the app developer";
-"There's already a product with the same name. What do you want to do?" = "There's already a product with the same name. What do you want to do?";
-"Did not find a matching product with the same name. What do you want to do?" = "Did not find a matching product with the same name. What do you want to do?";
+"A food item with this name already exists" = "An entry with this name already exists";
 
 // Recipe editor
 "Cook" = "Cook & Bake";
@@ -298,7 +298,7 @@
 "The nutritional values from the database may not be correct, please cross-check! Use at your own risk." = "The author of the app is not liable for the correctness of the nutritional values in the database. Please cross-check those! Use at your own risk!";
 "Accept and continue" = "Use at own risk";
 "Decline and cancel" = "Decline and cancel";
-"Typical Amounts" = "Typical Amounts";
+"Generate Typical Amounts" = "Generate Typical Amounts";
 
 // Food List help
 "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";

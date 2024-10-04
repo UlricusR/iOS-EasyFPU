@@ -83,7 +83,7 @@ public class FoodItem: NSManagedObject {
      
      - Returns: A new Core Data FoodItem.
      */
-    static func create(from composedFoodItem: ComposedFoodItemViewModel, generateTypicalAmounts: Bool) -> FoodItem {
+    static func create(from composedFoodItem: ComposedFoodItemViewModel) -> FoodItem {
         let moc = AppDelegate.viewContext
         
         // Create new FoodItem
@@ -101,8 +101,7 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.category = FoodItemCategory.product.rawValue
         
         // Add typical amounts
-        if generateTypicalAmounts {
-            // Then add the newly generated ones
+        if composedFoodItem.numberOfPortions > 0 {
             for typicalAmount in composedFoodItem.typicalAmounts {
                 let newCDTypicalAmount = TypicalAmount.create(from: typicalAmount)
                 cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)

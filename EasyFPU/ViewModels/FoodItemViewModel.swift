@@ -299,6 +299,31 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         return FPU(fpu: fpus)
     }
     
+    /**
+     FoodItem can only be deleted if it has no relationship to an Ingredient.
+     
+     - Returns: true if no relationship to an Ingredient is found
+     */
+    func canBeDeleted() -> Bool {
+        return !(cdFoodItem?.ingredients != nil && cdFoodItem!.ingredients!.count > 0)
+    }
+    
+    /**
+     A FoodItem category can always be changed from Product to Ingredient, but
+     cannot be changed from Ingredient to Product if it has relationships to Ingredients.
+     
+     - Returns: true if the category can be changed
+     */
+    func canChangeCategory() -> Bool {
+        return self.category == .product ? true : !(cdFoodItem?.ingredients != nil && cdFoodItem!.ingredients!.count > 0)
+    }
+    
+    /**
+     Changes the category.
+     
+     - Parameters:
+        - newCategory: the category to be set
+     */
     func changeCategory(to newCategory: FoodItemCategory) {
         if category != newCategory {
             category = newCategory

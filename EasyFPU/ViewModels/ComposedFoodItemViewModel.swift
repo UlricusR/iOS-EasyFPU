@@ -16,6 +16,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     @Published var amount: Int = 0
     @Published var numberOfPortions: Int = 0
     @Published var foodItems = [FoodItemViewModel]()
+    
     var cdComposedFoodItem: ComposedFoodItem?
     
     @Published var amountAsString: String = "" {
@@ -108,6 +109,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         self.category = FoodItemCategory.product
         self.favorite = cdComposedFoodItem.favorite
         self.amount = Int(cdComposedFoodItem.amount)
+        self.amountAsString = String(amount)
         self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
         self.cdComposedFoodItem = cdComposedFoodItem
         
@@ -119,7 +121,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
                 newCDFoodItem = cdFoodItem
             } else {
                 // Create a new FoodItem
-                newCDFoodItem = FoodItem.create(from: self, generateTypicalAmounts: false)
+                newCDFoodItem = FoodItem.create(from: self)
             }
             
             // Add the amount
@@ -199,17 +201,30 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         }
     }
     
+    /**
+     Resets the entire ComposedFoodItemViewModel, i.e., clears ingredients, resets values, removes link to Core Data ComposedFoodItem and creates a new ID.
+     */
     func clear() {
+        // Clear ingredients
+        clearIngredients()
+        
+        // Reset values and create new UUID
+        id = UUID()
+        name = NSLocalizedString("Composed product", comment: "")
+        favorite = false
+        numberOfPortions = 0
+        cdComposedFoodItem = nil
+    }
+    
+    /**
+     Clears all ingredients and sets the amount to 0.
+     */
+    func clearIngredients() {
         for foodItem in foodItems {
             foodItem.amountAsString = "0"
         }
         foodItems.removeAll()
-        
-        id = UUID()
-        favorite = false
         amount = 0
-        numberOfPortions = 0
-        cdComposedFoodItem = nil
     }
     
     func getCarbsInclSugars() -> Double {

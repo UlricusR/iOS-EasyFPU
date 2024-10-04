@@ -63,6 +63,16 @@ struct FoodItemListView: View {
                             .imageScale(.large)
                             .padding()
                         }
+                        
+                        if listType == .selection && !composedFoodItem.foodItems.isEmpty {
+                            Button(action: {
+                                composedFoodItem.clearIngredients()
+                            }) {
+                                Image(systemName: "xmark.circle").foregroundColor(.red)
+                                    .imageScale(.large)
+                                    .padding()
+                            }
+                        }
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -97,7 +107,7 @@ struct FoodItemListView: View {
                             Button("Done") {
                                 // Close sheet
                                 presentation.wrappedValue.dismiss()
-                            }
+                            }.disabled(composedFoodItem.foodItems.isEmpty)
                         }
                     }
                 }

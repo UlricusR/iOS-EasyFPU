@@ -35,7 +35,7 @@ struct MainView: View {
         } else {
             return AnyView(
                 TabView(selection: $selectedTab) {
-                    ComposedFoodItemEvaluationView(absorptionScheme: absorptionScheme, composedFoodItem: UserSettings.shared.composedMeal)
+                    ComposedFoodItemEvaluationView(absorptionScheme: absorptionScheme, composedFoodItemVM: UserSettings.shared.composedMeal)
                         .tag(Tab.eat.rawValue)
                         .tabItem{
                             Image(systemName: "fork.knife")

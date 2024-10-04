@@ -22,8 +22,6 @@ struct FoodItemComposerView: View {
     @State private var actionSheetMessage: String = ""
     @State private var existingFoodItem: FoodItem?
     
-    @State var generateTypicalAmounts: Bool = true
-    
     var body: some View {
         GeometryReader { geometry in
             NavigationStack {
@@ -80,33 +78,31 @@ struct FoodItemComposerView: View {
                             }
                             
                             
-                            Section(header: Text("Typical Amounts")) {
-                                // Generate typical amounts
-                                Toggle("Generate typical amounts", isOn: self.$generateTypicalAmounts)
+                            Section(header: Text("Generate Typical Amounts")) {
+                                // Number of portions
+                                HStack {
+                                    Stepper("Number of portions", value: $composedFoodItemVM.numberOfPortions, in: 0...100)
+                                    Text("\(composedFoodItemVM.numberOfPortions)")
+                                }
                                 
-                                if generateTypicalAmounts {
-                                    // Number of portions
-                                    HStack {
-                                        Stepper("Number of portions", value: $composedFoodItemVM.numberOfPortions, in: 1...100)
-                                        Text("\(composedFoodItemVM.numberOfPortions)")
-                                    }
-                                    
-                                    if !composedFoodItemVM.typicalAmounts.isEmpty {
-                                        List {
-                                            ForEach(composedFoodItemVM.typicalAmounts) { typicalAmount in
-                                                HStack {
-                                                    Text(typicalAmount.amountAsString)
-                                                    Text("g")
-                                                    Text(typicalAmount.comment)
-                                                }
-                                            }
-                                        }
-                                    }
+                                Text("If the number of portions is set to 0, no typical amounts will be created.").font(.caption)
+                                
+                                if composedFoodItemVM.numberOfPortions > 0 {
+                                    Text("\(composedFoodItemVM.amount / composedFoodItemVM.numberOfPortions)g " + NSLocalizedString("per portion", comment: ""))
                                 }
                             }
                             
-                            
                             Section(header: Text("Ingredients")) {
+                                Button(action: {
+                                    activeSheet = .addIngredients
+                                }) {
+                                    HStack {
+                                        Image(systemName: "plus.circle")
+                                            .imageScale(.large)
+                                            .foregroundColor(.green)
+                                        Text("Add ingredients")
+                                    }
+                                }
                                 List {
                                     ForEach(composedFoodItemVM.foodItems) { foodItem in
                                         HStack {
@@ -128,50 +124,38 @@ struct FoodItemComposerView: View {
                         }) {
                             Image(systemName: "questionmark.circle").imageScale(.large)
                         }
-                        
-                        if composedFoodItemVM.foodItems.count > 0 {
-                            Button(action: {
-                                composedFoodItemVM.clear()
-                                presentation.wrappedValue.dismiss()
-                            }) {
-                                Text("Clear")
-                            }
-                        }
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            activeSheet = .addIngredients
-                        }) {
-                            Image(systemName: "plus.circle")
-                                .imageScale(.large)
-                                .foregroundColor(.green)
-                        }
-                        
                         if composedFoodItemVM.foodItems.count > 0 {
                             Button(action: {
-                                if weightCheck(isLess: true) {
-                                    activeActionSheet = .weightDifference
-                                    actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
-                                    showingActionSheet = true
-                                } else if weightCheck(isLess: false) {
-                                    activeActionSheet = .weightDifference
-                                    actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
-                                    showingActionSheet = true
+                                // Check if this is a new ComposedFoodItem (no Core Data object attached yet) and, if yes, the name already exists
+                                if composedFoodItemVM.cdComposedFoodItem == nil && (FoodItem.getFoodItemByName(name: composedFoodItemVM.name) != nil || ComposedFoodItem.getComposedFoodItemByName(name: composedFoodItemVM.name) != nil) {
+                                    alertMessage = NSLocalizedString("A food item with this name already exists", comment: "")
+                                    showingAlert = true
                                 } else {
-                                    saveComposedFoodItem()
+                                    if weightCheck(isLess: true) {
+                                        activeActionSheet = .weightDifference
+                                        actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                                        showingActionSheet = true
+                                    } else if weightCheck(isLess: false) {
+                                        activeActionSheet = .weightDifference
+                                        actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
+                                        showingActionSheet = true
+                                    } else {
+                                        saveComposedFoodItem()
+                                    }
                                 }
                             }) {
                                 Text("Save")
                             }
-                        } else {
-                            Button(action: {
-                                presentation.wrappedValue.dismiss()
-                            }) {
-                                Text("Cancel")
-                            }
                         }
                         
+                        Button(action: {
+                            presentation.wrappedValue.dismiss()
+                        }) {
+                            Text("Cancel")
+                        }
                     }
                 }
             }
@@ -203,7 +187,7 @@ struct FoodItemComposerView: View {
         // Check if this was an existing ComposedFoodItem
         if composedFoodItemVM.cdComposedFoodItem == nil { // This is a new ComposedFoodItem
             // Store new ComposedFoodItem in CoreData
-            if ComposedFoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts) == nil {
+            if ComposedFoodItem.create(from: composedFoodItemVM) == nil {
                 // We're missing ingredients, the composedFoodItem could not be saved - this should not happen!
                 alertMessage = NSLocalizedString("Could not create the composed food item", comment: "")
                 showingAlert = true
@@ -216,17 +200,17 @@ struct FoodItemComposerView: View {
                 showingAlert = true
             }
         }
-    }
-    
-    private func replaceExistingFoodItem(_ existingFoodItem: FoodItem) {
-        FoodItem.update(existingFoodItem, with: composedFoodItemVM)
+        
+        // Clear the ComposedFoodItemViewModel
+        composedFoodItemVM.clear()
+        presentation.wrappedValue.dismiss()
     }
     
     @ViewBuilder
     private func sheetContent(_ state: FoodItemComposerViewSheets.State) -> some View {
         switch state {
         case .addIngredients:
-            IngredientSelectionListView()
+            IngredientSelectionListView(composedFoodItemVM: self.composedFoodItemVM)
         case .help:
             HelpView(helpScreen: self.helpScreen)
         }

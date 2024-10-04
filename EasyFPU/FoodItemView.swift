@@ -15,6 +15,7 @@ struct FoodItemView: View {
     var category: FoodItemCategory
     var listType: FoodItemListView.FoodItemListType
     @State var activeSheet: FoodItemViewSheets.State?
+    @State var showingAlert: Bool = false
     
     var body: some View {
         VStack {
@@ -72,7 +73,12 @@ struct FoodItemView: View {
             if listType == .maintenance {
                 // Editing the food item
                 Button(action: {
-                    activeSheet = .editFoodItem
+                    if foodItemVM.cdFoodItem?.composedFoodItem != nil {
+                        // There's an associated recipe, so show message to open Recipe Editor
+                        showingAlert = true
+                    } else {
+                        activeSheet = .editFoodItem
+                    }
                 }) {
                     Text("Edit")
                 }
@@ -97,7 +103,7 @@ struct FoodItemView: View {
                     foodItemVM.changeCategory(to: foodItemVM.category == .product ? .ingredient : .product)
                 }) {
                     Text(NSLocalizedString("Move to \(foodItemVM.category == .product ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""))
-                }
+                }.disabled(!foodItemVM.canChangeCategory())
                 
                 // Delete the food item
                 Button(action: {
@@ -106,11 +112,14 @@ struct FoodItemView: View {
                     }
                 }) {
                     Text("Delete")
-                }
+                }.disabled(!foodItemVM.canBeDeleted())
             }
         })
         .sheet(item: $activeSheet) {
             sheetContent($0)
+        }
+        .alert(NSLocalizedString("This product is created from a recipe, please open it in the recipe editor", comment: ""), isPresented: $showingAlert) {
+            Button("OK", role: .cancel) { }
         }
     }
     

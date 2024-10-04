@@ -38,7 +38,7 @@ public class ComposedFoodItem: NSManagedObject {
      
      - Returns: A Core Data ComposedFoodItem; nil if there are no Ingredients.
      */
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel, generateTypicalAmounts: Bool) -> ComposedFoodItem? {
+    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem? {
         let moc = AppDelegate.viewContext
         
         // Create new ComposedFoodItem
@@ -57,7 +57,7 @@ public class ComposedFoodItem: NSManagedObject {
         composedFoodItemVM.cdComposedFoodItem = cdComposedFoodItem
         
         // Create a related FoodItem and relate it to the ComposedFoodItem and vice versa
-        cdComposedFoodItem.foodItem = FoodItem.create(from: composedFoodItemVM, generateTypicalAmounts: generateTypicalAmounts)
+        cdComposedFoodItem.foodItem = FoodItem.create(from: composedFoodItemVM)
         cdComposedFoodItem.foodItem!.composedFoodItem = cdComposedFoodItem
         
         // Add new ingredients
@@ -88,7 +88,7 @@ public class ComposedFoodItem: NSManagedObject {
      */
     static func duplicate(_ existingComposedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem? {
         // Create a new ComposedFoodItem from the existing view model
-        let cdComposedFoodItem = ComposedFoodItem.create(from: existingComposedFoodItemVM, generateTypicalAmounts: !existingComposedFoodItemVM.typicalAmounts.isEmpty)
+        let cdComposedFoodItem = ComposedFoodItem.create(from: existingComposedFoodItemVM)
         
         // Rename
         cdComposedFoodItem?.name += NSLocalizedString(" - Copy", comment: "")
@@ -132,6 +132,22 @@ public class ComposedFoodItem: NSManagedObject {
                 cdComposedFoodItem.addToIngredients(NSSet(array: ingredients))
             }
             
+            // Delete the existing TypicalAmounts
+            if let existingTypicalAmounts = cdComposedFoodItem.foodItem?.typicalAmounts {
+                for typicalAmount in existingTypicalAmounts {
+                    if let typicalAmountToBeDeleted = typicalAmount as? NSManagedObject {
+                        moc.delete(typicalAmountToBeDeleted)
+                    }
+                }
+            }
+            
+            // Add the new TypicalAmounts
+            if let cdFoodItem = cdComposedFoodItem.foodItem {
+                for typicalAmount in composedFoodItemVM.typicalAmounts {
+                    cdFoodItem.addToTypicalAmounts(TypicalAmount.create(from: typicalAmount))
+                }
+            }
+            
             // Save updated composed food item
             try? AppDelegate.viewContext.save()
             
@@ -153,5 +169,24 @@ public class ComposedFoodItem: NSManagedObject {
         
         // And save the context
         try? moc.save()
+    }
+    
+    /**
+     Returns the Core Data ComposedFoodItem with the given name.
+     
+     - Parameter name: The Core Data entry name.
+     
+     - Returns: The related Core Data ComposedFoodItem, nil if not found.
+     */
+    static func getComposedFoodItemByName(name: String) -> ComposedFoodItem? {
+        let predicate = NSPredicate(format: "name = %@", name)
+        let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
+        request.predicate = predicate
+        if let result = try? AppDelegate.viewContext.fetch(request) {
+            if !result.isEmpty {
+                return result[0]
+            }
+        }
+        return nil
     }
 }

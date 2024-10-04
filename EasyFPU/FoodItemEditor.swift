@@ -214,7 +214,12 @@ struct FoodItemEditor: View {
                     
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
-                            saveFoodItem()
+                            if FoodItem.getFoodItemByName(name: draftFoodItemVM.name) != nil || ComposedFoodItem.getComposedFoodItemByName(name: draftFoodItemVM.name) != nil {
+                                errorMessage = NSLocalizedString("A food item with this name already exists", comment: "")
+                                self.activeAlert = .alertMessage
+                            } else {
+                                saveFoodItem()
+                            }
                         }) {
                             Text("Done")
                         }
