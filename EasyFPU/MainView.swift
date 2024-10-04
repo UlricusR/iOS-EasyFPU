@@ -55,7 +55,7 @@ struct MainView: View {
                         .tag(Tab.products.rawValue)
                         .tabItem{
                             Image(systemName: "birthday.cake")
-                            Text("Products")
+                            Text("My Products")
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                     

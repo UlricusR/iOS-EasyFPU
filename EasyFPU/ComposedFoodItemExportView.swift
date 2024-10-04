@@ -53,7 +53,7 @@ struct ComposedFoodItemExportView: View {
                 
                 HStack {
                     Stepper("Delay until meal", onIncrement: {
-                        userSettings.mealDelayInMinutes += 5
+                        userSettings.mealDelayInMinutes = min(30, userSettings.mealDelayInMinutes + 5)
                         carbsRegimeCalculator.recalculate()
                     }, onDecrement: {
                         userSettings.mealDelayInMinutes = max(0, userSettings.mealDelayInMinutes - 5)
@@ -86,7 +86,8 @@ struct ComposedFoodItemExportView: View {
                     Button(action: {
                         self.showingSheet = true
                     }) {
-                        Image(systemName: "questionmark.circle").imageScale(.large)
+                        Image(systemName: "questionmark.circle")
+                            .imageScale(.large)
                     }
                 }
                 
@@ -106,7 +107,8 @@ struct ComposedFoodItemExportView: View {
                             presentation.wrappedValue.dismiss()
                         }
                     }) {
-                        Text("Done")
+                        Image(systemName: "x.circle.fill")
+                            .imageScale(.large)
                     }
                 }
             }
@@ -160,6 +162,10 @@ struct ComposedFoodItemExportView: View {
     }
     
     private func exportHealthSample() {
+        // Last update of times
+        carbsRegimeCalculator.recalculate()
+        
+        // Export
         var hkObjects = [HKObject]()
         hkObjects.append(contentsOf: carbsRegimeCalculator.hkObjects)
         if exportTotalMealCalories {

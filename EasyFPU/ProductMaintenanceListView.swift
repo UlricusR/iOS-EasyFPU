@@ -15,7 +15,7 @@ struct ProductMaintenanceListView: View {
             listType: FoodItemListView.FoodItemListType.maintenance,
             composedFoodItem: UserSettings.shared.composedMeal,
             helpSheet: FoodItemListViewSheets.State.productMaintenanceListHelp,
-            foodItemListTitle: NSLocalizedString("Products", comment: "")
+            foodItemListTitle: NSLocalizedString("My Products", comment: "")
         )
     }
 }

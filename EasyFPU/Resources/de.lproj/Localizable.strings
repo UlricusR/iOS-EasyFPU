@@ -48,10 +48,12 @@
 "This is where you will see the nutritial data of your meal and where you can export it to Loop." = "Hier werden die Nährwertangaben Deiner Mahlzeit erscheinen, die Du dann nach Loop exportieren kannst.";
 "Make sure that you have your favorite products added to 'My Products' before you start adding some to your meal." = "Stelle sicher, dass Du Deine Lieblingsspeisen in 'Meine Produkte' hinzugefügt hast, bevor Du sie hier Deiner Mahlzeit hinzufügst.";
 "Add products to your meal" = "Füge Produkte zur Mahlzeit hinzu";
+"Add products" = "Produkte hinzufügen";
 
 // Products List
 "Food List" = "Essensliste";
-"Products" = "Meine Produkte";
+"Products" = "Produkte";
+"My Products" = "Meine Produkte";
 "Product" = "Produkt";
 "Product List" = "Produktliste";
 "Name" = "Name";
@@ -97,7 +99,8 @@
 "This product is created from a recipe, please open it in the recipe editor" = "Dieses Produkt ist mit einem Rezept verknüpft, bitte öffne es im Rezepteditor";
 
 // Ingredients
-"Ingredients" = "Meine Zutaten";
+"Ingredients" = "Zutaten";
+"My Ingredients" = "Meine Zutaten";
 "Ingredient" = "Zutat";
 "Ingredient List" = "Zutatenliste";
 "New Ingredient" = "Neue Zutat";
@@ -139,6 +142,7 @@
 "Export to Apple Health" = "Nach Apple Health exportieren";
 
 // Food item editor
+"Carbs" = "Kohlenhydrate";
 "Carbs: " = "Kohlenhydrate: ";
 "Calories: " = "Kalorien: ";
 "Amount: " = "Menge: ";
@@ -342,7 +346,7 @@
 "Delete the food item by tapping the link on the bottom of the view." = "Lösche das Essen, indem Du den Link am unteren Rand der Ansicht antippst.";
 
 // Meal Details help
-"Meal Details" = "Details zur Mahlzeit";
+"Meal Details" = "Details";
 "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid." = "Diese Ansicht stellt die Details über Deine Mahlzeit so dar, dass sie leicht als Screenshot z.B. an Dein Kind gesendet werden können.";
 "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal." = "Mit den + and - Knöpfen kannst Du die Zeit einstellen, bevor Deine Mahlzeit beginnt. In der Regel ist das der Spritz-Ess-Abstand.";
 "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Kohlenhydrate von Zucker werden in der Regel sofort absorbiert. Du kannst die Parameter im Absorptionsschema-Dialog anpassen.";

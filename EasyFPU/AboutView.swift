@@ -31,7 +31,8 @@ struct AboutView: View {
                     Button(action: {
                         presentation.wrappedValue.dismiss()
                     }) {
-                        Text("Done")
+                        Image(systemName: "x.circle.fill")
+                            .imageScale(.large)
                     }
                 }
             }

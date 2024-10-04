@@ -122,40 +122,41 @@ struct FoodItemComposerView: View {
                         Button(action: {
                             activeSheet = .help
                         }) {
-                            Image(systemName: "questionmark.circle").imageScale(.large)
+                            Image(systemName: "questionmark.circle")
+                                .imageScale(.large)
                         }
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        if composedFoodItemVM.foodItems.count > 0 {
-                            Button(action: {
-                                // Check if this is a new ComposedFoodItem (no Core Data object attached yet) and, if yes, the name already exists
-                                if composedFoodItemVM.cdComposedFoodItem == nil && (FoodItem.getFoodItemByName(name: composedFoodItemVM.name) != nil || ComposedFoodItem.getComposedFoodItemByName(name: composedFoodItemVM.name) != nil) {
-                                    alertMessage = NSLocalizedString("A food item with this name already exists", comment: "")
-                                    showingAlert = true
-                                } else {
-                                    if weightCheck(isLess: true) {
-                                        activeActionSheet = .weightDifference
-                                        actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
-                                        showingActionSheet = true
-                                    } else if weightCheck(isLess: false) {
-                                        activeActionSheet = .weightDifference
-                                        actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
-                                        showingActionSheet = true
-                                    } else {
-                                        saveComposedFoodItem()
-                                    }
-                                }
-                            }) {
-                                Text("Save")
-                            }
-                        }
-                        
                         Button(action: {
                             presentation.wrappedValue.dismiss()
                         }) {
-                            Text("Cancel")
+                            Image(systemName: "x.circle.fill")
+                                .imageScale(.large)
                         }
+                        
+                        Button(action: {
+                            // Check if this is a new ComposedFoodItem (no Core Data object attached yet) and, if yes, the name already exists
+                            if composedFoodItemVM.cdComposedFoodItem == nil && (FoodItem.getFoodItemByName(name: composedFoodItemVM.name) != nil || ComposedFoodItem.getComposedFoodItemByName(name: composedFoodItemVM.name) != nil) {
+                                alertMessage = NSLocalizedString("A food item with this name already exists", comment: "")
+                                showingAlert = true
+                            } else {
+                                if weightCheck(isLess: true) {
+                                    activeActionSheet = .weightDifference
+                                    actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                                    showingActionSheet = true
+                                } else if weightCheck(isLess: false) {
+                                    activeActionSheet = .weightDifference
+                                    actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
+                                    showingActionSheet = true
+                                } else {
+                                    saveComposedFoodItem()
+                                }
+                            }
+                        }) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .imageScale(.large)
+                        }.disabled(composedFoodItemVM.foodItems.count == 0)
                     }
                 }
             }

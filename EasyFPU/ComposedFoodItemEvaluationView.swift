@@ -40,28 +40,62 @@ struct ComposedFoodItemEvaluationView: View {
                         )
                     }
                 } else {
-                    // Summarize the meal
-                    VStack {
-                        // The meal delay stepper
-                        HStack {
-                            Stepper("Delay until meal", value: $userSettings.mealDelayInMinutes, in: 0...60, step: 5)
-                            Text("\(userSettings.mealDelayInMinutes)")
-                            Text("min")
-                        }.padding()
+                    Form {
+                        // Summarize the meal
+                        Section {
+                            // The meal delay stepper
+                            HStack {
+                                Stepper("Delay until meal", value: $userSettings.mealDelayInMinutes, in: 0...30, step: 5)
+                                Text("\(userSettings.mealDelayInMinutes)")
+                                Text("min")
+                            }
+                        }
                         
-                        // The carbs views
-                        if userSettings.treatSugarsSeparately { ComposedFoodItemSugarsView(composedFoodItem: self.composedFoodItemVM) }
-                        ComposedFoodItemCarbsView(composedFoodItem: self.composedFoodItemVM).padding(.top)
-                        ComposedFoodItemECarbsView(composedFoodItem: self.composedFoodItemVM, absorptionScheme: self.absorptionScheme).padding(.top)
-                    }.padding()
-                    
-                    Button(action: {
-                        activeSheet = .details
-                    }) {
-                        Text("Further details")
-                    }.padding()
-                    
-                    Spacer()
+                        Section(header: Text("Carbs")) {
+                            // The carbs views
+                            if userSettings.treatSugarsSeparately {
+                                ComposedFoodItemSugarsView(composedFoodItem: self.composedFoodItemVM)
+                            }
+                            ComposedFoodItemCarbsView(composedFoodItem: self.composedFoodItemVM)
+                            ComposedFoodItemECarbsView(composedFoodItem: self.composedFoodItemVM, absorptionScheme: self.absorptionScheme)
+                        }
+                        
+                        Section(header: Text("Products")) {
+                            // Button to add products
+                            Button(action: {
+                                activeSheet = .addProduct
+                            }) {
+                                HStack {
+                                    Image(systemName: "plus.circle")
+                                        .imageScale(.large)
+                                        .foregroundColor(.green)
+                                    Text("Add products")
+                                }
+                            }
+                            
+                            // The included products
+                            List {
+                                ForEach(composedFoodItemVM.foodItems) { foodItem in
+                                    HStack {
+                                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
+                                        Text("g")
+                                        Text(foodItem.name)
+                                    }
+                                }
+                            }
+                            
+                            // The link to the details
+                            Button(action: {
+                                activeSheet = .details
+                            }) {
+                                HStack {
+                                    Image(systemName: "info.circle.fill")
+                                        .imageScale(.large)
+                                    Text("Meal Details")
+                                }
+                            }
+                        }
+                    }
                 }
             }
             .navigationBarTitle(Text("Calculate meal"))
@@ -70,7 +104,8 @@ struct ComposedFoodItemEvaluationView: View {
                     Button(action: {
                         activeSheet = .help
                     }) {
-                        Image(systemName: "questionmark.circle").imageScale(.large)
+                        Image(systemName: "questionmark.circle")
+                            .imageScale(.large)
                     }
                     
                     if !composedFoodItemVM.foodItems.isEmpty {
@@ -80,7 +115,6 @@ struct ComposedFoodItemEvaluationView: View {
                         }) {
                             Image(systemName: "xmark.circle").foregroundColor(.red)
                                 .imageScale(.large)
-                                .padding()
                         }
                     }
                 }
@@ -91,15 +125,6 @@ struct ComposedFoodItemEvaluationView: View {
                     }) {
                         HealthDataHelper.healthKitIsAvailable() ? AnyView(Image(systemName: "square.and.arrow.up").imageScale(.large)) : AnyView(EmptyView())
                     }.disabled(composedFoodItemVM.foodItems.isEmpty)
-                    
-                    Button(action: {
-                        // Add new product to composed food item
-                        activeSheet = .addProduct
-                    }) {
-                        Image(systemName: "plus.circle")
-                            .imageScale(.large)
-                            .foregroundColor(.green)
-                    }
                 }
             }
         }

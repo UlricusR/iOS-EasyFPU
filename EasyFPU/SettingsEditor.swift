@@ -29,7 +29,7 @@ struct SettingsEditor: View {
     @Environment(\.presentationMode) var presentation
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 // Sugars
                 Section(header: Text("Absorption Time Parameters for Sugars")) {
@@ -234,21 +234,23 @@ struct SettingsEditor: View {
             // Navigation bar
             .navigationBarTitle(Text("App Settings"))
             .toolbar {
-                ToolbarItemGroup(placement: .navigationBarLeading) {
-                    Button(action: {
-                        presentation.wrappedValue.dismiss()
-                    }) {
-                        Text("Cancel")
-                    }
-                    
+                ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         self.showingScreen = true
                     }) {
-                        Image(systemName: "questionmark.circle").imageScale(.large)
-                    }.padding()
+                        Image(systemName: "questionmark.circle")
+                            .imageScale(.large)
+                    }
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "x.circle.fill")
+                            .imageScale(.large)
+                    }
+                    
                     Button(action: {
                         // Update absorption block
                         for absorptionBlock in self.draftAbsorptionScheme.absorptionBlocks {
@@ -308,8 +310,8 @@ struct SettingsEditor: View {
                             presentation.wrappedValue.dismiss()
                         }
                     }) {
-                        // Quit edit mode
-                        Text("Done")
+                        Image(systemName: "checkmark.circle.fill")
+                            .imageScale(.large)
                     }
                 }
             }

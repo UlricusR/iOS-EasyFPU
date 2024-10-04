@@ -48,10 +48,12 @@
 "This is where you will see the nutritial data of your meal and where you can export it to Loop." = "This is where you will see the nutritial data of your meal and where you can export it to Loop.";
 "Make sure that you have your favorite products added to 'My Products' before you start adding some to your meal." = "Make sure that you have your favorite products added to 'My Products' before you start adding some to your meal.";
 "Add products to your meal" = "Add products to your meal";
+"Add products" = "Add products";
 
 // Products List
 "Food List" = "Food List";
-"Products" = "My Products";
+"Products" = "Products";
+"My Products" = "My Products";
 "Product" = "Product";
 "Product List" = "Product List";
 "Name" = "Name";
@@ -97,7 +99,8 @@
 "This product is created from a recipe, please open it in the recipe editor" = "This product is created from a recipe, please open it in the recipe editor";
 
 // Ingredients
-"Ingredients" = "My Ingredients";
+"Ingredients" = "Ingredients";
+"My Ingredients" = "My Ingredients";
 "Ingredient" = "Ingredient";
 "Ingredient List" = "Ingredient List";
 "New Ingredient" = "New Ingredient";
@@ -139,6 +142,7 @@
 "FPU" = "FPU";
 
 // Food item editor
+"Carbs" = "Carbs";
 "Carbs: " = "Carbs: ";
 "Calories: " = "Calories: ";
 "Amount: " = "Amount: ";
@@ -342,7 +346,7 @@
 "Delete the food item by tapping the link on the bottom of the view." = "Delete the food item by tapping the link on the bottom of the view.";
 
 // Meal Details help
-"Meal Details" = "Meal Details";
+"Meal Details" = "Details";
 "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid." = "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid.";
 "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal." = "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal.";
 "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.";

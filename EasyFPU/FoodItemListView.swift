@@ -61,7 +61,15 @@ struct FoodItemListView: View {
                         }) {
                             Image(systemName: "questionmark.circle")
                             .imageScale(.large)
-                            .padding()
+                        }
+                        
+                        Button(action: {
+                            // Add new food item
+                            activeSheet = .addFoodItem
+                        }) {
+                            Image(systemName: "plus.circle")
+                                .imageScale(.large)
+                                .foregroundColor(.green)
                         }
                         
                         if listType == .selection && !composedFoodItem.foodItems.isEmpty {
@@ -70,7 +78,6 @@ struct FoodItemListView: View {
                             }) {
                                 Image(systemName: "xmark.circle").foregroundColor(.red)
                                     .imageScale(.large)
-                                    .padding()
                             }
                         }
                     }
@@ -83,30 +90,22 @@ struct FoodItemListView: View {
                         }) {
                             if self.showFavoritesOnly {
                                 Image(systemName: "star.fill")
-                                .foregroundColor(Color.yellow)
-                                .padding()
+                                    .foregroundColor(Color.yellow)
+                                    .imageScale(.large)
                             } else {
                                 Image(systemName: "star")
-                                .foregroundColor(Color.blue)
-                                .padding()
-                            }
-                        }
-                        
-                        if listType == .maintenance {
-                            Button(action: {
-                                // Add new food item
-                                activeSheet = .addFoodItem
-                            }) {
-                                Image(systemName: "plus.circle")
+                                    .foregroundColor(Color.blue)
                                     .imageScale(.large)
-                                    .foregroundColor(.green)
                             }
                         }
                         
                         if listType == .selection {
-                            Button("Done") {
+                            Button(action: {
                                 // Close sheet
                                 presentation.wrappedValue.dismiss()
+                            }) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .imageScale(.large)
                             }.disabled(composedFoodItem.foodItems.isEmpty)
                         }
                     }

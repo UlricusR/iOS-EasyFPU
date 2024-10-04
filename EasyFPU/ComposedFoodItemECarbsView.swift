@@ -33,7 +33,6 @@ struct ComposedFoodItemECarbsView: View {
             }
             .multilineTextAlignment(.center)
             .foregroundColor(Color(ComposedFoodItemECarbsView.color))
-            .padding(.bottom)
             
             HStack {
                 VStack(alignment: .trailing) { // Questions

@@ -34,12 +34,12 @@ struct DisclaimerView: View {
                     Button(action: {
                         var settingsError = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
-                            self.alertTitle = "Notice"
+                            self.alertTitle = NSLocalizedString("Notice", comment: "")
                             self.alertMessage = settingsError
                         } else {
                             // Display alert
-                            self.alertTitle = "Disclaimer"
-                            self.alertMessage = "You need to accept the disclaimer to continue."
+                            self.alertTitle = NSLocalizedString("Disclaimer", comment: "")
+                            self.alertMessage = NSLocalizedString("You need to accept the disclaimer to continue.", comment: "")
                         }
                         self.showingAlert = true
                     }) {
@@ -51,7 +51,7 @@ struct DisclaimerView: View {
                     Button(action: {
                         var settingsError = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
-                            self.alertTitle = "Notice"
+                            self.alertTitle = NSLocalizedString("Notice", comment: "")
                             self.alertMessage = settingsError
                             self.showingAlert = true
                         }

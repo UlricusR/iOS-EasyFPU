@@ -89,20 +89,22 @@ struct FoodItemSelector: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Button(action: {
+                        self.showingSheet = true
+                    }) {
+                        Image(systemName: "questionmark.circle")
+                            .imageScale(.large)
+                    }
+                }
+                
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: {
                         // Do nothing, just quit edit mode, as food item hasn't been modified
                         presentation.wrappedValue.dismiss()
                     }) {
-                        Text("Cancel")
+                        Image(systemName: "x.circle.fill")
+                            .imageScale(.large)
                     }
                     
-                    Button(action: {
-                        self.showingSheet = true
-                    }) {
-                        Image(systemName: "questionmark.circle").imageScale(.large)
-                    }.padding()
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         // First check for unsaved typical amount
                         if self.addToTypicalAmounts {
@@ -122,7 +124,8 @@ struct FoodItemSelector: View {
                             self.showingAlert = true
                         }
                     }) {
-                        Text("Add")
+                        Image(systemName: "checkmark.circle.fill")
+                            .imageScale(.large)
                     }.disabled(draftFoodItem.amount <= 0)
                 }
             }

@@ -25,7 +25,6 @@ struct ComposedFoodItemSugarsView: View {
             }
             .multilineTextAlignment(.center)
             .foregroundColor(Color(ComposedFoodItemSugarsView.color))
-            .padding(.bottom)
             
             HStack {
                 VStack(alignment: .trailing) { // Questions

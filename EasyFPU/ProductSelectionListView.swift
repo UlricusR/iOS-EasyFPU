@@ -17,7 +17,7 @@ struct ProductSelectionListView: View {
             listType: FoodItemListView.FoodItemListType.selection,
             composedFoodItem: composedFoodItemVM,
             helpSheet: FoodItemListViewSheets.State.productSelectionListHelp,
-            foodItemListTitle: NSLocalizedString("Products", comment: "")
+            foodItemListTitle: NSLocalizedString("My Products", comment: "")
         )
     }
 }

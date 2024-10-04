@@ -20,62 +20,60 @@ struct MenuView: View {
     @State private var showActionSheet = false
     
     var body: some View {
-        NavigationView {
-            VStack(alignment: .leading) {
-                // Absorption Scheme
-                Button(action: {
-                    activeSheet = .editAbsorptionScheme
-                }) {
-                    Text("App Settings")
+        NavigationStack {
+            Form {
+                Section(header: Text("Settings")) {
+                    // Absorption Scheme
+                    Button(action: {
+                        activeSheet = .editAbsorptionScheme
+                    }) {
+                        Text("App Settings")
+                    }
                 }
-                .padding(.top, 50)
                 
-                // Import
-                Button(action: {
-                    activeSheet = .pickFileToImport
-                }) {
-                    Text("Import from JSON")
-                }
-                .padding(.top, 40)
-                
-                // Export
-                Button(action: {
-                    activeSheet = .pickExportDirectory
-                }) {
-                    Text("Export to JSON")
-                }
-                .padding(.top, 15)
-                
-                // About
-                Button(action: {
-                    activeSheet = .about
-                }) {
-                    Text("About")
-                }
-                .padding(.top, 40)
-                
-                // Disclaimer
-                Button(action: {
-                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &alertMessage) {
-                        self.showingAlert = true
+                Section(header: Text("Import/Export")) {
+                    // Import
+                    Button(action: {
+                        activeSheet = .pickFileToImport
+                    }) {
+                        Text("Import from JSON")
                     }
                     
-                    // Display disclaimer
-                    UserSettings.shared.disclaimerAccepted = false
-                }) {
-                    Text("Disclaimer")
+                    // Export
+                    Button(action: {
+                        activeSheet = .pickExportDirectory
+                    }) {
+                        Text("Export to JSON")
+                    }
                 }
-                .padding(.top, 15)
                 
-                // Web help
-                Button(action: {
-                    UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
-                }) {
-                    Text("Help on the Web")
+                Section(header: Text("Info")) {
+                    // About
+                    Button(action: {
+                        activeSheet = .about
+                    }) {
+                        Text("About")
+                    }
+                    
+                    // Disclaimer
+                    Button(action: {
+                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &alertMessage) {
+                            self.showingAlert = true
+                        }
+                        
+                        // Display disclaimer
+                        UserSettings.shared.disclaimerAccepted = false
+                    }) {
+                        Text("Disclaimer")
+                    }
+                    
+                    // Web help
+                    Button(action: {
+                        UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
+                    }) {
+                        Text("Help on the Web")
+                    }
                 }
-                .padding(.top, 15)
-                
-                Spacer()
             }
             .navigationBarTitle("Settings")
         }

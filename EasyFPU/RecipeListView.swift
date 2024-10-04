@@ -90,7 +90,17 @@ struct RecipeListView: View {
                         }) {
                             Image(systemName: "questionmark.circle")
                                 .imageScale(.large)
-                                .padding()
+                        }
+                        
+                        Button(action: {
+                            // Reset the shared ComposedViewVM
+                            UserSettings.shared.composedProduct.clear()
+                            
+                            activeSheet = .createRecipe
+                        }) {
+                            Image(systemName: "plus.circle")
+                                .foregroundColor(.green)
+                                .imageScale(.large)
                         }
                     }
                     
@@ -103,23 +113,12 @@ struct RecipeListView: View {
                             if self.showFavoritesOnly {
                                 Image(systemName: "star.fill")
                                     .foregroundColor(Color.yellow)
-                                    .padding()
+                                    .imageScale(.large)
                             } else {
                                 Image(systemName: "star")
                                     .foregroundColor(Color.blue)
-                                    .padding()
+                                    .imageScale(.large)
                             }
-                        }
-                        
-                        Button(action: {
-                            // Reset the shared ComposedViewVM
-                            UserSettings.shared.composedProduct.clear()
-                            
-                            activeSheet = .createRecipe
-                        }) {
-                            Image(systemName: "plus.circle")
-                                .imageScale(.large)
-                                .foregroundColor(.green)
                         }
                     }
                 }
