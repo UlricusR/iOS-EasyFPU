@@ -46,14 +46,15 @@
 "Calculate meal" = "Calculate meal";
 "Total meal" = "My meal";
 "This is where you will see the nutritial data of your meal and where you can export it to Loop." = "This is where you will see the nutritial data of your meal and where you can export it to Loop.";
-"Make sure that you have your favorite products added to 'My Dishes' before you start adding some to your meal." = "Make sure that you have your favorite products added to 'My Dishes' before you start adding some to your meal.";
-"Add products to your meal" = "Add products to your meal";
-"Add products" = "Add products";
+"Make sure that you have your favorite products added to 'My Dishes' before you start adding some to your meal." = "Make sure that you have your favorite food added to 'My Dishes' before you start adding some to your meal.";
+"Add products to your meal" = "Add dishes to your meal";
+"Add products" = "Add dishes";
 
 // Dishes List
 "Products" = "Dishes";
 "My Products" = "My Dishes";
 "Product" = "Dish";
+"Oops! There are no dishes in your list yet. Start by adding some!" = "Oops! There are no dishes in your list yet. Start by adding some!";
 "Name" = "Name";
 "Favorite" = "Favorite";
 "Carbs per 100g" = "Carbs per 100g";
@@ -94,20 +95,21 @@
 "Cannot delete ingredient" = "Cannot delete ingredient";
 "Could not generate data export" = "Could not generate data export";
 "is not a valid data model" = "is not a valid data model. Could not import data.";
-"This product is created from a recipe, please open it in the recipe editor" = "This product is created from a recipe, please open it in the recipe editor";
+"This product is created from a recipe, please open it in the recipe editor" = "This dish is created from a recipe, please open it in the recipe editor";
 
 // Ingredients
 "Ingredients" = "Ingredients";
 "My Ingredients" = "My Ingredients";
 "Ingredient" = "Ingredient";
+"Oops! There are no ingredients in your list yet. Start by adding some!" = "Oops! There are no ingredients in your list yet. Start by adding some!";
 "Ingredient List" = "Ingredient List";
 "New Ingredient" = "New Ingredient";
 "Category" = "Category";
 "Composed product" = "My recipe";
 "Weight" = "Weight";
 "Final product" = "My recipe";
-"The weight of the composed product is less than the sum of its ingredients" = "The weight of the composed product is less than the sum of its ingredients";
-"The weight of the composed product is more than the sum of its ingredients" = "The weight of the composed product is more than the sum of its ingredients";
+"The weight of the composed product is less than the sum of its ingredients" = "The weight of the finished dish is less than the sum of its ingredients";
+"The weight of the composed product is more than the sum of its ingredients" = "The weight of the finished dish is more than the sum of its ingredients";
 "Save" = "Save";
 "Save anyway" = "Save anyway";
 "Number of portions" = "Number of portions";
@@ -375,8 +377,8 @@
 // Food item composer help
 "Food Item Composer" = "Recipe Editor";
 "This view summarizes your recipe. It shows the selected ingredients and lets you edit the following details:" = "This view summarizes your recipe. It shows the selected ingredients and lets you edit the following details:";
-"- The name of the composed product / recipe" = "- The name of the composed product / recipe";
-"- The total weight of the final product" = "- The total weight of the final product";
+"- The name of the composed product / recipe" = "- The name of the finished dish / recipe";
+"- The total weight of the final product" = "- The total weight of the finished dish";
 "- Whether or not the recipe is a favorite" = "- Whether or not the recipe is a favorite";
 "- The number of portions" = "- The number of portions";
 "Tapping 'Clear' in the recipe summary will clear your recipe, i.e. remove all ingredients." = "Tapping 'Clear' in the recipe summary will clear your recipe, i.e. remove all ingredients.";

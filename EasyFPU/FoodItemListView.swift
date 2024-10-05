@@ -21,6 +21,9 @@ struct FoodItemListView: View {
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     var helpSheet: FoodItemListViewSheets.State
     var foodItemListTitle: String
+    var emptyStateImage: Image
+    var emptyStateMessage: Text
+    var emptyStateButtonText: Text
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
     @State private var activeSheet: FoodItemListViewSheets.State?
@@ -45,10 +48,32 @@ struct FoodItemListView: View {
     var body: some View {
         ZStack(alignment: .top) {
             NavigationStack {
-                List {
-                    ForEach(self.filteredFoodItems) { foodItem in
-                        FoodItemView(composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
-                            .environment(\.managedObjectContext, self.managedObjectContext)
+                VStack {
+                    if foodItems.isEmpty {
+                        // List is empty, so show a nice picture and an action button
+                        emptyStateImage.padding()
+                        emptyStateMessage.padding()
+                        Button {
+                            // Add new food item
+                            activeSheet = .addFoodItem
+                        } label: {
+                            HStack {
+                                Image(systemName: "plus.circle").imageScale(.large).foregroundColor(.green)
+                                emptyStateButtonText
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    .fill(.yellow)
+                            )
+                        }
+                    } else {
+                        List {
+                            ForEach(self.filteredFoodItems) { foodItem in
+                                FoodItemView(composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
+                                    .environment(\.managedObjectContext, self.managedObjectContext)
+                            }
+                        }
                     }
                 }
                 .navigationBarTitle(foodItemListTitle)

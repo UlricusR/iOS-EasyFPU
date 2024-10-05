@@ -54,6 +54,7 @@
 "Products" = "Speisen";
 "My Products" = "Meine Speisen";
 "Product" = "Speise";
+"Oops! There are no dishes in your list yet. Start by adding some!" = "Hoppla! Es sind noch keine Speisen auf Deiner Liste. Füge welche hinzu!";
 "Name" = "Name";
 "Favorite" = "Lieblingsessen";
 "Carbs per 100g" = "Kohlenhydrate pro 100g";
@@ -100,6 +101,7 @@
 "Ingredients" = "Zutaten";
 "My Ingredients" = "Meine Zutaten";
 "Ingredient" = "Zutat";
+"Oops! There are no ingredients in your list yet. Start by adding some!" = "Hoppla! Es sind noch keine Zutaten auf Deiner Liste. Füge welche hinzu!";
 "Ingredient List" = "Zutatenliste";
 "New Ingredient" = "Neue Zutat";
 "Category" = "Kategorie";
