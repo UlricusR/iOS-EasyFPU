@@ -27,7 +27,7 @@
 "Share" = "Share";
 "Clear" = "Clear";
 "Close" = "Close";
-"Move to Product List" = "Move to Products";
+"Move to Product List" = "Move to Dishes";
 "Move to Ingredient List" = "Move to Ingredients";
 "Delete" = "Delete";
 "Copy" = "Copy";
@@ -46,16 +46,14 @@
 "Calculate meal" = "Calculate meal";
 "Total meal" = "My meal";
 "This is where you will see the nutritial data of your meal and where you can export it to Loop." = "This is where you will see the nutritial data of your meal and where you can export it to Loop.";
-"Make sure that you have your favorite products added to 'My Products' before you start adding some to your meal." = "Make sure that you have your favorite products added to 'My Products' before you start adding some to your meal.";
+"Make sure that you have your favorite products added to 'My Dishes' before you start adding some to your meal." = "Make sure that you have your favorite products added to 'My Dishes' before you start adding some to your meal.";
 "Add products to your meal" = "Add products to your meal";
 "Add products" = "Add products";
 
-// Products List
-"Food List" = "Food List";
-"Products" = "Products";
-"My Products" = "My Products";
-"Product" = "Product";
-"Product List" = "Product List";
+// Dishes List
+"Products" = "Dishes";
+"My Products" = "My Dishes";
+"Product" = "Dish";
 "Name" = "Name";
 "Favorite" = "Favorite";
 "Carbs per 100g" = "Carbs per 100g";
@@ -72,8 +70,8 @@
 "kcal" = "kcal";
 "g/FPU" = "g/FPU";
 "e-Carbs Factor" = "e-Carbs Faktor";
-"New Product" = "New Product";
-"Edit food item" = "Edit food item";
+"New Product" = "New Dish";
+"Edit food item" = "Edit Dish";
 "Nutritional values per 100g:" = "Per 100g:";
 "Nutritional values for" = "Nutritional values for";
 "Amount" = "Amount";
@@ -118,10 +116,10 @@
 "portion(s)" = "portions(s)";
 "per portion" = "per portion";
 "Cannot create typical amount: " = "Cannot create typical amount: ";
-"successfully saved in Products" = "successfully saved as Recipe and added to Products";
-"successfully saved as Recipe" = "successfully saved as Recipe, but not added to Products";
-"successfully updated in Products" = "successfully updated as Recipe and in Products";
-"successfully updated as Recipe" = "successfully updated as Recipe, but not in Products";
+"successfully saved in Products" = "successfully saved as Recipe and added to Dishes";
+"successfully saved as Recipe" = "successfully saved as Recipe, but not added to Dishes";
+"successfully updated in Products" = "successfully updated as Recipe and in Dishes";
+"successfully updated as Recipe" = "successfully updated as Recipe, but not in Dishes";
 "Could not create the composed food item" = "Oops! Could not create the composed food item due to missing ingredients. This should not happen. Please inform the App developer.";
 "Could not update the composed food item" = "Oops! Could not update the composed food item, as no Recipe was found. This should not happen. Please inform the App developer.";
 
@@ -228,7 +226,7 @@
 "Append" = "Add";
 "Keep both" = "Keep both";
 "Create Food Item" = "Create Food Item";
-"Only update Composed Food Item" = "Only update Composed Food Item";
+"Only update Composed Food Item" = "Only update Recipe";
 "Unable to open URL: " = "Unable to open URL: ";
 "Failed to decode due to missing key " = "Failed to decode due to missing key ";
 "Failed to decode due to type mismatch - " = "Failed to decode due to type mismatch - ";
@@ -305,22 +303,22 @@
 "Generate Typical Amounts" = "Generate Typical Amounts";
 
 // Food List help
-"The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
-"The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food.";
-"To add a new food item, tap on the large Plus button in the top right corner to add a new food item." = "To add a new food item, tap on the large Plus button in the top right corner to add a new food item.";
-"As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed.";
-"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
-"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
-"In case you have selected one or more food items, the arrow in the top right corner turns red. Click it to view the summary of your total meal and to export it to, e.g., Loop." = "In case you have selected one or more food items, the arrow in the top right corner turns red. Click it to view the summary of your total meal and to export it to, e.g., Loop.";
+"The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The list of dishes is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
+"The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "The list of dishes is empty on purpose when first opening the app, as everybody prefers different FPU relevant dishes.";
+"To add a new food item, tap on the large Plus button in the top right corner to add a new food item." = "To add a new dish, tap on the large Plus button in the top right corner to add a new dish.";
+"As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "As soon as your list of dishes contains one or more dish, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount consumed.";
+"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the dish has not yet been selected.";
+"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the dish has been selected and is included in your meal. Tapping the the dish again will remove it from your meal.";
+"In case you have selected one or more food items, the arrow in the top right corner turns red. Click it to view the summary of your total meal and to export it to, e.g., Loop." = "In case you have selected one or more dishes, the arrow in the top right corner turns red. Click it to view the summary of your total meal and to export it to, e.g., Loop.";
 
 // Ingredients list help
 "Ingredients List" = "Ingredients List";
 "The ingredients list contains the ingredients required to compose a recipe." = "The ingredients list contains the ingredients required to compose a recipe.";
 "To add a new ingredient, tap on the large Plus button in the top right corner." = "To add a new ingredient, tap on the large Plus button in the top right corner.";
 "As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount." = "As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount.";
-"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
-"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
-"In case you have selected one or more ingredients, the arrow in the top right corner turns red. Click it to view and edit the summary of your recipe and to save it to your products." = "In case you have selected one or more ingredients, the arrow in the top right corner turns red. Click it to view and edit the summary of your recipe and to save it to your products.";
+"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the ingredient has not yet been selected.";
+"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the ingredient has been selected and is included in your recipe. Tapping the the ingredient again will remove it from your recipe.";
+"In case you have selected one or more ingredients, the arrow in the top right corner turns red. Click it to view and edit the summary of your recipe and to save it to your products." = "In case you have selected one or more ingredients, the arrow in the top right corner turns red. Click it to view and edit the summary of your recipe and to save it to your dishes.";
 
 // Select Food Item help
 "Select Food Item" = "Select Food Item";
@@ -382,7 +380,7 @@
 "- Whether or not the recipe is a favorite" = "- Whether or not the recipe is a favorite";
 "- The number of portions" = "- The number of portions";
 "Tapping 'Clear' in the recipe summary will clear your recipe, i.e. remove all ingredients." = "Tapping 'Clear' in the recipe summary will clear your recipe, i.e. remove all ingredients.";
-"Tapping 'Save' in the recipe summary will save your recipe as a product in the product list" = "Tapping 'Save' in the recipe summary will save your recipe as a product in the product list";
+"Tapping 'Save' in the recipe summary will save your recipe as a product in the product list" = "Tapping 'Save' in the recipe summary will save your recipe as a dish in the list of dishes";
 
 // Health export help
 "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles.";
