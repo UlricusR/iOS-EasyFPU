@@ -49,6 +49,7 @@
 "Make sure that you have your favorite products added to 'My Products' before you start adding some to your meal." = "Stelle sicher, dass Du Deine Lieblingsspeisen in 'Meine Speisen' hinzugefügt hast, bevor Du sie hier Deiner Mahlzeit hinzufügst.";
 "Add products to your meal" = "Füge Speisen zur Mahlzeit hinzu";
 "Add products" = "Speisen hinzufügen";
+"Edit products" = "Speisen bearbeiten";
 
 // Products List
 "Products" = "Speisen";
@@ -96,6 +97,8 @@
 "Could not generate data export" = "Konnte Daten nicht exportieren";
 "is not a valid data model" = "ist kein gültiges Datenmodell. Konnte Daten nicht importieren.";
 "This product is created from a recipe, please open it in the recipe editor" = "Diese Speise ist mit einem Rezept verknüpft, bitte öffne es im Rezepteditor";
+"There's an associated recipe, do you want to delete it as well?" = "Es gibt ein verknüpftes Rezept. Willst Du dieses auch löschen?";
+"Keep recipe" = "Nur Speise löschen";
 
 // Ingredients
 "Ingredients" = "Zutaten";
@@ -171,7 +174,11 @@
 "Your yummy recipe will appear here once you add some ingredients." = "Dein leckeres Rezept wird hier erscheinen, sobald Du Zutaten hinzufügst.";
 "Have you added ingredients to 'My Ingredients'?" = "Hast Du Zutaten zu 'Meine Zutaten' hinzugefügt?";
 "Add ingredients" = "Zutaten hinzufügen";
+"Edit ingredients" = "Zutaten bearbeiten";
 "No associated cdComposedFoodItem" = "Kein assoziiertes cdComposedFoodItem - das sollte nicht passieren - bitte das Entwicklungsteam informieren";
+"There's an associated product, do you want to delete it as well?" = "Dieses Rezept ist mit einer Speise verknüpft. Willst Du diese auch löschen?";
+"Delete both" = "Rezept und Speise löschen";
+"Keep product" = "Nur Rezept löschen";
 
 // Settings editor
 "Absorption scheme" = "Absorptionsschema";
@@ -219,8 +226,6 @@
 "Failed to access " = "Zugriff nicht möglich auf ";
 "Successfully imported food list" = "Essensliste erfolgreich importiert";
 "Failed to import food list" = "Konnte Essensliste nicht importieren";
-"The following food items already exist and were not imported: " = "Folgende Essen sind bereits vorhanden und wurden nicht importiert: ";
-"more" = "weitere";
 "Notice" = "Hinweis";
 "Import food list" = "Essensliste importieren";
 "Please select" = "Bitte auswählen";

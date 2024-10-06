@@ -49,6 +49,7 @@
 "Make sure that you have your favorite products added to 'My Dishes' before you start adding some to your meal." = "Make sure that you have your favorite food added to 'My Dishes' before you start adding some to your meal.";
 "Add products to your meal" = "Add dishes to your meal";
 "Add products" = "Add dishes";
+"Edit products" = "Edit dishes";
 
 // Dishes List
 "Products" = "Dishes";
@@ -96,6 +97,8 @@
 "Could not generate data export" = "Could not generate data export";
 "is not a valid data model" = "is not a valid data model. Could not import data.";
 "This product is created from a recipe, please open it in the recipe editor" = "This dish is created from a recipe, please open it in the recipe editor";
+"There's an associated recipe, do you want to delete it as well?" = "There's an associated recipe, do you want to delete it as well?";
+"Keep recipe" = "Delete dish only";
 
 // Ingredients
 "Ingredients" = "Ingredients";
@@ -171,7 +174,11 @@
 "Your yummy recipe will appear here once you add some ingredients." = "Your yummy recipe will appear here once you add some ingredients.";
 "Have you added ingredients to 'My Ingredients'?" = "Have you added ingredients to 'My Ingredients'?";
 "Add ingredients" = "Add ingredients";
+"Edit ingredients" = "Edit ingredients";
 "No associated cdComposedFoodItem" = "No associated cdComposedFoodItem - should not happen - please contact the app developer";
+"There's an associated product, do you want to delete it as well?" = "There's an associated dish, do you want to delete it as well?";
+"Delete both" = "Delete recipe and dish";
+"Keep product" = "Delete recipe only";
 
 // Settings editor
 "Absorption scheme" = "Absorption scheme";
@@ -219,8 +226,6 @@
 "Failed to export food list to: " = "Failed to export food list to: ";
 "Successfully imported food list" = "Successfully imported food list";
 "Failed to import food list" = "Failed to import food list";
-"The following food items already exist and were not imported: " = "The following food items already exist and were not imported: ";
-"more" = "more";
 "Notice" = "Notice";
 "Import food list" = "Import food list";
 "Please select" = "Please select";

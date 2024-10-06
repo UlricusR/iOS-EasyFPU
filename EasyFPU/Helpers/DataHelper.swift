@@ -59,7 +59,12 @@ class DataHelper {
     
     // MARK: - Importing and exporting food items as JSON
     
-    static func importFoodItems(_ file: URL, foodItemVMsToBeImported: inout [FoodItemViewModel]?, errorMessage: inout String) -> Bool {
+    static func importFoodItems(
+        _ file: URL,
+        foodItemVMsToBeImported: inout [FoodItemViewModel]?,
+        composedFoodItemVMsToBeImported: inout [ComposedFoodItemViewModel]?,
+        errorMessage: inout String
+    ) -> Bool {
         debugPrint("Trying to import following file: \(file)")
         
         // Make sure we can access file
@@ -104,6 +109,7 @@ class DataHelper {
             case .version2:
                 let wrappedData = try decoder.decode(DataWrapper.self, from: jsonData)
                 foodItemVMsToBeImported = wrappedData.foodItemVMs
+                composedFoodItemVMsToBeImported = wrappedData.composedFoodItemVMs
             }
             // All has gone fine, we return true
             return true
@@ -133,8 +139,15 @@ class DataHelper {
             foodItems.append(FoodItemViewModel(from: cdFoodItem))
         }
         
+        // Get Core Data ComposedFoodItems and load them into ComposedFoodItemViewModels
+        let cdComposedFoodItems = ComposedFoodItem.fetchAll()
+        var composedFoodItems = [ComposedFoodItemViewModel]()
+        for cdComposedFoodItem in cdComposedFoodItems {
+            composedFoodItems.append(ComposedFoodItemViewModel(from: cdComposedFoodItem))
+        }
+        
         // Prepare the DataWrapper
-        let dataWrapper = DataWrapper(dataModelVersion: .version2, foodItemVMs: foodItems)
+        let dataWrapper = DataWrapper(dataModelVersion: .version2, foodItemVMs: foodItems, composedFoodItemVMs: composedFoodItems)
         
         // Encode
         let formatter = DateFormatter()

@@ -191,7 +191,15 @@ struct FoodItemEditor: View {
                 }
                 .navigationBarTitle(navigationBarTitle)
                 .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarLeading) {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            activeSheet = .help
+                        }) {
+                            Image(systemName: "questionmark.circle").imageScale(.large)
+                        }
+                    }
+                    
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Button(action: {
                             // First quit edit mode
                             presentation.wrappedValue.dismiss()
@@ -202,26 +210,24 @@ struct FoodItemEditor: View {
                             }
                             self.typicalAmountsToBeDeleted.removeAll()
                         }) {
-                            Text("Cancel")
+                            Image(systemName: "x.circle.fill")
+                                .imageScale(.large)
                         }
                         
                         Button(action: {
-                            activeSheet = .help
-                        }) {
-                            Image(systemName: "questionmark.circle").imageScale(.large)
-                        }.padding()
-                    }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            if FoodItem.getFoodItemByName(name: draftFoodItemVM.name) != nil || ComposedFoodItem.getComposedFoodItemByName(name: draftFoodItemVM.name) != nil {
+                            // Trim white spaces from name
+                            draftFoodItemVM.name = draftFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                            
+                            // Check if we have duplicate names (if this is no edited food item)
+                            if editedFoodItem == nil && (FoodItem.getFoodItemByName(name: draftFoodItemVM.name) != nil || ComposedFoodItem.getComposedFoodItemByName(name: draftFoodItemVM.name) != nil) {
                                 errorMessage = NSLocalizedString("A food item with this name already exists", comment: "")
                                 self.activeAlert = .alertMessage
                             } else {
                                 saveFoodItem()
                             }
                         }) {
-                            Text("Done")
+                            Image(systemName: "checkmark.circle.fill")
+                                .imageScale(.large)
                         }
                     }
                 }
@@ -279,11 +285,7 @@ struct FoodItemEditor: View {
                 // Reset typical amounts to be deleted
                 self.typicalAmountsToBeDeleted.removeAll()
             } else { // We have a new food item
-                var errorMessage = ""
-                if FoodItem.create(from: updatedFoodItemVM, allowDuplicate: false, foodItemNotCreated: &errorMessage) == nil {
-                    self.errorMessage = errorMessage
-                    self.activeAlert = .alertMessage
-                }
+                _ = FoodItem.create(from: updatedFoodItemVM, allowDuplicate: false)
             }
             
             // Quit edit mode

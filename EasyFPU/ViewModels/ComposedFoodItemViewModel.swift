@@ -93,7 +93,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     
     enum CodingKeys: String, CodingKey {
         case composedFoodItem
-        case id, amount, favorite, name, category, numberOfPortions, foodItems
+        case id, name, category, favorite, amount, numberOfPortions
+        case ingredients
     }
     
     init(id: UUID, name: String, category: FoodItemCategory, favorite: Bool) {
@@ -104,7 +105,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     }
     
     init(from cdComposedFoodItem: ComposedFoodItem) {
-        self.id = cdComposedFoodItem.id // TODO check
+        self.id = cdComposedFoodItem.id // Same ID as the Core Data ComposedFoodItem
         self.name = cdComposedFoodItem.name
         self.category = FoodItemCategory.product
         self.favorite = cdComposedFoodItem.favorite
@@ -145,14 +146,20 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         name = try composedFoodItem.decode(String.self, forKey: .name)
         numberOfPortions = try composedFoodItem.decode(Int.self, forKey: .numberOfPortions)
         
-        // Although foodItems are stored completely, we treat them as Ingredients and only use amount, but match them to FoodItems
-        let ingredients = try composedFoodItem.decode([FoodItemViewModel].self, forKey: .foodItems)
+        // Load the ingredients
+        let ingredients = try composedFoodItem.decode([FoodItemViewModel].self, forKey: .ingredients)
         for ingredient in ingredients {
-            // Search for the related Core Data FoodItem (which should have been loaded already,
-            // as ComposedFoodItems were sorted last before exporting the list of FoodItems
-            if let relatedFoodItem = FoodItem.getFoodItemByID(ingredient.id.uuidString) {
-                foodItems.append(FoodItemViewModel(from: relatedFoodItem))
-            }
+            // Create the ingredients as FoodItemViewModels
+            foodItems.append(FoodItemViewModel(
+                id: ingredient.id,
+                name: ingredient.name,
+                category: .ingredient,
+                favorite: ingredient.favorite,
+                caloriesPer100g: ingredient.caloriesPer100g,
+                carbsPer100g: ingredient.carbsPer100g,
+                sugarsPer100g: ingredient.sugarsPer100g,
+                amount: ingredient.amount
+            ))
         }
     }
     
@@ -246,10 +253,11 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         var composedFoodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .composedFoodItem)
-        try composedFoodItem.encode(amount, forKey: .amount)
-        try composedFoodItem.encode(favorite, forKey: .favorite)
+        try composedFoodItem.encode(id, forKey: .id)
         try composedFoodItem.encode(name, forKey: .name)
+        try composedFoodItem.encode(favorite, forKey: .favorite)
+        try composedFoodItem.encode(amount, forKey: .amount)
         try composedFoodItem.encode(numberOfPortions, forKey: .numberOfPortions)
-        try composedFoodItem.encode(foodItems, forKey: .foodItems)
+        try composedFoodItem.encode(foodItems, forKey: .ingredients)
     }
 }

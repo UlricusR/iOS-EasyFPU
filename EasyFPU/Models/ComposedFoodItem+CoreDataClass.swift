@@ -32,20 +32,20 @@ public class ComposedFoodItem: NSManagedObject {
     /**
      Creates a new ComposedFoodItem from the ComposedFoodItemViewModel.
      Creates the Ingredients and relates them to the new ComposedFoodItem.
-     Also creates a new FoodItem and relates it to the new ComposedFoodItem and vice versa.
+     Also creates a new FoodItem and relates it to the new ComposedFoodItem.
      
      - Parameter composedFoodItemVM: The source view model.
      
      - Returns: A Core Data ComposedFoodItem; nil if there are no Ingredients.
      */
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem? {
+    static func create(from composedFoodItemVM: ComposedFoodItemViewModel, isImport: Bool = false) -> ComposedFoodItem? {
         let moc = AppDelegate.viewContext
         
         // Create new ComposedFoodItem
         let cdComposedFoodItem = ComposedFoodItem(context: moc)
         
         // No existing composed food item, therefore create a new UUID
-        cdComposedFoodItem.id = UUID()
+        cdComposedFoodItem.id = composedFoodItemVM.id
         
         // Fill data
         cdComposedFoodItem.name = composedFoodItemVM.name
@@ -56,12 +56,11 @@ public class ComposedFoodItem: NSManagedObject {
         // Add cdComposedFoodItem to composedFoodItemVM
         composedFoodItemVM.cdComposedFoodItem = cdComposedFoodItem
         
-        // Create a related FoodItem and relate it to the ComposedFoodItem and vice versa
+        // Create a related FoodItem and relate it to the ComposedFoodItem
         cdComposedFoodItem.foodItem = FoodItem.create(from: composedFoodItemVM)
-        cdComposedFoodItem.foodItem!.composedFoodItem = cdComposedFoodItem
         
         // Add new ingredients
-        if let cdIngredients = Ingredient.create(from: composedFoodItemVM) {
+        if let cdIngredients = Ingredient.create(from: composedFoodItemVM, isImport: isImport) {
             cdComposedFoodItem.addToIngredients(NSSet(array: cdIngredients))
             
             // Save new composed food item
@@ -112,6 +111,14 @@ public class ComposedFoodItem: NSManagedObject {
             cdComposedFoodItem.favorite = composedFoodItemVM.favorite
             cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
             cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
+            
+            // If the related Core Data FoodItem was deleted, we need to create a new one
+            // and set its ID to the same as the composed food item
+            if cdComposedFoodItem.foodItem == nil {
+                let cdFoodItem = FoodItem.create(from: composedFoodItemVM)
+                cdFoodItem.id = cdComposedFoodItem.id
+                cdComposedFoodItem.foodItem = cdFoodItem
+            }
             
             // Update related cdFoodItem
             cdComposedFoodItem.foodItem?.name = composedFoodItemVM.name

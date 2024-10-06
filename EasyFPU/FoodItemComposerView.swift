@@ -97,10 +97,9 @@ struct FoodItemComposerView: View {
                                     activeSheet = .addIngredients
                                 }) {
                                     HStack {
-                                        Image(systemName: "plus.circle")
+                                        Image(systemName: "pencil.circle")
                                             .imageScale(.large)
-                                            .foregroundColor(.green)
-                                        Text("Add ingredients")
+                                        Text("Edit ingredients")
                                     }
                                 }
                                 List {
@@ -136,6 +135,9 @@ struct FoodItemComposerView: View {
                         }
                         
                         Button(action: {
+                            // Trim white spaces from name
+                            composedFoodItemVM.name = composedFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                            
                             // Check if this is a new ComposedFoodItem (no Core Data object attached yet) and, if yes, the name already exists
                             if composedFoodItemVM.cdComposedFoodItem == nil && (FoodItem.getFoodItemByName(name: composedFoodItemVM.name) != nil || ComposedFoodItem.getComposedFoodItemByName(name: composedFoodItemVM.name) != nil) {
                                 alertMessage = NSLocalizedString("A food item with this name already exists", comment: "")

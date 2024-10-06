@@ -40,7 +40,7 @@ public class Ingredient: NSManagedObject {
      - if the VM has no ComposedFoodItem (should never be the case)
      - of if there are no FoodItems attached to the ComposedFoodItem (should never be the case)
      */
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) -> [Ingredient]? {
+    static func create(from composedFoodItemVM: ComposedFoodItemViewModel, isImport: Bool = false) -> [Ingredient]? {
         // We cannot create an Ingredient if no FoodItem is available or no food item ingredients are attached
         if (composedFoodItemVM.cdComposedFoodItem == nil || composedFoodItemVM.foodItems.count == 0) {
             return nil
@@ -52,14 +52,21 @@ public class Ingredient: NSManagedObject {
         let moc = AppDelegate.viewContext
         
         for ingredient in composedFoodItemVM.foodItems {
-            // We cannot create an Ingredient if we have no cdFoodItem
-            if ingredient.cdFoodItem != nil {
+            // In case of an import, there might be no Core Data FoodItem for the ingredient yet
+            if isImport {
+                // Get existing or new FoodItem
+                let relatedFoodItem = FoodItem.create(from: ingredient, allowDuplicate: false)
+                ingredient.cdFoodItem = relatedFoodItem
+            }
+            
+            // If no import: We cannot create an Ingredient if we have no cdFoodItem
+            if let associatedCDFoodItem = ingredient.cdFoodItem {
                 // Create Ingredient
                 let cdIngredient = Ingredient(context: moc)
                 
                 // Fill data
                 // We use the identical UUID as the FoodItem, so that we can identify the related FoodItem later
-                cdIngredient.id = ingredient.cdFoodItem!.id // The id of the related FoodItem
+                cdIngredient.id = associatedCDFoodItem.id // The id of the related FoodItem
                 cdIngredient.name = ingredient.name
                 cdIngredient.favorite = ingredient.favorite
                 cdIngredient.amount = Int64(ingredient.amount)
@@ -69,14 +76,14 @@ public class Ingredient: NSManagedObject {
                 
                 // Create 1:1 references to ComposedFoodItem and FoodItem
                 cdIngredient.composedFoodItem = composedFoodItemVM.cdComposedFoodItem!
-                cdIngredient.foodItem = ingredient.cdFoodItem
-                
-                // Save new Ingredient
-                try? moc.save()
+                cdIngredient.foodItem = associatedCDFoodItem
                 
                 cdIngredients.append(cdIngredient)
             }
         }
+        
+        // Save
+        try? moc.save()
         
         // Return the ingredients if any
         return cdIngredients.count > 0 ? cdIngredients : nil

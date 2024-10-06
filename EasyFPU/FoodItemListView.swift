@@ -39,9 +39,13 @@ struct FoodItemListView: View {
     
     private var filteredFoodItems: [FoodItemViewModel] {
         if searchString == "" {
-            return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite && $0.category == self.category } : foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category }
+            return showFavoritesOnly ?
+            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category && $0.favorite } :
+            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category }
         } else {
-            return showFavoritesOnly ? foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.favorite && $0.category == self.category && $0.name.lowercased().contains(searchString.lowercased()) } : foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category && $0.name.lowercased().contains(searchString.lowercased()) }
+            return showFavoritesOnly ?
+            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category && $0.favorite && $0.name.lowercased().contains(searchString.lowercased()) } :
+            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category && $0.name.lowercased().contains(searchString.lowercased()) }
         }
     }
     
@@ -69,7 +73,15 @@ struct FoodItemListView: View {
                         }
                     } else {
                         List {
-                            ForEach(self.filteredFoodItems) { foodItem in
+                            ForEach(self.filteredFoodItems.sorted {
+                                if composedFoodItem.foodItems.contains($0) && !composedFoodItem.foodItems.contains($1) {
+                                    return true
+                                } else if !composedFoodItem.foodItems.contains($0) && composedFoodItem.foodItems.contains($1) {
+                                    return false
+                                } else {
+                                    return $0.name < $1.name
+                                }
+                            }) { foodItem in
                                 FoodItemView(composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
                                     .environment(\.managedObjectContext, self.managedObjectContext)
                             }

@@ -14,8 +14,10 @@ struct FoodItemView: View {
     @ObservedObject var foodItemVM: FoodItemViewModel
     var category: FoodItemCategory
     var listType: FoodItemListView.FoodItemListType
-    @State var activeSheet: FoodItemViewSheets.State?
-    @State var showingAlert: Bool = false
+    @State private var activeSheet: FoodItemViewSheets.State?
+    @State private var showingAlert: Bool = false
+    @State private var actionSheetIsPresented: Bool = false
+    @State private var foodItemToBeDeleted: FoodItem?
     
     var body: some View {
         VStack {
@@ -23,11 +25,11 @@ struct FoodItemView: View {
             HStack {
                 if listType == .selection {
                     if let foodItemIndex = composedFoodItemVM.foodItems.firstIndex(of: foodItemVM) {
-                        Image(systemName: "xmark.circle").foregroundColor(.red)
+                        Image(systemName: "power").foregroundColor(.green)
                         Text("\(composedFoodItemVM.foodItems[foodItemIndex].amount)").font(.headline).foregroundColor(.accentColor)
                         Text("g").font(.headline).foregroundColor(.accentColor)
                     } else {
-                        Image(systemName: "plus.circle").foregroundColor(.green)
+                        Image(systemName: "power").foregroundColor(.gray)
                     }
                 }
                 Text(foodItemVM.name).font(.headline).foregroundColor(listType == .selection && composedFoodItemVM.foodItems.contains(foodItemVM) ? .accentColor : .none)
@@ -61,11 +63,13 @@ struct FoodItemView: View {
             }
         }
         .onTapGesture {
-            if listType == .selection {
-                if composedFoodItemVM.foodItems.contains(foodItemVM) {
-                    composedFoodItemVM.remove(foodItem: foodItemVM)
-                } else {
-                    activeSheet = .selectFoodItem
+            withAnimation(.default) {
+                if listType == .selection {
+                    if composedFoodItemVM.foodItems.contains(foodItemVM) {
+                        composedFoodItemVM.remove(foodItem: foodItemVM)
+                    } else {
+                        activeSheet = .selectFoodItem
+                    }
                 }
             }
         }
@@ -108,7 +112,13 @@ struct FoodItemView: View {
                 // Delete the food item
                 Button(action: {
                     if let foodItemToBeDeleted = foodItemVM.cdFoodItem {
-                        FoodItem.delete(foodItemToBeDeleted)
+                        // Check for associated recipe
+                        if foodItemToBeDeleted.composedFoodItem != nil {
+                            self.foodItemToBeDeleted = foodItemToBeDeleted
+                            self.actionSheetIsPresented.toggle()
+                        } else {
+                            FoodItem.delete(foodItemToBeDeleted)
+                        }
                     }
                 }) {
                     Text("Delete")
@@ -120,6 +130,22 @@ struct FoodItemView: View {
         }
         .alert(NSLocalizedString("This product is created from a recipe, please open it in the recipe editor", comment: ""), isPresented: $showingAlert) {
             Button("OK", role: .cancel) { }
+        }
+        .actionSheet(isPresented: $actionSheetIsPresented) {
+            ActionSheet(title: Text("Warning"), message: Text("There's an associated recipe, do you want to delete it as well?"), buttons: [
+                .default(Text("Delete both")) {
+                    if let foodItemToBeDeleted {
+                        ComposedFoodItem.delete(foodItemToBeDeleted.composedFoodItem!)
+                        FoodItem.delete(foodItemToBeDeleted)
+                    }
+                },
+                .default(Text("Keep recipe")) {
+                    if let foodItemToBeDeleted {
+                        FoodItem.delete(foodItemToBeDeleted)
+                    }
+                },
+                .cancel()
+            ])
         }
     }
     

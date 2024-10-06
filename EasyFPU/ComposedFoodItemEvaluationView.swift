@@ -66,10 +66,9 @@ struct ComposedFoodItemEvaluationView: View {
                                 activeSheet = .addProduct
                             }) {
                                 HStack {
-                                    Image(systemName: "plus.circle")
+                                    Image(systemName: "pencil.circle")
                                         .imageScale(.large)
-                                        .foregroundColor(.green)
-                                    Text("Add products")
+                                    Text("Edit products")
                                 }
                             }
                             

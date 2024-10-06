@@ -46,16 +46,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Verify the URL’s extension is fooditem, since EasyFPU only supports files with that extension
         guard url.pathExtension == "fooditem" else { return }
         
-        var foodItemNotImported = ""
-        
         // Import Food Item
         do {
             let jsonData = try Data(contentsOf: url)
             let decoder = JSONDecoder()
             let foodItemToBeImported = try decoder.decode(FoodItemViewModel.self, from: jsonData)
-            if FoodItem.create(from: foodItemToBeImported, allowDuplicate: false, foodItemNotCreated: &foodItemNotImported) == nil {
-                debugPrint("The following food item could not be imported, as it already exists: " + foodItemNotImported)
-            }
+            _ = FoodItem.create(from: foodItemToBeImported, allowDuplicate: false)
             try FileManager.default.removeItem(at: url)
         } catch {
             debugPrint(error.localizedDescription)

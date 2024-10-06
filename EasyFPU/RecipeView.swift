@@ -12,7 +12,9 @@ struct RecipeView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @Binding var notificationState: RecipeListView.NotificationState?
-    @State var activeSheet: RecipeViewSheets.State?
+    @State private var activeSheet: RecipeViewSheets.State?
+    @State private var actionSheetIsPresented: Bool = false
+    @State private var recipeToBeDeleted: ComposedFoodItem?
 
     var body: some View {
         // Name, favorite
@@ -55,7 +57,13 @@ struct RecipeView: View {
             // Delete the recipe
             Button(action: {
                 if let composedFoodItemToBeDeleted = composedFoodItemVM.cdComposedFoodItem {
-                    ComposedFoodItem.delete(composedFoodItemToBeDeleted)
+                    // Check for associated product
+                    if composedFoodItemToBeDeleted.foodItem != nil {
+                        recipeToBeDeleted = composedFoodItemToBeDeleted
+                        actionSheetIsPresented.toggle()
+                    } else {
+                        ComposedFoodItem.delete(composedFoodItemToBeDeleted)
+                    }
                 }
             }) {
                 Text("Delete")
@@ -63,6 +71,22 @@ struct RecipeView: View {
         })
         .sheet(item: $activeSheet) {
             sheetContent($0)
+        }
+        .actionSheet(isPresented: $actionSheetIsPresented) {
+            ActionSheet(title: Text("Warning"), message: Text("There's an associated product, do you want to delete it as well?"), buttons: [
+                .default(Text("Delete both")) {
+                    if let recipeToBeDeleted {
+                        FoodItem.delete(recipeToBeDeleted.foodItem!)
+                        ComposedFoodItem.delete(recipeToBeDeleted)
+                    }
+                },
+                .default(Text("Keep product")) {
+                    if let recipeToBeDeleted {
+                        ComposedFoodItem.delete(recipeToBeDeleted)
+                    }
+                },
+                .cancel()
+            ])
         }
     }
     

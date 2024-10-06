@@ -79,8 +79,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     
     enum CodingKeys: String, CodingKey {
         case foodItem
-        case id, amount, caloriesPer100g, carbsPer100g, sugarsPer100g, favorite, name, typicalAmounts, category
-        case composedFoodItem
+        case id, name, category, favorite, amount, caloriesPer100g, carbsPer100g, sugarsPer100g
+        case typicalAmounts
     }
     
     init(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, sugarsPer100g: Double, amount: Int) {
@@ -219,19 +219,19 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         do {
             let uuidString = try foodItem.decode(String.self, forKey: .id)
             
-            // Success --> we overwrite the id (and generate a new one of this goes wrong)
+            // Success --> we overwrite the id (and generate a new one if this goes wrong)
             id = UUID(uuidString: uuidString) ?? UUID()
         } catch {
             // We generate a new UUID
             id = UUID()
         }
+        name = try foodItem.decode(String.self, forKey: .name)
         category = try FoodItemCategory.init(rawValue: foodItem.decode(String.self, forKey: .category)) ?? .product
+        favorite = try foodItem.decode(Bool.self, forKey: .favorite)
         amount = try foodItem.decode(Int.self, forKey: .amount)
         caloriesPer100g = try foodItem.decode(Double.self, forKey: .caloriesPer100g)
         carbsPer100g = try foodItem.decode(Double.self, forKey: .carbsPer100g)
         sugarsPer100g = try foodItem.decode(Double.self, forKey: .sugarsPer100g)
-        favorite = try foodItem.decode(Bool.self, forKey: .favorite)
-        name = try foodItem.decode(String.self, forKey: .name)
         typicalAmounts = try foodItem.decode([TypicalAmountViewModel].self, forKey: .typicalAmounts)
         
         guard
@@ -362,13 +362,13 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         var container = encoder.container(keyedBy: CodingKeys.self)
         var foodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)
         try foodItem.encode(id.uuidString, forKey: .id)
+        try foodItem.encode(name, forKey: .name)
         try foodItem.encode(category.rawValue, forKey: .category)
+        try foodItem.encode(favorite, forKey: .favorite)
         try foodItem.encode(amount, forKey: .amount)
         try foodItem.encode(caloriesPer100g, forKey: .caloriesPer100g)
         try foodItem.encode(carbsPer100g, forKey: .carbsPer100g)
         try foodItem.encode(sugarsPer100g, forKey: .sugarsPer100g)
-        try foodItem.encode(favorite, forKey: .favorite)
-        try foodItem.encode(name, forKey: .name)
         try foodItem.encode(typicalAmounts, forKey: .typicalAmounts)
     }
     

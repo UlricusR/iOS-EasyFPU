@@ -14,6 +14,7 @@ struct MenuView: View {
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
     var absorptionScheme: AbsorptionScheme
     @State private var foodItemVMsToBeImported: [FoodItemViewModel]?
+    @State private var composedFoodItemVMsToBeImported: [ComposedFoodItemViewModel]?
     @State private var activeSheet: MenuViewSheets.State?
     @State private var showingAlert = false
     @State private var alertMessage = ""
@@ -82,6 +83,7 @@ struct MenuView: View {
             ActionSheet(title: Text("Import food list"), message: Text("Please select"), buttons: [
                 .default(Text("Replace")) {
                     FoodItem.deleteAll()
+                    ComposedFoodItem.deleteAll()
                     self.importFoodItems()
                 },
                 .default(Text("Append")) {
@@ -118,7 +120,7 @@ struct MenuView: View {
     }
     
     private func importJSON(_ url: URL) {
-        if DataHelper.importFoodItems(url, foodItemVMsToBeImported: &foodItemVMsToBeImported, errorMessage: &alertMessage) {
+        if DataHelper.importFoodItems(url, foodItemVMsToBeImported: &foodItemVMsToBeImported, composedFoodItemVMsToBeImported: &composedFoodItemVMsToBeImported, errorMessage: &alertMessage) {
             self.showActionSheet = true
         } else {
             // Some error happened
@@ -149,35 +151,19 @@ struct MenuView: View {
     
     private func importFoodItems() {
         if foodItemVMsToBeImported != nil {
-            var foodItemsNotImported = [String]()
             for foodItemVMToBeImported in foodItemVMsToBeImported! {
-                var foodItemNotImported = ""
-                if FoodItem.create(from: foodItemVMToBeImported, allowDuplicate: false, foodItemNotCreated: &foodItemNotImported) == nil {
-                    // There seems to be a duplicate
-                    foodItemsNotImported.append(foodItemNotImported)
-                }
+                _ = FoodItem.create(from: foodItemVMToBeImported, allowDuplicate: false)
             }
-            
-            if foodItemsNotImported.isEmpty {
-                alertMessage = NSLocalizedString("Successfully imported food list", comment: "")
-            } else {
-                alertMessage = NSLocalizedString("The following food items already exist and were not imported: ", comment: "")
-                var counter = 0
-                while counter < foodItemsNotImported.count {
-                    if counter < 5 {
-                        if counter > 0 {
-                            alertMessage.append(", ")
-                        }
-                        alertMessage.append(foodItemsNotImported[counter])
-                    } else if counter == 5 {
-                        alertMessage.append(", ... (\(foodItemsNotImported.count - counter) ")
-                        alertMessage.append(NSLocalizedString("more", comment: ""))
-                        alertMessage.append(")")
-                        break
-                    }
-                    counter = counter + 1
-                }
+        }
+        
+        if composedFoodItemVMsToBeImported != nil {
+            for composedFoodItemVMToBeImported in composedFoodItemVMsToBeImported! {
+                _ = ComposedFoodItem.create(from: composedFoodItemVMToBeImported, isImport: true)
             }
+        }
+         
+        if foodItemVMsToBeImported != nil || composedFoodItemVMsToBeImported != nil {
+            alertMessage = NSLocalizedString("Successfully imported food list", comment: "")
             showingAlert = true
         } else {
             alertMessage = NSLocalizedString("Could not import food list", comment: "")
