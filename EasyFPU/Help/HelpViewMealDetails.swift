@@ -31,16 +31,20 @@ struct HelpViewMealDetails: View {
                     Text("Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.")
                 }.padding()
                 
-                Text("Tapping 'Clear' will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero.")
-                .padding()
+                HStack {
+                    Image(systemName: "xmark.circle").foregroundColor(.red)
+					Text("Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero.")
+                }.padding()
                 
                 HStack {
                     Image(systemName: "square.and.arrow.up").foregroundColor(.accentColor)
-                    Text("Tapping the export button in the summary will open the Meal Export view.")
+                    Text("Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet.")
                 }.padding()
                 
-                Text("Tapping 'More Details' will open the Meal Details view.")
-                .padding()
+				HStack {
+					Image(systemName: "info.circle.fill")
+					Text("Opens a view with all the details of the meal and its dishes.")
+                }.padding()
             }
         }
     }
