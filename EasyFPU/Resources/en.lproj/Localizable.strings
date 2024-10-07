@@ -166,7 +166,8 @@
 "This should not have happened - please inform the app developer" = "Oops! This should not have happened - please inform the app developer";
 "A food item with this name already exists" = "An entry with this name already exists";
 
-// Recipe editor
+// Recipe list and editor
+"Recipe List" = "Recipe List";
 "Cook" = "Cook & Bake";
 "Recipes" = "My recipes";
 "Oops! No recipe yet! Then let's go!" = "Oops! No recipe yet! Then let's go!";
@@ -309,23 +310,31 @@
 "Decline and cancel" = "Decline and cancel";
 "Generate Typical Amounts" = "Generate Typical Amounts";
 
-// Food List help
-"The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The list of dishes is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
-"The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "The list of dishes is empty on purpose when first opening the app, as everybody prefers different FPU relevant dishes.";
-"To add a new food item, tap on the large Plus button in the top right corner to add a new food item." = "To add a new dish, tap on the large Plus button in the top right corner to add a new dish.";
-"As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "As soon as your list of dishes contains one or more dish, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount consumed.";
-"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the dish has not yet been selected.";
-"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the dish has been selected and is included in your meal. Tapping the the dish again will remove it from your meal.";
-"In case you have selected one or more food items, the arrow in the top right corner turns red. Click it to view the summary of your total meal and to export it to, e.g., Loop." = "In case you have selected one or more dishes, the arrow in the top right corner turns red. Click it to view the summary of your total meal and to export it to, e.g., Loop.";
+// Food item maintenance list help
+"Product Maintenance List" = "Maintain Dishes";
+"Ingredient Maintenance List" = "Maintain Ingredients";
+"Here you maintain your dishes or ingredients." = "Here you maintain your dishes or ingredients.";
+"Adds a new dish or ingredient to the list." = "Adds a new dish or ingredient to the list.";
+"Filters by favorite dishes or ingredients." = "Filters by favorite dishes or ingredients.";
+"To edit, duplicate, share, move or delete a dish or ingredient, long-press on it." = "To edit, duplicate, share, move or delete a dish or ingredient, long-press on it.";
 
-// Ingredients list help
-"Ingredients List" = "Ingredients List";
-"The ingredients list contains the ingredients required to compose a recipe." = "The ingredients list contains the ingredients required to compose a recipe.";
-"To add a new ingredient, tap on the large Plus button in the top right corner." = "To add a new ingredient, tap on the large Plus button in the top right corner.";
+// Dishes selection help
+"Product Selection List" = "Choose Dishes";
+"The dishes list contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes." = "The list of dishes contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes.";
+"As soon as your dishes list contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount." = "As soon as your list of dishes contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount.";
+"Adds new dishes to the list. This is not selecting it, this needs to be done separately." = "Adds new dishes to the list. This is not selecting it, this needs to be done separately.";
+"Indicates that the dish is available for being added to your meal." = "Indicates that the dish is available for being added to your meal by tapping it.";
+"Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal." = "Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal.";
+"The red X at the top of the screen lets you remove all selected dishes at once." = "The red X at the top of the screen lets you remove all selected dishes at once.";
+
+// Ingredients selection list help
+"Ingredient Selection List" = "Choose Ingredients";
+"The ingredients list contains all ingredients available to compose a recipe. Here you select which ingredients to include in your recipe. If the list is empty, you need to first add ingredients." = "The ingredients list contains all ingredients available to compose a recipe. Here you select which ingredients to include in your recipe. If the list is empty, you need to first add ingredients.";
 "As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount." = "As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount.";
-"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the ingredient has not yet been selected.";
-"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the ingredient has been selected and is included in your recipe. Tapping the the ingredient again will remove it from your recipe.";
-"In case you have selected one or more ingredients, the arrow in the top right corner turns red. Click it to view and edit the summary of your recipe and to save it to your products." = "In case you have selected one or more ingredients, the arrow in the top right corner turns red. Click it to view and edit the summary of your recipe and to save it to your dishes.";
+"Adds new ingredients to the list. This is not selecting it, this needs to be done separately." = "Adds new ingredients to the list. This is not selecting it, this needs to be done separately.";
+"Indicates that the ingredient is available for being added to your recipe." = "Indicates that the ingredient is available for being added to your recipe by tapping it.";
+"Indicates that the ingredient has been selected and is included in your recipe. Tapping it again will remove it from your recipe." = "Indicates that the ingredient has been selected and is included in your recipe. Tapping it again will remove it from your recipe.";
+"The red X at the top of the screen lets you remove all selected ingredients at once." = "The red X at the top of the screen lets you remove all selected ingredients at once.";
 
 // Select Food Item help
 "Select Food Item" = "Select Food Item";
@@ -351,15 +360,22 @@
 "Delete the food item by tapping the link on the bottom of the view." = "Delete the food item by tapping the link on the bottom of the view.";
 
 // Meal Details help
-"Meal Details" = "Details";
+"Meal Details" = "Calculate Meal";
 "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid." = "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid.";
 "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal." = "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal.";
 "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.";
 "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.";
 "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.";
-"Tapping 'Clear' will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero." = "Tapping 'Clear' will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero.";
-"Tapping the export button in the summary will open the Meal Export view." = "Tapping the export button in the summary will open the Meal Export view.";
-"Tapping 'More Details' will open the Meal Details view." = "Tapping 'More Details' will open the Meal Details view.";
+"Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero." = "Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero.";
+"Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet." = "Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet.";
+"Lets you add and edit the dishes included in the meal." = "Lets you add and edit the dishes included in the meal.";
+"Opens a view with all the details of the meal and its dishes." = "Opens a view with all the details of the meal and its dishes.";
+
+// Recipe list help
+"You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients)." = "You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients).";
+"Start creating a new recipe." = "Start creating a new recipe.";
+"Filter your recipes by your favorites." = "Filter your recipes by your favorites.";
+"To edit, duplicate, share or delete a recipe, long-press on it." = "To edit, duplicate, share or delete a recipe, long-press on it.";
 
 // Absorption scheme help
 "Edit Absorption Scheme" = "Edit Absorption Scheme";
@@ -386,8 +402,8 @@
 "- The total weight of the final product" = "- The total weight of the finished dish";
 "- Whether or not the recipe is a favorite" = "- Whether or not the recipe is a favorite";
 "- The number of portions" = "- The number of portions";
-"Tapping 'Clear' in the recipe summary will clear your recipe, i.e. remove all ingredients." = "Tapping 'Clear' in the recipe summary will clear your recipe, i.e. remove all ingredients.";
-"Tapping 'Save' in the recipe summary will save your recipe as a product in the product list" = "Tapping 'Save' in the recipe summary will save your recipe as a dish in the list of dishes";
+"Lets you add and edit the ingredients included in the dish." = "Lets you add and edit the ingredients included in the recipe.";
+"Saves your recipe to the recipe list and creates a new dish in the list of dishes." = "Saves your recipe to the recipe list and creates a new dish in the list of dishes.";
 
 // Health export help
 "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles.";
