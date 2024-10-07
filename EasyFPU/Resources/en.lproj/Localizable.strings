@@ -310,6 +310,9 @@
 "Decline and cancel" = "Decline and cancel";
 "Generate Typical Amounts" = "Generate Typical Amounts";
 
+// Help screens
+"Menu bar" = "Menu bar";
+
 // Food item maintenance list help
 "Product Maintenance List" = "Maintain Dishes";
 "Ingredient Maintenance List" = "Maintain Ingredients";
@@ -322,10 +325,11 @@
 "Product Selection List" = "Choose Dishes";
 "The dishes list contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes." = "The list of dishes contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes.";
 "As soon as your dishes list contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount." = "As soon as your list of dishes contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount.";
-"Adds new dishes to the list. This is not selecting it, this needs to be done separately." = "Adds new dishes to the list. This is not selecting it, this needs to be done separately.";
 "Indicates that the dish is available for being added to your meal." = "Indicates that the dish is available for being added to your meal by tapping it.";
 "Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal." = "Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal.";
-"The red X at the top of the screen lets you remove all selected dishes at once." = "The red X at the top of the screen lets you remove all selected dishes at once.";
+"Adds new dishes to the list. This is not selecting it, this needs to be done separately." = "Add a new dish to the list. This is not selecting it, this needs to be done separately.";
+"The red X at the top of the screen lets you remove all selected dishes at once." = "Removes all selected dishes at once.";
+"Filters by your favorite dishes." = "Filters by your favorite dishes.";
 
 // Ingredients selection list help
 "Ingredient Selection List" = "Choose Ingredients";
@@ -337,13 +341,13 @@
 "The red X at the top of the screen lets you remove all selected ingredients at once." = "The red X at the top of the screen lets you remove all selected ingredients at once.";
 
 // Select Food Item help
-"Select Food Item" = "Select Food Item";
+"Select Food Item" = "Enter amount";
 "You may enter the consumed amount in three different ways." = "You may enter the consumed amount in three different ways.";
 "1. You directly enter it in the text field." = "1. You directly enter it in the text field.";
 "2. You use the green number fields to add to the amount already displayed in the text field." = "2. You use the green number fields to add to the amount already displayed in the text field.";
 "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value." = "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value.";
 "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment." = "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment.";
-"Save the typical amount by confirming with the green plus." = "Save the typical amount by confirming with the green plus.";
+"Saves the typical amount." = "Saves the typical amount.";
 "Use the food item editor to maintain existing typical amounts." = "Use the food item editor to maintain existing typical amounts.";
 
 // Food Item Editor help
@@ -352,7 +356,7 @@
 "All fields are mandatory, but you may leave away typical amounts." = "All fields are mandatory, but you may leave away typical amounts.";
 "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal.";
 "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button.";
-"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button.";
+"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the blue Checkmark button.";
 "Swipe left to remove a typical amount." = "Swipe left or hit the small red X to remove a typical amount.";
 "A good source for nutritional values (calories and carbs per 100g) is:" = "A good source for nutritional values (calories and carbs per 100g) is:";
 "Link-text-to-nutritional-values" = "Nutrition value";
@@ -373,8 +377,8 @@
 
 // Recipe list help
 "You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients)." = "You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients).";
-"Start creating a new recipe." = "Start creating a new recipe.";
-"Filter your recipes by your favorites." = "Filter your recipes by your favorites.";
+"Start creating a new recipe." = "Creates a new recipe.";
+"Filter your recipes by your favorites." = "Filters your recipes by your favorites.";
 "To edit, duplicate, share or delete a recipe, long-press on it." = "To edit, duplicate, share or delete a recipe, long-press on it.";
 
 // Absorption scheme help

@@ -310,6 +310,9 @@
 "Decline and cancel" = "Ablehnen und abbrechen";
 "Generate Typical Amounts" = "Typische Mengen erzeugen";
 
+// Help screens
+"Menu bar" = "Menüleiste";
+
 // Food item maintenance list help
 "Product Maintenance List" = "Speisenliste";
 "Ingredient Maintenance List" = "Zutatenliste";
@@ -322,10 +325,11 @@
 "Product Selection List" = "Speisen auswählen";
 "The dishes list contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes." = "Die Speisenliste enthält alle zur Zusammenstellung einer Mahlzeits verfügbaren Speisen. Hier wählst Du, welche Speisen Du in Deine Mahlzeit aufnehmen möchtest. Wenn die Liste leer ist, musst Du zunächst Speisen hinzufügen.";
 "As soon as your dishes list contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount." = "Sobald Deine Speisenliste eine oder mehrere Speisen enthält, kannst Du eine Mahlzeit erstellen. Tippe dazu einmal auf die jeweilige Speise. Dadurch wird die Ansicht zur Auswahl der Menge geöffnet.";
-"Adds new dishes to the list. This is not selecting it, this needs to be done separately." = "Fügt der Liste neue Speisen hinzu. Die Speise wird dadurch nicht der Mahlzeit hinzugefügt, dies muss separat erfolgen.";
 "Indicates that the dish is available for being added to your meal." = "Zeigt an, dass die Speise durch Antippen zur Mahlzeit hinzugefügt werden kann.";
 "Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal." = "Zeigt an, dass die Speise ausgewählt wurde und in der Mahlzeit enthalten ist. Tippe erneut darauf, um sie aus der Mahlzeit zu entfernen.";
-"The red X at the top of the screen lets you remove all selected dishes at once." = "Mit dem roten X oben auf dem Bildschirm kannst Du alle ausgewählten Speisen auf einmal entfernen.";
+"Adds new dishes to the list. This is not selecting it, this needs to be done separately." = "Fügt der Liste eine neu Speise hinzu. Die Speise wird dadurch nicht der Mahlzeit hinzugefügt, dies muss separat erfolgen.";
+"The red X at the top of the screen lets you remove all selected dishes at once." = "Entfernt alle ausgewählten Speisen auf einmal.";
+"Filters by your favorite dishes." = "Filtert nach Deinen Lieblingsspeisen.";
 
 // Ingredients selection list help
 "Ingredient Selection List" = "Zutaten auswählen";
@@ -337,13 +341,13 @@
 "The red X at the top of the screen lets you remove all selected ingredients at once." = "Mit dem roten X oben auf dem Bildschirm kannst Du alle ausgewählten Zutaten auf einmal entfernen.";
 
 // Select Food Item help
-"Select Food Item" = "Essen auswählen";
+"Select Food Item" = "Menge eingeben";
 "You may enter the consumed amount in three different ways." = "Es gibt drei Wege, die gegessene Menge einzugeben:";
 "1. You directly enter it in the text field." = "1. Gib die gegessene Menge direkt ins entsprechende Textfeld ein.";
-"2. You use the green number fields to add to the amount already displayed in the text field." = "Nutze die grünen Zahlenfelder, um die darauf abgebildete Menge der existierenden Menge hinzuzufügen.";
-"3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value." = "Solltest Du bereits typische Mengen für das Essen angelegt haben, kannst Du diese aus der angezeigten Liste auswählen. Diese Auswahl überschreibt die aktuell angezeigte Menge.";
+"2. You use the green number fields to add to the amount already displayed in the text field." = "2. Nutze die grünen Zahlenfelder, um die darauf abgebildete Menge der existierenden Menge hinzuzufügen.";
+"3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value." = "3. Solltest Du bereits typische Mengen für das Essen angelegt haben, kannst Du diese aus der angezeigten Liste auswählen. Diese Auswahl überschreibt die aktuell angezeigte Menge.";
 "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment." = "Du kannst die aktuell angezeigte Menge auch als neue typische Menge abspeichern, indem Du 'Zu typischen Mengen hinzufügen' antippst. Du wirst dann um einen Kommentar zu dieser Menge gebeten.";
-"Save the typical amount by confirming with the green plus." = "Speichere die neue typische Menge, indem Du die Eingabe mit dem grünen Plus bestätigst.";
+"Saves the typical amount." = "Saves the typical amount.";
 "Use the food item editor to maintain existing typical amounts." = "Um existierende typische Mengen zu bearbeiten, nutze bitte den Dialog zum Bearbeiten eines Essens.";
 
 // Food Item Editor help
@@ -352,7 +356,7 @@
 "All fields are mandatory, but you may leave away typical amounts." = "Alle Eingabefelder sind verpflichtend, aber Du musst keine typischen Mengen hinzufügen.";
 "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Bitte beachte, dass 1 Gramm Kohlenhydrate ca. 4 kcal Energiegehalt hat, d.h. die hier eingegebene Menge Kohlenhydrate multipliziert mit vier darf die Gesamt-Energiemenge in kcal nicht überschreiten.";
 "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "Um eine neue typische Menge hinzuzufügen, gib die Menge und einen passenden Kommentar in die entsprechenden Felder ein und bestätige die Eingabe mit dem grünen Plus-Knopf.";
-"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "Um eine existierende typische Menge zu bearbeiten, tippe diese an, ändere dann die Werte und bestätige die Änderung durch Antippen des gelben Hakens.";
+"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "Um eine existierende typische Menge zu bearbeiten, tippe diese an, ändere dann die Werte und bestätige die Änderung durch Antippen des blauen Hakens.";
 "Swipe left to remove a typical amount." = "Wische die typische Menge nach links oder tippe auf das kleine rote X, um sie zu löschen.";
 "A good source for nutritional values (calories and carbs per 100g) is:" = "Eine gute Quelle für Nährwerte (Kalorien und Kohlenhydrate pro 100g) ist:";
 "Link-text-to-nutritional-values" = "FDDB.info";
@@ -361,20 +365,20 @@
 
 // Meal Details help
 "Meal Details" = "Mahlzeit berechnen";
-"This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid." = "Diese Ansicht stellt die Details über Deine Mahlzeit so dar, dass sie leicht als Screenshot z.B. an Dein Kind gesendet werden können.";
-"With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal." = "Mit den + and - Knöpfen kannst Du die Zeit einstellen, bevor Deine Mahlzeit beginnt. In der Regel ist das der Spritz-Ess-Abstand.";
+"This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid." = "Diese Ansicht stellt die Details über Deine Mahlzeit so dar, dass sie leicht als Screenshot an, z.B., Dein Kind gesendet werden können.";
+"With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal." = "Mit den + und - Knöpfen kannst Du die Zeit einstellen, bevor Deine Mahlzeit beginnt. In der Regel ist das der Spritz-Ess-Abstand.";
 "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Kohlenhydrate von Zucker werden in der Regel sofort absorbiert. Du kannst die Parameter im Absorptionsschema-Dialog anpassen.";
 "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Reguläre Kohlenhydrate werden langsamer als Zucker verdaut. Du kannst die entsprechenden Parameter ebenfalls im Absorptionsschema-Dialog anpassen.";
 "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Verlängerte Kohlenhydrate stammen aus der Verdauung von Fett und Proteinen (und sind eigentlich keine Kohlenhydrate). Daher kann ihre Absorptionszeit spät starten und sehr lange andauern.";
-"Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero." = "Löscht Deine Mahlzeit, d.h. alle Speisen werden entfernt und der Spritz-Ess-Abstand wird auf Null zurückgesetzt.";
+"Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero." = "Setzt Deine Mahlzeit zurück, d.h. alle Speisen werden entfernt und der Spritz-Ess-Abstand wird auf Null zurückgesetzt.";
 "Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet." = "Startet den Export der Mahlzeit nach Apple Health (zur Verwendung in Loop). Du kannst die Details noch überprüfen, d.h., es erfolgt noch kein tatsächlicher Export.";
 "Lets you add and edit the dishes included in the meal." = "Ermöglicht das Hinzufügen und Bearbeiten der in der Mahlzeit enthaltenen Gerichte.";
 "Opens a view with all the details of the meal and its dishes." = "Öffnet eine Ansicht mit allen Details der Mahlzeit und seiner Speisen.";
 
 // Recipe list help
 "You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients)." = "Deine Rezepte findest Du in der Rezeptliste. Ein EasyFPU-Rezept besteht aus einer Reihe von Zutaten, die eine fertige Speise ergeben. Beispiel: Ein Kuchen (fertige Speise) besteht aus Mehl, Milch, Zucker, Eiern usw. (seine Zutaten).";
-"Start creating a new recipe." = "Beginne ein neues Rezept.";
-"Filter your recipes by your favorites." = "Filtere Deine Rezepte nach Lieblingsrezepten.";
+"Start creating a new recipe." = "Beginnt ein neues Rezept.";
+"Filter your recipes by your favorites." = "Filtert Deine Rezepte nach Lieblingsrezepten.";
 "To edit, duplicate, share or delete a recipe, long-press on it." = "Um ein Rezept zu bearbeiten, zu duplizieren, zu teilen oder zu löschen, drücke lange darauf.";
 
 // Absorption scheme help

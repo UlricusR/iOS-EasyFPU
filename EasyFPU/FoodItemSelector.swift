@@ -55,7 +55,7 @@ struct FoodItemSelector: View {
                                     Button(action: {
                                         self.addTypicalAmount()
                                     }) {
-                                        Image(systemName: "plus.circle").foregroundColor(.green)
+                                        Image(systemName: "checkmark.circle.fill")
                                     }
                                 }
                             } else {
@@ -101,7 +101,7 @@ struct FoodItemSelector: View {
                         // Do nothing, just quit edit mode, as food item hasn't been modified
                         presentation.wrappedValue.dismiss()
                     }) {
-                        Image(systemName: "x.circle.fill")
+                        Image(systemName: "xmark.circle.fill")
                             .imageScale(.large)
                     }
                     

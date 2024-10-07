@@ -27,7 +27,7 @@ struct HelpViewIngredientsList: View {
             }.padding()
 			
             HStack {
-                Image(systemName: "x.circle").foregroundColor(.red)
+                Image(systemName: "xmark.circle").foregroundColor(.red)
                 Text("Indicates that the ingredient has been selected and is included in your recipe. Tapping it again will remove it from your recipe.")
             }.padding()
 			

@@ -109,8 +109,10 @@ struct ComposedFoodItemEvaluationView: View {
                     
                     if !composedFoodItemVM.foodItems.isEmpty {
                         Button(action: {
-                            composedFoodItemVM.clear()
-                            UserSettings.shared.mealDelayInMinutes = 0
+                            withAnimation(.default) {
+                                composedFoodItemVM.clear()
+                                UserSettings.shared.mealDelayInMinutes = 0
+                            }
                         }) {
                             Image(systemName: "xmark.circle").foregroundColor(.red)
                                 .imageScale(.large)

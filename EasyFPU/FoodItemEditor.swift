@@ -130,7 +130,7 @@ struct FoodItemEditor: View {
                                 Button(action: {
                                     self.addTypicalAmount()
                                 }) {
-                                    Image(systemName: self.updateButton ? "checkmark.circle" : "plus.circle").foregroundColor(self.updateButton ? .yellow : .green)
+                                    Image(systemName: self.updateButton ? "checkmark.circle.fill" : "plus.circle").foregroundColor(self.updateButton ? .blue : .green)
                                 }
                             }
                         }
@@ -210,7 +210,7 @@ struct FoodItemEditor: View {
                             }
                             self.typicalAmountsToBeDeleted.removeAll()
                         }) {
-                            Image(systemName: "x.circle.fill")
+                            Image(systemName: "xmark.circle.fill")
                                 .imageScale(.large)
                         }
                         

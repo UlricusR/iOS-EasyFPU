@@ -27,7 +27,7 @@ struct HelpViewFoodItemEditor: View {
             }.padding()
             
             HStack {
-                Image(systemName: "checkmark.circle").foregroundColor(.yellow)
+                Image(systemName: "checkmark.circle.fill").foregroundColor(.accentColor)
                 Text("To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button.")
             }.padding()
             

@@ -31,13 +31,13 @@ struct HelpView: View {
             ScrollView<AnyView> {
                 switch helpScreen {
                 case .productMaintenanceList:
-                    return AnyView(HelpViewProductsList())
+                    return AnyView(HelpViewFoodItemMaintenanceList())
                 case .productSelectionList:
-                    return AnyView(HelpViewFoodItemMaintenanceList())
+                    return AnyView(HelpViewProductsList())
                 case .ingredientMaintenanceList:
-                    return AnyView(HelpViewIngredientsList())
-                case .ingredientSelectionList:
                     return AnyView(HelpViewFoodItemMaintenanceList())
+                case .ingredientSelectionList:
+                    return AnyView(HelpViewIngredientsList())
                 case .recipeList:
                     return AnyView(HelpViewRecipeList())
                 case .foodItemSelector:
@@ -60,7 +60,7 @@ struct HelpView: View {
                     Button(action: {
                         presentation.wrappedValue.dismiss()
                     }) {
-                        Text("Close")
+                        Image(systemName: "xmark.circle.fill")
                     }
                 }
             }

@@ -14,6 +14,10 @@ struct HelpViewRecipeList: View {
             // The Recipe list
             Text("You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients).").padding()
             
+            Text("To edit, duplicate, share or delete a recipe, long-press on it.").padding()
+            
+            Text("Menu bar").font(.headline).padding()
+            
             HStack {
                 Image(systemName: "plus.circle").foregroundColor(.green).imageScale(.large)
                 Text("Start creating a new recipe.")
@@ -23,8 +27,6 @@ struct HelpViewRecipeList: View {
                 Image(systemName: "star").foregroundColor(Color.blue).imageScale(.large)
                 Text("Filter your recipes by your favorites.")
             }.padding()
-            
-            Text("To edit, duplicate, share or delete a recipe, long-press on it.").padding()
         }
     }
 }

@@ -14,6 +14,10 @@ struct HelpViewFoodItemMaintenanceList: View {
             // The food item maintenance list
             Text("Here you maintain your dishes or ingredients.").padding()
             
+            Text("To edit, duplicate, share, move or delete a dish or ingredient, long-press on it.").padding()
+            
+            Text("Menu bar").font(.headline).padding()
+            
             HStack {
                 Image(systemName: "plus.circle").foregroundColor(.green)
                 Text("Adds a new dish or ingredient to the list.")
@@ -23,8 +27,6 @@ struct HelpViewFoodItemMaintenanceList: View {
                 Image(systemName: "star").foregroundColor(Color.blue).imageScale(.large)
                 Text("Filters by favorite dishes or ingredients.")
             }.padding()
-			
-			Text("To edit, duplicate, share, move or delete a dish or ingredient, long-press on it.").padding()
         }
     }
 }

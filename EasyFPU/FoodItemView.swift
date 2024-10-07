@@ -25,7 +25,7 @@ struct FoodItemView: View {
             HStack {
                 if listType == .selection {
                     if let foodItemIndex = composedFoodItemVM.foodItems.firstIndex(of: foodItemVM) {
-                        Image(systemName: "x.circle").foregroundColor(.red)
+                        Image(systemName: "xmark.circle").foregroundColor(.red)
                         Text("\(composedFoodItemVM.foodItems[foodItemIndex].amount)").font(.headline).foregroundColor(.accentColor)
                         Text("g").font(.headline).foregroundColor(.accentColor)
                     } else {

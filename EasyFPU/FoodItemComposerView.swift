@@ -130,7 +130,7 @@ struct FoodItemComposerView: View {
                         Button(action: {
                             presentation.wrappedValue.dismiss()
                         }) {
-                            Image(systemName: "x.circle.fill")
+                            Image(systemName: "xmark.circle.fill")
                                 .imageScale(.large)
                         }
                         

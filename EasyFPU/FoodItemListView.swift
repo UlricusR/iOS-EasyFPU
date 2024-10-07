@@ -111,7 +111,9 @@ struct FoodItemListView: View {
                         
                         if listType == .selection && !composedFoodItem.foodItems.isEmpty {
                             Button(action: {
-                                composedFoodItem.clearIngredients()
+                                withAnimation(.default) {
+                                    composedFoodItem.clearIngredients()
+                                }
                             }) {
                                 Image(systemName: "xmark.circle").foregroundColor(.red)
                                     .imageScale(.large)
