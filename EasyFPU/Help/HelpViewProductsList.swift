@@ -11,28 +11,29 @@ import SwiftUI
 struct HelpViewProductsList: View {
     var body: some View {
         VStack(alignment: .leading) {
-            // The Food List
-            Text("The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.").padding()
-            Text("The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food.").padding()
+            // The product selection list
+            Text("The dishes list contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes.").padding()
             
-            HStack {
-                Image(systemName: "plus.circle").foregroundColor(.green).imageScale(.large)
-                Text("To add a new food item, tap on the large Plus button in the top right corner to add a new food item.")
-            }.padding()
-            
-            Text("As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed.").padding()
+            Text("As soon as your dishes list contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount.").padding()
             
             HStack {
                 Image(systemName: "plus.circle").foregroundColor(.green)
-                Text("A green Plus icon indicates that the food item has not yet been selected.")
+                Text("Adds new dishes to the list. This is not selecting it, this needs to be done separately.")
             }.padding()
+            
             HStack {
-                Image(systemName: "xmark.circle").foregroundColor(.red)
-                Text("A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.")
+                Image(systemName: "plus.circle").foregroundColor(.gray)
+                Text("Indicates that the dish is available for being added to your meal.")
             }.padding()
+			
             HStack {
-                Image(systemName: "arrowshape.turn.up.forward.fill").foregroundColor(.red)
-                Text("In case you have selected one or more food items, the arrow in the top right corner turns red. Click it to view the summary of your total meal and to export it to, e.g., Loop.")
+                Image(systemName: "x.circle").foregroundColor(.red)
+                Text("Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal.")
+            }.padding()
+			
+			HStack {
+				Image(systemName: "xmark.circle").foregroundColor(.red).imageScale(.large)
+				Text("The red X at the top of the screen lets you remove all selected dishes at once.")
             }.padding()
         }
     }
