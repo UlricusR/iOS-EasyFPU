@@ -17,10 +17,15 @@ struct HelpFoodItemComposer: View {
             Text("- The total weight of the final product").padding(.horizontal)
             Text("- Whether or not the recipe is a favorite").padding(.horizontal)
             Text("- The number of portions").padding(.horizontal)
-            
+			
 			HStack {
-				Image(systemName: "checkmark.circle.fill")
-				Text("Saves your recipe to the recipe list and creates a new dish in the list of dishes.")
+					Image(systemName: "checkmark.circle.fill")
+					Text("Saves your recipe to the recipe list and creates a new dish in the list of dishes.")
+			}.padding()
+			
+			HStack {
+					Image(systemName: "pencil.circle")
+					Text("Lets you add and edit the ingredients included in the dish.")
 			}.padding()
         }
     }
