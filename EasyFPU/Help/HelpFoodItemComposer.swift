@@ -18,9 +18,10 @@ struct HelpFoodItemComposer: View {
             Text("- Whether or not the recipe is a favorite").padding(.horizontal)
             Text("- The number of portions").padding(.horizontal)
             
-            Text("Tapping 'Save' in the recipe summary will save your recipe as a product in the product list").padding()
-            
-            Text("Tapping 'Clear' in the recipe summary will clear your recipe, i.e. remove all ingredients.").padding()
+			HStack {
+				Image(systemName: "checkmark.circle.fill")
+				Text("Saves your recipe to the recipe list and creates a new dish in the list of dishes.")
+			}.padding()
         }
     }
 }
