@@ -31,13 +31,13 @@ struct HelpView: View {
             ScrollView<AnyView> {
                 switch helpScreen {
                 case .productMaintenanceList:
-                    return AnyView(HelpViewProductsList()) // TODO review
+                    return AnyView(HelpViewProductsList())
                 case .productSelectionList:
-                    return AnyView(HelpViewProductsList()) // TODO create own
+                    return AnyView(HelpViewFoodItemMaintenanceList())
                 case .ingredientMaintenanceList:
-                    return AnyView(HelpViewIngredientsList()) // TODO review
+                    return AnyView(HelpViewIngredientsList())
                 case .ingredientSelectionList:
-                    return AnyView(HelpViewIngredientsList()) // TODO create own
+                    return AnyView(HelpViewFoodItemMaintenanceList())
                 case .recipeList:
                     return AnyView(HelpViewRecipeList())
                 case .foodItemSelector:
