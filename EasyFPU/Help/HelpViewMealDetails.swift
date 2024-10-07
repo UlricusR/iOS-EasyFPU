@@ -40,6 +40,11 @@ struct HelpViewMealDetails: View {
                     Image(systemName: "square.and.arrow.up").foregroundColor(.accentColor)
                     Text("Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet.")
                 }.padding()
+				
+				HStack {
+                    Image(systemName: "pencil.circle")
+                    Text("Lets you add and edit the dishes included in the meal.")
+                }.padding()
                 
 				HStack {
 					Image(systemName: "info.circle.fill")
