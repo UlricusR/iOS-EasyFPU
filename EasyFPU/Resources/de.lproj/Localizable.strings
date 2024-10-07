@@ -167,6 +167,7 @@
 "A food item with this name already exists" = "Ein Eintrag mit diesem Namen existiert bereits";
 
 // Recipe editor
+"Recipe List" = "Rezeptliste";
 "Cook" = "Kochen & Backen";
 "Recipes" = "Meine Rezepte";
 "Oops! No recipe yet! Then let's go!" = "Hoppla! Noch kein Rezept vorhanden! Dann aber ran!";
@@ -309,23 +310,31 @@
 "Decline and cancel" = "Ablehnen und abbrechen";
 "Generate Typical Amounts" = "Typische Mengen erzeugen";
 
-// Food List help
-"The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "Die Speisenliste ist die Hauptansicht der App. Sie erscheint automatisch nach dem ersten Öffnen der App und der Zustimmung zum Haftungsausschluss.";
-"The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "Die Speisenliste ist absichtlich leer, denn jeder hat eigene FPE-relevante Lieblingsessen.";
-"To add a new food item, tap on the large Plus button in the top right corner to add a new food item." = "Drücke den großen, grünen Plus-Knopf, um eine neue Speise hinzuzufügen.";
-"As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "Sobald Deine Speisenliste ein oder mehrere Speisen beinhaltet, kannst Du eine Mahlzeit zusammenstellen. Drücke dazu kurz auf eine Speise. Dies öffnet den Dialog zur Eingabe der gegessenen Menge.";
-"A green Plus icon indicates that the food item has not yet been selected." = "Ein grünes Plus-Zeichen zeigt an, dass die Speise noch nicht zu einer Mahlzeit hinzugefügt wurde.";
-"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "Ein rotes Kreuz zeigt an, dass die Speise ausgewählt wurde. Es wird nun bei der Berechnung der Gesamtmahlzeit berücksichtigt. Drücke ein weiteres Mal kurz auf die Speise, um es wieder aus der Mahlzeit zu entfernen.";
-"In case you have selected one or more food items, the arrow in the top right corner turns red. Click it to view the summary of your total meal and to export it to, e.g., Loop." = "Hast Du mindestens eine Speise ausgewählt, wird der Pfeil in der oberen rechten Ecke rot. Tippe ihn an, um die Zusammenfassung Deiner Gesamtmahlzeit zu sehen und sie z.B. nach Loop zu exportieren.";
+// Food item maintenance list help
+"Product Maintenance List" = "Speisenliste";
+"Ingredient Maintenance List" = "Zutatenliste";
+"Here you maintain your dishes or ingredients." = "Hier pflegst Du Deine Speisen oder Zutaten.";
+"Adds a new dish or ingredient to the list." = "Fügt eine neue Speise oder Zutat hinzu.";
+"Filters by favorite dishes or ingredients." = "Filtert nach Lieblingsspeisen.";
+"To edit, duplicate, share, move or delete a dish or ingredient, long-press on it." = "Zum Bearbeiten, Duplizieren, Teilen, Bewegen oder Löschen lange drücken.";
 
-// Ingredients list help
-"Ingredients List" = "Zutatenliste";
-"The ingredients list contains the ingredients required to compose a recipe." = "Die Zutatenliste beinahltet alle Zutaten, die zum Zubereiten eines Rezepts notwendig sind.";
-"To add a new ingredient, tap on the large Plus button in the top right corner." = "Neue Zutaten werden mit dem grünen, großen Plus-Zeichen in der oberen rechten Ecke hinzugefügt.";
-"As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount." = "Sobald mindestens eine Zutat hinzugefügt wurde, kannst Du mit Deinem Rezept beginnen. Um eine Zutat hinzuzufügen, tippe einmal darauf. Dadurch öffnet sich der Zutaten-Auswahldialog.";
-"A green Plus icon indicates that the food item has not yet been selected." = "Ein grünes Plus vor der Zutat zeigt an, dass die Zutat noch nicht ausgewählt wurde.";
-"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "Ein rotes X zeigt an, dass die Zutat ausgewählt wurde. Erneutes Tippen entfernt sie wieder aus dem Rezept.";
-"In case you have selected one or more ingredients, the arrow in the top right corner turns red. Click it to view and edit the summary of your recipe and to save it to your products." = "Hast Du mindestens eine Zutat ausgewählt, wird der Pfeil in der oberen rechten Ecke rot. Tippe darauf, um die Zusammenfassung Deines Rezepts zu sehen, zu bearbeiten und als Speise zu speichern.";
+// Dishes delection list help
+"Product Selection List" = "Speisen auswählen";
+"The dishes list contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes." = "Die Speisenliste enthält alle zur Zusammenstellung einer Mahlzeits verfügbaren Speisen. Hier wählst Du, welche Speisen Du in Deine Mahlzeit aufnehmen möchtest. Wenn die Liste leer ist, musst Du zunächst Speisen hinzufügen.";
+"As soon as your dishes list contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount." = "Sobald Deine Speisenliste eine oder mehrere Speisen enthält, kannst Du eine Mahlzeit erstellen. Tippe dazu einmal auf die jeweilige Speise. Dadurch wird die Ansicht zur Auswahl der Menge geöffnet.";
+"Adds new dishes to the list. This is not selecting it, this needs to be done separately." = "Fügt der Liste neue Speisen hinzu. Die Speise wird dadurch nicht der Mahlzeit hinzugefügt, dies muss separat erfolgen.";
+"Indicates that the dish is available for being added to your meal." = "Zeigt an, dass die Speise durch Antippen zur Mahlzeit hinzugefügt werden kann.";
+"Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal." = "Zeigt an, dass die Speise ausgewählt wurde und in der Mahlzeit enthalten ist. Tippe erneut darauf, um sie aus der Mahlzeit zu entfernen.";
+"The red X at the top of the screen lets you remove all selected dishes at once." = "Mit dem roten X oben auf dem Bildschirm kannst Du alle ausgewählten Speisen auf einmal entfernen.";
+
+// Ingredients selection list help
+"Ingredient Selection List" = "Zutaten auswählen";
+"The ingredients list contains all ingredients available to compose a recipe. Here you select which ingredients to include in your recipe. If the list is empty, you need to first add ingredients." = "Die Zutatenliste enthält alle zur Zusammenstellung eines Rezepts verfügbaren Zutaten. Hier wählst Du, welche Zutaten Du in Dein Rezept aufnehmen möchtest. Wenn die Liste leer ist, musst Du zunächst Zutaten hinzufügen.";
+"As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount." = "Sobald Deine Zutatenliste eine oder mehrere Zutaten enthält, kannst Du ein Rezept erstellen. Tippe dazu einmal auf die jeweilige Zutat. Dadurch wird die Ansicht zur Auswahl der Menge geöffnet.";
+"Adds new ingredients to the list. This is not selecting it, this needs to be done separately." = "Fügt der Liste neue Zutaten hinzu. Die Zutat wird dadurch nicht dem Rezept hinzugefügt, dies muss separat erfolgen.";
+"Indicates that the ingredient is available for being added to your recipe." = "Zeigt an, dass die Zutat durch Antippen zum Rezept hinzugefügt werden kann.";
+"Indicates that the ingredient has been selected and is included in your recipe. Tapping it again will remove it from your recipe." = "Zeigt an, dass die Zutat ausgewählt wurde und im Rezept enthalten ist. Tippe erneut darauf, um sie aus dem Rezept zu entfernen.";
+"The red X at the top of the screen lets you remove all selected ingredients at once." = "Mit dem roten X oben auf dem Bildschirm kannst Du alle ausgewählten Zutaten auf einmal entfernen.";
 
 // Select Food Item help
 "Select Food Item" = "Essen auswählen";
@@ -351,15 +360,22 @@
 "Delete the food item by tapping the link on the bottom of the view." = "Lösche das Essen, indem Du den Link am unteren Rand der Ansicht antippst.";
 
 // Meal Details help
-"Meal Details" = "Details";
+"Meal Details" = "Mahlzeit berechnen";
 "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid." = "Diese Ansicht stellt die Details über Deine Mahlzeit so dar, dass sie leicht als Screenshot z.B. an Dein Kind gesendet werden können.";
 "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal." = "Mit den + and - Knöpfen kannst Du die Zeit einstellen, bevor Deine Mahlzeit beginnt. In der Regel ist das der Spritz-Ess-Abstand.";
 "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Kohlenhydrate von Zucker werden in der Regel sofort absorbiert. Du kannst die Parameter im Absorptionsschema-Dialog anpassen.";
 "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Reguläre Kohlenhydrate werden langsamer als Zucker verdaut. Du kannst die entsprechenden Parameter ebenfalls im Absorptionsschema-Dialog anpassen.";
 "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Verlängerte Kohlenhydrate stammen aus der Verdauung von Fett und Proteinen (und sind eigentlich keine Kohlenhydrate). Daher kann ihre Absorptionszeit spät starten und sehr lange andauern.";
-"Tapping 'Clear' will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero." = "Mit 'Zurücksetzen' kannst Du Deine Gesamtmahlzeit zurücksetzen, d.h. die Mengen aller Essen und die Zeit bis zum Beginn der Mahlzeit wird auf Null zurückgestellt.";
-"Tapping the export button in the summary will open the Meal Export view." = "Drücke auf den Export-Knopf, um Deine Mahlzeit nach Apple Health zu exportieren.";
-"Tapping 'More Details' will open the Meal Details view." = "Drücke auf 'Mehr Details', um weitere Details zu sehen.";
+"Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero." = "Löscht Deine Mahlzeit, d.h. alle Speisen werden entfernt und der Spritz-Ess-Abstand wird auf Null zurückgesetzt.";
+"Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet." = "Startet den Export der Mahlzeit nach Apple Health (zur Verwendung in Loop). Du kannst die Details noch überprüfen, d.h., es erfolgt noch kein tatsächlicher Export.";
+"Lets you add and edit the dishes included in the meal." = "Ermöglicht das Hinzufügen und Bearbeiten der in der Mahlzeit enthaltenen Gerichte.";
+"Opens a view with all the details of the meal and its dishes." = "Öffnet eine Ansicht mit allen Details der Mahlzeit und seiner Speisen.";
+
+// Recipe list help
+"You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients)." = "Deine Rezepte findest Du in der Rezeptliste. Ein EasyFPU-Rezept besteht aus einer Reihe von Zutaten, die eine fertige Speise ergeben. Beispiel: Ein Kuchen (fertige Speise) besteht aus Mehl, Milch, Zucker, Eiern usw. (seine Zutaten).";
+"Start creating a new recipe." = "Beginne ein neues Rezept.";
+"Filter your recipes by your favorites." = "Filtere Deine Rezepte nach Lieblingsrezepten.";
+"To edit, duplicate, share or delete a recipe, long-press on it." = "Um ein Rezept zu bearbeiten, zu duplizieren, zu teilen oder zu löschen, drücke lange darauf.";
 
 // Absorption scheme help
 "Edit Absorption Scheme" = "Absorptionsschema";
@@ -386,8 +402,8 @@
 "- The total weight of the final product" = "- Das Gesamtgewicht der fertigen Speise";
 "- Whether or not the recipe is a favorite" = "- Lieblingsessen";
 "- The number of portions" = "- Anzahl der Portionen";
-"Tapping 'Clear' in the recipe summary will clear your recipe, i.e. remove all ingredients." = "Mit 'Zurücksetzen' werden alle Zutaten entfernt.";
-"Tapping 'Save' in the recipe summary will save your recipe as a product in the product list" = "Mit 'Speichern' wird Dein Rezept als Speise in der Speisenliste abgespeichert.";
+"Lets you add and edit the ingredients included in the dish." = "Ermöglicht das Hinzufügen und Bearbeiten der im Rezept enthaltenen Zutaten.";
+"Saves your recipe to the recipe list and creates a new dish in the list of dishes." = "Speichert Dein Rezept in der Rezeptliste und erstellt eine neue Speise in der Liste der Speisen.";
 
 // Health export help
 "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "Du kannst Nährwerte nach Apple Health exportieren. Wähle die entsprechenden Daten mit den Auswahlknöpfen aus.";
