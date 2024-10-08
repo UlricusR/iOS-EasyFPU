@@ -247,7 +247,7 @@ struct SettingsEditor: View {
                     Button(action: {
                         presentation.wrappedValue.dismiss()
                     }) {
-                        Image(systemName: "xmark.circle.fill")
+                        Image(systemName: "xmark.circle")
                             .imageScale(.large)
                     }
                     

@@ -70,23 +70,19 @@ struct FoodItemView: View {
                     } else {
                         activeSheet = .selectFoodItem
                     }
-                }
-            }
-        }
-        .contextMenu(menuItems: {
-            if listType == .maintenance {
-                // Editing the food item
-                Button(action: {
+                } else if listType == .maintenance {
+                    // Editing the food item
                     if foodItemVM.cdFoodItem?.composedFoodItem != nil {
                         // There's an associated recipe, so show message to open Recipe Editor
                         showingAlert = true
                     } else {
                         activeSheet = .editFoodItem
                     }
-                }) {
-                    Text("Edit")
                 }
-                
+            }
+        }
+        .contextMenu(menuItems: {
+            if listType == .maintenance {
                 // Duplicating the food item
                 Button(action: {
                     foodItemVM.duplicate()

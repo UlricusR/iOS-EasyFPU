@@ -174,7 +174,7 @@ struct FoodItemEditor: View {
                         // Delete food item (only when editing an existing food item)
                         if editedFoodItem != nil {
                             Section {
-                                Button(action: {
+                                Button("Delete food item", role: .destructive) {
                                     // Close the sheet
                                     presentation.wrappedValue.dismiss()
                                     
@@ -182,8 +182,6 @@ struct FoodItemEditor: View {
                                     if let foodItemToBeDeleted = self.draftFoodItemVM.cdFoodItem {
                                         FoodItem.delete(foodItemToBeDeleted)
                                     }
-                                }) {
-                                    Text("Delete food item")
                                 }
                             }
                         }
@@ -210,7 +208,7 @@ struct FoodItemEditor: View {
                             }
                             self.typicalAmountsToBeDeleted.removeAll()
                         }) {
-                            Image(systemName: "xmark.circle.fill")
+                            Image(systemName: "xmark.circle")
                                 .imageScale(.large)
                         }
                         
