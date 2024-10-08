@@ -113,6 +113,9 @@ struct FoodItemListView: View {
                             Button(action: {
                                 withAnimation(.default) {
                                     composedFoodItem.clearIngredients()
+                                    
+                                    // Close sheet
+                                    presentation.wrappedValue.dismiss()
                                 }
                             }) {
                                 Image(systemName: "xmark.circle").foregroundStyle(.red)
@@ -145,7 +148,8 @@ struct FoodItemListView: View {
                             }) {
                                 Image(systemName: "checkmark.circle.fill")
                                     .imageScale(.large)
-                            }.disabled(composedFoodItem.foodItems.isEmpty)
+                            }
+                            .disabled(composedFoodItem.foodItems.isEmpty)
                         }
                     }
                 }
