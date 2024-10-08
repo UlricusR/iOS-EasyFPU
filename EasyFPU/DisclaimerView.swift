@@ -18,9 +18,9 @@ struct DisclaimerView: View {
         NavigationStack {
             VStack(alignment: .leading) {
                 Text("Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!").padding()
-                Text("Please consult your medical doctor before modifying your diabetes therapy and applying Fat Protein Units.").padding().foregroundColor(.red).font(.headline)
+                Text("Please consult your medical doctor before modifying your diabetes therapy and applying Fat Protein Units.").padding().foregroundStyle(.red).font(.headline)
                 Text("Read more here!")
-                .padding().foregroundColor(.accentColor)
+                .padding().foregroundStyle(.blue)
                 .onTapGesture {
                     UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
                 }

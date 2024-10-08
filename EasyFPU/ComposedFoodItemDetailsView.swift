@@ -35,7 +35,7 @@ struct ComposedFoodItemDetailsView: View {
                         Text(String(composedFoodItem.amount))
                         Text("g")
                         Text(NSLocalizedString(composedFoodItem.name, comment: ""))
-                    }.foregroundColor(Color.accentColor)
+                    }.foregroundStyle(Color.accentColor)
                     
                     // Calories
                     HStack {
@@ -85,7 +85,7 @@ struct ComposedFoodItemDetailsView: View {
                 List {
                     // Food items
                     ForEach(composedFoodItem.foodItems, id: \.self) { foodItem in
-                        ComposedFoodItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundColorName: Color.accentColor)
+                        ComposedFoodItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundStyleName: Color.accentColor)
                     }
                 }
             }

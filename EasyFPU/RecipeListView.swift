@@ -58,7 +58,7 @@ struct RecipeListView: View {
                             HStack {
                                 Image(systemName: "plus.circle")
                                     .imageScale(.large)
-                                    .foregroundColor(.green)
+                                    .foregroundStyle(.green)
                                     .bold()
                                 Text("Start cooking or baking")
                             }
@@ -99,7 +99,7 @@ struct RecipeListView: View {
                             activeSheet = .createRecipe
                         }) {
                             Image(systemName: "plus.circle")
-                                .foregroundColor(.green)
+                                .foregroundStyle(.green)
                                 .imageScale(.large)
                         }
                     }
@@ -112,11 +112,11 @@ struct RecipeListView: View {
                         }) {
                             if self.showFavoritesOnly {
                                 Image(systemName: "star.fill")
-                                    .foregroundColor(Color.yellow)
+                                    .foregroundStyle(.yellow)
                                     .imageScale(.large)
                             } else {
                                 Image(systemName: "star")
-                                    .foregroundColor(Color.blue)
+                                    .foregroundStyle(.blue)
                                     .imageScale(.large)
                             }
                         }

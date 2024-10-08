@@ -13,7 +13,7 @@ struct ComposedFoodItemView: View {
     @ObservedObject var absorptionScheme: AbsorptionScheme
     var fontSizeName: Font?
     var fontSizeDetails: Font?
-    var foregroundColorName: Color?
+    var foregroundStyleName: Color
     @ObservedObject var userSettings = UserSettings.shared
     var absorptionTimeAsString: String {
         if foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
@@ -30,7 +30,7 @@ struct ComposedFoodItemView: View {
                 Text(String(foodItem.amount))
                 Text("g")
                 Text(foodItem.name)
-            }.font(fontSizeName).foregroundColor(foregroundColorName)
+            }.font(fontSizeName).foregroundStyle(foregroundStyleName)
             
             // Calories
             HStack {

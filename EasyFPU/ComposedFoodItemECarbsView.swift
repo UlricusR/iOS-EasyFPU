@@ -32,14 +32,14 @@ struct ComposedFoodItemECarbsView: View {
                 Text("e-Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
-            .foregroundColor(Color(ComposedFoodItemECarbsView.color))
+            .foregroundStyle(Color(ComposedFoodItemECarbsView.color))
             
             HStack {
                 VStack(alignment: .trailing) { // Questions
                     Text("How much?")
                     Text("When?")
                     Text("How long?")
-                }.foregroundColor(Color(ComposedFoodItemECarbsView.color))
+                }.foregroundStyle(Color(ComposedFoodItemECarbsView.color))
                 
                 VStack(alignment: .leading) { // Answers
                     HStack {

@@ -62,7 +62,7 @@ struct FoodItemListView: View {
                             activeSheet = .addFoodItem
                         } label: {
                             HStack {
-                                Image(systemName: "plus.circle").imageScale(.large).foregroundColor(.green)
+                                Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
                                 emptyStateButtonText
                             }
                             .padding()
@@ -106,7 +106,7 @@ struct FoodItemListView: View {
                         }) {
                             Image(systemName: "plus.circle")
                                 .imageScale(.large)
-                                .foregroundColor(.green)
+                                .foregroundStyle(.green)
                         }
                         
                         if listType == .selection && !composedFoodItem.foodItems.isEmpty {
@@ -115,7 +115,7 @@ struct FoodItemListView: View {
                                     composedFoodItem.clearIngredients()
                                 }
                             }) {
-                                Image(systemName: "xmark.circle").foregroundColor(.red)
+                                Image(systemName: "xmark.circle").foregroundStyle(.red)
                                     .imageScale(.large)
                             }
                         }
@@ -129,11 +129,11 @@ struct FoodItemListView: View {
                         }) {
                             if self.showFavoritesOnly {
                                 Image(systemName: "star.fill")
-                                    .foregroundColor(Color.yellow)
+                                    .foregroundStyle(Color.yellow)
                                     .imageScale(.large)
                             } else {
                                 Image(systemName: "star")
-                                    .foregroundColor(Color.blue)
+                                    .foregroundStyle(Color.blue)
                                     .imageScale(.large)
                             }
                         }

@@ -19,12 +19,12 @@ struct HelpViewRecipeList: View {
             Text("Menu bar").font(.headline).padding()
             
             HStack {
-                Image(systemName: "plus.circle").foregroundColor(.green).imageScale(.large)
+                Image(systemName: "plus.circle").foregroundStyle(.green).imageScale(.large)
                 Text("Start creating a new recipe.")
             }.padding()
 			
 			HStack {
-                Image(systemName: "star").foregroundColor(Color.blue).imageScale(.large)
+                Image(systemName: "star").foregroundStyle(.blue).imageScale(.large)
                 Text("Filter your recipes by your favorites.")
             }.padding()
         }

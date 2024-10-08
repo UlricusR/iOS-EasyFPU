@@ -195,7 +195,7 @@ struct SettingsEditor: View {
                                 }
                             }
                         }) {
-                            Image(systemName: self.updateButton ? "checkmark.circle" : "plus.circle").foregroundColor(self.updateButton ? .yellow : .green)
+                            Image(systemName: self.updateButton ? "checkmark.circle" : "plus.circle").foregroundStyle(self.updateButton ? .yellow : .green)
                         }
                     }
                 }

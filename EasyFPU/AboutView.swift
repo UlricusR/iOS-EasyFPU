@@ -17,7 +17,7 @@ struct AboutView: View {
                 Text("Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal.").padding()
                 Text("It's free and open-source, so I'll never ask you for money.").padding()
                 Text("Documentation on rueth.info")
-                    .padding().foregroundColor(.accentColor)
+                    .padding().foregroundStyle(.blue)
                     .onTapGesture {
                         UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
                     }

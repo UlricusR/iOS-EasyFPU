@@ -28,7 +28,7 @@ struct ComposedFoodItemExportView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
-                Text("Please choose the data to export:").padding()
+                Text("Please choose the data to export:").padding().font(.headline)
                 
                 if userSettings.treatSugarsSeparately {
                     Toggle(isOn: $carbsRegimeCalculator.includeTotalMealSugars) {
@@ -63,22 +63,19 @@ struct ComposedFoodItemExportView: View {
                     Text("min")
                 }.padding()
                 
-                Button(action: {
-                    self.prepareHealthSampleExport()
-                }) {
-                    Image(systemName: "square.and.arrow.up")
-                    Text("Export").fontWeight(.bold)
-                }
-                .multilineTextAlignment(.center)
-                .padding()
-                
                 // The carbs preview
                 if !carbsRegimeCalculator.hkObjects.isEmpty {
                     Text("Preview of exported carbs in g").padding([.top, .leading, .trailing])
                     HealthExportCarbsPreviewChart(carbsRegime: self.carbsRegimeCalculator.carbsRegime)
                 }
-                
-                Spacer()
+            }
+            
+            VStack(alignment: .center) {
+                Button("Export", systemImage: "square.and.arrow.up") {
+                    self.prepareHealthSampleExport()
+                }
+                .padding()
+                .buttonStyle(.borderedProminent)
             }
             .navigationBarTitle("Export to Health", displayMode: .inline)
             .toolbar {

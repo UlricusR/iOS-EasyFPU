@@ -25,39 +25,39 @@ struct FoodItemView: View {
             HStack {
                 if listType == .selection {
                     if let foodItemIndex = composedFoodItemVM.foodItems.firstIndex(of: foodItemVM) {
-                        Image(systemName: "xmark.circle").foregroundColor(.red)
-                        Text("\(composedFoodItemVM.foodItems[foodItemIndex].amount)").font(.headline).foregroundColor(.accentColor)
-                        Text("g").font(.headline).foregroundColor(.accentColor)
+                        Image(systemName: "xmark.circle").foregroundStyle(.red)
+                        Text("\(composedFoodItemVM.foodItems[foodItemIndex].amount)").font(.headline).foregroundStyle(.blue)
+                        Text("g").font(.headline).foregroundStyle(.blue)
                     } else {
-                        Image(systemName: "plus.circle").foregroundColor(.gray)
+                        Image(systemName: "plus.circle").foregroundStyle(.gray)
                     }
                 }
-                Text(foodItemVM.name).font(.headline).foregroundColor(listType == .selection && composedFoodItemVM.foodItems.contains(foodItemVM) ? .accentColor : .none)
-                if foodItemVM.favorite { Image(systemName: "star.fill").foregroundColor(.yellow).imageScale(.small) }
+                Text(foodItemVM.name).font(.headline).foregroundStyle(listType == .selection && composedFoodItemVM.foodItems.contains(foodItemVM) ? .blue : .primary)
+                if foodItemVM.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
                 Spacer()
             }
             
             // Second line: Nutritional values per 100g
             HStack {
-                Text("Nutritional values per 100g:").font(.caption).foregroundColor(.gray)
+                Text("Nutritional values per 100g:").font(.caption).foregroundStyle(.gray)
 
                 Spacer()
 
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItemVM.caloriesPer100g))!).font(.caption).foregroundColor(.gray)
-                Text("kcal").font(.caption).foregroundColor(.gray)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItemVM.caloriesPer100g))!).font(.caption).foregroundStyle(.gray)
+                Text("kcal").font(.caption).foregroundStyle(.gray)
 
-                Text("|").foregroundColor(.gray)
+                Text("|").foregroundStyle(.gray)
 
                 VStack(alignment: .leading) {
                     HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItemVM.carbsPer100g))!).font(.caption).foregroundColor(.gray)
-                        Text("g Carbs").font(.caption).foregroundColor(.gray)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItemVM.carbsPer100g))!).font(.caption).foregroundStyle(.gray)
+                        Text("g Carbs").font(.caption).foregroundStyle(.gray)
                     }
                     
                     HStack {
-                        Text("Thereof").font(.caption).foregroundColor(.gray)
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItemVM.sugarsPer100g))!).font(.caption).foregroundColor(.gray)
-                        Text("g Sugars").font(.caption).foregroundColor(.gray)
+                        Text("Thereof").font(.caption).foregroundStyle(.gray)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItemVM.sugarsPer100g))!).font(.caption).foregroundStyle(.gray)
+                        Text("g Sugars").font(.caption).foregroundStyle(.gray)
                     }
                 }
             }

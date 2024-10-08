@@ -29,7 +29,7 @@ struct ComposedFoodItemEvaluationView: View {
                         HStack {
                             Image(systemName: "plus.circle")
                                 .imageScale(.large)
-                                .foregroundColor(.green)
+                                .foregroundStyle(.green)
                                 .bold()
                             Text("Add products to your meal")
                         }
@@ -114,7 +114,7 @@ struct ComposedFoodItemEvaluationView: View {
                                 UserSettings.shared.mealDelayInMinutes = 0
                             }
                         }) {
-                            Image(systemName: "xmark.circle").foregroundColor(.red)
+                            Image(systemName: "xmark.circle").foregroundStyle(.red)
                                 .imageScale(.large)
                         }
                     }

@@ -19,12 +19,12 @@ struct HelpViewFoodItemMaintenanceList: View {
             Text("Menu bar").font(.headline).padding()
             
             HStack {
-                Image(systemName: "plus.circle").foregroundColor(.green)
+                Image(systemName: "plus.circle").foregroundStyle(.green)
                 Text("Adds a new dish or ingredient to the list.")
             }.padding()
             
 			HStack {
-                Image(systemName: "star").foregroundColor(Color.blue).imageScale(.large)
+                Image(systemName: "star").foregroundStyle(Color.blue).imageScale(.large)
                 Text("Filters by favorite dishes or ingredients.")
             }.padding()
         }

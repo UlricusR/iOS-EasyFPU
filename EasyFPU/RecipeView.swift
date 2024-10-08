@@ -20,7 +20,7 @@ struct RecipeView: View {
         // Name, favorite
         HStack {
             Text(composedFoodItemVM.name).font(.headline)
-            if composedFoodItemVM.favorite { Image(systemName: "star.fill").foregroundColor(.yellow).imageScale(.small) }
+            if composedFoodItemVM.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
             Spacer()
         }
         .contextMenu(menuItems: {

@@ -66,7 +66,7 @@ struct FoodPreviewContent: View {
             
             HStack {
                 Text(NSLocalizedString("Link to entry in ", comment: "") + UserSettings.shared.foodDatabase.databaseType.rawValue)
-                    .padding().foregroundColor(.accentColor)
+                    .padding().foregroundStyle(.blue)
                     .onTapGesture {
                         try? UIApplication.shared.open(UserSettings.shared.foodDatabase.getLink(for: selectedEntry.sourceId))
                     }

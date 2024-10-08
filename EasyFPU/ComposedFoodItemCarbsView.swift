@@ -24,14 +24,14 @@ struct ComposedFoodItemCarbsView: View {
                 Text("Regular Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
-            .foregroundColor(Color(ComposedFoodItemCarbsView.color))
+            .foregroundStyle(Color(ComposedFoodItemCarbsView.color))
             
             HStack {
                 VStack(alignment: .trailing) { // Questions
                     Text("How much?")
                     Text("When?")
                     Text("How long?")
-                }.foregroundColor(Color(ComposedFoodItemCarbsView.color))
+                }.foregroundStyle(Color(ComposedFoodItemCarbsView.color))
                 
                 VStack(alignment: .leading) { // Answers
                     HStack {

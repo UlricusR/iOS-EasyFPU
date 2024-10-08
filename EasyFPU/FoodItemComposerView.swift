@@ -37,7 +37,7 @@ struct FoodItemComposerView: View {
                             HStack {
                                 Image(systemName: "plus.circle")
                                     .imageScale(.large)
-                                    .foregroundColor(.green)
+                                    .foregroundStyle(.green)
                                     .bold()
                                 Text("Add ingredients")
                             }

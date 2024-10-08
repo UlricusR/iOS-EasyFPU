@@ -24,14 +24,14 @@ struct ComposedFoodItemSugarsView: View {
                 Text("Sugars").font(.headline).fontWeight(.bold).lineLimit(2)
             }
             .multilineTextAlignment(.center)
-            .foregroundColor(Color(ComposedFoodItemSugarsView.color))
+            .foregroundStyle(Color(ComposedFoodItemSugarsView.color))
             
             HStack {
                 VStack(alignment: .trailing) { // Questions
                     Text("How much?")
                     Text("When?")
                     Text("How long?")
-                }.foregroundColor(Color(ComposedFoodItemSugarsView.color))
+                }.foregroundStyle(Color(ComposedFoodItemSugarsView.color))
                 
                 VStack(alignment: .leading) { // Answers
                     HStack { // How much?

@@ -25,87 +25,77 @@ struct FoodItemSelector: View {
     var body: some View {
         
         NavigationStack {
-            GeometryReader { geometry in
-                Form {
-                    Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text(category == .product ? "Enter amount consumed" : "Enter amount used") : Text(category == .product ? "Enter amount consumed or select typical amount" : "Enter amount used or select typical amount")) {
-                        HStack {
-                            Text(category == .product ? "Amount consumed": "Amount used")
-                            CustomTextField(titleKey: category == .product ? "Amount consumed" : "Amount used", text: self.$draftFoodItem.amountAsString, keyboardType: .numberPad)
-                                .multilineTextAlignment(.trailing)
-                            Text("g")
-                        }
-                        
-                        // Buttons to ease input
-                        HStack {
-                            Spacer()
-                            NumberButton(number: 100, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
-                            NumberButton(number: 50, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
-                            NumberButton(number: 10, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
-                            NumberButton(number: 5, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
-                            NumberButton(number: 1, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
-                            Spacer()
-                        }
-                        
-                        // Add to typical amounts (only if not connected to a ComposedFoodItem)
-                        if draftFoodItem.cdFoodItem?.composedFoodItem == nil {
-                            if self.addToTypicalAmounts {
-                                // User wants to add amount to typical amounts, so comment is required
-                                HStack {
-                                    CustomTextField(titleKey: "Comment", text: self.$newTypicalAmountComment, keyboardType: .default)
+            VStack {
+                GeometryReader { geometry in
+                    Form {
+                        Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text(category == .product ? "Enter amount consumed" : "Enter amount used") : Text(category == .product ? "Enter amount consumed or select typical amount" : "Enter amount used or select typical amount")) {
+                            HStack {
+                                Text(category == .product ? "Amount consumed": "Amount used")
+                                CustomTextField(titleKey: category == .product ? "Amount consumed" : "Amount used", text: self.$draftFoodItem.amountAsString, keyboardType: .numberPad)
+                                    .multilineTextAlignment(.trailing)
+                                Text("g")
+                            }
+                            
+                            // Buttons to ease input
+                            HStack {
+                                Spacer()
+                                NumberButton(number: 100, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                                NumberButton(number: 50, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                                NumberButton(number: 10, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                                NumberButton(number: 5, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                                NumberButton(number: 1, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                                Spacer()
+                            }
+                            
+                            // Add to typical amounts (only if not connected to a ComposedFoodItem)
+                            if draftFoodItem.cdFoodItem?.composedFoodItem == nil {
+                                if self.addToTypicalAmounts {
+                                    // User wants to add amount to typical amounts, so comment is required
+                                    HStack {
+                                        CustomTextField(titleKey: "Comment", text: self.$newTypicalAmountComment, keyboardType: .default)
+                                        Button(action: {
+                                            self.addTypicalAmount()
+                                        }) {
+                                            Image(systemName: "checkmark.circle.fill")
+                                        }
+                                    }
+                                } else {
+                                    // Give user possibility to add the entered amount to typical amounts
                                     Button(action: {
-                                        self.addTypicalAmount()
+                                        self.addToTypicalAmounts = true
                                     }) {
-                                        Image(systemName: "checkmark.circle.fill")
+                                        Text("Add to typical amounts")
                                     }
                                 }
-                            } else {
-                                // Give user possibility to add the entered amount to typical amounts
-                                Button(action: {
-                                    self.addToTypicalAmounts = true
-                                }) {
-                                    Text("Add to typical amounts")
+                            }
+                        }
+                        
+                        if !self.draftFoodItem.typicalAmounts.isEmpty {
+                            Section(header: Text("Typical amounts:")) {
+                                ForEach(self.draftFoodItem.typicalAmounts.sorted()) { typicalAmount in
+                                    HStack {
+                                        Text(typicalAmount.amountAsString)
+                                        Text("g")
+                                        Text(typicalAmount.comment)
+                                    }
+                                    .onTapGesture {
+                                        self.draftFoodItem.amountAsString = typicalAmount.amountAsString
+                                    }
                                 }
                             }
                         }
-                    }
-                    
-                    if !self.draftFoodItem.typicalAmounts.isEmpty {
-                        Section(header: Text("Typical amounts:")) {
-                            ForEach(self.draftFoodItem.typicalAmounts.sorted()) { typicalAmount in
-                                HStack {
-                                    Text(typicalAmount.amountAsString)
-                                    Text("g")
-                                    Text(typicalAmount.comment)
-                                }
-                                .onTapGesture {
-                                    self.draftFoodItem.amountAsString = typicalAmount.amountAsString
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            .navigationBarTitle(self.draftFoodItem.name)
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarLeading) {
-                    Button(action: {
-                        self.showingSheet = true
-                    }) {
-                        Image(systemName: "questionmark.circle")
-                            .imageScale(.large)
                     }
                 }
                 
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button(action: {
+                HStack {
+                    Button("Cancel") {
                         // Do nothing, just quit edit mode, as food item hasn't been modified
                         presentation.wrappedValue.dismiss()
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .imageScale(.large)
                     }
+                    .padding()
+                    .buttonStyle(.bordered)
                     
-                    Button(action: {
+                    Button("Add") {
                         // First check for unsaved typical amount
                         if self.addToTypicalAmounts {
                             self.addTypicalAmount()
@@ -123,10 +113,21 @@ struct FoodItemSelector: View {
                             self.errorMessage = err.evaluate()
                             self.showingAlert = true
                         }
+                    }
+                    .padding()
+                    .buttonStyle(.borderedProminent)
+                    .disabled(draftFoodItem.amount <= 0)
+                }
+            }
+            .navigationBarTitle(self.draftFoodItem.name)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        self.showingSheet = true
                     }) {
-                        Image(systemName: "checkmark.circle.fill")
+                        Image(systemName: "questionmark.circle")
                             .imageScale(.large)
-                    }.disabled(draftFoodItem.amount <= 0)
+                    }
                 }
             }
         }

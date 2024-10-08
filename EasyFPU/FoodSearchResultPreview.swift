@@ -24,7 +24,7 @@ struct FoodSearchResultPreview: View {
             Button(action: {
                 self.foodDatabaseResults.selectedEntry = product
             }) {
-                Image(systemName: self.foodDatabaseResults.selectedEntry == product ? "checkmark.circle.fill" : "circle").foregroundColor(.green)
+                Image(systemName: self.foodDatabaseResults.selectedEntry == product ? "checkmark.circle.fill" : "circle").foregroundStyle(.green)
             }.buttonStyle(BorderlessButtonStyle())
             
             if let imageObject = product.imageFront {

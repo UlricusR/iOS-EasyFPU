@@ -17,39 +17,39 @@ struct HelpViewMealDetails: View {
             
             Group {
                 HStack {
-                    Image(systemName: "cube.fill").foregroundColor(Color(ComposedFoodItemSugarsView.color))
+                    Image(systemName: "cube.fill").foregroundStyle(Color(ComposedFoodItemSugarsView.color))
                     Text("Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.")
                 }.padding()
                 
                 HStack {
-                    Image(systemName: "hare.fill").foregroundColor(Color(ComposedFoodItemCarbsView.color))
+                    Image(systemName: "hare.fill").foregroundStyle(Color(ComposedFoodItemCarbsView.color))
                     Text("Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.")
                 }.padding()
                 
                 HStack {
-                    Image(systemName: "tortoise.fill").foregroundColor(Color(ComposedFoodItemECarbsView.color))
+                    Image(systemName: "tortoise.fill").foregroundStyle(Color(ComposedFoodItemECarbsView.color))
                     Text("Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.")
                 }.padding()
                 
                 HStack {
-                    Image(systemName: "xmark.circle").foregroundColor(.red)
+                    Image(systemName: "xmark.circle").foregroundStyle(.red)
 					Text("Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero.")
                 }.padding()
                 
                 HStack {
-                    Image(systemName: "pencil.circle").foregroundColor(.accentColor)
+                    Image(systemName: "pencil.circle").foregroundStyle(.blue)
                     Text("Lets you add and edit the dishes included in the meal.")
                 }.padding()
                 
 				HStack {
-					Image(systemName: "info.circle.fill").foregroundColor(.accentColor)
+					Image(systemName: "info.circle.fill").foregroundStyle(.blue)
 					Text("Opens a view with all the details of the meal and its dishes.")
                 }.padding()
                 
                 Text("Menu bar").font(.headline).padding()
                 
                 HStack {
-                    Image(systemName: "square.and.arrow.up").foregroundColor(.accentColor)
+                    Image(systemName: "square.and.arrow.up").foregroundStyle(.blue)
                     Text("Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet.")
                 }.padding()
             }
