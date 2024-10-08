@@ -18,7 +18,7 @@ struct FoodSearch: View {
     
     var body: some View {
         if let searchResults = foodDatabaseResults.searchResults {
-            NavigationView {
+            NavigationStack {
                 List {
                     ForEach(searchResults) { searchResult in
                         FoodSearchResultPreview(product: searchResult, foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem, category: self.category, parentPresentation: _presentation)
@@ -52,7 +52,6 @@ struct FoodSearch: View {
             .onDisappear() {
                 foodDatabaseResults.searchResults = nil
             }
-            .navigationViewStyle(StackNavigationViewStyle())
         } else {
             NotificationView {
                 ActivityIndicatorSpinner()

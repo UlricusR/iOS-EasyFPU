@@ -23,7 +23,7 @@ struct ComposedFoodItemDetailsView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 VStack(alignment: .leading) {
                     //
@@ -100,6 +100,5 @@ struct ComposedFoodItemDetailsView: View {
                 }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

@@ -57,7 +57,7 @@ struct FoodItemEditor: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            NavigationView {
+            NavigationStack {
                 VStack {
                     Form {
                         Section {
@@ -232,7 +232,6 @@ struct FoodItemEditor: View {
                     }
                 }
             }
-            .navigationViewStyle(StackNavigationViewStyle())
             .alert(item: $activeAlert) { state in
                 alertContent(state)
             }

@@ -78,7 +78,6 @@ struct MenuView: View {
             }
             .navigationBarTitle("Settings")
         }
-        .navigationViewStyle(StackNavigationViewStyle())
         .actionSheet(isPresented: self.$showActionSheet) {
             ActionSheet(title: Text("Import food list"), message: Text("Please select"), buttons: [
                 .default(Text("Replace")) {

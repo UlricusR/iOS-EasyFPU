@@ -27,7 +27,7 @@ struct HelpView: View {
     var helpScreen: HelpScreen
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView<AnyView> {
                 switch helpScreen {
                 case .productMaintenanceList:
@@ -64,6 +64,6 @@ struct HelpView: View {
                     }
                 }
             }
-        }.navigationViewStyle(StackNavigationViewStyle())
+        }
     }
 }

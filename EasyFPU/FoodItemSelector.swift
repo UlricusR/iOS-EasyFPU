@@ -24,7 +24,7 @@ struct FoodItemSelector: View {
     
     var body: some View {
         
-        NavigationView {
+        NavigationStack {
             GeometryReader { geometry in
                 Form {
                     Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text(category == .product ? "Enter amount consumed" : "Enter amount used") : Text(category == .product ? "Enter amount consumed or select typical amount" : "Enter amount used or select typical amount")) {
@@ -130,7 +130,6 @@ struct FoodItemSelector: View {
                 }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
         .alert(isPresented: self.$showingAlert) {
             Alert(
                 title: Text("Data alert"),

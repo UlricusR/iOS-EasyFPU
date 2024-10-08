@@ -162,7 +162,6 @@ struct FoodItemComposerView: View {
                     }
                 }
             }
-            .navigationViewStyle(StackNavigationViewStyle())
         }
         .sheet(item: $activeSheet) {
             sheetContent($0)

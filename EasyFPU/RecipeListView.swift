@@ -124,7 +124,6 @@ struct RecipeListView: View {
                 }
             }
             .searchable(text: self.$searchString)
-            .navigationViewStyle(StackNavigationViewStyle())
             .sheet(item: $activeSheet) {
                 sheetContent($0)
             }

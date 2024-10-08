@@ -26,7 +26,7 @@ struct ComposedFoodItemExportView: View {
     @State var exportTotalMealCalories = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCalories) ?? false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(alignment: .leading) {
                 Text("Please choose the data to export:").padding()
                 
@@ -113,7 +113,6 @@ struct ComposedFoodItemExportView: View {
                 }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
         .onAppear() {
             self.processHealthSample()
         }

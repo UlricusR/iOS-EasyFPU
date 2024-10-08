@@ -20,7 +20,7 @@ struct FoodPreview: View {
     
     var body: some View {
         if let product = product {
-            NavigationView {
+            NavigationStack {
                 FoodPreviewContent(selectedEntry: product)
                 .navigationBarTitle("Scanned Food")
                 .toolbar {
@@ -56,7 +56,6 @@ struct FoodPreview: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
-            .navigationViewStyle(StackNavigationViewStyle())
         } else {
             NotificationView {
                 ActivityIndicatorSpinner()

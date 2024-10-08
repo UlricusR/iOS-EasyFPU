@@ -316,7 +316,6 @@ struct SettingsEditor: View {
                 }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
             
         // Alert
         .alert(isPresented: $showingAlert) {

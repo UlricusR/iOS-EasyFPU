@@ -129,7 +129,6 @@ struct ComposedFoodItemEvaluationView: View {
                 }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }

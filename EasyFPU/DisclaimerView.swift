@@ -15,7 +15,7 @@ struct DisclaimerView: View {
     @State private var showingAlert = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(alignment: .leading) {
                 Text("Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!").padding()
                 Text("Please consult your medical doctor before modifying your diabetes therapy and applying Fat Protein Units.").padding().foregroundColor(.red).font(.headline)
@@ -64,7 +64,6 @@ struct DisclaimerView: View {
                 }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
         .alert(isPresented: self.$showingAlert) {
             Alert(
                 title: Text(self.alertTitle),

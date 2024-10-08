@@ -12,7 +12,7 @@ struct AboutView: View {
     @Environment(\.presentationMode) var presentation
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(alignment: .leading) {
                 Text("Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal.").padding()
                 Text("It's free and open-source, so I'll never ask you for money.").padding()
@@ -36,6 +36,6 @@ struct AboutView: View {
                     }
                 }
             }
-        }.navigationViewStyle(StackNavigationViewStyle())
+        }
     }
 }
