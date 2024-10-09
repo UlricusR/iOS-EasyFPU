@@ -364,7 +364,7 @@
 "Delete the food item by tapping the link on the bottom of the view." = "Lösche das Essen, indem Du den Link am unteren Rand der Ansicht antippst.";
 
 // Meal Details help
-"Meal Details" = "Mahlzeit berechnen";
+"Meal Details" = "Details";
 "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid." = "Diese Ansicht stellt die Details über Deine Mahlzeit so dar, dass sie leicht als Screenshot an, z.B., Dein Kind gesendet werden können.";
 "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal." = "Mit den + und - Knöpfen kannst Du die Zeit einstellen, bevor Deine Mahlzeit beginnt. In der Regel ist das der Spritz-Ess-Abstand.";
 "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Kohlenhydrate von Zucker werden in der Regel sofort absorbiert. Du kannst die Parameter im Absorptionsschema-Dialog anpassen.";

@@ -364,7 +364,7 @@
 "Delete the food item by tapping the link on the bottom of the view." = "Delete the food item by tapping the link on the bottom of the view.";
 
 // Meal Details help
-"Meal Details" = "Calculate Meal";
+"Meal Details" = "Meal Details";
 "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid." = "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid.";
 "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal." = "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal.";
 "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.";

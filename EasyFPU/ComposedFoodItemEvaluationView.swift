@@ -84,14 +84,8 @@ struct ComposedFoodItemEvaluationView: View {
                             }
                             
                             // The link to the details
-                            Button(action: {
+                            Button("Meal Details", systemImage: "info.circle.fill") {
                                 activeSheet = .details
-                            }) {
-                                HStack {
-                                    Image(systemName: "info.circle.fill")
-                                        .imageScale(.large)
-                                    Text("Meal Details")
-                                }
                             }
                         }
                     }

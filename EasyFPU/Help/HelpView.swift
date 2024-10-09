@@ -16,7 +16,7 @@ enum HelpScreen: String {
     case recipeList = "Recipe List"
     case foodItemSelector = "Select Food Item"
     case foodItemEditor = "Edit Food Item"
-    case mealDetails = "Meal Details"
+    case mealDetails = "Calculate meal"
     case absorptionSchemeEditor = "Edit Absorption Scheme"
     case mealExport = "Export to Health"
     case foodItemComposer = "Food Item Composer"
