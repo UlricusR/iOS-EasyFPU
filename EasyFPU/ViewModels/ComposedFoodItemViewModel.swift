@@ -184,8 +184,22 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     }
     
     func duplicate() {
+        // Create a duplicate ComposedFoodItemViewModel from self, as we need a new ID
+        let newComposedFoodItemVM = ComposedFoodItemViewModel(
+            id: UUID(),
+            name: self.name + NSLocalizedString(" - Copy", comment: ""),
+            category: self.category,
+            favorite: self.favorite
+        )
+        
+        newComposedFoodItemVM.amount = self.amount
+        newComposedFoodItemVM.numberOfPortions = self.numberOfPortions
+        
+        // We use the same FoodItemVMs (= ingredients) with their IDs
+        newComposedFoodItemVM.foodItems = self.foodItems
+        
         // Create the duplicate in Core Data
-        _ = ComposedFoodItem.duplicate(self)
+        _ = ComposedFoodItem.create(from: newComposedFoodItemVM)
     }
     
     func exportToURL() -> URL? {

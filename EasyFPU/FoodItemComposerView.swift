@@ -117,7 +117,7 @@ struct FoodItemComposerView: View {
                 }
                 .navigationBarTitle(Text("Final product"))
                 .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarLeading) {
+                    ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
                             activeSheet = .help
                         }) {

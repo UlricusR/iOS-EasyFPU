@@ -30,19 +30,25 @@ public class Ingredient: NSManagedObject {
     }
     
     /**
-     Creates a list of Ingredients from a ComposedFoodItemViewModel.
+     Creates a list of Ingredients from a ComposedFoodItemViewModel and relates it to the Core Data ComposedFoodItem
      Contains a reference to the related FoodItem and stores the ID of this FoodItem as separate value for export/import purposes.
 
      - Parameter composedFoodItemVM: The source view model, the FoodItemViewModels of which are used as Ingredients,
      i.e., only amount and reference to Core Data FoodItem is used
+     - cdComposedFoodItem: The Core Data ComposedFoodItem to relate the Ingredients to.
+     - isImport: If true, a new FoodItem is created for each ingredient, otherwise an existing FoodItem is expected.
      
      - Returns: A list of Ingredients, nil
      - if the VM has no ComposedFoodItem (should never be the case)
      - of if there are no FoodItems attached to the ComposedFoodItem (should never be the case)
      */
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel, isImport: Bool = false) -> [Ingredient]? {
-        // We cannot create an Ingredient if no FoodItem is available or no food item ingredients are attached
-        if (composedFoodItemVM.cdComposedFoodItem == nil || composedFoodItemVM.foodItems.count == 0) {
+    static func create(
+        from composedFoodItemVM: ComposedFoodItemViewModel,
+        relateTo cdComposedFoodItem: ComposedFoodItem,
+        isImport: Bool = false
+    ) -> [Ingredient]? {
+        // We cannot create an Ingredient if no food item ingredients are attached
+        if (composedFoodItemVM.foodItems.count == 0) {
             return nil
         }
         
@@ -75,12 +81,15 @@ public class Ingredient: NSManagedObject {
                 cdIngredient.sugarsPer100g = ingredient.sugarsPer100g
                 
                 // Create 1:1 references to ComposedFoodItem and FoodItem
-                cdIngredient.composedFoodItem = composedFoodItemVM.cdComposedFoodItem!
+                cdIngredient.composedFoodItem = cdComposedFoodItem
                 cdIngredient.foodItem = associatedCDFoodItem
                 
                 cdIngredients.append(cdIngredient)
             }
         }
+        
+        // Create and add ingredients
+        cdComposedFoodItem.addToIngredients(NSSet(array: cdIngredients))
         
         // Save
         try? moc.save()

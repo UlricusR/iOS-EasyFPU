@@ -33,6 +33,7 @@ public class ComposedFoodItem: NSManagedObject {
      Creates a new ComposedFoodItem from the ComposedFoodItemViewModel.
      Creates the Ingredients and relates them to the new ComposedFoodItem.
      Also creates a new FoodItem and relates it to the new ComposedFoodItem.
+     Does not relate the Core Data ComposedFoodItem to the passed ComposedFoodItemViewModel.
      
      - Parameter composedFoodItemVM: The source view model.
      
@@ -53,15 +54,13 @@ public class ComposedFoodItem: NSManagedObject {
         cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
         cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
         
-        // Add cdComposedFoodItem to composedFoodItemVM
-        composedFoodItemVM.cdComposedFoodItem = cdComposedFoodItem
+        // Save new composed food item
+        try? moc.save()
         
-        // Create a related FoodItem and relate it to the ComposedFoodItem
-        cdComposedFoodItem.foodItem = FoodItem.create(from: composedFoodItemVM)
-        
-        // Add new ingredients
-        if let cdIngredients = Ingredient.create(from: composedFoodItemVM, isImport: isImport) {
-            cdComposedFoodItem.addToIngredients(NSSet(array: cdIngredients))
+        // Check for ingredients - there must be ingredients!
+        if Ingredient.create(from: composedFoodItemVM, relateTo: cdComposedFoodItem, isImport: isImport) != nil {
+            // Create a related FoodItem and relate it to the ComposedFoodItem
+            cdComposedFoodItem.foodItem = FoodItem.create(from: composedFoodItemVM)
             
             // Save new composed food item
             try? moc.save()
@@ -74,25 +73,6 @@ public class ComposedFoodItem: NSManagedObject {
             try? moc.save()
             return nil
         }
-    }
-    
-    /**
-     Creates a ComposedFoodItem from an existing one - used for duplicating.
-     
-     - Parameters:
-        - existingComposedFoodItem: The Core Data ComposedFoodItem to be duplicated.
-        - newCDFoodItem: The Core Data FoodItem to be linked to this new ComposedFoodItem.
-     
-     - Returns: A new Core Data ComposedFoodItem linked to the passed FoodItem.
-     */
-    static func duplicate(_ existingComposedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem? {
-        // Create a new ComposedFoodItem from the existing view model
-        let cdComposedFoodItem = ComposedFoodItem.create(from: existingComposedFoodItemVM)
-        
-        // Rename
-        cdComposedFoodItem?.name += NSLocalizedString(" - Copy", comment: "")
-        
-        return cdComposedFoodItem
     }
     
     /**
@@ -135,9 +115,7 @@ public class ComposedFoodItem: NSManagedObject {
             }
             
             // Add new ingredients
-            if let ingredients = Ingredient.create(from: composedFoodItemVM) {
-                cdComposedFoodItem.addToIngredients(NSSet(array: ingredients))
-            }
+            _ = Ingredient.create(from: composedFoodItemVM, relateTo: cdComposedFoodItem)
             
             // Delete the existing TypicalAmounts
             if let existingTypicalAmounts = cdComposedFoodItem.foodItem?.typicalAmounts {

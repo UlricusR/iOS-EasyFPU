@@ -60,6 +60,9 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
         cdFoodItem.favorite = foodItemVM.favorite
         
+        // Save
+        try? moc.save()
+        
         // Add typical amounts
         for typicalAmount in foodItemVM.typicalAmounts {
             let newCDTypicalAmount = TypicalAmount.create(from: typicalAmount)
@@ -188,17 +191,33 @@ public class FoodItem: NSManagedObject {
      
      - Returns: the new Core Data FoodItem, nil should never happen
      */
-    static func duplicate(_ existingFoodItemVM: FoodItemViewModel) -> FoodItem? {
+    static func duplicate(_ existingFoodItem: FoodItem) -> FoodItem? {
         let moc = AppDelegate.viewContext
-        let cdFoodItem = FoodItem.create(from: existingFoodItemVM, allowDuplicate: true)
         
-        // Rename
-        cdFoodItem.name = (cdFoodItem.name ?? "") + NSLocalizedString(" - Copy", comment: "")
+        // Create new FoodItem with own ID
+        let cdFoodItem = FoodItem(context: moc)
+        cdFoodItem.id = UUID()
         
-        for typicalAmountVM in existingFoodItemVM.typicalAmounts {
-            _ = TypicalAmount.create(from: typicalAmountVM)
+        // Fill data
+        cdFoodItem.name = (existingFoodItem.name ?? NSLocalizedString("- No name -", comment: "")) + NSLocalizedString(" - Copy", comment: "")
+        cdFoodItem.caloriesPer100g = existingFoodItem.caloriesPer100g
+        cdFoodItem.carbsPer100g = existingFoodItem.carbsPer100g
+        cdFoodItem.sugarsPer100g = existingFoodItem.sugarsPer100g
+        cdFoodItem.favorite = existingFoodItem.favorite
+        cdFoodItem.category = existingFoodItem.category
+        
+        // Add typical amounts
+        if let typicalAmounts = existingFoodItem.typicalAmounts {
+            for case let typicalAmount as TypicalAmount in typicalAmounts {
+                let newCDTypicalAmount = TypicalAmount(context: moc)
+                newCDTypicalAmount.id = UUID()
+                newCDTypicalAmount.amount = typicalAmount.amount
+                newCDTypicalAmount.comment = typicalAmount.comment
+                cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
+            }
         }
         
+        // Save new food item and refresh
         try? moc.save()
         
         return cdFoodItem

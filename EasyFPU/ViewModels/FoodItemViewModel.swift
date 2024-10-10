@@ -335,7 +335,9 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
      Duplicates a FoodItem.
      */
     func duplicate() {
-        _ = FoodItem.duplicate(self)
+        guard let cdFoodItem else { return }
+        // Create the duplicate in Core Data
+        _ = FoodItem.duplicate(cdFoodItem)
     }
     
     func exportToURL() -> URL? {
