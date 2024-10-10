@@ -30,6 +30,7 @@
 "Move to Product List" = "Zu Speisen verschieben";
 "Move to Ingredient List" = "Zu Zutaten verschieben";
 "Delete" = "Löschen";
+"Do not delete" = "Nicht löschen";
 "Copy" = "Kopie";
 "Tap to edit" = "Zum Bearbeiten antippen";
 " - Copy" = " - Kopie";
@@ -96,9 +97,12 @@
 "Cannot delete ingredient" = "Kann Zutat nicht löschen";
 "Could not generate data export" = "Konnte Daten nicht exportieren";
 "is not a valid data model" = "ist kein gültiges Datenmodell. Konnte Daten nicht importieren.";
-"This product is created from a recipe, please open it in the recipe editor" = "Diese Speise ist mit einem Rezept verknüpft, bitte öffne es im Rezepteditor";
+"This food item is created from a recipe, please open it in the recipe editor" = "Dieses Essen ist mit einem Rezept verknüpft, bitte öffne es im Rezepteditor";
 "There's an associated recipe, do you want to delete it as well?" = "Es gibt ein verknüpftes Rezept. Willst Du dieses auch löschen?";
 "Keep recipe" = "Nur Speise löschen";
+"Edit food" = "Essen bearbeiten";
+"Delete food" = "Essen löschen";
+"Do you really want to delete this food item? This cannot be undone!" = "Willst Du dieses Essen wirklich löschen? Dies kann nicht rückgängig gemacht werden!";
 
 // Ingredients
 "Ingredients" = "Zutaten";
@@ -180,6 +184,8 @@
 "There's an associated product, do you want to delete it as well?" = "Dieses Rezept ist mit einer Speise verknüpft. Willst Du diese auch löschen?";
 "Delete both" = "Rezept und Speise löschen";
 "Keep product" = "Nur Rezept löschen";
+"Delete recipe" = "Rezept löschen";
+"Do you really want to delete this recipe? This cannot be undone!" = "Willst Du dieses Rezept wirklich löschen? Dies kann nicht rückgängig gemacht werden!";
 
 // Settings editor
 "Absorption scheme" = "Absorptionsschema";
@@ -319,7 +325,7 @@
 "Here you maintain your dishes or ingredients." = "Hier pflegst Du Deine Speisen oder Zutaten.";
 "Adds a new dish or ingredient to the list." = "Fügt eine neue Speise oder Zutat hinzu.";
 "Filters by favorite dishes or ingredients." = "Filtert nach Lieblingsspeisen.";
-"To edit, duplicate, share, move or delete a dish or ingredient, long-press on it." = "Zum Bearbeiten, Duplizieren, Teilen, Bewegen oder Löschen lange drücken.";
+"To edit, duplicate, share, move or delete a dish or ingredient, swipe left or right." = "Zum Bearbeiten, Duplizieren, Teilen, Bewegen oder Löschen nach rechts oder links wischen.";
 
 // Dishes delection list help
 "Product Selection List" = "Speisen auswählen";
@@ -357,7 +363,7 @@
 "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Bitte beachte, dass 1 Gramm Kohlenhydrate ca. 4 kcal Energiegehalt hat, d.h. die hier eingegebene Menge Kohlenhydrate multipliziert mit vier darf die Gesamt-Energiemenge in kcal nicht überschreiten.";
 "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "Um eine neue typische Menge hinzuzufügen, gib die Menge und einen passenden Kommentar in die entsprechenden Felder ein und bestätige die Eingabe mit dem grünen Plus-Knopf.";
 "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "Um eine existierende typische Menge zu bearbeiten, tippe diese an, ändere dann die Werte und bestätige die Änderung durch Antippen des blauen Hakens.";
-"Swipe left to remove a typical amount." = "Wische die typische Menge nach links oder tippe auf das kleine rote X, um sie zu löschen.";
+"Swipe left to remove a typical amount." = "Wische die typische Menge nach links, um sie zu löschen.";
 "A good source for nutritional values (calories and carbs per 100g) is:" = "Eine gute Quelle für Nährwerte (Kalorien und Kohlenhydrate pro 100g) ist:";
 "Link-text-to-nutritional-values" = "FDDB.info";
 "Link-URL-to-nutritional-values" = "https://fddb.info/";
@@ -379,7 +385,7 @@
 "You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients)." = "Deine Rezepte findest Du in der Rezeptliste. Ein EasyFPU-Rezept besteht aus einer Reihe von Zutaten, die eine fertige Speise ergeben. Beispiel: Ein Kuchen (fertige Speise) besteht aus Mehl, Milch, Zucker, Eiern usw. (seine Zutaten).";
 "Start creating a new recipe." = "Beginnt ein neues Rezept.";
 "Filter your recipes by your favorites." = "Filtert Deine Rezepte nach Lieblingsrezepten.";
-"To edit, duplicate, share or delete a recipe, long-press on it." = "Um ein Rezept zu bearbeiten, zu duplizieren, zu teilen oder zu löschen, drücke lange darauf.";
+"To edit, duplicate, share or delete a recipe, swipe left or right." = "Um ein Rezept zu bearbeiten, zu duplizieren, zu teilen oder zu löschen, nach links oder rechts wischen.";
 
 // Absorption scheme help
 "Edit Absorption Scheme" = "Absorptionsschema";

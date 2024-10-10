@@ -14,6 +14,7 @@ struct RecipeView: View {
     @Binding var notificationState: RecipeListView.NotificationState?
     @State private var activeSheet: RecipeViewSheets.State?
     @State private var actionSheetIsPresented: Bool = false
+    @State private var alertIsPresented: Bool = false
     @State private var recipeToBeDeleted: ComposedFoodItem?
 
     var body: some View {
@@ -23,9 +24,9 @@ struct RecipeView: View {
             if composedFoodItemVM.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
             Spacer()
         }
-        .contextMenu(menuItems: {
+        .swipeActions(edge: .trailing) {
             // Editing the recipe
-            Button(action: {
+            Button("Edit", systemImage: "pencil") {
                 if composedFoodItemVM.cdComposedFoodItem != nil {
                     // Prepare the composed product by filling it with the selected ComposedFoodItem
                     UserSettings.shared.composedProduct = ComposedFoodItemViewModel(from: composedFoodItemVM.cdComposedFoodItem!)
@@ -36,53 +37,67 @@ struct RecipeView: View {
                     // No associated cdComposedFoodItem - this should not happen!
                     notificationState = .errorMessage(NSLocalizedString("No associated cdComposedFoodItem", comment: ""))
                 }
-            }) {
-                Text("Edit")
             }
+            .tint(.blue)
             
             // Duplicating the recipe
-            Button(action: {
+            Button("Duplicate", systemImage: "document.on.document") {
                 composedFoodItemVM.duplicate()
-            }) {
-                Text("Duplicate")
             }
-            
-            // Sharing the recipe
-            Button(action: {
-                activeSheet = .exportRecipe
-            }) {
-                Text("Share")
-            }
+            .tint(.indigo)
             
             // Delete the recipe
-            Button(action: {
+            Button("Delete", systemImage: "trash", role: .destructive) {
                 if let composedFoodItemToBeDeleted = composedFoodItemVM.cdComposedFoodItem {
+                    recipeToBeDeleted = composedFoodItemToBeDeleted
+                    
                     // Check for associated product
                     if composedFoodItemToBeDeleted.foodItem != nil {
-                        recipeToBeDeleted = composedFoodItemToBeDeleted
                         actionSheetIsPresented.toggle()
                     } else {
-                        ComposedFoodItem.delete(composedFoodItemToBeDeleted)
+                        alertIsPresented.toggle()
                     }
                 }
-            }) {
-                Text("Delete")
             }
-        })
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+            // Sharing the recipe
+            Button("Share", systemImage: "square.and.arrow.up") {
+                activeSheet = .exportRecipe
+            }
+            .tint(.green)
+        }
         .sheet(item: $activeSheet) {
             sheetContent($0)
+        }
+        .alert(isPresented: $alertIsPresented) {
+            Alert(
+                title: Text("Delete recipe"),
+                message: Text("Do you really want to delete this recipe? This cannot be undone!"),
+                primaryButton: .default(
+                    Text("Do not delete")
+                ),
+                secondaryButton: .destructive(
+                    Text("Delete"),
+                    action: deleteRecipe
+                )
+            )
         }
         .actionSheet(isPresented: $actionSheetIsPresented) {
             ActionSheet(title: Text("Warning"), message: Text("There's an associated product, do you want to delete it as well?"), buttons: [
                 .default(Text("Delete both")) {
                     if let recipeToBeDeleted {
-                        FoodItem.delete(recipeToBeDeleted.foodItem!)
-                        ComposedFoodItem.delete(recipeToBeDeleted)
+                        withAnimation(.default) {
+                            FoodItem.delete(recipeToBeDeleted.foodItem!)
+                            ComposedFoodItem.delete(recipeToBeDeleted)
+                        }
                     }
                 },
                 .default(Text("Keep product")) {
                     if let recipeToBeDeleted {
-                        ComposedFoodItem.delete(recipeToBeDeleted)
+                        withAnimation(.default) {
+                            ComposedFoodItem.delete(recipeToBeDeleted)
+                        }
                     }
                 },
                 .cancel()
@@ -107,6 +122,14 @@ struct RecipeView: View {
                 ActivityView(activityItems: [path], applicationActivities: nil)
             } else {
                 Text(NSLocalizedString("Could not generate data export", comment: ""))
+            }
+        }
+    }
+    
+    private func deleteRecipe() {
+        if let recipeToBeDeleted {
+            withAnimation(.default) {
+                ComposedFoodItem.delete(recipeToBeDeleted)
             }
         }
     }

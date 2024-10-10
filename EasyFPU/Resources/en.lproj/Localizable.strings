@@ -30,6 +30,7 @@
 "Move to Product List" = "Move to Dishes";
 "Move to Ingredient List" = "Move to Ingredients";
 "Delete" = "Delete";
+"Do not delete" = "Do not delete";
 "Copy" = "Copy";
 "Tap to edit" = "Tap to edit";
 " - Copy" = " - Copy";
@@ -96,9 +97,12 @@
 "Cannot delete ingredient" = "Cannot delete ingredient";
 "Could not generate data export" = "Could not generate data export";
 "is not a valid data model" = "is not a valid data model. Could not import data.";
-"This product is created from a recipe, please open it in the recipe editor" = "This dish is created from a recipe, please open it in the recipe editor";
+"This food item is created from a recipe, please open it in the recipe editor" = "This food item is created from a recipe, please open it in the recipe editor";
 "There's an associated recipe, do you want to delete it as well?" = "There's an associated recipe, do you want to delete it as well?";
 "Keep recipe" = "Delete dish only";
+"Edit food" = "Edit food";
+"Delete food" = "Delete food";
+"Do you really want to delete this food item? This cannot be undone!" = "Do you really want to delete this food item? This cannot be undone!";
 
 // Ingredients
 "Ingredients" = "Ingredients";
@@ -180,6 +184,8 @@
 "There's an associated product, do you want to delete it as well?" = "There's an associated dish, do you want to delete it as well?";
 "Delete both" = "Delete recipe and dish";
 "Keep product" = "Delete recipe only";
+"Delete recipe" = "Delete recipe";
+"Do you really want to delete this recipe? This cannot be undone!" = "Do you really want to delete this recipe? This cannot be undone!";
 
 // Settings editor
 "Absorption scheme" = "Absorption scheme";
@@ -319,7 +325,7 @@
 "Here you maintain your dishes or ingredients." = "Here you maintain your dishes or ingredients.";
 "Adds a new dish or ingredient to the list." = "Adds a new dish or ingredient to the list.";
 "Filters by favorite dishes or ingredients." = "Filters by favorite dishes or ingredients.";
-"To edit, duplicate, share, move or delete a dish or ingredient, long-press on it." = "To edit, duplicate, share, move or delete a dish or ingredient, long-press on it.";
+"To edit, duplicate, share, move or delete a dish or ingredient, swipe left or right." = "To edit, duplicate, share, move or delete a dish or ingredient, swipe left or right.";
 
 // Dishes selection help
 "Product Selection List" = "Choose Dishes";
@@ -357,7 +363,7 @@
 "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal.";
 "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button.";
 "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the blue Checkmark button.";
-"Swipe left to remove a typical amount." = "Swipe left or hit the small red X to remove a typical amount.";
+"Swipe left to remove a typical amount." = "Swipe left to remove a typical amount.";
 "A good source for nutritional values (calories and carbs per 100g) is:" = "A good source for nutritional values (calories and carbs per 100g) is:";
 "Link-text-to-nutritional-values" = "Nutrition value";
 "Link-URL-to-nutritional-values" = "https://www.nutritionvalue.org/";
@@ -379,7 +385,7 @@
 "You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients)." = "You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients).";
 "Start creating a new recipe." = "Creates a new recipe.";
 "Filter your recipes by your favorites." = "Filters your recipes by your favorites.";
-"To edit, duplicate, share or delete a recipe, long-press on it." = "To edit, duplicate, share or delete a recipe, long-press on it.";
+"To edit, duplicate, share or delete a recipe, swipe left or right." = "To edit, duplicate, share or delete a recipe, swipe left or right.";
 
 // Absorption scheme help
 "Edit Absorption Scheme" = "Edit Absorption Scheme";

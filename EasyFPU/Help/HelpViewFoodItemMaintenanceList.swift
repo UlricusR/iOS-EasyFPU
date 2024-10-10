@@ -14,7 +14,7 @@ struct HelpViewFoodItemMaintenanceList: View {
             // The food item maintenance list
             Text("Here you maintain your dishes or ingredients.").padding()
             
-            Text("To edit, duplicate, share, move or delete a dish or ingredient, long-press on it.").padding()
+            Text("To edit, duplicate, share, move or delete a dish or ingredient, swipe left or right.").padding()
             
             Text("Menu bar").font(.headline).padding()
             

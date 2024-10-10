@@ -28,7 +28,7 @@ struct FoodItemEditor: View {
     @State private var activeSheet: FoodItemEditorSheets.State?
     @State private var foodSelected = false // We don't need this variable here
     
-    @State var activeAlert: FoodItemEditorSheets.AlertState?
+    @State private var activeAlert: FoodItemEditorSheets.AlertState?
     
     @FetchRequest(
         entity: FoodItem.entity(),
@@ -144,15 +144,19 @@ struct FoodItemEditor: View {
                                             Text("g")
                                             Text(typicalAmount.comment)
                                         }
-                                        .onTapGesture {
-                                            self.newTypicalAmount = typicalAmount.amountAsString
-                                            self.newTypicalAmountComment = typicalAmount.comment
-                                            self.newTypicalAmountId = typicalAmount.id
-                                            self.updateButton = true
-                                        }
+                                        
                                         
                                         Spacer()
-                                        Button(action: {
+                                        
+                                    }
+                                    .onTapGesture {
+                                        self.newTypicalAmount = typicalAmount.amountAsString
+                                        self.newTypicalAmountComment = typicalAmount.comment
+                                        self.newTypicalAmountId = typicalAmount.id
+                                        self.updateButton = true
+                                    }
+                                    .swipeActions(allowsFullSwipe: true) {
+                                        Button("Delete", systemImage: "trash", role: .destructive) {
                                             // First clear edit fields if filled
                                             if self.updateButton {
                                                 self.newTypicalAmount = ""
@@ -163,11 +167,9 @@ struct FoodItemEditor: View {
                                             
                                             // Then delete typical amount
                                             self.deleteTypicalAmount(typicalAmount)
-                                        }) {
-                                            Image(systemName: "xmark.circle").foregroundStyle(.red)
                                         }
                                     }
-                                }.onDelete(perform: deleteTypicalAmount)
+                                }
                             }
                         }
                         
@@ -317,13 +319,6 @@ struct FoodItemEditor: View {
             
             // Display alert and stay in edit mode
             self.activeAlert = .alertMessage
-        }
-    }
-    
-    private func deleteTypicalAmount(at offsets: IndexSet) {
-        offsets.forEach { index in
-            let typicalAmountToBeDeleted = self.typicalAmounts[index]
-            deleteTypicalAmount(typicalAmountToBeDeleted)
         }
     }
     

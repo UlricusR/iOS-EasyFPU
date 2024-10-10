@@ -16,4 +16,11 @@ class FoodItemViewSheets {
         
         var id: State { self }
     }
+    
+    enum AlertState: Identifiable {
+        case associatedRecipe
+        case confirmDelete
+        
+        var id: AlertState { self }
+    }
 }

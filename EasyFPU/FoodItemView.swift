@@ -15,7 +15,7 @@ struct FoodItemView: View {
     var category: FoodItemCategory
     var listType: FoodItemListView.FoodItemListType
     @State private var activeSheet: FoodItemViewSheets.State?
-    @State private var showingAlert: Bool = false
+    @State private var activeAlert: FoodItemViewSheets.AlertState?
     @State private var actionSheetIsPresented: Bool = false
     @State private var foodItemToBeDeleted: FoodItem?
     
@@ -70,74 +70,78 @@ struct FoodItemView: View {
                     } else {
                         activeSheet = .selectFoodItem
                     }
-                } else if listType == .maintenance {
-                    // Editing the food item
-                    if foodItemVM.cdFoodItem?.composedFoodItem != nil {
-                        // There's an associated recipe, so show message to open Recipe Editor
-                        showingAlert = true
-                    } else {
-                        activeSheet = .editFoodItem
-                    }
                 }
             }
         }
-        .contextMenu(menuItems: {
-            if listType == .maintenance {
-                // Duplicating the food item
-                Button(action: {
-                    foodItemVM.duplicate()
-                }) {
-                    Text("Duplicate")
+        .swipeActions(edge: .trailing) {
+            // Editing the food item
+            Button("Edit", systemImage: "pencil") {
+                if foodItemVM.cdFoodItem?.composedFoodItem != nil {
+                    // There's an associated recipe, so show message to open Recipe Editor
+                    activeAlert = .associatedRecipe
+                } else {
+                    activeSheet = .editFoodItem
                 }
-                
-                // Sharing the food item
-                Button(action: {
-                    activeSheet = .exportFoodItem
-                }) {
-                    Text("Share")
-                }
-                
-                // Moving the food item to another category
-                Button(action: {
-                    composedFoodItemVM.remove(foodItem: foodItemVM)
-                    foodItemVM.changeCategory(to: foodItemVM.category == .product ? .ingredient : .product)
-                }) {
-                    Text(NSLocalizedString("Move to \(foodItemVM.category == .product ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""))
-                }.disabled(!foodItemVM.canChangeCategory())
-                
-                // Delete the food item
-                Button(action: {
-                    if let foodItemToBeDeleted = foodItemVM.cdFoodItem {
-                        // Check for associated recipe
-                        if foodItemToBeDeleted.composedFoodItem != nil {
-                            self.foodItemToBeDeleted = foodItemToBeDeleted
-                            self.actionSheetIsPresented.toggle()
-                        } else {
-                            FoodItem.delete(foodItemToBeDeleted)
-                        }
-                    }
-                }) {
-                    Text("Delete")
-                }.disabled(!foodItemVM.canBeDeleted())
             }
-        })
+            .tint(.blue)
+            
+            // Duplicating the food item
+            Button("Duplicate", systemImage: "document.on.document") {
+                foodItemVM.duplicate()
+            }
+            .tint(.indigo)
+            
+            // Delete the food item
+            Button("Delete", systemImage: "trash", role: .destructive) {
+                if let foodItemToBeDeleted = foodItemVM.cdFoodItem {
+                    self.foodItemToBeDeleted = foodItemToBeDeleted
+                    
+                    // Check for associated recipe
+                    if foodItemToBeDeleted.composedFoodItem != nil {
+                        self.actionSheetIsPresented.toggle()
+                    } else {
+                        self.activeAlert = .confirmDelete
+                    }
+                }
+            }
+            .disabled(!foodItemVM.canBeDeleted())
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+            // Moving the food item to another category
+            Button(NSLocalizedString("Move to \(foodItemVM.category == .product ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""), systemImage: "rectangle.2.swap") {
+                composedFoodItemVM.remove(foodItem: foodItemVM)
+                foodItemVM.changeCategory(to: foodItemVM.category == .product ? .ingredient : .product)
+            }
+            .tint(.yellow)
+            .disabled(!foodItemVM.canChangeCategory())
+            
+            // Sharing the food item
+            Button("Share", systemImage: "square.and.arrow.up") {
+                activeSheet = .exportFoodItem
+            }
+            .tint(.green)
+        }
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert(NSLocalizedString("This product is created from a recipe, please open it in the recipe editor", comment: ""), isPresented: $showingAlert) {
-            Button("OK", role: .cancel) { }
+        .alert(item: $activeAlert) {
+            alertContent($0)
         }
         .actionSheet(isPresented: $actionSheetIsPresented) {
             ActionSheet(title: Text("Warning"), message: Text("There's an associated recipe, do you want to delete it as well?"), buttons: [
                 .default(Text("Delete both")) {
                     if let foodItemToBeDeleted {
-                        ComposedFoodItem.delete(foodItemToBeDeleted.composedFoodItem!)
-                        FoodItem.delete(foodItemToBeDeleted)
+                        withAnimation(.default) {
+                            ComposedFoodItem.delete(foodItemToBeDeleted.composedFoodItem!)
+                            FoodItem.delete(foodItemToBeDeleted)
+                        }
                     }
                 },
                 .default(Text("Keep recipe")) {
                     if let foodItemToBeDeleted {
-                        FoodItem.delete(foodItemToBeDeleted)
+                        withAnimation(.default) {
+                            FoodItem.delete(foodItemToBeDeleted)
+                        }
                     }
                 },
                 .cancel()
@@ -166,6 +170,37 @@ struct FoodItemView: View {
                 ActivityView(activityItems: [path], applicationActivities: nil)
             } else {
                 Text(NSLocalizedString("Could not generate data export", comment: ""))
+            }
+        }
+    }
+    
+    private func alertContent(_ state: FoodItemViewSheets.AlertState) -> Alert {
+        switch state {
+        case .associatedRecipe:
+            return Alert(
+                title: Text("Edit food"),
+                message: Text("This food item is created from a recipe, please open it in the recipe editor"),
+                dismissButton: .default(Text("OK"))
+            )
+        case .confirmDelete:
+            return Alert(
+                title: Text("Delete food"),
+                message: Text("Do you really want to delete this food item? This cannot be undone!"),
+                primaryButton: .default(
+                    Text("Do not delete")
+                ),
+                secondaryButton: .destructive(
+                    Text("Delete"),
+                    action: deleteFoodItem
+                )
+            )
+        }
+    }
+    
+    private func deleteFoodItem() {
+        if let foodItemToBeDeleted {
+            withAnimation(.default) {
+                FoodItem.delete(foodItemToBeDeleted)
             }
         }
     }
