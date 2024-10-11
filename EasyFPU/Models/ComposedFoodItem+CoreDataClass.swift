@@ -143,6 +143,44 @@ public class ComposedFoodItem: NSManagedObject {
         }
     }
     
+    static func duplicate(_ existingComposedFoodItem: ComposedFoodItem) -> ComposedFoodItem? {
+        let moc = AppDelegate.viewContext
+        
+        // Create new ComposedFoodItem with new ID
+        let cdComposedFoodItem = ComposedFoodItem(context: moc)
+        cdComposedFoodItem.id = UUID()
+        
+        // Fill data
+        cdComposedFoodItem.name = existingComposedFoodItem.name + NSLocalizedString(" - Copy", comment: "")
+        cdComposedFoodItem.favorite = existingComposedFoodItem.favorite
+        cdComposedFoodItem.amount = existingComposedFoodItem.amount
+        cdComposedFoodItem.numberOfPortions = existingComposedFoodItem.numberOfPortions
+        
+        // Save
+        try? moc.save()
+        
+        // Create ingredients
+        for case let ingredient as Ingredient in existingComposedFoodItem.ingredients {
+            _ = Ingredient.duplicate(ingredient, for: cdComposedFoodItem)
+        }
+        
+        // Create related FoodItem
+        if let existingFoodItem = existingComposedFoodItem.foodItem {
+            cdComposedFoodItem.foodItem = FoodItem.duplicate(existingFoodItem)
+            
+            // Save
+            try? moc.save()
+            
+            return cdComposedFoodItem
+        } else {
+            // No existing FoodItem found to duplicate - this should not happen
+            // Delete composedFoodItem again
+            ComposedFoodItem.delete(cdComposedFoodItem)
+            
+            return nil
+        }
+    }
+    
     static func delete(_ composedFoodItem: ComposedFoodItem) {
         let moc = AppDelegate.viewContext
         
