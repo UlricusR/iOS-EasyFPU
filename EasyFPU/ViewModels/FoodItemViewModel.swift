@@ -308,6 +308,12 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         return !(cdFoodItem?.ingredients != nil && cdFoodItem!.ingredients!.count > 0)
     }
     
+    /// Checks if an associated recipe exists.
+    /// - Returns: True if an associated recipe exists.
+    func hasAssociatedRecipe() -> Bool {
+        return cdFoodItem?.composedFoodItem != nil
+    }
+    
     /**
      Changes the category.
      
@@ -326,8 +332,13 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
      */
     func duplicate() {
         guard let cdFoodItem else { return }
-        // Create the duplicate in Core Data
-        _ = FoodItem.duplicate(cdFoodItem)
+        
+        // Check if a recipe is associated, if yes duplicate recipe
+        if cdFoodItem.composedFoodItem != nil {
+            _ = ComposedFoodItem.duplicate(cdFoodItem.composedFoodItem!)
+        } else {
+            // Create the duplicate in Core Data
+            _ = FoodItem.duplicate(cdFoodItem)}
     }
     
     func exportToURL() -> URL? {

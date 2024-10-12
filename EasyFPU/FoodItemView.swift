@@ -33,7 +33,12 @@ struct FoodItemView: View {
                     }
                 }
                 Text(foodItemVM.name).font(.headline).foregroundStyle(listType == .selection && composedFoodItemVM.foodItems.contains(foodItemVM) ? .blue : .primary)
-                if foodItemVM.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
+                if foodItemVM.hasAssociatedRecipe() {
+                    Image(systemName: "frying.pan.fill").foregroundStyle(.gray).imageScale(.small)
+                }
+                if foodItemVM.favorite {
+                    Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small)
+                }
                 Spacer()
             }
             
