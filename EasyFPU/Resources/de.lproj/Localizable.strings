@@ -325,6 +325,7 @@
 "Product Maintenance List" = "Speisenliste";
 "Ingredient Maintenance List" = "Zutatenliste";
 "Here you maintain your dishes or ingredients." = "Hier pflegst Du Deine Speisen oder Zutaten.";
+"A frying pan symbol indicates that the food item is associated to a recipe." = "Ein Bratpfannensymbol weist darauf hin, dass das Essen mit einem Rezept verknüpft ist.";
 "Adds a new dish or ingredient to the list." = "Fügt eine neue Speise oder Zutat hinzu.";
 "Filters by favorite dishes or ingredients." = "Filtert nach Lieblingsspeisen.";
 "To edit, duplicate, share, move or delete a dish or ingredient, swipe left or right." = "Zum Bearbeiten, Duplizieren, Teilen, Bewegen oder Löschen nach rechts oder links wischen.";

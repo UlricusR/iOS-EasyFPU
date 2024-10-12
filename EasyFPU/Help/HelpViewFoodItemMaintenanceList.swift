@@ -14,6 +14,8 @@ struct HelpViewFoodItemMaintenanceList: View {
             // The food item maintenance list
             Text("Here you maintain your dishes or ingredients.").padding()
             
+            Text("A frying pan symbol indicates that the food item is associated to a recipe.").padding()
+            
             Text("To edit, duplicate, share, move or delete a dish or ingredient, swipe left or right.").padding()
             
             Text("Menu bar").font(.headline).padding()

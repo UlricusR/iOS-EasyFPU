@@ -325,6 +325,7 @@
 "Product Maintenance List" = "Maintain Dishes";
 "Ingredient Maintenance List" = "Maintain Ingredients";
 "Here you maintain your dishes or ingredients." = "Here you maintain your dishes or ingredients.";
+"A frying pan symbol indicates that the food item is associated to a recipe." = "A frying pan symbol indicates that the food item is associated to a recipe.";
 "Adds a new dish or ingredient to the list." = "Adds a new dish or ingredient to the list.";
 "Filters by favorite dishes or ingredients." = "Filters by favorite dishes or ingredients.";
 "To edit, duplicate, share, move or delete a dish or ingredient, swipe left or right." = "To edit, duplicate, share, move or delete a dish or ingredient, swipe left or right.";
