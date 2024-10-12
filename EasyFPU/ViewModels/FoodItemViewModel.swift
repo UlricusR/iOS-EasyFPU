@@ -309,16 +309,6 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     }
     
     /**
-     A FoodItem category can always be changed from Product to Ingredient, but
-     cannot be changed from Ingredient to Product if it has relationships to Ingredients.
-     
-     - Returns: true if the category can be changed
-     */
-    func canChangeCategory() -> Bool {
-        return self.category == .product ? true : !(cdFoodItem?.ingredients != nil && cdFoodItem!.ingredients!.count > 0)
-    }
-    
-    /**
      Changes the category.
      
      - Parameters:

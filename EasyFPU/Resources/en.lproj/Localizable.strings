@@ -103,6 +103,8 @@
 "Edit food" = "Edit food";
 "Delete food" = "Delete food";
 "Do you really want to delete this food item? This cannot be undone!" = "Do you really want to delete this food item? This cannot be undone!";
+"Cannot delete food" = "Cannot delete food";
+"This food item is in use in a recipe, please remove it from the recipe before deleting." = "This food item is in use in a recipe, please remove it from the recipe before deleting.";
 
 // Ingredients
 "Ingredients" = "Ingredients";

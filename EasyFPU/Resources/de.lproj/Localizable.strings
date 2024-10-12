@@ -103,6 +103,8 @@
 "Edit food" = "Essen bearbeiten";
 "Delete food" = "Essen löschen";
 "Do you really want to delete this food item? This cannot be undone!" = "Willst Du dieses Essen wirklich löschen? Dies kann nicht rückgängig gemacht werden!";
+"Cannot delete food" = "Kann Essen nicht löschen";
+"This food item is in use in a recipe, please remove it from the recipe before deleting." = "Dieses Essen wird in einem Rezept verwendet, bitte entferne es erst vom Rezept.";
 
 // Ingredients
 "Ingredients" = "Zutaten";

@@ -96,15 +96,16 @@ struct FoodItemView: View {
                 if let foodItemToBeDeleted = foodItemVM.cdFoodItem {
                     self.foodItemToBeDeleted = foodItemToBeDeleted
                     
-                    // Check for associated recipe
-                    if foodItemToBeDeleted.composedFoodItem != nil {
+                    // Check if FoodItem is related to an Ingredient
+                    if !foodItemVM.canBeDeleted() {
+                        self.activeAlert = .associatedIngredient
+                    } else if foodItemToBeDeleted.composedFoodItem != nil {
                         self.actionSheetIsPresented.toggle()
                     } else {
                         self.activeAlert = .confirmDelete
                     }
                 }
             }
-            .disabled(!foodItemVM.canBeDeleted())
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             // Moving the food item to another category
@@ -113,7 +114,6 @@ struct FoodItemView: View {
                 foodItemVM.changeCategory(to: foodItemVM.category == .product ? .ingredient : .product)
             }
             .tint(.yellow)
-            .disabled(!foodItemVM.canChangeCategory())
             
             // Sharing the food item
             Button("Share", systemImage: "square.and.arrow.up") {
@@ -193,6 +193,11 @@ struct FoodItemView: View {
                     Text("Delete"),
                     action: deleteFoodItem
                 )
+            )
+        case .associatedIngredient:
+            return Alert(
+                title: Text("Cannot delete food"),
+                message: Text("This food item is in use in a recipe, please remove it from the recipe before deleting.")
             )
         }
     }
