@@ -22,6 +22,7 @@ class FoodItemEditorSheets {
         case alertMessage
         case scan
         case search
+        case warningUpdateIngredients
         
         var id: AlertState { self }
     }

@@ -133,6 +133,10 @@
 "successfully updated as Recipe" = "erfolgreich als Rezept (aber nicht als Speise) aktualisiert";
 "Could not create the composed food item" = "Hoppla! Das zusammengestellte Essen konnte wegen fehlender Zutaten nicht gespeichert werden. Das sollte nicht passieren. Bitte informiere das Entwicklungsteam.";
 "Could not update the composed food item" = "Hoppla! Das zusammengestellte Essen konnte nicht aktualisiert werden wegen eines fehlenden Rezepts. Das sollte nicht passieren. Bitte informiere das Entwicklungsteam.";
+"Associated Ingredients" = "Verknüpfte Rezepte";
+"This food item is used as ingredient in the following recipes:" = "Diese Zutat wird in folgenden Rezepten genutzt:";
+"Updating the food item will also update the associated recipes." = "Die Aktualisierung der Zutat verändert die Nährwerte dieser Rezepte.";
+"Update recipes" = "Rezepte aktualisieren";
 
 // Meal preview
 "Eat" = "Essen";

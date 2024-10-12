@@ -133,6 +133,10 @@
 "successfully updated as Recipe" = "successfully updated as Recipe, but not in Dishes";
 "Could not create the composed food item" = "Oops! Could not create the composed food item due to missing ingredients. This should not happen. Please inform the App developer.";
 "Could not update the composed food item" = "Oops! Could not update the composed food item, as no Recipe was found. This should not happen. Please inform the App developer.";
+"Associated Ingredients" = "Associated Recipes";
+"This food item is used as ingredient in the following recipes:" = "This ingredient is used in the following recipes:";
+"Updating the food item will also update the associated recipes." = "Updating the ingredient will change the nutritional values of these recipes.";
+"Update recipes" = "Update recipes";
 
 // Meal preview
 "Eat" = "Eat";

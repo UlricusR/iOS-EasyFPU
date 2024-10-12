@@ -45,13 +45,14 @@ struct FoodItemEditor: View {
     @State private var oldSugarsPer100gAsString = ""
     @State private var oldAmountAsString = ""
     
-    @State var newTypicalAmount = ""
-    @State var newTypicalAmountComment = ""
-    @State var newTypicalAmountId: UUID?
-    @State var typicalAmountsToBeDeleted = [TypicalAmountViewModel]()
-    @State var updateButton = false
-    @State var notificationStatus = FoodItemEditor.NotificationState.void
-    @State var productWasChosenInFoodPreview = false // We actually don't need this variable in this view
+    @State private var newTypicalAmount = ""
+    @State private var newTypicalAmountComment = ""
+    @State private var newTypicalAmountId: UUID?
+    @State private var typicalAmountsToBeDeleted = [TypicalAmountViewModel]()
+    @State private var updateButton = false
+    @State private var notificationStatus = FoodItemEditor.NotificationState.void
+    @State private var associatedRecipes: [String] = []
+    @State private var updatedFoodItemVM: FoodItemViewModel?
     
     private let helpScreen = HelpScreen.foodItemEditor
     
@@ -274,21 +275,40 @@ struct FoodItemEditor: View {
             carbsAsString: self.draftFoodItemVM.carbsPer100gAsString,
             sugarsAsString: self.draftFoodItemVM.sugarsPer100gAsString,
             amountAsString: self.draftFoodItemVM.amountAsString,
-            error: &error) { // We have a valid food item
+            error: &error
+        ) { // We have a valid food item
+            self.updatedFoodItemVM = updatedFoodItemVM
+            
             // Add typical amounts
-            updatedFoodItemVM.typicalAmounts = draftFoodItemVM.typicalAmounts
+            self.updatedFoodItemVM!.typicalAmounts = draftFoodItemVM.typicalAmounts
             
             if self.editedFoodItem != nil { // We need to update an existing food item
-                FoodItem.update(editedFoodItem!, with: updatedFoodItemVM, typicalAmountsToBeDeleted)
-                
-                // Reset typical amounts to be deleted
-                self.typicalAmountsToBeDeleted.removeAll()
+                // Check for related Ingredients
+                if editedFoodItem!.ingredients?.count ?? 0 > 0 {
+                    // Get the names of the ingredients
+                    for case let ingredient as Ingredient in editedFoodItem!.ingredients! {
+                        associatedRecipes.append(ingredient.composedFoodItem.name)
+                    }
+                    
+                    // Show alert
+                    activeAlert = .warningUpdateIngredients
+                } else {
+                    // No associated recipe
+                    // Update FoodItem
+                    FoodItem.update(self.editedFoodItem!, with: updatedFoodItemVM, typicalAmountsToBeDeleted)
+                    
+                    // Reset typical amounts to be deleted
+                    self.typicalAmountsToBeDeleted.removeAll()
+                    
+                    // Quit edit mode
+                    presentation.wrappedValue.dismiss()
+                }
             } else { // We have a new food item
-                _ = FoodItem.create(from: updatedFoodItemVM, allowDuplicate: false)
+                _ = FoodItem.create(from: self.updatedFoodItemVM!, allowDuplicate: false)
+                
+                // Quit edit mode
+                presentation.wrappedValue.dismiss()
             }
-            
-            // Quit edit mode
-            presentation.wrappedValue.dismiss()
         } else { // Invalid data, display alert
             // Evaluate error
             switch error {
@@ -500,6 +520,28 @@ struct FoodItemEditor: View {
                     self.performSearch()
                 }),
                 secondaryButton: .default(Text("Decline and cancel"))
+            )
+        case .warningUpdateIngredients:
+            return Alert(
+                title: Text("Associated Ingredients"),
+                message: Text(
+                    NSLocalizedString("This food item is used as ingredient in the following recipes:", comment: "") +
+                    "\n\n\(self.associatedRecipes.joined(separator: "\n"))\n\n" +
+                    NSLocalizedString("Updating the food item will also update the associated recipes.", comment: "")
+                ),
+                primaryButton: .default(Text("Update recipes"), action: {
+                    // Update FoodItem
+                    if let updatedFoodItemVM {
+                        FoodItem.update(editedFoodItem!, with: updatedFoodItemVM, typicalAmountsToBeDeleted)
+                        
+                        // Reset typical amounts to be deleted
+                        self.typicalAmountsToBeDeleted.removeAll()
+                    }
+                    
+                    // Quit edit mode
+                    presentation.wrappedValue.dismiss()
+                }),
+                secondaryButton: .cancel()
             )
         }
     }

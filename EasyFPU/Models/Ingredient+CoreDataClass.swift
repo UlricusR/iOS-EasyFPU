@@ -127,6 +127,9 @@ public class Ingredient: NSManagedObject {
         cdIngredient.composedFoodItem = newCDComposedFoodItem
         cdIngredient.foodItem = existingIngredient.foodItem
         
+        // Add to ComposedFoodItem
+        newCDComposedFoodItem.addToIngredients(cdIngredient)
+        
         // Save new Ingredient
         try? moc.save()
         

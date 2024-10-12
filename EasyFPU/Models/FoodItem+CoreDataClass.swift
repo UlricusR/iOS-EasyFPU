@@ -138,6 +138,8 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
         cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
         
+        // TODO: Update related ingredients and the food items of the composed food items of the related recipes
+        
         // Remove deleted typical amounts
         for typicalAmountToBeDeleted in typicalAmountsToBeDeleted {
             if typicalAmountToBeDeleted.cdTypicalAmount != nil {
