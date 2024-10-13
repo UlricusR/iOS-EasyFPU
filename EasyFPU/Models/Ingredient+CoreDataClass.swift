@@ -135,4 +135,28 @@ public class Ingredient: NSManagedObject {
         
         return cdIngredient
     }
+    
+    /// Updates the values of the Ingredient with those of the FoodItem (but not the ID).
+    /// Also updates the FoodItem of the related ComposedFoodItem.
+    /// - Parameters:
+    ///   - ingredient: The Ingredient to be updated.
+    ///   - foodItem: The FoodItem the values are copied of.
+    /// - Returns: The updated Ingredient or nil if the related FoodItem of the related ComposedFoodItem could not be found (should not happen).
+    static func update(_ ingredient: Ingredient, with foodItem: FoodItem) -> Ingredient? {
+        ingredient.name = foodItem.name
+        ingredient.favorite = foodItem.favorite
+        ingredient.caloriesPer100g = foodItem.caloriesPer100g
+        ingredient.carbsPer100g = foodItem.carbsPer100g
+        ingredient.sugarsPer100g = foodItem.sugarsPer100g
+        
+        // Update the FoodItem of the related ComposedFoodItem
+        if ComposedFoodItem.updateRelatedFoodItem(ingredient.composedFoodItem) == nil {
+            return nil
+        }
+        
+        // Save
+        try? AppDelegate.viewContext.save()
+        
+        return ingredient
+    }
 }

@@ -18,9 +18,9 @@ extension FoodItem {
     }
 
     @NSManaged public var id: UUID
-    @NSManaged public var name: String?
+    @NSManaged public var name: String
     @NSManaged public var favorite: Bool
-    @NSManaged public var category: String?
+    @NSManaged public var category: String
     @NSManaged public var caloriesPer100g: Double
     @NSManaged public var carbsPer100g: Double
     @NSManaged public var sugarsPer100g: Double

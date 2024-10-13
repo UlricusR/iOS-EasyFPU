@@ -143,6 +143,35 @@ public class ComposedFoodItem: NSManagedObject {
         }
     }
     
+    /// Updates the nutritional value of the FoodItem related to the ComposedFoodItem.
+    /// - Parameter composedFoodItem: The ComposedFoodItem, the FoodItem of which should be updated.
+    /// - Returns: The updated FoodItem, nil if no related FoodItem was found (should never happen).
+    static func updateRelatedFoodItem(_ composedFoodItem: ComposedFoodItem) -> FoodItem? {
+        // Find the related FoodItem
+        guard let relatedFoodItem = composedFoodItem.foodItem else { return nil }
+        
+        let moc = AppDelegate.viewContext
+        
+        var calories: Double = 0.0
+        var carbs: Double = 0.0
+        var sugars: Double = 0.0
+        
+        // Iterate through ingredients and calculate the updated nutritional values
+        for case let ingredient as Ingredient in composedFoodItem.ingredients {
+            calories += ingredient.caloriesPer100g / 100 * Double(ingredient.amount)
+            carbs += ingredient.carbsPer100g / 100 * Double(ingredient.amount)
+            sugars += ingredient.sugarsPer100g / 100 * Double(ingredient.amount)
+        }
+        
+        relatedFoodItem.caloriesPer100g = calories / Double(composedFoodItem.amount) * 100
+        relatedFoodItem.carbsPer100g = carbs / Double(composedFoodItem.amount) * 100
+        relatedFoodItem.sugarsPer100g = sugars / Double(composedFoodItem.amount) * 100
+        
+        try? moc.save()
+        
+        return relatedFoodItem
+    }
+    
     static func duplicate(_ existingComposedFoodItem: ComposedFoodItem) -> ComposedFoodItem? {
         let moc = AppDelegate.viewContext
         

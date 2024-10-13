@@ -123,6 +123,7 @@ public class FoodItem: NSManagedObject {
     
     /**
      Updates a Core Data FoodItem with the values from a FoodItemViewModel.
+     If related to one or more Ingredients, their values will also be updated.
      
      - Parameters:
         - cdFoodItem: The Core Data FoodItem to be updated.
@@ -138,7 +139,11 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
         cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
         
-        // TODO: Update related ingredients and the food items of the composed food items of the related recipes
+        // Get the related ingredients and update their values
+        let relatedIngredients = cdFoodItem.ingredients?.allObjects as? [Ingredient] ?? []
+        for ingredient in relatedIngredients {
+            _ = Ingredient.update(ingredient, with: cdFoodItem)
+        }
         
         // Remove deleted typical amounts
         for typicalAmountToBeDeleted in typicalAmountsToBeDeleted {
@@ -151,34 +156,6 @@ public class FoodItem: NSManagedObject {
         // Update typical amounts
         for typicalAmountVM in foodItemVM.typicalAmounts {
             let cdTypicalAmount = TypicalAmount.update(with: typicalAmountVM)
-            cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
-        }
-        
-        try? moc.save()
-    }
-    
-    static func update(_ cdFoodItem: FoodItem, with composedFoodItemVM: ComposedFoodItemViewModel) {
-        let moc = AppDelegate.viewContext
-        cdFoodItem.name = composedFoodItemVM.name
-        cdFoodItem.category = FoodItemCategory.product.rawValue
-        cdFoodItem.favorite = composedFoodItemVM.favorite
-        cdFoodItem.carbsPer100g = composedFoodItemVM.carbsPer100g
-        cdFoodItem.caloriesPer100g = composedFoodItemVM.caloriesPer100g
-        cdFoodItem.sugarsPer100g = composedFoodItemVM.sugarsPer100g
-        
-        // Delete typical amounts
-        if let oldTypicalAmounts = cdFoodItem.typicalAmounts {
-            // Delete the existing typical amounts
-            for oldTypicalAmount in oldTypicalAmounts {
-                if let oldTypicalAmountToBeDeleted = oldTypicalAmount as? NSManagedObject {
-                    moc.delete(oldTypicalAmountToBeDeleted)
-                }
-            }
-        }
-        
-        // Add new typical amounts
-        for typicalAmountVM in composedFoodItemVM.typicalAmounts {
-            let cdTypicalAmount = TypicalAmount.create(from: typicalAmountVM)
             cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
         }
         
@@ -201,7 +178,7 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.id = UUID()
         
         // Fill data
-        cdFoodItem.name = (existingFoodItem.name ?? NSLocalizedString("- No name -", comment: "")) + NSLocalizedString(" - Copy", comment: "")
+        cdFoodItem.name = (existingFoodItem.name) + NSLocalizedString(" - Copy", comment: "")
         cdFoodItem.caloriesPer100g = existingFoodItem.caloriesPer100g
         cdFoodItem.carbsPer100g = existingFoodItem.carbsPer100g
         cdFoodItem.sugarsPer100g = existingFoodItem.sugarsPer100g

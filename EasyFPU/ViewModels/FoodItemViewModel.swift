@@ -99,8 +99,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     init(from cdFoodItem: FoodItem) {
         // Use ID from Core Date FoodItem
         self.id = cdFoodItem.id
-        self.name = cdFoodItem.name ?? NSLocalizedString("- Unnamned -", comment: "")
-        self.category = FoodItemCategory.init(rawValue: cdFoodItem.category ?? FoodItemCategory.product.rawValue) ?? FoodItemCategory.product // Default is product
+        self.name = cdFoodItem.name
+        self.category = FoodItemCategory.init(rawValue: cdFoodItem.category) ?? FoodItemCategory.product // Default is product
         self.favorite = cdFoodItem.favorite
         self.caloriesPer100g = cdFoodItem.caloriesPer100g
         self.carbsPer100g = cdFoodItem.carbsPer100g

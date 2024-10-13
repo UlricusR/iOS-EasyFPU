@@ -114,7 +114,7 @@ struct ComposedFoodItemEvaluationView: View {
                     }
                 }
                 
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         activeSheet = .exportToHealth
                     }) {

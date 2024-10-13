@@ -89,13 +89,11 @@ struct ComposedFoodItemDetailsView: View {
                     }
                 }
             }
-            .navigationBarTitle(Text(self.composedFoodItem.name))
+            .navigationBarTitle(Text("Total meal"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
+                    Button("Close", systemImage: "xmark.circle.fill") {
                         presentation.wrappedValue.dismiss()
-                    }) {
-                        Text("Close")
                     }
                 }
             }
