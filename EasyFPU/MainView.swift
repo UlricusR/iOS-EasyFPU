@@ -67,7 +67,7 @@ struct MainView: View {
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                     
-                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme), absorptionScheme: self.absorptionScheme)
+                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme))
                         .tag(Tab.settings.rawValue)
                         .tabItem{
                             Image(systemName: "gear")

@@ -163,6 +163,50 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         }
     }
     
+    /// Checks if an associated Core Data ComposedFoodItem exists.
+    /// - Returns: True if an associated Core Data ComposedFoodItem exists.
+    func hasAssociatedComposedFoodItem() -> Bool {
+        return cdComposedFoodItem != nil
+    }
+    
+    /// Checks if the associated Core Data ComposedFoodItem is linked to a Core Data FoodItem.
+    /// - Returns: True if both a ComposedFoodItem exists and is linked to a FoodItem.
+    func hasAssociatedFoodItem() -> Bool {
+        return cdComposedFoodItem?.foodItem != nil
+    }
+    
+    /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this ComposedFoodItemViewModel exists.
+    /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
+    func nameExists() -> Bool {
+        ComposedFoodItem.getComposedFoodItemByName(name: self.name) != nil || FoodItem.getFoodItemByName(name: self.name) != nil
+    }
+    
+    /// Saves the ComposedFoodItemViewModel as Core Data ComposedFoodItem.
+    /// - Returns: False if no ingredients could be found in the ComposedFoodItemViewModel, otherwise true.
+    func save(isImport: Bool = false) -> Bool {
+        ComposedFoodItem.create(from: self, isImport) != nil
+    }
+    
+    /// Updates the related Core Data ComposedFoodItem with the values of this ComposedFoodItemViewModel.
+    /// - Returns: False if no related Core Data ComposedFoodItem was found (shouldn't happen).
+    func update() -> Bool {
+        ComposedFoodItem.update(self) != nil
+    }
+    
+    /// Deletes the Core Data ComposedFoodItem if available.
+    /// - Parameter includeAssociatedRecipe: If true, the Core Data FoodItem associated to the ComposedFoodItem is also deleted, if available.
+    func delete(includeAssociatedFoodItem: Bool) {
+        guard let cdComposedFoodItem else { return }
+        
+        if includeAssociatedFoodItem {
+            if let associatedFoodItem = cdComposedFoodItem.foodItem {
+                FoodItem.delete(associatedFoodItem)
+            }
+        }
+        
+        ComposedFoodItem.delete(cdComposedFoodItem)
+    }
+    
     func add(foodItem: FoodItemViewModel) {
         if !foodItems.contains(foodItem) {
             foodItems.append(foodItem)

@@ -11,7 +11,6 @@ import SKCountryPicker
 
 struct SettingsEditor: View {
     @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
-    var editedAbsorptionScheme: AbsorptionScheme
     @ObservedObject var userSettings = UserSettings.shared
     @State private var newMaxFpu: String = ""
     @State private var newAbsorptionTime: String = ""
@@ -255,9 +254,8 @@ struct SettingsEditor: View {
                         // Update absorption block
                         for absorptionBlock in self.draftAbsorptionScheme.absorptionBlocks {
                             // Check if it's an existing core data entry
-                            if absorptionBlock.cdAbsorptionBlock == nil { // This is a new absorption block
-                                let newCdAbsorptionBlock = AbsorptionBlock.create(from: absorptionBlock)
-                                self.editedAbsorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
+                            if !absorptionBlock.hasAssociatedAbsorptionBlock() { // This is a new absorption block
+                                absorptionBlock.save(to: self.draftAbsorptionScheme)
                             } else { // This is an existing absorption block, so just update values
                                 let _ = absorptionBlock.updateCdAbsorptionBlock()
                             }
@@ -265,9 +263,7 @@ struct SettingsEditor: View {
                         
                         // Remove deleted absorption blocks
                         for absorptionBlockToBeDeleted in self.absorptionBlocksToBeDeleted {
-                            if absorptionBlockToBeDeleted.cdAbsorptionBlock != nil {
-                                AbsorptionBlock.remove(absorptionBlockToBeDeleted.cdAbsorptionBlock!, from: editedAbsorptionScheme)
-                            }
+                            _ = absorptionBlockToBeDeleted.remove(from: draftAbsorptionScheme)
                         }
                         
                         // Reset typical amounts to be deleted

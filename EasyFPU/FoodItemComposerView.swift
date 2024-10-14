@@ -139,7 +139,7 @@ struct FoodItemComposerView: View {
                             composedFoodItemVM.name = composedFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
                             
                             // Check if this is a new ComposedFoodItem (no Core Data object attached yet) and, if yes, the name already exists
-                            if composedFoodItemVM.cdComposedFoodItem == nil && (FoodItem.getFoodItemByName(name: composedFoodItemVM.name) != nil || ComposedFoodItem.getComposedFoodItemByName(name: composedFoodItemVM.name) != nil) {
+                            if !composedFoodItemVM.hasAssociatedComposedFoodItem() && composedFoodItemVM.nameExists() {
                                 alertMessage = NSLocalizedString("A food item with this name already exists", comment: "")
                                 showingAlert = true
                             } else {
@@ -187,16 +187,16 @@ struct FoodItemComposerView: View {
     
     private func saveComposedFoodItem() {
         // Check if this was an existing ComposedFoodItem
-        if composedFoodItemVM.cdComposedFoodItem == nil { // This is a new ComposedFoodItem
+        if !composedFoodItemVM.hasAssociatedComposedFoodItem() { // This is a new ComposedFoodItem
             // Store new ComposedFoodItem in CoreData
-            if ComposedFoodItem.create(from: composedFoodItemVM) == nil {
+            if !composedFoodItemVM.save() {
                 // We're missing ingredients, the composedFoodItem could not be saved - this should not happen!
                 alertMessage = NSLocalizedString("Could not create the composed food item", comment: "")
                 showingAlert = true
             }
         } else { // We edit an existing ComposedFoodItem
             // Update Core Data ComposedFoodItem
-            if ComposedFoodItem.update(composedFoodItemVM) == nil {
+            if !composedFoodItemVM.update() {
                 // No Core Data ComposedFoodItem found - this should never happen!
                 alertMessage = NSLocalizedString("Could not update the composed food item", comment: "")
                 showingAlert = true

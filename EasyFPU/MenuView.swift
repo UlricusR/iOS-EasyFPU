@@ -12,7 +12,6 @@ import UniformTypeIdentifiers
 struct MenuView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
-    var absorptionScheme: AbsorptionScheme
     @State private var foodItemVMsToBeImported: [FoodItemViewModel]?
     @State private var composedFoodItemVMsToBeImported: [ComposedFoodItemViewModel]?
     @State private var activeSheet: MenuViewSheets.State?
@@ -107,7 +106,7 @@ struct MenuView: View {
     private func sheetContent(_ state: MenuViewSheets.State) -> some View {
         switch state {
         case .editAbsorptionScheme:
-            SettingsEditor(draftAbsorptionScheme: self.draftAbsorptionScheme, editedAbsorptionScheme: absorptionScheme)
+            SettingsEditor(draftAbsorptionScheme: self.draftAbsorptionScheme)
                     .environment(\.managedObjectContext, managedObjectContext)
         case .pickFileToImport:
             FilePickerView(callback: self.importJSON, documentTypes: [UTType.json])
@@ -151,13 +150,13 @@ struct MenuView: View {
     private func importFoodItems() {
         if foodItemVMsToBeImported != nil {
             for foodItemVMToBeImported in foodItemVMsToBeImported! {
-                _ = FoodItem.create(from: foodItemVMToBeImported, allowDuplicate: false)
+                foodItemVMToBeImported.save(allowDuplicate: false)
             }
         }
         
         if composedFoodItemVMsToBeImported != nil {
             for composedFoodItemVMToBeImported in composedFoodItemVMsToBeImported! {
-                _ = ComposedFoodItem.create(from: composedFoodItemVMToBeImported, isImport: true)
+                _ = composedFoodItemVMToBeImported.save(isImport: true)
             }
         }
          

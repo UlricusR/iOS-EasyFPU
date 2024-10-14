@@ -10,6 +10,7 @@ import Foundation
 
 class AbsorptionSchemeViewModel: ObservableObject {
     @Published var absorptionBlocks: [AbsorptionBlockViewModel]
+    var cdAbsorptionScheme: AbsorptionScheme
     
     // Absorption block parameters for sugars
     private(set) var delaySugars: Int = AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault
@@ -151,7 +152,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
     static let treatSugarsSeparatelyDefault: Bool = true
     
     init(from cdAbsorptionScheme: AbsorptionScheme) {
-        // Absorption scheme
+        self.cdAbsorptionScheme = cdAbsorptionScheme
         self.absorptionBlocks = [AbsorptionBlockViewModel]()
         for absorptionBlock in cdAbsorptionScheme.absorptionBlocks {
             let newAbsorptionBlockViewModel = AbsorptionBlockViewModel(from: absorptionBlock)

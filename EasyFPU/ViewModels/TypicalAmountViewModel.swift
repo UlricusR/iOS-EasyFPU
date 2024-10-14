@@ -66,6 +66,16 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, I
         amountAsString = String(amount)
     }
     
+    /// Creates a new Core Data TypicalAmount and adds it to the FoodItem associated to the passed FoodItemViewModel.
+    /// - Parameter foodItemVM: The FoodItemViewModel, the Core Data FoodItem of which the TypicalAmount should be added to.
+    /// - Returns: False if no Core Data FoodItem was found (should not happen), otherwise true.
+    func save(to foodItemVM: FoodItemViewModel) -> Bool {
+        guard let cdFoodItem = foodItemVM.cdFoodItem else { return false }
+        let newTypicalAmount = TypicalAmount.create(from: self)
+        FoodItem.add(newTypicalAmount, to: cdFoodItem)
+        return true
+    }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

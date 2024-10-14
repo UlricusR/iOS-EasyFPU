@@ -51,7 +51,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let jsonData = try Data(contentsOf: url)
             let decoder = JSONDecoder()
             let foodItemToBeImported = try decoder.decode(FoodItemViewModel.self, from: jsonData)
-            _ = FoodItem.create(from: foodItemToBeImported, allowDuplicate: false)
+            foodItemToBeImported.save(allowDuplicate: false)
             try FileManager.default.removeItem(at: url)
         } catch {
             debugPrint(error.localizedDescription)

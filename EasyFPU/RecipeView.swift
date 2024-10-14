@@ -15,8 +15,7 @@ struct RecipeView: View {
     @State private var activeSheet: RecipeViewSheets.State?
     @State private var actionSheetIsPresented: Bool = false
     @State private var alertIsPresented: Bool = false
-    @State private var recipeToBeDeleted: ComposedFoodItem?
-
+    
     var body: some View {
         // Name, favorite
         HStack {
@@ -48,11 +47,9 @@ struct RecipeView: View {
             
             // Delete the recipe
             Button("Delete", systemImage: "trash", role: .destructive) {
-                if let composedFoodItemToBeDeleted = composedFoodItemVM.cdComposedFoodItem {
-                    recipeToBeDeleted = composedFoodItemToBeDeleted
-                    
+                if composedFoodItemVM.hasAssociatedComposedFoodItem() {
                     // Check for associated product
-                    if composedFoodItemToBeDeleted.foodItem != nil {
+                    if composedFoodItemVM.hasAssociatedFoodItem() {
                         actionSheetIsPresented.toggle()
                     } else {
                         alertIsPresented.toggle()
@@ -79,26 +76,17 @@ struct RecipeView: View {
                 ),
                 secondaryButton: .destructive(
                     Text("Delete"),
-                    action: deleteRecipe
+                    action: deleteRecipeOnly
                 )
             )
         }
         .actionSheet(isPresented: $actionSheetIsPresented) {
             ActionSheet(title: Text("Warning"), message: Text("There's an associated product, do you want to delete it as well?"), buttons: [
                 .default(Text("Delete both")) {
-                    if let recipeToBeDeleted {
-                        withAnimation(.default) {
-                            FoodItem.delete(recipeToBeDeleted.foodItem!)
-                            ComposedFoodItem.delete(recipeToBeDeleted)
-                        }
-                    }
+                    deleteRecipeAndFoodItem()
                 },
                 .default(Text("Keep product")) {
-                    if let recipeToBeDeleted {
-                        withAnimation(.default) {
-                            ComposedFoodItem.delete(recipeToBeDeleted)
-                        }
-                    }
+                    deleteRecipeOnly()
                 },
                 .cancel()
             ])
@@ -126,11 +114,15 @@ struct RecipeView: View {
         }
     }
     
-    private func deleteRecipe() {
-        if let recipeToBeDeleted {
-            withAnimation(.default) {
-                ComposedFoodItem.delete(recipeToBeDeleted)
-            }
+    private func deleteRecipeOnly() {
+        withAnimation(.default) {
+            composedFoodItemVM.delete(includeAssociatedFoodItem: false)
+        }
+    }
+    
+    private func deleteRecipeAndFoodItem() {
+        withAnimation(.default) {
+            composedFoodItemVM.delete(includeAssociatedFoodItem: true)
         }
     }
 }

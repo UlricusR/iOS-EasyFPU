@@ -19,7 +19,6 @@ struct FoodItemEditor: View {
     @Environment(\.presentationMode) var presentation
     var navigationBarTitle: String
     @ObservedObject var draftFoodItemVM: FoodItemViewModel
-    var editedFoodItem: FoodItem? // Working copy of the food item
     var category: FoodItemCategory
     @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
     @State private var scanResult: FoodDatabaseEntry?
@@ -175,16 +174,14 @@ struct FoodItemEditor: View {
                         }
                         
                         // Delete food item (only when editing an existing food item)
-                        if editedFoodItem != nil {
+                        if draftFoodItemVM.hasAssociatedFoodItem() {
                             Section {
                                 Button("Delete food item", role: .destructive) {
                                     // Close the sheet
                                     presentation.wrappedValue.dismiss()
                                     
                                     // Delete food item
-                                    if let foodItemToBeDeleted = self.draftFoodItemVM.cdFoodItem {
-                                        FoodItem.delete(foodItemToBeDeleted)
-                                    }
+                                    self.draftFoodItemVM.delete(includeAssociatedRecipe: false)
                                 }
                             }
                         }
@@ -219,8 +216,8 @@ struct FoodItemEditor: View {
                             // Trim white spaces from name
                             draftFoodItemVM.name = draftFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
                             
-                            // Check if we have duplicate names (if this is no edited food item)
-                            if editedFoodItem == nil && (FoodItem.getFoodItemByName(name: draftFoodItemVM.name) != nil || ComposedFoodItem.getComposedFoodItemByName(name: draftFoodItemVM.name) != nil) {
+                            // Check if we have duplicate names (if this is a new food item)
+                            if !draftFoodItemVM.hasAssociatedFoodItem() && draftFoodItemVM.nameExists() {
                                 errorMessage = NSLocalizedString("A food item with this name already exists", comment: "")
                                 self.activeAlert = .alertMessage
                             } else {
@@ -267,7 +264,7 @@ struct FoodItemEditor: View {
         
         // Create updated food item
         if let updatedFoodItemVM = FoodItemViewModel(
-            id: self.editedFoodItem != nil ? self.editedFoodItem!.id : UUID(),
+            id: draftFoodItemVM.hasAssociatedFoodItem() ? self.draftFoodItemVM.cdFoodItem!.id : UUID(),
             name: self.draftFoodItemVM.name,
             category: self.draftFoodItemVM.category,
             favorite: self.draftFoodItemVM.favorite,
@@ -282,11 +279,11 @@ struct FoodItemEditor: View {
             // Add typical amounts
             self.updatedFoodItemVM!.typicalAmounts = draftFoodItemVM.typicalAmounts
             
-            if self.editedFoodItem != nil { // We need to update an existing food item
+            if draftFoodItemVM.hasAssociatedFoodItem() { // We need to update an existing food item
                 // Check for related Ingredients
-                if editedFoodItem!.ingredients?.count ?? 0 > 0 {
+                if draftFoodItemVM.cdFoodItem!.ingredients?.count ?? 0 > 0 {
                     // Get the names of the ingredients
-                    for case let ingredient as Ingredient in editedFoodItem!.ingredients! {
+                    for case let ingredient as Ingredient in draftFoodItemVM.cdFoodItem!.ingredients! {
                         associatedRecipes.append(ingredient.composedFoodItem.name)
                     }
                     
@@ -295,7 +292,7 @@ struct FoodItemEditor: View {
                 } else {
                     // No associated recipe
                     // Update FoodItem
-                    FoodItem.update(self.editedFoodItem!, with: updatedFoodItemVM, typicalAmountsToBeDeleted)
+                    updatedFoodItemVM.update(typicalAmountsToBeDeleted)
                     
                     // Reset typical amounts to be deleted
                     self.typicalAmountsToBeDeleted.removeAll()
@@ -304,7 +301,7 @@ struct FoodItemEditor: View {
                     presentation.wrappedValue.dismiss()
                 }
             } else { // We have a new food item
-                _ = FoodItem.create(from: self.updatedFoodItemVM!, allowDuplicate: false)
+                self.updatedFoodItemVM!.save(allowDuplicate: false)
                 
                 // Quit edit mode
                 presentation.wrappedValue.dismiss()
@@ -532,7 +529,7 @@ struct FoodItemEditor: View {
                 primaryButton: .default(Text("Update recipes"), action: {
                     // Update FoodItem
                     if let updatedFoodItemVM {
-                        FoodItem.update(editedFoodItem!, with: updatedFoodItemVM, typicalAmountsToBeDeleted)
+                        updatedFoodItemVM.update(typicalAmountsToBeDeleted)
                         
                         // Reset typical amounts to be deleted
                         self.typicalAmountsToBeDeleted.removeAll()

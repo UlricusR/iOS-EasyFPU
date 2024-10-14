@@ -12,7 +12,6 @@ struct FoodItemSelector: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.presentationMode) var presentation
     @ObservedObject var draftFoodItem: FoodItemViewModel
-    var editedFoodItem: FoodItem
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     var category: FoodItemCategory
     @State private var showingAlert = false
@@ -152,8 +151,7 @@ struct FoodItemSelector: View {
             self.newTypicalAmountComment = ""
             
             // Update food item in core data, save and broadcast changed object
-            let newCoreDataTypicalAmount = TypicalAmount.create(from: newTypicalAmount)
-            FoodItem.add(newCoreDataTypicalAmount, to: editedFoodItem)
+            _ = newTypicalAmount.save(to: draftFoodItem)
             
             self.addToTypicalAmounts = false
         } else {

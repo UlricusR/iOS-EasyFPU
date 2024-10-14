@@ -2,16 +2,16 @@
 //  EasyFPUTests.swift
 //  EasyFPUTests
 //
-//  Created by Ulrich Rüth on 21/08/2023.
-//  Copyright © 2023 Ulrich Rüth. All rights reserved.
+//  Created by Ulrich Rüth on 14/10/2024.
+//  Copyright © 2024 Ulrich Rüth. All rights reserved.
 //
 
-import XCTest
-import CoreData
+import Testing
 @testable import EasyFPU
+import CoreData
 
-final class CoreDataMigrationTests: XCTestCase {
-    private let momdURL = DataModel.bundle.url(forResource: "EasyFPU", withExtension: "momd")!
+class CoreDataMigrationTests {
+    private let momdURL = DataModel.bundle.url(forResource: AppDelegate.DataStoreName, withExtension: "momd")!
     private let storeType = NSSQLiteStoreType
     
     private var sourceContainer: NSPersistentContainer?
@@ -34,12 +34,10 @@ final class CoreDataMigrationTests: XCTestCase {
     private var composedFoodItem1 = Dictionary<String, String>()
     private var composedFoodItem2 = Dictionary<String, String>()
     
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        
+    init() throws {
         // Prepare databases
-        sourceMoc = try prepareDatabase(versionName: "EasyFPU", persistentStoreUrl: &sourceStoreUrl, managedObjectModel: &sourceMom)
-        targetMoc = try prepareDatabase(versionName: "EasyFPU 2", persistentStoreUrl: &targetStoreUrl, managedObjectModel: &targetMom)
+        sourceMoc = try prepareDatabase(versionName: AppDelegate.DataStoreName, persistentStoreUrl: &sourceStoreUrl, managedObjectModel: &sourceMom)
+        targetMoc = try prepareDatabase(versionName: AppDelegate.DataStoreName + " 2", persistentStoreUrl: &targetStoreUrl, managedObjectModel: &targetMom)
         
         // Output the storeURLs
         print("Source DB: " + sourceStoreUrl!.absoluteString)
@@ -148,16 +146,24 @@ final class CoreDataMigrationTests: XCTestCase {
             "numberOfPortions": "12"
         ]
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        
-        // Remove temporary stores
-        try sourceMoc?.persistentStoreCoordinator?.destroyPersistentStore(at: sourceStoreUrl!, type: NSPersistentStore.StoreType(rawValue: storeType))
-        try targetMoc?.persistentStoreCoordinator?.destroyPersistentStore(at: targetStoreUrl!, type: NSPersistentStore.StoreType(rawValue: storeType))
-    }
     
-    func testMigrationModel1To2() throws {
+    deinit {
+        // Remove references
+        sourceMom = nil
+        targetMom = nil
+        sourceMoc = nil
+        targetMoc = nil
+        sourceContainer = nil
+        targetContainer = nil
+        
+        // Delete the databases
+        _ = try? FileManager.default.removeItem(at: sourceStoreUrl!)
+        _ = try? FileManager.default.removeItem(at: targetStoreUrl!)
+    }
+
+    
+    @Test("Migrating data model 1 to 2", .disabled("We currently use automated migration w/o a migration model."))
+    func migrateModel1To2() async throws {
         // Add FoodItems, Ingredients and ComposedFoodItems
         let cdFoodItem1 = addFoodItem(moc: sourceMoc!, foodItem: foodItem1)
         let cdFoodItem2 = addFoodItem(moc: sourceMoc!, foodItem: foodItem2)
@@ -187,6 +193,7 @@ final class CoreDataMigrationTests: XCTestCase {
         
         // Migrate the store to version 2
         let mappingModel = NSMappingModel(from: nil, forSourceModel: sourceMom, destinationModel: targetMom)
+        try #require(mappingModel != nil)
         let migrationManager = NSMigrationManager(sourceModel: sourceMom!, destinationModel: targetMom!)
         try! migrationManager.migrateStore(from: sourceStoreUrl!, type: NSPersistentStore.StoreType.sqlite, mapping: mappingModel!, to: targetStoreUrl!, type: NSPersistentStore.StoreType.sqlite)
         
@@ -203,94 +210,33 @@ final class CoreDataMigrationTests: XCTestCase {
         //
         
         // We expect 4 FoodItems, foodItem1..4 and none from ingredient1
-        XCTAssertEqual(newFoodItems.count, 4)
+        #expect(newFoodItems.count == 4)
         
         // There shouldn't be any Ingredients or ComposedFoodItems
-        XCTAssertTrue(newIngredients.isEmpty || newIngredients.count == 0)
-        XCTAssertTrue(newComposedFoodItems.isEmpty || newComposedFoodItems.count == 0)
+        #expect(newIngredients.isEmpty || newIngredients.count == 0)
+        #expect(newComposedFoodItems.isEmpty || newComposedFoodItems.count == 0)
         
         // Check FoodItem content
         for newFoodItem in newFoodItems {
             // Check if newFoodItem has ID
-            XCTAssertNotNil(newFoodItem.value(forKey: "id"))
+            #expect(newFoodItem.value(forKey: "id") != nil)
             
             // Check if new values are identical to old values
             let oldFoodItems = try! sourceMoc!.fetch(foodItemRequest) as! [NSManagedObject]
             if let oldFoodItem = getFoodItemByName(for: newFoodItem, from: oldFoodItems) {
-                XCTAssertEqual(newFoodItem.value(forKey: "name") as? String, oldFoodItem.value(forKey: "name") as? String)
-                XCTAssertEqual(newFoodItem.value(forKey: "caloriesPer100g") as? Double, oldFoodItem.value(forKey: "caloriesPer100g") as? Double)
-                XCTAssertEqual(newFoodItem.value(forKey: "carbsPer100g") as? Double, oldFoodItem.value(forKey: "carbsPer100g") as? Double)
-                XCTAssertEqual(newFoodItem.value(forKey: "sugarsPer100g") as? Double, oldFoodItem.value(forKey: "sugarsPer100g") as? Double)
-                XCTAssertEqual(newFoodItem.value(forKey: "category") as? String, oldFoodItem.value(forKey: "category") as? String)
-                XCTAssertEqual(newFoodItem.value(forKey: "favorite") as? Bool, oldFoodItem.value(forKey: "favorite") as? Bool)
+                #expect(newFoodItem.value(forKey: "name") as? String == oldFoodItem.value(forKey: "name") as? String)
+                #expect(newFoodItem.value(forKey: "caloriesPer100g") as? Double == oldFoodItem.value(forKey: "caloriesPer100g") as? Double)
+                #expect(newFoodItem.value(forKey: "carbsPer100g") as? Double == oldFoodItem.value(forKey: "carbsPer100g") as? Double)
+                #expect(newFoodItem.value(forKey: "sugarsPer100g") as? Double == oldFoodItem.value(forKey: "sugarsPer100g") as? Double)
+                #expect(newFoodItem.value(forKey: "category") as? String == oldFoodItem.value(forKey: "category") as? String)
+                #expect(newFoodItem.value(forKey: "favorite") as? Bool == oldFoodItem.value(forKey: "favorite") as? Bool)
             }
         }
     }
     
-    private func prepareDatabase(versionName: String, persistentStoreUrl: inout URL?, managedObjectModel: inout NSManagedObjectModel?) throws -> NSManagedObjectContext {
-        // Read and load the old model
-        let mom = createManagedObjectModel(versionName: versionName)
-        XCTAssertNotNil(mom)
-        managedObjectModel = mom!
-        
-        // Create persistent container
-        let container = try startPersistentContainer(model: managedObjectModel!, storeUrl: &persistentStoreUrl)
-        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel!)
-        let _ = try coordinator.addPersistentStore(type: NSPersistentStore.StoreType(rawValue: storeType), at: persistentStoreUrl!)
-        
-        // Create managed object context
-        let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        managedObjectContext.persistentStoreCoordinator = coordinator
-        
-        return managedObjectContext
-    }
-    
-    /// Create and load a store using the given model version. The store will be located in a
-    /// temporary directory.
-    ///
-    /// - Parameter versionName: The name of the model (`.xcdatamodel`). For example, `"App V1"`.
-    /// - Returns: An `NSPersistentContainer` that is loaded and ready for usage.
-    private func startPersistentContainer(model: NSManagedObjectModel, storeUrl: inout URL?) throws -> NSPersistentContainer {
-        storeUrl = makeTemporaryStoreURL()
-        let container = makePersistentContainer(storeURL: storeUrl!,
-                                                managedObjectModel: model)
-        container.loadPersistentStores { _, error in
-            XCTAssertNil(error)
-        }
-
-        return container
-    }
-    
-    private func makePersistentContainer(storeURL: URL,
-                                         managedObjectModel: NSManagedObjectModel) -> NSPersistentContainer {
-        let description = NSPersistentStoreDescription(url: storeURL)
-        // In order to have more control over when the migration happens, we're setting
-        // `shouldMigrateStoreAutomatically` to `false` to stop `NSPersistentContainer`
-        // from **automatically** migrating the store. Leaving this as `true` might result in false positives.
-        description.shouldMigrateStoreAutomatically = false
-        description.type = storeType
-
-        let container = NSPersistentContainer(name: "App Container", managedObjectModel: managedObjectModel)
-        container.persistentStoreDescriptions = [description]
-
-        return container
-    }
-    
-    private func createManagedObjectModel(versionName: String) -> NSManagedObjectModel? {
-        let url = momdURL.appendingPathComponent(versionName).appendingPathExtension("mom")
-        return NSManagedObjectModel(contentsOf: url)
-    }
-    
-    private func storeURL(from container: NSPersistentContainer) -> URL {
-        let description = container.persistentStoreDescriptions.first!
-        return description.url!
-    }
-    
-    private func makeTemporaryStoreURL() -> URL {
-        URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent(UUID().uuidString)
-            .appendingPathExtension("sqlite")
-    }
+    //
+    // Data prep functions
+    //
     
     private func addFoodItem(moc: NSManagedObjectContext, foodItem: Dictionary<String, String>) -> NSManagedObject {
         let cdFoodItem = NSEntityDescription.insertNewObject(forEntityName: "FoodItem", into: moc)
@@ -343,5 +289,73 @@ final class CoreDataMigrationTests: XCTestCase {
         }
         
         return nil
+    }
+    
+    //
+    // Functions to create Core Data stack
+    //
+    
+    private func prepareDatabase(versionName: String, persistentStoreUrl: inout URL?, managedObjectModel: inout NSManagedObjectModel?) throws -> NSManagedObjectContext {
+        // Read and load the old model
+        let mom = createManagedObjectModel(versionName: versionName)
+        try #require(mom != nil)
+        managedObjectModel = mom!
+        
+        // Create persistent container
+        let container = try startPersistentContainer(model: managedObjectModel!, storeUrl: &persistentStoreUrl)
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel!)
+        let _ = try coordinator.addPersistentStore(type: NSPersistentStore.StoreType(rawValue: storeType), at: persistentStoreUrl!)
+        
+        // Create managed object context
+        let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        managedObjectContext.persistentStoreCoordinator = coordinator
+        
+        return managedObjectContext
+    }
+    
+    private func createManagedObjectModel(versionName: String) -> NSManagedObjectModel? {
+        let url = momdURL.appendingPathComponent(versionName).appendingPathExtension("mom")
+        return NSManagedObjectModel(contentsOf: url)
+    }
+    
+    /// Create and load a store using the given model version. The store will be located in a
+    /// temporary directory.
+    ///
+    /// - Parameter versionName: The name of the model (`.xcdatamodel`). For example, `"App V1"`.
+    /// - Returns: An `NSPersistentContainer` that is loaded and ready for usage.
+    private func startPersistentContainer(model: NSManagedObjectModel, storeUrl: inout URL?) throws -> NSPersistentContainer {
+        storeUrl = makeTemporaryStoreURL()
+        let container = makePersistentContainer(
+            storeURL: storeUrl!,
+            managedObjectModel: model
+        )
+        container.loadPersistentStores { _, error in
+            #expect(error == nil)
+        }
+
+        return container
+    }
+    
+    private func makeTemporaryStoreURL() -> URL {
+        URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("sqlite")
+    }
+    
+    private func makePersistentContainer(
+        storeURL: URL,
+        managedObjectModel: NSManagedObjectModel
+    ) -> NSPersistentContainer {
+        let description = NSPersistentStoreDescription(url: storeURL)
+        // In order to have more control over when the migration happens, we're setting
+        // `shouldMigrateStoreAutomatically` to `false` to stop `NSPersistentContainer`
+        // from **automatically** migrating the store. Leaving this as `true` might result in false positives.
+        description.shouldMigrateStoreAutomatically = false
+        description.type = storeType
+
+        let container = NSPersistentContainer(name: "App Container", managedObjectModel: managedObjectModel)
+        container.persistentStoreDescriptions = [description]
+
+        return container
     }
 }

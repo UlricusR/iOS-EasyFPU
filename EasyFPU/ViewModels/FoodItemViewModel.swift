@@ -308,10 +308,22 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         return !(cdFoodItem?.ingredients != nil && cdFoodItem!.ingredients!.count > 0)
     }
     
+    /// Checks if an associated FoodItem exists.
+    /// - Returns: True if an associated FoodItem exists.
+    func hasAssociatedFoodItem() -> Bool {
+        return cdFoodItem != nil
+    }
+    
     /// Checks if an associated recipe exists.
     /// - Returns: True if an associated recipe exists.
     func hasAssociatedRecipe() -> Bool {
         return cdFoodItem?.composedFoodItem != nil
+    }
+    
+    /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this FoodItemViewModel exists.
+    /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
+    func nameExists() -> Bool {
+        ComposedFoodItem.getComposedFoodItemByName(name: self.name) != nil || FoodItem.getFoodItemByName(name: self.name) != nil
     }
     
     /**
@@ -327,6 +339,19 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         }
     }
     
+    /// Saves the FoodItemViewModel to a Core Data FoodItem
+    /// - Parameter allowDuplicate: If true, a FoodItem will be created even if one with identical ID is found.
+    func save(allowDuplicate: Bool) {
+        _ = FoodItem.create(from: self, allowDuplicate: allowDuplicate)
+    }
+    
+    /// Updates the related Core Data FoodItem with the values of this FoodItemViewModel.
+    /// - Parameter typicalAmountsToBeDeleted: The typical amounts which need to be deleted during update.
+    func update(_ typicalAmountsToBeDeleted: [TypicalAmountViewModel]) {
+        guard let cdFoodItem else { return }
+        FoodItem.update(cdFoodItem, with: self, typicalAmountsToBeDeleted)
+    }
+    
     /**
      Duplicates a FoodItem.
      */
@@ -339,6 +364,20 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         } else {
             // Create the duplicate in Core Data
             _ = FoodItem.duplicate(cdFoodItem)}
+    }
+    
+    /// Deletes the Core Data FoodItem if available.
+    /// - Parameter includeAssociatedRecipe: If true, the Core Data ComposedFoodItem associated to the FoodItem is also deleted, if available.
+    func delete(includeAssociatedRecipe: Bool) {
+        guard let cdFoodItem else { return }
+        
+        if includeAssociatedRecipe {
+            if let associatedRecipe = cdFoodItem.composedFoodItem {
+                ComposedFoodItem.delete(associatedRecipe)
+            }
+        }
+        
+        FoodItem.delete(cdFoodItem)
     }
     
     func exportToURL() -> URL? {

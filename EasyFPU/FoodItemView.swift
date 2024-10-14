@@ -17,7 +17,6 @@ struct FoodItemView: View {
     @State private var activeSheet: FoodItemViewSheets.State?
     @State private var activeAlert: FoodItemViewSheets.AlertState?
     @State private var actionSheetIsPresented: Bool = false
-    @State private var foodItemToBeDeleted: FoodItem?
     
     var body: some View {
         VStack {
@@ -98,13 +97,11 @@ struct FoodItemView: View {
             
             // Delete the food item
             Button("Delete", systemImage: "trash", role: .destructive) {
-                if let foodItemToBeDeleted = foodItemVM.cdFoodItem {
-                    self.foodItemToBeDeleted = foodItemToBeDeleted
-                    
+                if foodItemVM.hasAssociatedFoodItem() {
                     // Check if FoodItem is related to an Ingredient
                     if !foodItemVM.canBeDeleted() {
                         self.activeAlert = .associatedIngredient
-                    } else if foodItemToBeDeleted.composedFoodItem != nil {
+                    } else if foodItemVM.hasAssociatedRecipe() {
                         self.actionSheetIsPresented.toggle()
                     } else {
                         self.activeAlert = .confirmDelete
@@ -135,19 +132,10 @@ struct FoodItemView: View {
         .actionSheet(isPresented: $actionSheetIsPresented) {
             ActionSheet(title: Text("Warning"), message: Text("There's an associated recipe, do you want to delete it as well?"), buttons: [
                 .default(Text("Delete both")) {
-                    if let foodItemToBeDeleted {
-                        withAnimation(.default) {
-                            ComposedFoodItem.delete(foodItemToBeDeleted.composedFoodItem!)
-                            FoodItem.delete(foodItemToBeDeleted)
-                        }
-                    }
+                    deleteFoodItemAndComposedFoodItem()
                 },
                 .default(Text("Keep recipe")) {
-                    if let foodItemToBeDeleted {
-                        withAnimation(.default) {
-                            FoodItem.delete(foodItemToBeDeleted)
-                        }
-                    }
+                    deleteFoodItemOnly()
                 },
                 .cancel()
             ])
@@ -162,14 +150,13 @@ struct FoodItemView: View {
                 FoodItemEditor(
                     navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
                     draftFoodItemVM: self.foodItemVM,
-                    editedFoodItem: self.foodItemVM.cdFoodItem!,
                     category: category
                 ).environment(\.managedObjectContext, managedObjectContext)
             } else {
                 Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
             }
         case .selectFoodItem:
-            FoodItemSelector(draftFoodItem: self.foodItemVM, editedFoodItem: self.foodItemVM.cdFoodItem!, composedFoodItem: composedFoodItemVM, category: self.category)
+            FoodItemSelector(draftFoodItem: self.foodItemVM, composedFoodItem: composedFoodItemVM, category: self.category)
         case .exportFoodItem:
             if let path = foodItemVM.exportToURL() {
                 ActivityView(activityItems: [path], applicationActivities: nil)
@@ -196,7 +183,7 @@ struct FoodItemView: View {
                 ),
                 secondaryButton: .destructive(
                     Text("Delete"),
-                    action: deleteFoodItem
+                    action: deleteFoodItemOnly
                 )
             )
         case .associatedIngredient:
@@ -207,11 +194,15 @@ struct FoodItemView: View {
         }
     }
     
-    private func deleteFoodItem() {
-        if let foodItemToBeDeleted {
-            withAnimation(.default) {
-                FoodItem.delete(foodItemToBeDeleted)
-            }
+    private func deleteFoodItemOnly() {
+        withAnimation(.default) {
+            foodItemVM.delete(includeAssociatedRecipe: false)
+        }
+    }
+    
+    private func deleteFoodItemAndComposedFoodItem() {
+        withAnimation(.default) {
+            foodItemVM.delete(includeAssociatedRecipe: true)
         }
     }
 }
