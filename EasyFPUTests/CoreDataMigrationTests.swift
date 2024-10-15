@@ -11,7 +11,7 @@ import Testing
 import CoreData
 
 class CoreDataMigrationTests {
-    private let momdURL = DataModel.bundle.url(forResource: AppDelegate.DataStoreName, withExtension: "momd")!
+    private let momdURL = DataModel.bundle.url(forResource: CoreDataStack.dataStoreName, withExtension: "momd")!
     private let storeType = NSSQLiteStoreType
     
     private var sourceContainer: NSPersistentContainer?
@@ -36,8 +36,8 @@ class CoreDataMigrationTests {
     
     init() throws {
         // Prepare databases
-        sourceMoc = try prepareDatabase(versionName: AppDelegate.DataStoreName, persistentStoreUrl: &sourceStoreUrl, managedObjectModel: &sourceMom)
-        targetMoc = try prepareDatabase(versionName: AppDelegate.DataStoreName + " 2", persistentStoreUrl: &targetStoreUrl, managedObjectModel: &targetMom)
+        sourceMoc = try prepareDatabase(versionName: CoreDataStack.dataStoreName, persistentStoreUrl: &sourceStoreUrl, managedObjectModel: &sourceMom)
+        targetMoc = try prepareDatabase(versionName: CoreDataStack.dataStoreName + " 2", persistentStoreUrl: &targetStoreUrl, managedObjectModel: &targetMom)
         
         // Output the storeURLs
         print("Source DB: " + sourceStoreUrl!.absoluteString)

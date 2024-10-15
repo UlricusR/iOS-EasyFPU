@@ -7,7 +7,7 @@
 		<key>EasyFPU.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>1</integer>
 		</dict>
 		<key>EasyFPUTests.xcscheme_^#shared#^_</key>
 		<dict>
@@ -23,6 +23,11 @@
 			<true/>
 		</dict>
 		<key>1B71EC072A817C6100343C89</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1B93041C2CBCECE700DE7CDD</key>
 		<dict>
 			<key>primary</key>
 			<true/>

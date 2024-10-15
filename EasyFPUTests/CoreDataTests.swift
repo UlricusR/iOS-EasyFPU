@@ -11,14 +11,32 @@ import CoreData
 @testable import EasyFPU
 
 struct CoreDataTests {
-    var coreDataStack: NSObject!
+    struct FoodItemBehavior {
+        @Test("ID: 1 - Create FoodItem - allowDuplicate=false - no FoodItem")
+        func createFoodItemDuplicateFalseNoFoodItem() async throws {
+            // Save a new FoodItem to the DB
+            let foodItemVM = DataFactory.shared.foodItem1
+            foodItemVM.save(allowDuplicate: false)
+            
+            // Check results in DB
+            #expect(FoodItem.fetchAll().count == 1)
+            
+            // Check for identical IDs
+            let foodItem = FoodItem.getFoodItemByName(name: foodItemVM.name)
+            try #require(foodItem != nil)
+            #expect(foodItem!.id == foodItemVM.id)
+            assessFoodItemValues(foodItemVM: foodItemVM, foodItem: foodItem!)
+        }
+        
+        private func assessFoodItemValues(foodItemVM: FoodItemViewModel, foodItem: FoodItem) {
+            #expect(foodItem.name == foodItemVM.name)
+            #expect(foodItem.category == foodItemVM.category.rawValue)
+            #expect(foodItem.favorite == foodItemVM.favorite)
+            #expect(foodItem.caloriesPer100g == foodItemVM.caloriesPer100g)
+            #expect(foodItem.carbsPer100g == foodItemVM.carbsPer100g)
+            #expect(foodItem.sugarsPer100g == foodItemVM.sugarsPer100g)
+        }
+    }
     
-    init() {
-        coreDataStack = TestCoreDataStack()
-    }
-
-    @Test func createFoodItem() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    }
 
 }
