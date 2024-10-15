@@ -235,7 +235,10 @@ public class FoodItem: NSManagedObject {
      - Returns: The related Core Data FoodItem, nil if not found.
      */
     static func getFoodItemByID(_ id: String) -> FoodItem? {
-        let predicate = NSPredicate(format: "id = %@", id)
+        for foodItem in FoodItem.fetchAll() {
+            debugPrint(foodItem)
+        }
+        let predicate = NSPredicate(format: "id == %@", id)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.predicate = predicate
         if let result = try? CoreDataStack.viewContext.fetch(request) {
@@ -254,7 +257,7 @@ public class FoodItem: NSManagedObject {
      - Returns: The related Core Data FoodItem, nil if not found.
      */
     static func getFoodItemByName(name: String) -> FoodItem? {
-        let predicate = NSPredicate(format: "name = %@", name)
+        let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.predicate = predicate
         if let result = try? CoreDataStack.viewContext.fetch(request) {

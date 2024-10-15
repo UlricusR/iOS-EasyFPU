@@ -221,7 +221,7 @@ public class ComposedFoodItem: NSManagedObject {
      - Returns: The related Core Data ComposedFoodItem, nil if not found.
      */
     static func getComposedFoodItemByName(name: String) -> ComposedFoodItem? {
-        let predicate = NSPredicate(format: "name = %@", name)
+        let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
         request.predicate = predicate
         if let result = try? CoreDataStack.viewContext.fetch(request) {
