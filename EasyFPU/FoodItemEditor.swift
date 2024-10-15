@@ -280,10 +280,13 @@ struct FoodItemEditor: View {
             self.updatedFoodItemVM!.typicalAmounts = draftFoodItemVM.typicalAmounts
             
             if draftFoodItemVM.hasAssociatedFoodItem() { // We need to update an existing food item
+                // Add associated FoodItem to updatedFoodItemVM
+                self.updatedFoodItemVM!.cdFoodItem = draftFoodItemVM.cdFoodItem
+                
                 // Check for related Ingredients
-                if draftFoodItemVM.cdFoodItem!.ingredients?.count ?? 0 > 0 {
+                if self.updatedFoodItemVM!.cdFoodItem!.ingredients?.count ?? 0 > 0 {
                     // Get the names of the ingredients
-                    for case let ingredient as Ingredient in draftFoodItemVM.cdFoodItem!.ingredients! {
+                    for case let ingredient as Ingredient in self.updatedFoodItemVM!.cdFoodItem!.ingredients! {
                         associatedRecipes.append(ingredient.composedFoodItem.name)
                     }
                     
@@ -292,7 +295,7 @@ struct FoodItemEditor: View {
                 } else {
                     // No associated recipe
                     // Update FoodItem
-                    updatedFoodItemVM.update(typicalAmountsToBeDeleted)
+                    self.updatedFoodItemVM!.update(typicalAmountsToBeDeleted)
                     
                     // Reset typical amounts to be deleted
                     self.typicalAmountsToBeDeleted.removeAll()

@@ -27,7 +27,7 @@ struct MainView: View {
     @State private var errorMessage = ""
     
     var body: some View {
-        debugPrint(AppDelegate.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
+        debugPrint(CoreDataStack.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
         if !userSettings.disclaimerAccepted {
             return AnyView(
                 DisclaimerView()

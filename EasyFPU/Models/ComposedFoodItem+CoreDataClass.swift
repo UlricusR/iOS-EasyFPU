@@ -12,16 +12,16 @@ import CoreData
 
 
 public class ComposedFoodItem: NSManagedObject {
-    static func fetchAll(viewContext: NSManagedObjectContext = AppDelegate.viewContext) -> [ComposedFoodItem] {
+    static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [ComposedFoodItem] {
         let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
         
-        guard let composedFoodItems = try? AppDelegate.viewContext.fetch(request) else {
+        guard let composedFoodItems = try? CoreDataStack.viewContext.fetch(request) else {
             return []
         }
         return composedFoodItems
     }
     
-    static func deleteAll(viewContext: NSManagedObjectContext = AppDelegate.viewContext) {
+    static func deleteAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) {
         ComposedFoodItem.fetchAll(viewContext: viewContext).forEach({
             viewContext.delete($0)
         })
@@ -40,10 +40,8 @@ public class ComposedFoodItem: NSManagedObject {
      - Returns: A Core Data ComposedFoodItem; nil if there are no Ingredients.
      */
     static func create(from composedFoodItemVM: ComposedFoodItemViewModel, _ isImport: Bool) -> ComposedFoodItem? {
-        let moc = AppDelegate.viewContext
-        
         // Create new ComposedFoodItem
-        let cdComposedFoodItem = ComposedFoodItem(context: moc)
+        let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
         
         // No existing composed food item, therefore create a new UUID
         cdComposedFoodItem.id = composedFoodItemVM.id
@@ -55,7 +53,7 @@ public class ComposedFoodItem: NSManagedObject {
         cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
         
         // Save new composed food item
-        try? moc.save()
+        CoreDataStack.shared.save()
         
         // Check for ingredients - there must be ingredients!
         if Ingredient.create(from: composedFoodItemVM, relateTo: cdComposedFoodItem, isImport: isImport) != nil {
@@ -63,14 +61,14 @@ public class ComposedFoodItem: NSManagedObject {
             cdComposedFoodItem.foodItem = FoodItem.create(from: composedFoodItemVM)
             
             // Save new composed food item
-            try? moc.save()
+            CoreDataStack.shared.save()
             
             // Return the ComposedFoodItem
             return cdComposedFoodItem
         } else {
             // There are no ingredients, therefore we delete it again and return nil
-            moc.delete(cdComposedFoodItem)
-            try? moc.save()
+            CoreDataStack.viewContext.delete(cdComposedFoodItem)
+            CoreDataStack.shared.save()
             return nil
         }
     }
@@ -84,8 +82,6 @@ public class ComposedFoodItem: NSManagedObject {
      */
     static func update(_ composedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem? {
         if let cdComposedFoodItem = composedFoodItemVM.cdComposedFoodItem {
-            let moc = AppDelegate.viewContext
-            
             // Update data in cdComposedFoodItem
             cdComposedFoodItem.name = composedFoodItemVM.name
             cdComposedFoodItem.favorite = composedFoodItemVM.favorite
@@ -110,7 +106,7 @@ public class ComposedFoodItem: NSManagedObject {
             // Delete the existing Ingredients
             for ingredient in cdComposedFoodItem.ingredients {
                 if let ingredientToBeDeleted = ingredient as? NSManagedObject {
-                    moc.delete(ingredientToBeDeleted)
+                    CoreDataStack.viewContext.delete(ingredientToBeDeleted)
                 }
             }
             
@@ -121,7 +117,7 @@ public class ComposedFoodItem: NSManagedObject {
             if let existingTypicalAmounts = cdComposedFoodItem.foodItem?.typicalAmounts {
                 for typicalAmount in existingTypicalAmounts {
                     if let typicalAmountToBeDeleted = typicalAmount as? NSManagedObject {
-                        moc.delete(typicalAmountToBeDeleted)
+                        CoreDataStack.viewContext.delete(typicalAmountToBeDeleted)
                     }
                 }
             }
@@ -134,7 +130,7 @@ public class ComposedFoodItem: NSManagedObject {
             }
             
             // Save updated composed food item
-            try? AppDelegate.viewContext.save()
+            try? CoreDataStack.viewContext.save()
             
             return cdComposedFoodItem
         } else {
@@ -149,8 +145,6 @@ public class ComposedFoodItem: NSManagedObject {
     static func updateRelatedFoodItem(_ composedFoodItem: ComposedFoodItem) -> FoodItem? {
         // Find the related FoodItem
         guard let relatedFoodItem = composedFoodItem.foodItem else { return nil }
-        
-        let moc = AppDelegate.viewContext
         
         var calories: Double = 0.0
         var carbs: Double = 0.0
@@ -167,16 +161,14 @@ public class ComposedFoodItem: NSManagedObject {
         relatedFoodItem.carbsPer100g = carbs / Double(composedFoodItem.amount) * 100
         relatedFoodItem.sugarsPer100g = sugars / Double(composedFoodItem.amount) * 100
         
-        try? moc.save()
+        CoreDataStack.shared.save()
         
         return relatedFoodItem
     }
     
     static func duplicate(_ existingComposedFoodItem: ComposedFoodItem) -> ComposedFoodItem? {
-        let moc = AppDelegate.viewContext
-        
         // Create new ComposedFoodItem with new ID
-        let cdComposedFoodItem = ComposedFoodItem(context: moc)
+        let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
         cdComposedFoodItem.id = UUID()
         
         // Fill data
@@ -186,7 +178,7 @@ public class ComposedFoodItem: NSManagedObject {
         cdComposedFoodItem.numberOfPortions = existingComposedFoodItem.numberOfPortions
         
         // Save
-        try? moc.save()
+        CoreDataStack.shared.save()
         
         // Create ingredients
         for case let ingredient as Ingredient in existingComposedFoodItem.ingredients {
@@ -198,7 +190,7 @@ public class ComposedFoodItem: NSManagedObject {
             cdComposedFoodItem.foodItem = FoodItem.duplicate(existingFoodItem)
             
             // Save
-            try? moc.save()
+            CoreDataStack.shared.save()
             
             return cdComposedFoodItem
         } else {
@@ -211,16 +203,14 @@ public class ComposedFoodItem: NSManagedObject {
     }
     
     static func delete(_ composedFoodItem: ComposedFoodItem) {
-        let moc = AppDelegate.viewContext
-        
         // Deletion of all related ingredients will happen automatically
         // as we have set Delete Rule to Cascade in data model
         
         // Delete the food item itself
-        moc.delete(composedFoodItem)
+        CoreDataStack.viewContext.delete(composedFoodItem)
         
         // And save the context
-        try? moc.save()
+        CoreDataStack.shared.save()
     }
     
     /**
@@ -234,7 +224,7 @@ public class ComposedFoodItem: NSManagedObject {
         let predicate = NSPredicate(format: "name = %@", name)
         let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
         request.predicate = predicate
-        if let result = try? AppDelegate.viewContext.fetch(request) {
+        if let result = try? CoreDataStack.viewContext.fetch(request) {
             if !result.isEmpty {
                 return result[0]
             }

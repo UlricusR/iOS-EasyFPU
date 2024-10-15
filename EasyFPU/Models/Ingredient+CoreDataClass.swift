@@ -12,16 +12,16 @@ import CoreData
 
 
 public class Ingredient: NSManagedObject {
-    static func fetchAll(viewContext: NSManagedObjectContext = AppDelegate.viewContext) -> [Ingredient] {
+    static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [Ingredient] {
         let request: NSFetchRequest<Ingredient> = Ingredient.fetchRequest()
         
-        guard let ingredients = try? AppDelegate.viewContext.fetch(request) else {
+        guard let ingredients = try? CoreDataStack.viewContext.fetch(request) else {
             return []
         }
         return ingredients
     }
     
-    static func deleteAll(viewContext: NSManagedObjectContext = AppDelegate.viewContext) {
+    static func deleteAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) {
         Ingredient.fetchAll(viewContext: viewContext).forEach({
             viewContext.delete($0)
         })
@@ -55,8 +55,6 @@ public class Ingredient: NSManagedObject {
         // Initialize ingredients array
         var cdIngredients = [Ingredient]()
         
-        let moc = AppDelegate.viewContext
-        
         for ingredient in composedFoodItemVM.foodItems {
             // In case of an import, there might be no Core Data FoodItem for the ingredient yet
             if isImport {
@@ -68,7 +66,7 @@ public class Ingredient: NSManagedObject {
             // If no import: We cannot create an Ingredient if we have no cdFoodItem
             if let associatedCDFoodItem = ingredient.cdFoodItem {
                 // Create Ingredient
-                let cdIngredient = Ingredient(context: moc)
+                let cdIngredient = Ingredient(context: CoreDataStack.viewContext)
                 
                 // Fill data
                 // We use the identical UUID as the FoodItem, so that we can identify the related FoodItem later
@@ -92,7 +90,7 @@ public class Ingredient: NSManagedObject {
         cdComposedFoodItem.addToIngredients(NSSet(array: cdIngredients))
         
         // Save
-        try? moc.save()
+        CoreDataStack.shared.save()
         
         // Return the ingredients if any
         return cdIngredients.count > 0 ? cdIngredients : nil
@@ -109,10 +107,8 @@ public class Ingredient: NSManagedObject {
      - Returns: The new Ingredient with with a reference to the newCDComposedFoodItem.
     */
     static func duplicate(_ existingIngredient: Ingredient, for newCDComposedFoodItem: ComposedFoodItem) -> Ingredient {
-        let moc = AppDelegate.viewContext
-        
         // Create Ingredient
-        let cdIngredient = Ingredient(context: moc)
+        let cdIngredient = Ingredient(context: CoreDataStack.viewContext)
         
         // Fill data
         cdIngredient.id = existingIngredient.id // The id of the related FoodItem
@@ -131,7 +127,7 @@ public class Ingredient: NSManagedObject {
         newCDComposedFoodItem.addToIngredients(cdIngredient)
         
         // Save new Ingredient
-        try? moc.save()
+        CoreDataStack.shared.save()
         
         return cdIngredient
     }
@@ -155,7 +151,7 @@ public class Ingredient: NSManagedObject {
         }
         
         // Save
-        try? AppDelegate.viewContext.save()
+        try? CoreDataStack.viewContext.save()
         
         return ingredient
     }

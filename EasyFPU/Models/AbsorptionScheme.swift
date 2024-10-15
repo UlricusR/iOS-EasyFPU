@@ -66,7 +66,7 @@ class AbsorptionScheme: Equatable, ObservableObject {
                 absorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: cdAbsorptionBlock)
             }
         }
-        try? AppDelegate.viewContext.save()
+        try? CoreDataStack.viewContext.save()
     }
     
     static func == (lhs: AbsorptionScheme, rhs: AbsorptionScheme) -> Bool {

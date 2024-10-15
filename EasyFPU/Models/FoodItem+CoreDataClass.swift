@@ -12,17 +12,17 @@ import CoreData
 
 
 public class FoodItem: NSManagedObject {
-    static func fetchAll(viewContext: NSManagedObjectContext = AppDelegate.viewContext) -> [FoodItem] {
+    static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [FoodItem] {
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         
-        guard let foodItems = try? AppDelegate.viewContext.fetch(request) else {
+        guard let foodItems = try? CoreDataStack.viewContext.fetch(request) else {
             return []
         }
         return foodItems
     }
     
-    static func deleteAll(viewContext: NSManagedObjectContext = AppDelegate.viewContext) {
+    static func deleteAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) {
         FoodItem.fetchAll(viewContext: viewContext).forEach({
             viewContext.delete($0)
         })
@@ -46,8 +46,7 @@ public class FoodItem: NSManagedObject {
         }
         
         // Create the FoodItem
-        let moc = AppDelegate.viewContext
-        let cdFoodItem = FoodItem(context: moc)
+        let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         
         // If we have a duplicate, then a new UUID is required
         cdFoodItem.id = existingFoodItem != nil ? UUID() : foodItemVM.id
@@ -61,7 +60,7 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.favorite = foodItemVM.favorite
         
         // Save
-        try? moc.save()
+        CoreDataStack.shared.save()
         
         // Add typical amounts
         for typicalAmount in foodItemVM.typicalAmounts {
@@ -70,7 +69,7 @@ public class FoodItem: NSManagedObject {
         }
         
         // Save
-        try? moc.save()
+        CoreDataStack.shared.save()
         return cdFoodItem
     }
     
@@ -91,10 +90,8 @@ public class FoodItem: NSManagedObject {
             return existingFoodItem
         }
         
-        let moc = AppDelegate.viewContext
-        
         // Create new FoodItem
-        let cdFoodItem = FoodItem(context: moc)
+        let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         cdFoodItem.id = composedFoodItem.id
         
         // Fill data
@@ -116,7 +113,7 @@ public class FoodItem: NSManagedObject {
         }
         
         // Save new food item and refresh
-        try? moc.save()
+        CoreDataStack.shared.save()
         
         return cdFoodItem
     }
@@ -131,7 +128,6 @@ public class FoodItem: NSManagedObject {
         - typicalAmountsToBeDeleted: The TypicalAmounts to be deleted from the FoodItem.
      */
     static func update(_ cdFoodItem: FoodItem, with foodItemVM: FoodItemViewModel, _ typicalAmountsToBeDeleted: [TypicalAmountViewModel]) {
-        let moc = AppDelegate.viewContext
         cdFoodItem.name = foodItemVM.name
         cdFoodItem.category = foodItemVM.category.rawValue
         cdFoodItem.favorite = foodItemVM.favorite
@@ -149,7 +145,7 @@ public class FoodItem: NSManagedObject {
         for typicalAmountToBeDeleted in typicalAmountsToBeDeleted {
             if typicalAmountToBeDeleted.cdTypicalAmount != nil {
                 cdFoodItem.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
-                moc.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
+                CoreDataStack.viewContext.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
             }
         }
         
@@ -159,7 +155,7 @@ public class FoodItem: NSManagedObject {
             cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
         }
         
-        try? moc.save()
+        CoreDataStack.shared.save()
     }
     
     /**
@@ -171,10 +167,8 @@ public class FoodItem: NSManagedObject {
      - Returns: the new Core Data FoodItem, nil should never happen
      */
     static func duplicate(_ existingFoodItem: FoodItem) -> FoodItem? {
-        let moc = AppDelegate.viewContext
-        
         // Create new FoodItem with own ID
-        let cdFoodItem = FoodItem(context: moc)
+        let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         cdFoodItem.id = UUID()
         
         // Fill data
@@ -188,7 +182,7 @@ public class FoodItem: NSManagedObject {
         // Add typical amounts
         if let typicalAmounts = existingFoodItem.typicalAmounts {
             for case let typicalAmount as TypicalAmount in typicalAmounts {
-                let newCDTypicalAmount = TypicalAmount(context: moc)
+                let newCDTypicalAmount = TypicalAmount(context: CoreDataStack.viewContext)
                 newCDTypicalAmount.id = UUID()
                 newCDTypicalAmount.amount = typicalAmount.amount
                 newCDTypicalAmount.comment = typicalAmount.comment
@@ -197,22 +191,20 @@ public class FoodItem: NSManagedObject {
         }
         
         // Save new food item and refresh
-        try? moc.save()
+        CoreDataStack.shared.save()
         
         return cdFoodItem
     }
     
     static func delete(_ foodItem: FoodItem) {
-        let moc = AppDelegate.viewContext
-        
         // Deletion of all related typical amounts will happen automatically
         // as we have set Delete Rule to Cascade in data model
         
         // Delete the food item itself
-        moc.delete(foodItem)
+        CoreDataStack.viewContext.delete(foodItem)
         
         // And save the context
-        try? moc.save()
+        CoreDataStack.shared.save()
     }
     
     /**
@@ -224,15 +216,14 @@ public class FoodItem: NSManagedObject {
      */
     static func add(_ typicalAmount: TypicalAmount, to foodItem: FoodItem) {
         foodItem.addToTypicalAmounts(typicalAmount)
-        try? AppDelegate.viewContext.save()
+        try? CoreDataStack.viewContext.save()
     }
     
     static func setCategory(_ foodItem: FoodItem?, to category: String) {
         if let foodItem = foodItem {
-            let moc = AppDelegate.viewContext
             foodItem.category = category
-            moc.refresh(foodItem, mergeChanges: true)
-            try? moc.save()
+            CoreDataStack.viewContext.refresh(foodItem, mergeChanges: true)
+            CoreDataStack.shared.save()
         }
     }
     
@@ -247,7 +238,7 @@ public class FoodItem: NSManagedObject {
         let predicate = NSPredicate(format: "id = %@", id)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.predicate = predicate
-        if let result = try? AppDelegate.viewContext.fetch(request) {
+        if let result = try? CoreDataStack.viewContext.fetch(request) {
             if !result.isEmpty {
                 return result[0]
             }
@@ -266,7 +257,7 @@ public class FoodItem: NSManagedObject {
         let predicate = NSPredicate(format: "name = %@", name)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.predicate = predicate
-        if let result = try? AppDelegate.viewContext.fetch(request) {
+        if let result = try? CoreDataStack.viewContext.fetch(request) {
             if !result.isEmpty {
                 return result[0]
             }
