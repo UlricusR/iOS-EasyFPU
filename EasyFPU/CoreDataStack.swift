@@ -12,11 +12,18 @@ final class CoreDataStack {
     static let dataStoreName = "EasyFPU"
     static let shared = CoreDataStack()
     
+    let storeType: String
+    
     // Create a persistent container as a lazy variable to defer instantiation until its first use.
     lazy var persistentContainer: NSPersistentContainer = {
+        let description = NSPersistentStoreDescription()
+        description.type = storeType
         
         // Pass the data model filename to the container’s initializer.
         let container = NSPersistentCloudKitContainer(name: CoreDataStack.dataStoreName)
+        if storeType == NSInMemoryStoreType {
+            container.persistentStoreDescriptions = [description]
+        }
         
         // Load any persistent stores, which creates a store if none exists.
         container.loadPersistentStores { _, error in
@@ -50,7 +57,13 @@ final class CoreDataStack {
         return viewContext
     }
         
-    private init() { }
+    private init() {
+        if ProcessInfo.processInfo.environment["persistent_store_type"] == "in_memory" {
+            self.storeType = NSInMemoryStoreType
+        } else {
+            self.storeType = NSSQLiteStoreType
+        }
+    }
 }
 
 extension CoreDataStack {
