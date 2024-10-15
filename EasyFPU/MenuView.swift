@@ -80,12 +80,10 @@ struct MenuView: View {
         .actionSheet(isPresented: self.$showActionSheet) {
             ActionSheet(title: Text("Import food list"), message: Text("Please select"), buttons: [
                 .default(Text("Replace")) {
-                    FoodItem.deleteAll()
-                    ComposedFoodItem.deleteAll()
-                    self.importFoodItems()
+                    self.importFoodItems(replaceExisting: true)
                 },
                 .default(Text("Append")) {
-                    self.importFoodItems()
+                    self.importFoodItems(replaceExisting: false)
                 },
                 .cancel()
             ])
@@ -147,7 +145,11 @@ struct MenuView: View {
         }
     }
     
-    private func importFoodItems() {
+    private func importFoodItems(replaceExisting: Bool) {
+        if replaceExisting {
+            DataHelper.deleteAllFood()
+        }
+        
         if foodItemVMsToBeImported != nil {
             for foodItemVMToBeImported in foodItemVMsToBeImported! {
                 foodItemVMToBeImported.save(allowDuplicate: false)

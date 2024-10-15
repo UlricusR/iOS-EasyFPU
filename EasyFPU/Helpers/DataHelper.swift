@@ -167,6 +167,13 @@ class DataHelper {
         }
     }
     
+    /// Deletes all Core Data ComposedFoodItems (and with them Ingredients)
+    /// and FoodItems (and with them TypicalAmounts)
+    static func deleteAllFood() {
+        ComposedFoodItem.deleteAll()
+        FoodItem.deleteAll()
+    }
+    
     // MARK: - Data checker and formatter
     
     static func doubleFormatter(numberOfDigits: Int) -> NumberFormatter {
