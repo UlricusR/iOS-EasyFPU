@@ -40,7 +40,7 @@ public class FoodItem: NSManagedObject {
      - Returns: the new Core Data FoodItem, or the existing one if a duplicate was found and is not allowed.
      */
     static func create(from foodItemVM: FoodItemViewModel, allowDuplicate: Bool) -> FoodItem {
-        let existingFoodItem = FoodItem.getFoodItemByID(foodItemVM.id.uuidString)
+        let existingFoodItem = FoodItem.getFoodItemByID(id: foodItemVM.id)
         if !allowDuplicate && existingFoodItem != nil {
             return existingFoodItem!
         }
@@ -86,7 +86,7 @@ public class FoodItem: NSManagedObject {
      */
     static func create(from composedFoodItem: ComposedFoodItemViewModel) -> FoodItem {
         // Return the existing Core Data FoodItem, if found
-        if let existingFoodItem = FoodItem.getFoodItemByID(composedFoodItem.id.uuidString) {
+        if let existingFoodItem = FoodItem.getFoodItemByID(id: composedFoodItem.id) {
             return existingFoodItem
         }
         
@@ -234,17 +234,17 @@ public class FoodItem: NSManagedObject {
      
      - Returns: The related Core Data FoodItem, nil if not found.
      */
-    static func getFoodItemByID(_ id: String) -> FoodItem? {
-        for foodItem in FoodItem.fetchAll() {
-            debugPrint(foodItem)
-        }
-        let predicate = NSPredicate(format: "id == %@", id)
+    static func getFoodItemByID(id: UUID) -> FoodItem? {
+        let predicate = NSPredicate(format: "id == %@", id as CVarArg)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.predicate = predicate
-        if let result = try? CoreDataStack.viewContext.fetch(request) {
+        do {
+            let result = try CoreDataStack.viewContext.fetch(request)
             if !result.isEmpty {
                 return result[0]
             }
+        } catch {
+            debugPrint("Error fetching food item: \(error)")
         }
         return nil
     }
@@ -260,10 +260,13 @@ public class FoodItem: NSManagedObject {
         let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.predicate = predicate
-        if let result = try? CoreDataStack.viewContext.fetch(request) {
+        do {
+            let result = try CoreDataStack.viewContext.fetch(request)
             if !result.isEmpty {
                 return result[0]
             }
+        } catch {
+            debugPrint("Error fetching food item: \(error)")
         }
         return nil
     }

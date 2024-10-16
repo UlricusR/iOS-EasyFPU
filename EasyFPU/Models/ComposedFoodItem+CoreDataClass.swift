@@ -214,6 +214,28 @@ public class ComposedFoodItem: NSManagedObject {
     }
     
     /**
+     Returns the Core Data ComposedFoodItem with the given id.
+     
+     - Parameter id: The Core Data entry id.
+     
+     - Returns: The related Core Data ComposedFoodItem, nil if not found.
+     */
+    static func getComposedFoodItemByID(id: UUID) -> ComposedFoodItem? {
+        let predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
+        request.predicate = predicate
+        do {
+            let result = try CoreDataStack.viewContext.fetch(request)
+            if !result.isEmpty {
+                return result[0]
+            }
+        } catch {
+            debugPrint("Error fetching ComposedFoodItem: \(error)")
+        }
+        return nil
+    }
+    
+    /**
      Returns the Core Data ComposedFoodItem with the given name.
      
      - Parameter name: The Core Data entry name.
@@ -224,10 +246,13 @@ public class ComposedFoodItem: NSManagedObject {
         let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
         request.predicate = predicate
-        if let result = try? CoreDataStack.viewContext.fetch(request) {
+        do {
+            let result = try CoreDataStack.viewContext.fetch(request)
             if !result.isEmpty {
                 return result[0]
             }
+        } catch {
+            debugPrint("Error fetching ComposedFoodItem: \(error)")
         }
         return nil
     }

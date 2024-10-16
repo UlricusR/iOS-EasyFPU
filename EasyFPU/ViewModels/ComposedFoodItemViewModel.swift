@@ -117,7 +117,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         for ingredient in cdComposedFoodItem.ingredients {
             let ingredient = ingredient as! Ingredient
             var newCDFoodItem: FoodItem
-            if let cdFoodItem = FoodItem.getFoodItemByID(ingredient.id.uuidString) {
+            if let cdFoodItem = FoodItem.getFoodItemByID(id: ingredient.id) {
                 // A FoodItem exists, so use it
                 newCDFoodItem = cdFoodItem
             } else {
