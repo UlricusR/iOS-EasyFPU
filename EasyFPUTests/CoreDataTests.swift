@@ -179,13 +179,17 @@ struct CoreDataTests {
         
         @Test("ID: 8 - Update FoodItem - no associated Ingredients - TypicalAmounts to be deleted")
         func updateFoodItemNoAssociatedIngredientsTypicalAmountsToBeDeleted() async throws {
+            // Get and save a FoodItem with TypicalAmounts
             let foodItemVM = DataFactory.shared.tests78CreateFoodItemWithTypicalAmounts()
             foodItemVM.save(allowDuplicate: false)
             
-            // Check results in DB and get the FoodItem
+            // Check FoodItem results in DB and get the FoodItem
             let allCDFoodItems = FoodItem.fetchAll()
             try #require(allCDFoodItems.count == 1)
             let cdFoodItem = allCDFoodItems.first!
+            
+            // Check TypicalAmount results in DB
+            try #require(TypicalAmount.fetchAll().count == 4)
             
             // Create the FoodItemViewModel from the Core Data FoodItem (including the TypicalAmounts)
             let newFoodItemVM = FoodItemViewModel(from: cdFoodItem)
@@ -234,6 +238,51 @@ struct CoreDataTests {
             #expect(TypicalAmount.fetchAll().count == 0)
         }
         
+        @Test("ID: 9 - Duplicate FoodItem - with TypicalAmounts")
+        func duplicateFoodItemWithTypicalAmounts() async throws {
+            // Get and save a FoodItem with TypicalAmounts
+            let foodItemVM = DataFactory.shared.tests78CreateFoodItemWithTypicalAmounts()
+            foodItemVM.save(allowDuplicate: false)
+            
+            // Check FoodItem results in DB and get the FoodItem
+            let allCDFoodItems = FoodItem.fetchAll()
+            try #require(allCDFoodItems.count == 1)
+            let cdFoodItem = allCDFoodItems.first!
+            
+            // Check TypicalAmount results in DB
+            try #require(TypicalAmount.fetchAll().count == 4)
+            
+            // Duplicate the cdFoodItem
+            let duplicatedCDFoodItem = FoodItem.duplicate(cdFoodItem)
+            
+            // Check duplicated FoodItem results in DB and get the FoodItem
+            let allCDFoodItemsAfterDuplication = FoodItem.fetchAll()
+            try #require(allCDFoodItemsAfterDuplication.count == 2)
+            
+            // Check TypicalAmount results in DB - there should be 2x4 now
+            try #require(TypicalAmount.fetchAll().count == 8)
+            
+            // Cross-check sum of all amounts of both FoodItems
+            var foodItemTypicalAmountSum = 0
+            for typicalAmount in cdFoodItem.typicalAmounts!  {
+                foodItemTypicalAmountSum += Int((typicalAmount as! TypicalAmount).amount)
+            }
+            var duplicatedFoodItemTypicalAmountSum = 0
+            for typicalAmount in duplicatedCDFoodItem.typicalAmounts!  {
+                duplicatedFoodItemTypicalAmountSum += Int((typicalAmount as! TypicalAmount).amount)
+            }
+            #expect(foodItemTypicalAmountSum == duplicatedFoodItemTypicalAmountSum)
+            
+            // Check values
+            assessFoodItemValues(foodItem1: cdFoodItem, foodItem2: duplicatedCDFoodItem, sameName: false)
+            
+            // Delete FoodItems and (cascading) TypicalAmounts
+            FoodItem.delete(cdFoodItem)
+            FoodItem.delete(duplicatedCDFoodItem)
+            #expect(FoodItem.fetchAll().count == 0)
+            #expect(TypicalAmount.fetchAll().count == 0)
+        }
+        
         /*
         @Test("ID: 8 - Update FoodItem - associated Ingredients - no TypicalAmounts to be deleted")
         func updateFoodItemAssociatedIngredientsNoTypicalAmountsToBeDeleted() async throws {
@@ -248,6 +297,16 @@ struct CoreDataTests {
             #expect(foodItem.caloriesPer100g == foodItemVM.caloriesPer100g)
             #expect(foodItem.carbsPer100g == foodItemVM.carbsPer100g)
             #expect(foodItem.sugarsPer100g == foodItemVM.sugarsPer100g)
+        }
+        
+        private func assessFoodItemValues(foodItem1: FoodItem, foodItem2: FoodItem, sameName: Bool) {
+            #expect(foodItem1.id != foodItem2.id)
+            sameName ? #expect(foodItem1.name == foodItem2.name) : #expect(foodItem1.name != foodItem2.name)
+            #expect(foodItem1.category == foodItem2.category)
+            #expect(foodItem1.favorite == foodItem2.favorite)
+            #expect(foodItem1.caloriesPer100g == foodItem2.caloriesPer100g)
+            #expect(foodItem1.carbsPer100g == foodItem2.carbsPer100g)
+            #expect(foodItem1.sugarsPer100g == foodItem2.sugarsPer100g)
         }
         
         private func assessTypicalAmountValues(typicalAmountVM: TypicalAmountViewModel, typicalAmount: TypicalAmount) {
