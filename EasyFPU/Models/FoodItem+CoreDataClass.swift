@@ -172,9 +172,9 @@ public class FoodItem: NSManagedObject {
      - Parameters:
         - existingFoodItemVM: the FoodItemViewModel to be duplicated
      
-     - Returns: the new Core Data FoodItem, nil should never happen
+     - Returns: the new Core Data FoodItem
      */
-    static func duplicate(_ existingFoodItem: FoodItem) -> FoodItem? {
+    static func duplicate(_ existingFoodItem: FoodItem) -> FoodItem {
         // Create new FoodItem with own ID
         let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         cdFoodItem.id = UUID()
