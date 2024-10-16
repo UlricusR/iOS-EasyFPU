@@ -76,6 +76,7 @@ public class FoodItem: NSManagedObject {
     /**
      Creates a new Core Data FoodItem from a ComposedFoodItemViewModel.
      First checks if a Core Data FoodItem with the same ID exists, otherwise creates a new one with the ID of the ComposedFoodItemViewModel.
+     Creates TypicalAmounts for the FoodItem, if required.
      It does not create a relationship to a ComposedFoodItem. This needs to be created manually.
      
      - Parameters:
@@ -84,30 +85,37 @@ public class FoodItem: NSManagedObject {
      
      - Returns: The existing Core Data FoodItem if found, otherwise a new one.
      */
-    static func create(from composedFoodItem: ComposedFoodItemViewModel) -> FoodItem {
+    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) -> FoodItem {
+        var cdFoodItem: FoodItem
+        
         // Return the existing Core Data FoodItem, if found
-        if let existingFoodItem = FoodItem.getFoodItemByID(id: composedFoodItem.id) {
-            return existingFoodItem
+        if let existingFoodItem = FoodItem.getFoodItemByID(id: composedFoodItemVM.id) {
+            cdFoodItem = existingFoodItem
+            
+            // Remove existing TypicalAmounts
+            if let existingTypicalAmounts = cdFoodItem.typicalAmounts {
+                cdFoodItem.removeFromTypicalAmounts(existingTypicalAmounts)
+            }
+        } else {
+            // Create new FoodItem
+            cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
+            cdFoodItem.id = composedFoodItemVM.id
+            
+            // Fill data
+            cdFoodItem.name = composedFoodItemVM.name
+            cdFoodItem.caloriesPer100g = composedFoodItemVM.caloriesPer100g
+            cdFoodItem.carbsPer100g = composedFoodItemVM.carbsPer100g
+            cdFoodItem.sugarsPer100g = composedFoodItemVM.sugarsPer100g
+            cdFoodItem.favorite = composedFoodItemVM.favorite
+            
+            // Set category to product
+            cdFoodItem.category = FoodItemCategory.product.rawValue
         }
         
-        // Create new FoodItem
-        let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
-        cdFoodItem.id = composedFoodItem.id
-        
-        // Fill data
-        cdFoodItem.name = composedFoodItem.name
-        cdFoodItem.caloriesPer100g = composedFoodItem.caloriesPer100g
-        cdFoodItem.carbsPer100g = composedFoodItem.carbsPer100g
-        cdFoodItem.sugarsPer100g = composedFoodItem.sugarsPer100g
-        cdFoodItem.favorite = composedFoodItem.favorite
-        
-        // Set category to product
-        cdFoodItem.category = FoodItemCategory.product.rawValue
-        
         // Add typical amounts
-        if composedFoodItem.numberOfPortions > 0 {
-            for typicalAmount in composedFoodItem.typicalAmounts {
-                let newCDTypicalAmount = TypicalAmount.create(from: typicalAmount)
+        if composedFoodItemVM.numberOfPortions > 0 {
+            for typicalAmountVM in composedFoodItemVM.typicalAmounts {
+                let newCDTypicalAmount = TypicalAmount.create(from: typicalAmountVM)
                 cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
             }
         }
