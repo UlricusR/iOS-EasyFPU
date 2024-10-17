@@ -30,6 +30,10 @@ public class TypicalAmount: NSManagedObject {
         try? viewContext.save()
     }
     
+    /// Creates a Core Data TypicalAmount from the passed TypicalAmountViewModel and creates a relation between the two.
+    /// Does not relate it to a Core Data FoodItem.
+    /// - Parameter typicalAmountVM: The source TypicalAmountViewModel.
+    /// - Returns: The created Core Data TypicalAmount.
     static func create(from typicalAmountVM: TypicalAmountViewModel) -> TypicalAmount {
         // Create TypicalAmount
         let cdTypicalAmount = TypicalAmount(context: CoreDataStack.viewContext)

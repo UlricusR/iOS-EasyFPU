@@ -27,12 +27,12 @@ struct DataFactory {
     var tests56Ingredient4forComposedFoodItem3: FoodItemViewModel
     var tests56Ingredient5forComposedFoodItem3: FoodItemViewModel
     
-    // Tests 7-8
-    var test78FoodItem: FoodItemViewModel
-    var test78TypicalAmount1: TypicalAmountViewModel
-    var test78TypicalAmount2: TypicalAmountViewModel
-    var test78TypicalAmount3: TypicalAmountViewModel
-    var test78TypicalAmount4: TypicalAmountViewModel
+    // Tests 7-10
+    var test710FoodItem: FoodItemViewModel
+    var test710TypicalAmount1: TypicalAmountViewModel
+    var test710TypicalAmount2: TypicalAmountViewModel
+    var test710TypicalAmount3: TypicalAmountViewModel
+    var test710TypicalAmount4: TypicalAmountViewModel
     
     // Test xxxx
     var foodItemForComposedFoodItem1: FoodItemViewModel
@@ -188,7 +188,7 @@ struct DataFactory {
         ])
         
         // Tests 7-8
-        try test78FoodItem = DataFactory.createFoodItemVM(foodItem: [
+        try test710FoodItem = DataFactory.createFoodItemVM(foodItem: [
             "name": "Backpulver",
             "caloriesPer100g": "90",
             "carbsPer100g": "22",
@@ -199,22 +199,22 @@ struct DataFactory {
             "amount": "0"
         ])
         
-        try test78TypicalAmount1 = DataFactory.createTypicalAmountViewModel(typicalAmount: [
+        try test710TypicalAmount1 = DataFactory.createTypicalAmountViewModel(typicalAmount: [
             "amount": "100",
             "comment": "Comment 1"
         ])
         
-        try test78TypicalAmount2 = DataFactory.createTypicalAmountViewModel(typicalAmount: [
+        try test710TypicalAmount2 = DataFactory.createTypicalAmountViewModel(typicalAmount: [
             "amount": "200",
             "comment": "Comment 2"
         ])
         
-        try test78TypicalAmount3 = DataFactory.createTypicalAmountViewModel(typicalAmount: [
+        try test710TypicalAmount3 = DataFactory.createTypicalAmountViewModel(typicalAmount: [
             "amount": "300",
             "comment": "Comment 3"
         ])
         
-        try test78TypicalAmount4 = DataFactory.createTypicalAmountViewModel(typicalAmount: [
+        try test710TypicalAmount4 = DataFactory.createTypicalAmountViewModel(typicalAmount: [
             "amount": "400",
             "comment": "Comment 4"
         ])
@@ -320,11 +320,11 @@ struct DataFactory {
     
     // Tests 7-8
     func tests78CreateFoodItemWithTypicalAmounts() -> FoodItemViewModel {
-        let foodItemVM = DataFactory.shared.test78FoodItem
-        foodItemVM.typicalAmounts.append(DataFactory.shared.test78TypicalAmount1)
-        foodItemVM.typicalAmounts.append(DataFactory.shared.test78TypicalAmount2)
-        foodItemVM.typicalAmounts.append(DataFactory.shared.test78TypicalAmount3)
-        foodItemVM.typicalAmounts.append(DataFactory.shared.test78TypicalAmount4)
+        let foodItemVM = DataFactory.shared.test710FoodItem
+        foodItemVM.typicalAmounts.append(DataFactory.shared.test710TypicalAmount1)
+        foodItemVM.typicalAmounts.append(DataFactory.shared.test710TypicalAmount2)
+        foodItemVM.typicalAmounts.append(DataFactory.shared.test710TypicalAmount3)
+        foodItemVM.typicalAmounts.append(DataFactory.shared.test710TypicalAmount4)
         return foodItemVM
     }
     

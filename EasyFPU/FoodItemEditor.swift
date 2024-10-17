@@ -294,6 +294,14 @@ struct FoodItemEditor: View {
                     activeAlert = .warningUpdateIngredients
                 } else {
                     // No associated recipe
+                    
+                    // Remove the typicalAmountsToBeDeleted from the view model
+                    for typicalAmountToBeDeleted in typicalAmountsToBeDeleted {
+                        if let index = self.updatedFoodItemVM!.typicalAmounts.firstIndex(of: typicalAmountToBeDeleted) {
+                            self.updatedFoodItemVM!.typicalAmounts.remove(at: index)
+                        }
+                    }
+                    
                     // Update FoodItem
                     self.updatedFoodItemVM!.update(typicalAmountsToBeDeleted)
                     

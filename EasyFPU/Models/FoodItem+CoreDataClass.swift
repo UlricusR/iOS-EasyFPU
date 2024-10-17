@@ -224,9 +224,13 @@ public class FoodItem: NSManagedObject {
      */
     static func add(_ typicalAmount: TypicalAmount, to foodItem: FoodItem) {
         foodItem.addToTypicalAmounts(typicalAmount)
-        try? CoreDataStack.viewContext.save()
+        CoreDataStack.shared.save()
     }
     
+    /// Sets the category of the Core Data FoodItem to the given String. Does not check if the string is a valid FoodItemCategory.
+    /// - Parameters:
+    ///   - foodItem: The Core Data FoodItem.
+    ///   - category: The string representation of the FoodItemCategory.
     static func setCategory(_ foodItem: FoodItem?, to category: String) {
         if let foodItem = foodItem {
             foodItem.category = category

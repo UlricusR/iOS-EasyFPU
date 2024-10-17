@@ -14,7 +14,7 @@ struct CoreDataTests {
     struct FoodItemBehavior {
         
         @Test("ID: 1/2 - Create FoodItem - no FoodItem", arguments: [false, true])
-        func createFoodItemDuplicateFalseNoFoodItem(allowDuplicate: Bool) async throws {
+        func createFoodItemDuplicateFalseNoFoodItem(allowDuplicate: Bool) throws {
             // Save a new FoodItem to the DB
             let foodItemVM = DataFactory.shared.tests14FoodItem1
             foodItemVM.save(allowDuplicate: allowDuplicate)
@@ -34,7 +34,7 @@ struct CoreDataTests {
         }
         
         @Test("ID: 3 - Create FoodItem - allowDuplicate=false - existing identical FoodItem")
-        func createFoodItemDuplicateFalseIdenticalFoodItem() async throws {
+        func createFoodItemDuplicateFalseIdenticalFoodItem() throws {
             // Save a new FoodItem to the DB
             let foodItemVM = DataFactory.shared.tests14FoodItem1
             foodItemVM.save(allowDuplicate: false)
@@ -62,7 +62,7 @@ struct CoreDataTests {
         }
         
         @Test("ID: 4 - Create FoodItem - allowDuplicate=true - existing identical FoodItem")
-        func createFoodItemDuplicateTrueIdenticalFoodItem() async throws {
+        func createFoodItemDuplicateTrueIdenticalFoodItem() throws {
             // Save a new FoodItem to the DB
             let foodItemVM = DataFactory.shared.tests14FoodItem1
             foodItemVM.save(allowDuplicate: false)
@@ -91,7 +91,7 @@ struct CoreDataTests {
         }
         
         @Test("ID: 5 - Create FoodItem from ComposedFoodItemVM - no existing related FoodItem")
-        func createFoodItemFromComposedFoodItemVMNoExistingRelatedFoodItem() async throws {
+        func createFoodItemFromComposedFoodItemVMNoExistingRelatedFoodItem() throws {
             // Get ComposedFoodItemViewModel and create the related FoodItem
             let composedFoodItemVM = DataFactory.shared.tests56CreateComposedFoodItem3()
             let relatedFoodItem = FoodItem.create(from: composedFoodItemVM)
@@ -113,7 +113,7 @@ struct CoreDataTests {
         }
         
         @Test("ID: 6 - Create FoodItem from ComposedFoodItemVM - existing related FoodItem")
-        func createFoodItemFromComposedFoodItemVMExistingRelatedFoodItem() async throws {
+        func createFoodItemFromComposedFoodItemVMExistingRelatedFoodItem() throws {
             // Save related FoodItem
             let relatedFoodItemVM = DataFactory.shared.tests56FoodItemForComposedFoodItem3
             relatedFoodItemVM.save(allowDuplicate: false)
@@ -144,8 +144,8 @@ struct CoreDataTests {
         }
         
         @Test("ID: 7 - Update FoodItem - no associated Ingredients - no TypicalAmounts to be deleted")
-        func updateFoodItemNoAssociatedIngredientsNoTypicalAmountsToBeDeleted() async throws {
-            let foodItemVM = DataFactory.shared.test78FoodItem
+        func updateFoodItemNoAssociatedIngredientsNoTypicalAmountsToBeDeleted() throws {
+            let foodItemVM = DataFactory.shared.test710FoodItem
             foodItemVM.save(allowDuplicate: false)
             
             // Check results in DB and get the FoodItem
@@ -178,7 +178,7 @@ struct CoreDataTests {
         }
         
         @Test("ID: 8 - Update FoodItem - no associated Ingredients - TypicalAmounts to be deleted")
-        func updateFoodItemNoAssociatedIngredientsTypicalAmountsToBeDeleted() async throws {
+        func updateFoodItemNoAssociatedIngredientsTypicalAmountsToBeDeleted() throws {
             // Get and save a FoodItem with TypicalAmounts
             let foodItemVM = DataFactory.shared.tests78CreateFoodItemWithTypicalAmounts()
             foodItemVM.save(allowDuplicate: false)
@@ -229,8 +229,8 @@ struct CoreDataTests {
                 ($0 as! TypicalAmount).amount < ($1 as! TypicalAmount).amount
             }
             
-            assessTypicalAmountValues(typicalAmountVM: DataFactory.shared.test78TypicalAmount1, typicalAmount: remainingTypicalAmountsArray[0] as! TypicalAmount)
-            assessTypicalAmountValues(typicalAmountVM: DataFactory.shared.test78TypicalAmount3, typicalAmount: remainingTypicalAmountsArray[1] as! TypicalAmount)
+            assessTypicalAmountValues(typicalAmountVM: DataFactory.shared.test710TypicalAmount1, typicalAmount: remainingTypicalAmountsArray[0] as! TypicalAmount)
+            assessTypicalAmountValues(typicalAmountVM: DataFactory.shared.test710TypicalAmount3, typicalAmount: remainingTypicalAmountsArray[1] as! TypicalAmount)
             
             // Delete FoodItem and (cascading) TypicalAmounts
             FoodItem.delete(cdFoodItemAfterUpdate)
@@ -239,7 +239,7 @@ struct CoreDataTests {
         }
         
         @Test("ID: 9 - Duplicate FoodItem - with TypicalAmounts")
-        func duplicateFoodItemWithTypicalAmounts() async throws {
+        func duplicateFoodItemWithTypicalAmounts() throws {
             // Get and save a FoodItem with TypicalAmounts
             let foodItemVM = DataFactory.shared.tests78CreateFoodItemWithTypicalAmounts()
             foodItemVM.save(allowDuplicate: false)
@@ -283,9 +283,65 @@ struct CoreDataTests {
             #expect(TypicalAmount.fetchAll().count == 0)
         }
         
+        @Test("ID: 10 - Add TypicalAmount")
+        func addTypicalAmount() throws {
+            let foodItemVM = DataFactory.shared.test710FoodItem
+            foodItemVM.save(allowDuplicate: false)
+            
+            // Check FoodItem results in DB and get the FoodItem
+            let allCDFoodItems = FoodItem.fetchAll()
+            try #require(allCDFoodItems.count == 1)
+            let cdFoodItem = allCDFoodItems.first!
+            
+            // Create (unlinked) typicalAmounts in DB
+            let cdTypicalAmount1 = TypicalAmount.create(from: DataFactory.shared.test710TypicalAmount1)
+            let cdTypicalAmount2 = TypicalAmount.create(from: DataFactory.shared.test710TypicalAmount2)
+            let cdTypicalAmount3 = TypicalAmount.create(from: DataFactory.shared.test710TypicalAmount3)
+            let cdTypicalAmount4 = TypicalAmount.create(from: DataFactory.shared.test710TypicalAmount4)
+            
+            // Add to FoodItem
+            FoodItem.add(cdTypicalAmount1, to: cdFoodItem)
+            FoodItem.add(cdTypicalAmount2, to: cdFoodItem)
+            FoodItem.add(cdTypicalAmount3, to: cdFoodItem)
+            FoodItem.add(cdTypicalAmount4, to: cdFoodItem)
+            
+            // Check DB for TypicalAmounts
+            try #require(cdFoodItem.typicalAmounts != nil)
+            #expect(cdFoodItem.typicalAmounts!.count == 4)
+            #expect(TypicalAmount.fetchAll().count == 4)
+            
+            // Delete FoodItem and (cascading) TypicalAmounts
+            FoodItem.delete(cdFoodItem)
+            #expect(FoodItem.fetchAll().count == 0)
+            #expect(TypicalAmount.fetchAll().count == 0)
+        }
+        
+        @Test("ID: 11 - Change category")
+        func changeCategory() throws {
+            let foodItemVM = DataFactory.shared.test710FoodItem
+            foodItemVM.save(allowDuplicate: false)
+            
+            // Check FoodItem results in DB and get the FoodItem
+            let allCDFoodItems = FoodItem.fetchAll()
+            try #require(allCDFoodItems.count == 1)
+            let cdFoodItem = allCDFoodItems.first!
+            
+            // Change category to FoodItemCategory.product
+            FoodItem.setCategory(cdFoodItem, to: FoodItemCategory.product.rawValue)
+            #expect(cdFoodItem.category == FoodItemCategory.product.rawValue)
+            
+            // Change category to FoodItemCategory.ingredient
+            FoodItem.setCategory(cdFoodItem, to: FoodItemCategory.ingredient.rawValue)
+            #expect(cdFoodItem.category == FoodItemCategory.ingredient.rawValue)
+            
+            // Delete FoodItem
+            FoodItem.delete(cdFoodItem)
+            #expect(FoodItem.fetchAll().count == 0)
+        }
+        
         /*
         @Test("ID: 8 - Update FoodItem - associated Ingredients - no TypicalAmounts to be deleted")
-        func updateFoodItemAssociatedIngredientsNoTypicalAmountsToBeDeleted() async throws {
+        func updateFoodItemAssociatedIngredientsNoTypicalAmountsToBeDeleted() throws {
         }*/
             
             
