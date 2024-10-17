@@ -43,7 +43,7 @@ public class ComposedFoodItem: NSManagedObject {
         // Create new ComposedFoodItem
         let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
         
-        // No existing composed food item, therefore create a new UUID
+        // Use the ID of the ComposedFoodItemViewModel
         cdComposedFoodItem.id = composedFoodItemVM.id
         
         // Fill data

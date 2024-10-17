@@ -34,7 +34,7 @@ struct DataFactory {
     var test710TypicalAmount3: TypicalAmountViewModel
     var test710TypicalAmount4: TypicalAmountViewModel
     
-    // Test xxxx
+    // Test 12
     var foodItemForComposedFoodItem1: FoodItemViewModel
     var composedFoodItem1: ComposedFoodItemViewModel
     var ingredient2forFoodItem2: FoodItemViewModel
@@ -318,7 +318,7 @@ struct DataFactory {
         return tests56ComposedFoodItem3
     }
     
-    // Tests 7-8
+    // Tests 7-10
     func tests78CreateFoodItemWithTypicalAmounts() -> FoodItemViewModel {
         let foodItemVM = DataFactory.shared.test710FoodItem
         foodItemVM.typicalAmounts.append(DataFactory.shared.test710TypicalAmount1)

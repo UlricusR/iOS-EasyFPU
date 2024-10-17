@@ -338,38 +338,93 @@ struct CoreDataTests {
             FoodItem.delete(cdFoodItem)
             #expect(FoodItem.fetchAll().count == 0)
         }
-        
-        /*
-        @Test("ID: 8 - Update FoodItem - associated Ingredients - no TypicalAmounts to be deleted")
-        func updateFoodItemAssociatedIngredientsNoTypicalAmountsToBeDeleted() throws {
-        }*/
-            
-            
-        
-        private func assessFoodItemValues(foodItemVM: FoodItemViewModel, foodItem: FoodItem) {
-            #expect(foodItem.name == foodItemVM.name)
-            #expect(foodItem.category == foodItemVM.category.rawValue)
-            #expect(foodItem.favorite == foodItemVM.favorite)
-            #expect(foodItem.caloriesPer100g == foodItemVM.caloriesPer100g)
-            #expect(foodItem.carbsPer100g == foodItemVM.carbsPer100g)
-            #expect(foodItem.sugarsPer100g == foodItemVM.sugarsPer100g)
-        }
-        
-        private func assessFoodItemValues(foodItem1: FoodItem, foodItem2: FoodItem, sameName: Bool) {
-            #expect(foodItem1.id != foodItem2.id)
-            sameName ? #expect(foodItem1.name == foodItem2.name) : #expect(foodItem1.name != foodItem2.name)
-            #expect(foodItem1.category == foodItem2.category)
-            #expect(foodItem1.favorite == foodItem2.favorite)
-            #expect(foodItem1.caloriesPer100g == foodItem2.caloriesPer100g)
-            #expect(foodItem1.carbsPer100g == foodItem2.carbsPer100g)
-            #expect(foodItem1.sugarsPer100g == foodItem2.sugarsPer100g)
-        }
-        
-        private func assessTypicalAmountValues(typicalAmountVM: TypicalAmountViewModel, typicalAmount: TypicalAmount) {
-            #expect(typicalAmount.amount == typicalAmountVM.amount)
-            #expect(typicalAmount.comment == typicalAmountVM.comment)
-        }
     }
     
-
+    struct ComposedFoodItemBehavior {
+        @Test("ID: 12 - Create ComposedFoodItem - import = true")
+        func createComposedFoodItemImportTrue() throws {
+            // Get the VM and and save as Core Data ComposedFoodItem
+            let composedFoodItemVM = DataFactory.shared.tests56CreateComposedFoodItem3() // Pizzateig with 5 Ingredients
+            try #require(composedFoodItemVM.save(isImport: true))
+            
+            // Check and get ComposedFoodItem from DB
+            let allCDComposedFoodItems = ComposedFoodItem.fetchAll()
+            try #require(allCDComposedFoodItems.count == 1)
+            let cdComposedFoodItem = allCDComposedFoodItems.first!
+            let cdFoodItem = cdComposedFoodItem.foodItem
+            #expect(cdFoodItem != nil)
+            
+            // Check and get FoodItem from DB
+            let allCDFoodItems = FoodItem.fetchAll()
+            try #require(allCDFoodItems.count == 6)
+            
+            // Check for correct reference
+            #expect(cdComposedFoodItem.foodItem == cdFoodItem!)
+            
+            // Check for identical IDs
+            #expect(cdComposedFoodItem.id == cdFoodItem!.id)
+            
+            // Check and get associated Ingredients from DB
+            let allIngredients = cdComposedFoodItem.ingredients
+            #expect(allIngredients.count == 5)
+            for case let ingredient as Ingredient in allIngredients {
+                #expect(ingredient.composedFoodItem == cdComposedFoodItem)
+                #expect(ingredient.foodItem != nil)
+                try assessIngredientValues(ingredient: ingredient)
+            }
+            
+            // Delete ComposedFoodItem (and with it Ingredients)
+            ComposedFoodItem.delete(cdComposedFoodItem)
+            #expect(ComposedFoodItem.fetchAll().count == 0)
+            #expect(Ingredient.fetchAll().count == 0)
+            
+            // Delete FoodItem - 5 FoodItems for Ingredients should remain
+            FoodItem.delete(cdFoodItem!)
+            #expect(FoodItem.fetchAll().count == 5)
+            
+            // Delete the remaining FoodItems
+            FoodItem.deleteAll()
+            #expect(FoodItem.fetchAll().count == 0)
+        }
+    }
+        
+    /*
+    @Test("ID: 8 - Update FoodItem - associated Ingredients - no TypicalAmounts to be deleted")
+    func updateFoodItemAssociatedIngredientsNoTypicalAmountsToBeDeleted() throws {
+    }*/
+        
+        
+    private static func assessFoodItemValues(foodItemVM: FoodItemViewModel, foodItem: FoodItem) {
+        #expect(foodItem.name == foodItemVM.name)
+        #expect(foodItem.category == foodItemVM.category.rawValue)
+        #expect(foodItem.favorite == foodItemVM.favorite)
+        #expect(foodItem.caloriesPer100g == foodItemVM.caloriesPer100g)
+        #expect(foodItem.carbsPer100g == foodItemVM.carbsPer100g)
+        #expect(foodItem.sugarsPer100g == foodItemVM.sugarsPer100g)
+    }
+    
+    private static func assessFoodItemValues(foodItem1: FoodItem, foodItem2: FoodItem, sameName: Bool) {
+        #expect(foodItem1.id != foodItem2.id)
+        sameName ? #expect(foodItem1.name == foodItem2.name) : #expect(foodItem1.name != foodItem2.name)
+        #expect(foodItem1.category == foodItem2.category)
+        #expect(foodItem1.favorite == foodItem2.favorite)
+        #expect(foodItem1.caloriesPer100g == foodItem2.caloriesPer100g)
+        #expect(foodItem1.carbsPer100g == foodItem2.carbsPer100g)
+        #expect(foodItem1.sugarsPer100g == foodItem2.sugarsPer100g)
+    }
+    
+    private static func assessIngredientValues(ingredient: Ingredient) throws {
+        try #require(ingredient.foodItem != nil)
+        #expect(ingredient.id == ingredient.foodItem!.id)
+        #expect(ingredient.name == ingredient.foodItem!.name)
+        #expect(ingredient.favorite == ingredient.foodItem!.favorite)
+        #expect(ingredient.caloriesPer100g == ingredient.foodItem!.caloriesPer100g)
+        #expect(ingredient.carbsPer100g == ingredient.foodItem!.carbsPer100g)
+        #expect(ingredient.sugarsPer100g == ingredient.foodItem!.sugarsPer100g)
+    }
+    
+    private static func assessTypicalAmountValues(typicalAmountVM: TypicalAmountViewModel, typicalAmount: TypicalAmount) {
+        #expect(typicalAmount.amount == typicalAmountVM.amount)
+        #expect(typicalAmount.comment == typicalAmountVM.comment)
+    }
 }
