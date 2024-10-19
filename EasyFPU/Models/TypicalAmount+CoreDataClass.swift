@@ -64,7 +64,9 @@ public class TypicalAmount: NSManagedObject {
         typicalAmount.comment = typicalAmountVM.comment
         typicalAmountVM.cdTypicalAmount = typicalAmount
         
-        try? CoreDataStack.viewContext.save()
+        // Save
+        CoreDataStack.shared.save()
+        
         return typicalAmount
     }
 }

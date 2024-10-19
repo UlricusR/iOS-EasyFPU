@@ -374,10 +374,12 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         if includeAssociatedRecipe {
             if let associatedRecipe = cdFoodItem.composedFoodItem {
                 ComposedFoodItem.delete(associatedRecipe)
+                CoreDataStack.shared.save()
             }
         }
         
         FoodItem.delete(cdFoodItem)
+        CoreDataStack.shared.save()
     }
     
     func exportToURL() -> URL? {

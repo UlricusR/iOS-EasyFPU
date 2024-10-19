@@ -74,9 +74,9 @@ struct FoodItemListView: View {
                     } else {
                         List {
                             ForEach(self.filteredFoodItems.sorted {
-                                if composedFoodItem.foodItems.contains($0) && !composedFoodItem.foodItems.contains($1) {
+                                if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
                                     return true
-                                } else if !composedFoodItem.foodItems.contains($0) && composedFoodItem.foodItems.contains($1) {
+                                } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
                                     return false
                                 } else {
                                     return $0.name < $1.name
@@ -109,7 +109,7 @@ struct FoodItemListView: View {
                                 .foregroundStyle(.green)
                         }
                         
-                        if listType == .selection && !composedFoodItem.foodItems.isEmpty {
+                        if listType == .selection && !composedFoodItem.foodItemVMs.isEmpty {
                             Button(action: {
                                 withAnimation(.default) {
                                     composedFoodItem.clearIngredients()
@@ -149,7 +149,7 @@ struct FoodItemListView: View {
                                 Image(systemName: "checkmark.circle.fill")
                                     .imageScale(.large)
                             }
-                            .disabled(composedFoodItem.foodItems.isEmpty)
+                            .disabled(composedFoodItem.foodItemVMs.isEmpty)
                         }
                     }
                 }

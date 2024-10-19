@@ -48,19 +48,22 @@ public class Ingredient: NSManagedObject {
         isImport: Bool = false
     ) -> [Ingredient]? {
         // We cannot create an Ingredient if no food item ingredients are attached
-        if (composedFoodItemVM.foodItems.count == 0) {
+        if (composedFoodItemVM.foodItemVMs.count == 0) {
             return nil
         }
         
         // Initialize ingredients array
         var cdIngredients = [Ingredient]()
         
-        for ingredient in composedFoodItemVM.foodItems {
+        for ingredient in composedFoodItemVM.foodItemVMs {
             // In case of an import, there might be no Core Data FoodItem for the ingredient yet
             if isImport {
                 // Get existing or new FoodItem
                 let relatedFoodItem = FoodItem.create(from: ingredient, allowDuplicate: false)
                 ingredient.cdFoodItem = relatedFoodItem
+                
+                // Save
+                CoreDataStack.shared.save()
             }
             
             // If no import: We cannot create an Ingredient if we have no cdFoodItem
@@ -83,6 +86,9 @@ public class Ingredient: NSManagedObject {
                 cdIngredient.foodItem = associatedCDFoodItem
                 
                 cdIngredients.append(cdIngredient)
+                
+                // Save
+                CoreDataStack.shared.save()
             }
         }
         
@@ -151,7 +157,7 @@ public class Ingredient: NSManagedObject {
         }
         
         // Save
-        try? CoreDataStack.viewContext.save()
+        CoreDataStack.shared.save()
         
         return ingredient
     }

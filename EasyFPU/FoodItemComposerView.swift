@@ -26,7 +26,7 @@ struct FoodItemComposerView: View {
         GeometryReader { geometry in
             NavigationStack {
                 VStack {
-                    if composedFoodItemVM.foodItems.isEmpty {
+                    if composedFoodItemVM.foodItemVMs.isEmpty {
                         // No ingredients selected for the recipe, so display info and a call for action button
                         Image("eggs-color").padding()
                         Text("Your yummy recipe will appear here once you add some ingredients.").padding()
@@ -103,7 +103,7 @@ struct FoodItemComposerView: View {
                                     }
                                 }
                                 List {
-                                    ForEach(composedFoodItemVM.foodItems) { foodItem in
+                                    ForEach(composedFoodItemVM.foodItemVMs) { foodItem in
                                         HStack {
                                             Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
                                             Text("g")
@@ -158,7 +158,7 @@ struct FoodItemComposerView: View {
                         }) {
                             Image(systemName: "checkmark.circle.fill")
                                 .imageScale(.large)
-                        }.disabled(composedFoodItemVM.foodItems.count == 0)
+                        }.disabled(composedFoodItemVM.foodItemVMs.count == 0)
                     }
                 }
             }
@@ -178,7 +178,7 @@ struct FoodItemComposerView: View {
     
     private func weightCheck(isLess: Bool) -> Bool {
         var ingredientsWeight = 0
-        for ingredient in composedFoodItemVM.foodItems {
+        for ingredient in composedFoodItemVM.foodItemVMs {
             ingredientsWeight += ingredient.amount
         }
         

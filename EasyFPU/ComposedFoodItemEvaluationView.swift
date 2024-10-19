@@ -18,7 +18,7 @@ struct ComposedFoodItemEvaluationView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                if composedFoodItemVM.foodItems.isEmpty {
+                if composedFoodItemVM.foodItemVMs.isEmpty {
                     // No products selected for the meal, so display empty state info and a call for action button
                     Image("cutlery-color").padding()
                     Text("This is where you will see the nutritial data of your meal and where you can export it to Loop.").padding()
@@ -74,7 +74,7 @@ struct ComposedFoodItemEvaluationView: View {
                             
                             // The included products
                             List {
-                                ForEach(composedFoodItemVM.foodItems) { foodItem in
+                                ForEach(composedFoodItemVM.foodItemVMs) { foodItem in
                                     HStack {
                                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
                                         Text("g")
@@ -101,7 +101,7 @@ struct ComposedFoodItemEvaluationView: View {
                             .imageScale(.large)
                     }
                     
-                    if !composedFoodItemVM.foodItems.isEmpty {
+                    if !composedFoodItemVM.foodItemVMs.isEmpty {
                         Button(action: {
                             withAnimation(.default) {
                                 composedFoodItemVM.clear()
@@ -119,7 +119,7 @@ struct ComposedFoodItemEvaluationView: View {
                         activeSheet = .exportToHealth
                     }) {
                         HealthDataHelper.healthKitIsAvailable() ? AnyView(Image(systemName: "square.and.arrow.up").imageScale(.large)) : AnyView(EmptyView())
-                    }.disabled(composedFoodItemVM.foodItems.isEmpty)
+                    }.disabled(composedFoodItemVM.foodItemVMs.isEmpty)
                 }
             }
         }

@@ -29,8 +29,11 @@ struct CoreDataTests {
             assessFoodItemValues(foodItemVM: foodItemVM, foodItem: foodItem!)
             
             // Remove FoodItem from DB
-            FoodItem.deleteAll()
+            FoodItem.delete(foodItem!)
             try #require(FoodItem.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
         
         @Test("ID: 3 - Create FoodItem - allowDuplicate=false - existing identical FoodItem")
@@ -59,6 +62,9 @@ struct CoreDataTests {
             // Remove FoodItem from DB
             FoodItem.deleteAll()
             try #require(FoodItem.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
         
         @Test("ID: 4 - Create FoodItem - allowDuplicate=true - existing identical FoodItem")
@@ -88,6 +94,9 @@ struct CoreDataTests {
             // Remove FoodItem from DB
             FoodItem.deleteAll()
             try #require(FoodItem.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
         
         @Test("ID: 5 - Create FoodItem from ComposedFoodItemVM - no existing related FoodItem")
@@ -110,6 +119,9 @@ struct CoreDataTests {
             FoodItem.delete(relatedFoodItem)
             #expect(FoodItem.fetchAll().count == 0)
             #expect(TypicalAmount.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
         
         @Test("ID: 6 - Create FoodItem from ComposedFoodItemVM - existing related FoodItem")
@@ -134,6 +146,7 @@ struct CoreDataTests {
             let typicalAmounts = TypicalAmount.fetchAll()
             #expect(typicalAmounts.count == 8)
             for typicalAmount in typicalAmounts {
+                try #require(typicalAmount.foodItem != nil)
                 #expect(typicalAmount.foodItem == relatedFoodItem)
             }
             
@@ -141,6 +154,9 @@ struct CoreDataTests {
             FoodItem.delete(relatedFoodItem)
             #expect(FoodItem.fetchAll().count == 0)
             #expect(TypicalAmount.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
         
         @Test("ID: 7 - Update FoodItem - no associated Ingredients - no TypicalAmounts to be deleted")
@@ -175,6 +191,9 @@ struct CoreDataTests {
             FoodItem.delete(cdFoodItemAfterUpdate)
             #expect(FoodItem.fetchAll().count == 0)
             #expect(TypicalAmount.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
         
         @Test("ID: 8 - Update FoodItem - no associated Ingredients - TypicalAmounts to be deleted")
@@ -236,6 +255,9 @@ struct CoreDataTests {
             FoodItem.delete(cdFoodItemAfterUpdate)
             #expect(FoodItem.fetchAll().count == 0)
             #expect(TypicalAmount.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
         
         @Test("ID: 9 - Duplicate FoodItem - with TypicalAmounts")
@@ -278,9 +300,11 @@ struct CoreDataTests {
             
             // Delete FoodItems and (cascading) TypicalAmounts
             FoodItem.delete(cdFoodItem)
-            FoodItem.delete(duplicatedCDFoodItem)
             #expect(FoodItem.fetchAll().count == 0)
             #expect(TypicalAmount.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
         
         @Test("ID: 10 - Add TypicalAmount")
@@ -314,6 +338,9 @@ struct CoreDataTests {
             FoodItem.delete(cdFoodItem)
             #expect(FoodItem.fetchAll().count == 0)
             #expect(TypicalAmount.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
         
         @Test("ID: 11 - Change category")
@@ -337,6 +364,9 @@ struct CoreDataTests {
             // Delete FoodItem
             FoodItem.delete(cdFoodItem)
             #expect(FoodItem.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
     }
     
@@ -354,7 +384,7 @@ struct CoreDataTests {
             let cdFoodItem = cdComposedFoodItem.foodItem
             #expect(cdFoodItem != nil)
             
-            // Check and get FoodItem from DB
+            // Check and get FoodItem from DB (5 for ingredients, 1 for the ComposedFoodItem)
             let allCDFoodItems = FoodItem.fetchAll()
             try #require(allCDFoodItems.count == 6)
             
@@ -385,8 +415,139 @@ struct CoreDataTests {
             // Delete the remaining FoodItems
             FoodItem.deleteAll()
             #expect(FoodItem.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
+        }
+        
+        @Test("ID: 13 - Create ComposedFoodItem - import = false")
+        func createComposedFoodItemImportFalse() throws {
+            // Get the VM and and save as Core Data ComposedFoodItem
+            let composedFoodItemVM = DataFactory.shared.tests56CreateComposedFoodItem3() // Pizzateig with 5 Ingredients
+            
+            // Create FoodItems for ingredients
+            for foodItemVM in composedFoodItemVM.foodItemVMs {
+                // Get existing or new FoodItem
+                let relatedFoodItem = FoodItem.create(from: foodItemVM, allowDuplicate: false)
+                foodItemVM.cdFoodItem = relatedFoodItem
+            }
+            
+            // Check FoodItems in DB - it should be 5 (the 5 ingredients)
+            #expect(FoodItem.fetchAll().count == 5)
+            
+            // Save the ComposedFoodItem
+            try #require(composedFoodItemVM.save(isImport: false))
+            
+            // Check and get ComposedFoodItem from DB
+            let allCDComposedFoodItems = ComposedFoodItem.fetchAll()
+            try #require(allCDComposedFoodItems.count == 1)
+            let cdComposedFoodItem = allCDComposedFoodItems.first!
+            let cdFoodItem = cdComposedFoodItem.foodItem
+            #expect(cdFoodItem != nil)
+            
+            // Check and get FoodItem from DB - now it should be 6, as one for the ComposedFoodItem has been created
+            let allCDFoodItems = FoodItem.fetchAll()
+            try #require(allCDFoodItems.count == 6)
+            
+            // Check for correct reference
+            #expect(cdComposedFoodItem.foodItem == cdFoodItem!)
+            
+            // Check for identical IDs
+            #expect(cdComposedFoodItem.id == cdFoodItem!.id)
+            
+            // Check and get associated Ingredients from DB
+            let allIngredients = cdComposedFoodItem.ingredients
+            #expect(allIngredients.count == 5)
+            for case let ingredient as Ingredient in allIngredients {
+                #expect(ingredient.composedFoodItem == cdComposedFoodItem)
+                #expect(ingredient.foodItem != nil)
+                try assessIngredientValues(ingredient: ingredient)
+            }
+            
+            // Delete ComposedFoodItem (and with it Ingredients)
+            ComposedFoodItem.delete(cdComposedFoodItem)
+            #expect(ComposedFoodItem.fetchAll().count == 0)
+            #expect(Ingredient.fetchAll().count == 0)
+            
+            // Delete FoodItem - 5 FoodItems for Ingredients should remain
+            FoodItem.delete(cdFoodItem!)
+            #expect(FoodItem.fetchAll().count == 5)
+            
+            // Delete the remaining FoodItems
+            FoodItem.deleteAll()
+            #expect(FoodItem.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
+        }
+        
+        @Test("ID: 14 - Update ComposedFoodItem - related FoodItem")
+        func updateComposedFoodItemRelatedFoodItem() throws {
+            // Get the VM and and save as Core Data ComposedFoodItem
+            let composedFoodItemVM = DataFactory.shared.tests56CreateComposedFoodItem3() // Pizzateig with 5 Ingredients
+            try #require(composedFoodItemVM.save(isImport: true))
+            try #require(composedFoodItemVM.foodItemVMs.count == 5)
+            
+            // Modify the composedFoodItemVM - we remove 2 and add 1 ingredient, so we have 4 in total
+            let nameAppendix = " - Updated"
+            composedFoodItemVM.name += nameAppendix
+            composedFoodItemVM.numberOfPortions = composedFoodItemVM.numberOfPortions * 2
+            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[4])
+            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[0])
+            let newIngredient = DataFactory.shared.foodItem3
+            newIngredient.cdFoodItem = FoodItem.create(from: newIngredient, allowDuplicate: false)
+            newIngredient.amount = 220
+            composedFoodItemVM.add(foodItem: newIngredient)
+            
+            // Run the Core Data update
+            #expect(composedFoodItemVM.update())
+            
+            // Check and get ComposedFoodItem from DB
+            let allCDComposedFoodItems = ComposedFoodItem.fetchAll()
+            try #require(allCDComposedFoodItems.count == 1)
+            let cdComposedFoodItem = allCDComposedFoodItems.first!
+            let cdFoodItem = cdComposedFoodItem.foodItem
+            #expect(cdFoodItem != nil)
+            
+            // Check and get FoodItem from DB - 6 for the ingredients (5 initial ones plus one new one),
+            // 1 for the ComposedFoodItem, so 7 in total
+            let allCDFoodItems = FoodItem.fetchAll()
+            try #require(allCDFoodItems.count == 7)
+            
+            // Check for correct reference
+            #expect(cdComposedFoodItem.foodItem == cdFoodItem!)
+            
+            // Check for identical IDs
+            #expect(cdComposedFoodItem.id == cdFoodItem!.id)
+            
+            // Check and get associated Ingredients from DB
+            let allIngredients = cdComposedFoodItem.ingredients
+            #expect(allIngredients.count == 4)
+            for case let ingredient as Ingredient in allIngredients {
+                #expect(ingredient.composedFoodItem == cdComposedFoodItem)
+                #expect(ingredient.foodItem != nil)
+                try CoreDataTests.assessIngredientValues(ingredient: ingredient)
+            }
+            
+            // Delete ComposedFoodItem (and with it Ingredients)
+            ComposedFoodItem.delete(cdComposedFoodItem)
+            #expect(ComposedFoodItem.fetchAll().count == 0)
+            #expect(Ingredient.fetchAll().count == 0)
+            
+            // Delete FoodItem - 6 FoodItems for Ingredients should remain
+            FoodItem.delete(cdFoodItem!)
+            #expect(FoodItem.fetchAll().count == 6)
+            
+            // Delete the remaining FoodItems
+            FoodItem.deleteAll()
+            #expect(FoodItem.fetchAll().count == 0)
+            
+            // Reset DB
+            CoreDataTests.resetDB()
         }
     }
+    
+    
         
     /*
     @Test("ID: 8 - Update FoodItem - associated Ingredients - no TypicalAmounts to be deleted")
@@ -426,5 +587,12 @@ struct CoreDataTests {
     private static func assessTypicalAmountValues(typicalAmountVM: TypicalAmountViewModel, typicalAmount: TypicalAmount) {
         #expect(typicalAmount.amount == typicalAmountVM.amount)
         #expect(typicalAmount.comment == typicalAmountVM.comment)
+    }
+    
+    private static func resetDB() {
+        FoodItem.deleteAll()
+        ComposedFoodItem.deleteAll()
+        Ingredient.deleteAll()
+        TypicalAmount.deleteAll()
     }
 }

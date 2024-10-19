@@ -23,15 +23,15 @@ struct FoodItemView: View {
             // First line: amount, name, favorite
             HStack {
                 if listType == .selection {
-                    if let foodItemIndex = composedFoodItemVM.foodItems.firstIndex(of: foodItemVM) {
+                    if let foodItemIndex = composedFoodItemVM.foodItemVMs.firstIndex(of: foodItemVM) {
                         Image(systemName: "xmark.circle").foregroundStyle(.red)
-                        Text("\(composedFoodItemVM.foodItems[foodItemIndex].amount)").font(.headline).foregroundStyle(.blue)
+                        Text("\(composedFoodItemVM.foodItemVMs[foodItemIndex].amount)").font(.headline).foregroundStyle(.blue)
                         Text("g").font(.headline).foregroundStyle(.blue)
                     } else {
                         Image(systemName: "plus.circle").foregroundStyle(.gray)
                     }
                 }
-                Text(foodItemVM.name).font(.headline).foregroundStyle(listType == .selection && composedFoodItemVM.foodItems.contains(foodItemVM) ? .blue : .primary)
+                Text(foodItemVM.name).font(.headline).foregroundStyle(listType == .selection && composedFoodItemVM.foodItemVMs.contains(foodItemVM) ? .blue : .primary)
                 if foodItemVM.hasAssociatedRecipe() {
                     Image(systemName: "frying.pan.fill").foregroundStyle(.gray).imageScale(.small)
                 }
@@ -69,7 +69,7 @@ struct FoodItemView: View {
         .onTapGesture {
             withAnimation(.default) {
                 if listType == .selection {
-                    if composedFoodItemVM.foodItems.contains(foodItemVM) {
+                    if composedFoodItemVM.foodItemVMs.contains(foodItemVM) {
                         composedFoodItemVM.remove(foodItem: foodItemVM)
                     } else {
                         activeSheet = .selectFoodItem

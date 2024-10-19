@@ -107,6 +107,8 @@ public class ComposedFoodItem: NSManagedObject {
             for ingredient in cdComposedFoodItem.ingredients {
                 if let ingredientToBeDeleted = ingredient as? NSManagedObject {
                     CoreDataStack.viewContext.delete(ingredientToBeDeleted)
+                    CoreDataStack.shared.save()
+                    
                 }
             }
             
@@ -118,6 +120,7 @@ public class ComposedFoodItem: NSManagedObject {
                 for typicalAmount in existingTypicalAmounts {
                     if let typicalAmountToBeDeleted = typicalAmount as? NSManagedObject {
                         CoreDataStack.viewContext.delete(typicalAmountToBeDeleted)
+                        CoreDataStack.shared.save()
                     }
                 }
             }
@@ -129,8 +132,8 @@ public class ComposedFoodItem: NSManagedObject {
                 }
             }
             
-            // Save updated composed food item
-            try? CoreDataStack.viewContext.save()
+            // Save
+            CoreDataStack.shared.save()
             
             return cdComposedFoodItem
         } else {

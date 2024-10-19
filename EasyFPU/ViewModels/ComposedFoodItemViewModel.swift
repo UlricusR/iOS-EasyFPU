@@ -15,7 +15,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     @Published var favorite: Bool
     @Published var amount: Int = 0
     @Published var numberOfPortions: Int = 0
-    @Published var foodItems = [FoodItemViewModel]()
+    @Published var foodItemVMs = [FoodItemViewModel]()
     
     var cdComposedFoodItem: ComposedFoodItem?
     
@@ -34,7 +34,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     
     var calories: Double {
         var newValue = 0.0
-        for foodItem in foodItems {
+        for foodItem in foodItemVMs {
             newValue += foodItem.getCalories()
         }
         return newValue
@@ -42,7 +42,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     
     private var carbs: Double {
         var newValue = 0.0
-        for foodItem in foodItems {
+        for foodItem in foodItemVMs {
             newValue += foodItem.getCarbsInclSugars()
         }
         return newValue
@@ -50,7 +50,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     
     private var sugars: Double {
         var newValue = 0.0
-        for foodItem in foodItems {
+        for foodItem in foodItemVMs {
             newValue += foodItem.getSugarsOnly()
         }
         return newValue
@@ -58,7 +58,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     
     var fpus: FPU {
         var fpu = FPU(fpu: 0.0)
-        for foodItem in foodItems {
+        for foodItem in foodItemVMs {
             let tempFPU = fpu.fpu
             fpu = FPU(fpu: tempFPU + foodItem.getFPU().fpu)
         }
@@ -131,7 +131,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
             foodItemVM.amount = amount
             
             // Add FoodItemVM to ComposedFoodItemVM
-            foodItems.append(foodItemVM)
+            foodItemVMs.append(foodItemVM)
         }
     }
     
@@ -150,7 +150,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         let ingredients = try composedFoodItem.decode([FoodItemViewModel].self, forKey: .ingredients)
         for ingredient in ingredients {
             // Create the ingredients as FoodItemViewModels
-            foodItems.append(FoodItemViewModel(
+            foodItemVMs.append(FoodItemViewModel(
                 id: ingredient.id,
                 name: ingredient.name,
                 category: .ingredient,
@@ -184,13 +184,17 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     /// Saves the ComposedFoodItemViewModel as Core Data ComposedFoodItem.
     /// - Returns: False if no ingredients could be found in the ComposedFoodItemViewModel, otherwise true.
     func save(isImport: Bool = false) -> Bool {
-        ComposedFoodItem.create(from: self, isImport) != nil
+        guard let cdComposedFoodItem = ComposedFoodItem.create(from: self, isImport) else { return false }
+        self.cdComposedFoodItem = cdComposedFoodItem
+        return true
     }
     
     /// Updates the related Core Data ComposedFoodItem with the values of this ComposedFoodItemViewModel.
     /// - Returns: False if no related Core Data ComposedFoodItem was found (shouldn't happen).
     func update() -> Bool {
-        ComposedFoodItem.update(self) != nil
+        guard let cdComposedFoodItem = ComposedFoodItem.update(self) else { return false }
+        self.cdComposedFoodItem = cdComposedFoodItem
+        return true
     }
     
     /// Deletes the Core Data ComposedFoodItem if available.
@@ -201,29 +205,31 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         if includeAssociatedFoodItem {
             if let associatedFoodItem = cdComposedFoodItem.foodItem {
                 FoodItem.delete(associatedFoodItem)
+                CoreDataStack.shared.save()
             }
         }
         
         ComposedFoodItem.delete(cdComposedFoodItem)
+        CoreDataStack.shared.save()
     }
     
     func add(foodItem: FoodItemViewModel) {
-        if !foodItems.contains(foodItem) {
-            foodItems.append(foodItem)
+        if !foodItemVMs.contains(foodItem) {
+            foodItemVMs.append(foodItem)
             amountAsString = String(amount + foodItem.amount) // amount will be set implicitely
         }
     }
     
     func remove(foodItem: FoodItemViewModel) {
-        if let index = foodItems.firstIndex(of: foodItem) {
+        if let index = foodItemVMs.firstIndex(of: foodItem) {
             // Substract amount of FoodItem removed
-            let oldFoodItemAmount = foodItems[index].amount
+            let oldFoodItemAmount = foodItemVMs[index].amount
             let newComposedFoodItemAmount = amount - oldFoodItemAmount
             amountAsString = String(newComposedFoodItemAmount)
             
             // Remove FoodItem
-            foodItems[index].amountAsString = "0"
-            foodItems.remove(at: index)
+            foodItemVMs[index].amountAsString = "0"
+            foodItemVMs.remove(at: index)
         }
     }
     
@@ -272,10 +278,10 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
      Clears all ingredients and sets the amount to 0.
      */
     func clearIngredients() {
-        for foodItem in foodItems {
+        for foodItem in foodItemVMs {
             foodItem.amountAsString = "0"
         }
-        foodItems.removeAll()
+        foodItemVMs.removeAll()
         amount = 0
     }
     
@@ -303,6 +309,6 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         try composedFoodItem.encode(favorite, forKey: .favorite)
         try composedFoodItem.encode(amount, forKey: .amount)
         try composedFoodItem.encode(numberOfPortions, forKey: .numberOfPortions)
-        try composedFoodItem.encode(foodItems, forKey: .ingredients)
+        try composedFoodItem.encode(foodItemVMs, forKey: .ingredients)
     }
 }

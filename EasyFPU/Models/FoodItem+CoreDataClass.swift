@@ -31,7 +31,7 @@ public class FoodItem: NSManagedObject {
     }
     
     /**
-     Creates a new Core Data FoodItem.
+     Creates a new Core Data FoodItem. Does not relate it to the passed FoodItemViewModel.
      
      - Parameters:
         - foodItedVM: the source FoodItemViewModel.
@@ -154,6 +154,7 @@ public class FoodItem: NSManagedObject {
             if typicalAmountToBeDeleted.cdTypicalAmount != nil {
                 cdFoodItem.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
                 CoreDataStack.viewContext.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
+                CoreDataStack.shared.save()
             }
         }
         

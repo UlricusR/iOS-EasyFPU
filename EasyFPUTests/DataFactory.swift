@@ -34,13 +34,13 @@ struct DataFactory {
     var test710TypicalAmount3: TypicalAmountViewModel
     var test710TypicalAmount4: TypicalAmountViewModel
     
-    // Test 12
+    // Test 14
     var foodItemForComposedFoodItem1: FoodItemViewModel
     var composedFoodItem1: ComposedFoodItemViewModel
     var ingredient2forFoodItem2: FoodItemViewModel
+    var foodItem3: FoodItemViewModel
     
     // Unused
-    var foodItem3: FoodItemViewModel
     var ingredient1noReference: FoodItemViewModel
     var ingredient3forFoodItem3: FoodItemViewModel
     var ingredient4forFoodItem3: FoodItemViewModel
@@ -219,7 +219,7 @@ struct DataFactory {
             "comment": "Comment 4"
         ])
         
-        // Tests xxxx (FoodItem.update with related Ingredients)
+        // Tests 14 (ComposedFoodItem.update with related Ingredients)
         
         try foodItemForComposedFoodItem1 = DataFactory.createFoodItemVM(foodItem: [
             "name": "Marmorkuchen mit Schokoglasur",
@@ -253,7 +253,6 @@ struct DataFactory {
         ])
         
         
-        // Unused
         try foodItem3 = DataFactory.createFoodItemVM(foodItem: [
             "name": "Eier (GutBio)",
             "caloriesPer100g": "152.4",
@@ -265,6 +264,7 @@ struct DataFactory {
             "amount": "0"
         ])
         
+        // Unused
         try ingredient1noReference = DataFactory.createFoodItemVM(foodItem: [ // For composedFoodItem1, should create a new FoodItem, as unknown
             "amount": "123",
             "name": "Andere Kalorien", // unknown name
@@ -310,11 +310,11 @@ struct DataFactory {
     
     // Tests 5-6
     func tests56CreateComposedFoodItem3() -> ComposedFoodItemViewModel {
-        tests56ComposedFoodItem3.foodItems.append(tests56Ingredient1forComposedFoodItem3)
-        tests56ComposedFoodItem3.foodItems.append(tests56Ingredient2forComposedFoodItem3)
-        tests56ComposedFoodItem3.foodItems.append(tests56Ingredient3forComposedFoodItem3)
-        tests56ComposedFoodItem3.foodItems.append(tests56Ingredient4forComposedFoodItem3)
-        tests56ComposedFoodItem3.foodItems.append(tests56Ingredient5forComposedFoodItem3)
+        tests56ComposedFoodItem3.foodItemVMs.append(tests56Ingredient1forComposedFoodItem3)
+        tests56ComposedFoodItem3.foodItemVMs.append(tests56Ingredient2forComposedFoodItem3)
+        tests56ComposedFoodItem3.foodItemVMs.append(tests56Ingredient3forComposedFoodItem3)
+        tests56ComposedFoodItem3.foodItemVMs.append(tests56Ingredient4forComposedFoodItem3)
+        tests56ComposedFoodItem3.foodItemVMs.append(tests56Ingredient5forComposedFoodItem3)
         return tests56ComposedFoodItem3
     }
     
@@ -330,7 +330,7 @@ struct DataFactory {
     
     // Tests xxxx
     func createComposedFoodItem1() -> ComposedFoodItemViewModel {
-        composedFoodItem1.foodItems.append(ingredient2forFoodItem2)
+        composedFoodItem1.foodItemVMs.append(ingredient2forFoodItem2)
         return composedFoodItem1
     }
     

@@ -84,7 +84,7 @@ struct ComposedFoodItemDetailsView: View {
                 
                 List {
                     // Food items
-                    ForEach(composedFoodItem.foodItems, id: \.self) { foodItem in
+                    ForEach(composedFoodItem.foodItemVMs, id: \.self) { foodItem in
                         ComposedFoodItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundStyleName: Color.accentColor)
                     }
                 }
