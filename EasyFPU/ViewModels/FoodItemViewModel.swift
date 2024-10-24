@@ -323,7 +323,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this FoodItemViewModel exists.
     /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
     func nameExists() -> Bool {
-        ComposedFoodItem.getComposedFoodItemByName(name: self.name) != nil || FoodItem.getFoodItemByName(name: self.name) != nil
+        ComposedFoodItem.getComposedFoodItemByName(name: self.name) != nil || FoodItem.getFoodItemsByName(name: self.name) != nil
     }
     
     /**

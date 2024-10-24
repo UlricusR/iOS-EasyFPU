@@ -16,13 +16,18 @@ final class CoreDataStack {
     
     // Create a persistent container as a lazy variable to defer instantiation until its first use.
     lazy var persistentContainer: NSPersistentContainer = {
-        let description = NSPersistentStoreDescription()
-        description.type = storeType
+        var container: NSPersistentContainer
         
-        // Pass the data model filename to the container’s initializer.
-        let container = NSPersistentCloudKitContainer(name: CoreDataStack.dataStoreName)
         if storeType == NSInMemoryStoreType {
+            let description = NSPersistentStoreDescription()
+            description.type = storeType
+            
+            // Create an in-memory store
+            container = NSPersistentContainer(name: CoreDataStack.dataStoreName)
             container.persistentStoreDescriptions = [description]
+        } else {
+            // Create an SQLite store
+            container = NSPersistentCloudKitContainer(name: CoreDataStack.dataStoreName)
         }
         
         // Load any persistent stores, which creates a store if none exists.

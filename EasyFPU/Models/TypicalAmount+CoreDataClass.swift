@@ -69,4 +69,26 @@ public class TypicalAmount: NSManagedObject {
         
         return typicalAmount
     }
+    
+    /**
+     Returns the Core Data TypicalAmount with the given id.
+     
+     - Parameter id: The Core Data entry id.
+     
+     - Returns: The related Core Data TypicalAmount, nil if not found.
+     */
+    static func getTypicalAmountByID(id: UUID) -> TypicalAmount? {
+        let predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        let request: NSFetchRequest<TypicalAmount> = TypicalAmount.fetchRequest()
+        request.predicate = predicate
+        do {
+            let result = try CoreDataStack.viewContext.fetch(request)
+            if !result.isEmpty {
+                return result[0]
+            }
+        } catch {
+            debugPrint("Error fetching typical amount: \(error)")
+        }
+        return nil
+    }
 }

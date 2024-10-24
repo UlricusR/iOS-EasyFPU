@@ -161,4 +161,26 @@ public class Ingredient: NSManagedObject {
         
         return ingredient
     }
+    
+    /**
+     Returns the Core Data Ingredient with the given id.
+     
+     - Parameter id: The Core Data entry id.
+     
+     - Returns: The related Core Data Ingredient, nil if not found.
+     */
+    static func getIngredientByID(id: UUID) -> Ingredient? {
+        let predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        let request: NSFetchRequest<Ingredient> = Ingredient.fetchRequest()
+        request.predicate = predicate
+        do {
+            let result = try CoreDataStack.viewContext.fetch(request)
+            if !result.isEmpty {
+                return result[0]
+            }
+        } catch {
+            debugPrint("Error fetching ingredient: \(error)")
+        }
+        return nil
+    }
 }

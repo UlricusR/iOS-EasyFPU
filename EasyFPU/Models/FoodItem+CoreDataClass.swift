@@ -269,14 +269,14 @@ public class FoodItem: NSManagedObject {
      
      - Returns: The related Core Data FoodItem, nil if not found.
      */
-    static func getFoodItemByName(name: String) -> FoodItem? {
+    static func getFoodItemsByName(name: String) -> [FoodItem]? {
         let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.predicate = predicate
         do {
             let result = try CoreDataStack.viewContext.fetch(request)
             if !result.isEmpty {
-                return result[0]
+                return result
             }
         } catch {
             debugPrint("Error fetching food item: \(error)")

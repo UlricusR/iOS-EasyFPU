@@ -10,164 +10,139 @@ import Testing
 import CoreData
 @testable import EasyFPU
 
+@Suite("Core Data Tests")
 struct CoreDataTests {
+    
+    @Suite("FoodItem behavior")
     struct FoodItemBehavior {
         
         @Test("ID: 1/2 - Create FoodItem - no FoodItem", arguments: [false, true])
         func createFoodItemDuplicateFalseNoFoodItem(allowDuplicate: Bool) throws {
-            // Save a new FoodItem to the DB
-            let foodItemVM = DataFactory.shared.tests14FoodItem1
+            // Create new FoodItem in DB
+            let foodItemVM = try DataFactory.shared.createFoodItemVM()
             foodItemVM.save(allowDuplicate: allowDuplicate)
             
-            // Check results in DB
-            #expect(FoodItem.fetchAll().count == 1)
-            
-            // Check for identical IDs
+            // Check if FoodItem was created in DB
             let foodItem = FoodItem.getFoodItemByID(id: foodItemVM.id)
-            try #require(foodItem != nil)
-            #expect(foodItem!.id == foodItemVM.id)
+            try #require(foodItem != nil, "The saved FoodItem should be found in the DB by its ID.")
             assessFoodItemValues(foodItemVM: foodItemVM, foodItem: foodItem!)
             
             // Remove FoodItem from DB
-            FoodItem.delete(foodItem!)
-            try #require(FoodItem.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            try CoreDataTests.deleteFoodItemFromDB(foodItem!)
         }
         
         @Test("ID: 3 - Create FoodItem - allowDuplicate=false - existing identical FoodItem")
         func createFoodItemDuplicateFalseIdenticalFoodItem() throws {
-            // Save a new FoodItem to the DB
-            let foodItemVM = DataFactory.shared.tests14FoodItem1
-            foodItemVM.save(allowDuplicate: false)
+            // Create new FoodItem in DB
+            let foodItemVM = try DataFactory.shared.createFoodItemVM()
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false, allowDuplicate: false)
             
-            // Check results in DB
-            #expect(FoodItem.fetchAll().count == 1)
-            
-            // Add duplicate with same ID
-            let duplicateFoodItemVM = DataFactory.shared.tests14FoodItem1duplicate
+            // Add duplicate with same ID, but don't allow duplicates
+            let duplicateFoodItemVM = try DataFactory.shared.createFoodItemVM(id: foodItemVM.id)
             duplicateFoodItemVM.save(allowDuplicate: false)
             
-            // Check results in DB - we still expect 1
-            let allFoodItems = FoodItem.fetchAll()
-            #expect(allFoodItems.count == 1)
+            // Check for all FoodItems with this name - we still only expect one
+            let foodItems = FoodItem.getFoodItemsByName(name: foodItemVM.name)
+            try #require(foodItems != nil, "The FoodItem should be found in the DB by its name.")
+            #expect(foodItems!.count == 1, "Only one FoodItem should be found by the given name.")
             
             // Check for identical IDs
-            let foodItem = FoodItem.getFoodItemByName(name: foodItemVM.name)
-            try #require(foodItem != nil)
-            #expect(foodItem!.id == foodItemVM.id)
-            assessFoodItemValues(foodItemVM: foodItemVM, foodItem: foodItem!)
+            #expect(cdFoodItem.id == foodItemVM.id, "The IDs of the FoodItem and the FoodItemVM should be identical.")
+            assessFoodItemValues(foodItemVM: foodItemVM, foodItem: cdFoodItem)
             
             // Remove FoodItem from DB
-            FoodItem.deleteAll()
-            try #require(FoodItem.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
         }
         
         @Test("ID: 4 - Create FoodItem - allowDuplicate=true - existing identical FoodItem")
         func createFoodItemDuplicateTrueIdenticalFoodItem() throws {
-            // Save a new FoodItem to the DB
-            let foodItemVM = DataFactory.shared.tests14FoodItem1
-            foodItemVM.save(allowDuplicate: false)
-            
-            // Check results in DB
-            #expect(FoodItem.fetchAll().count == 1)
+            // Create a new FoodItem in the DB
+            let foodItemVM = try DataFactory.shared.createFoodItemVM()
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false, allowDuplicate: false)
             
             // Add duplicate with same ID
-            let duplicateFoodItemVM = DataFactory.shared.tests14FoodItem1duplicate
+            let duplicateFoodItemVM = try DataFactory.shared.createFoodItemVM(id: foodItemVM.id)
             duplicateFoodItemVM.save(allowDuplicate: true)
             
-            // Check results in DB - we expect 2
-            #expect(FoodItem.fetchAll().count == 2)
+            // Check if duplicated FoodItem was created in DB
+            let bothFoodItems = FoodItem.getFoodItemsByName(name: duplicateFoodItemVM.name)
+            try #require(bothFoodItems != nil, "There need to be FoodItems with the given name in the DB.")
+            try #require(bothFoodItems!.count == 2, "There need to be two FoodItems with the given name in the DB.")
             
             // Check for different IDs
-            let foodItems = FoodItem.fetchAll()
-            #expect(foodItems[0].id != foodItems[1].id)
+            let foodItem1ID = bothFoodItems![0].id
+            let foodItem2ID = bothFoodItems![1].id
+            #expect(foodItem1ID != foodItem2ID)
             
             // Assess values
-            assessFoodItemValues(foodItemVM: foodItemVM, foodItem: foodItems[0])
-            assessFoodItemValues(foodItemVM: duplicateFoodItemVM, foodItem: foodItems[1])
+            assessFoodItemValues(foodItemVM: foodItemVM, foodItem: bothFoodItems![0])
+            assessFoodItemValues(foodItemVM: duplicateFoodItemVM, foodItem: bothFoodItems![1])
             
-            // Remove FoodItem from DB
-            FoodItem.deleteAll()
-            try #require(FoodItem.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            // Remove FoodItems from DB
+            try CoreDataTests.deleteFoodItemFromDB(bothFoodItems![0])
+            try CoreDataTests.deleteFoodItemFromDB(bothFoodItems![1])
         }
         
         @Test("ID: 5 - Create FoodItem from ComposedFoodItemVM - no existing related FoodItem")
         func createFoodItemFromComposedFoodItemVMNoExistingRelatedFoodItem() throws {
             // Get ComposedFoodItemViewModel and create the related FoodItem
-            let composedFoodItemVM = DataFactory.shared.tests56CreateComposedFoodItem3()
+            let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel()
             let relatedFoodItem = FoodItem.create(from: composedFoodItemVM)
+            let foodItemID = relatedFoodItem.id
             
-            // Check for correct ID
-            #expect(relatedFoodItem.id == composedFoodItemVM.id)
+            // Check if FoodItem was created in DB
+            let cdFoodItem = FoodItem.getFoodItemByID(id: composedFoodItemVM.id)
+            try #require(cdFoodItem != nil, "The saved FoodItem should be found in the DB by its ID.")
+            #expect(relatedFoodItem == cdFoodItem, "The FoodItems should be identical.")
             
             // Check for typical amounts, 8 are expected, relating to the relatedFoodItem
-            let typicalAmounts = TypicalAmount.fetchAll()
-            #expect(typicalAmounts.count == 8)
-            for typicalAmount in typicalAmounts {
-                #expect(typicalAmount.foodItem == relatedFoodItem)
-            }
+            let typicalAmounts = relatedFoodItem.typicalAmounts.array(of: TypicalAmount.self)
+            #expect(typicalAmounts.count == 8, "8 TypicalAmounts should have been created.")
             
-            // Delete FoodItem and (cascading) TypicalAmounts
-            FoodItem.delete(relatedFoodItem)
-            #expect(FoodItem.fetchAll().count == 0)
-            #expect(TypicalAmount.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            // Delete FoodItem
+            try CoreDataTests.deleteFoodItemFromDB(cdFoodItem!)
         }
         
         @Test("ID: 6 - Create FoodItem from ComposedFoodItemVM - existing related FoodItem")
         func createFoodItemFromComposedFoodItemVMExistingRelatedFoodItem() throws {
+            // Get the ComposedFoodItemViewModel
+            let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel()
+            
+            // Create a corresponding FoodItemViewModel
+            let existingFoodItemVM = try DataFactory.shared.createFoodItemViewModel(for: composedFoodItemVM)
+            
             // Save related FoodItem
-            let relatedFoodItemVM = DataFactory.shared.tests56FoodItemForComposedFoodItem3
-            relatedFoodItemVM.save(allowDuplicate: false)
+            existingFoodItemVM.save(allowDuplicate: false)
             
-            // Check if FoodItem exists with correct ID
-            let existingFoodItem = FoodItem.getFoodItemByID(id: relatedFoodItemVM.id)
-            try #require(existingFoodItem != nil)
+            // Check if FoodItem exists with identical ID as ComposedFoodItemViewModel
+            let existingCDFoodItem = FoodItem.getFoodItemByID(id: composedFoodItemVM.id)
+            try #require(existingCDFoodItem != nil)
             
-            // Get ComposedFoodItemViewModel and create the related FoodItem, which must be the existingFoodItem
-            let composedFoodItemVM = DataFactory.shared.tests56CreateComposedFoodItem3()
-            let relatedFoodItem = FoodItem.create(from: composedFoodItemVM)
-            #expect(relatedFoodItem == existingFoodItem)
+            // Create the related FoodItem, which must be the existingFoodItem
+            let relatedCDFoodItem = FoodItem.create(from: composedFoodItemVM)
+            #expect(relatedCDFoodItem == existingCDFoodItem, "The related FoodItem must be identical to the existing FoodItem")
             
             // Check for correct ID
-            #expect(relatedFoodItem.id == composedFoodItemVM.id)
+            #expect(relatedCDFoodItem.id == composedFoodItemVM.id)
             
             // Check for typical amounts, 8 are expected, relating to the relatedFoodItem
-            let typicalAmounts = TypicalAmount.fetchAll()
+            let typicalAmounts = relatedCDFoodItem.typicalAmounts.array(of: TypicalAmount.self)
             #expect(typicalAmounts.count == 8)
             for typicalAmount in typicalAmounts {
                 try #require(typicalAmount.foodItem != nil)
-                #expect(typicalAmount.foodItem == relatedFoodItem)
+                #expect(typicalAmount.foodItem == relatedCDFoodItem)
             }
             
-            // Delete FoodItem and (cascading) TypicalAmounts
-            FoodItem.delete(relatedFoodItem)
-            #expect(FoodItem.fetchAll().count == 0)
-            #expect(TypicalAmount.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            // Delete FoodItem
+            try CoreDataTests.deleteFoodItemFromDB(relatedCDFoodItem)
         }
         
         @Test("ID: 7 - Update FoodItem - no associated Ingredients - no TypicalAmounts to be deleted")
         func updateFoodItemNoAssociatedIngredientsNoTypicalAmountsToBeDeleted() throws {
-            let foodItemVM = DataFactory.shared.test710FoodItem
-            foodItemVM.save(allowDuplicate: false)
-            
-            // Check results in DB and get the FoodItem
-            let allCDFoodItems = FoodItem.fetchAll()
-            try #require(allCDFoodItems.count == 1)
-            let cdFoodItem = allCDFoodItems.first!
+            // Create new FoodItem in DB
+            let foodItemVM = try DataFactory.shared.createFoodItemVM()
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false, allowDuplicate: false)
+            let foodItemID = cdFoodItem.id
             
             // Modify the foodItemVM
             let nameAppendix = " - Updated"
@@ -180,35 +155,29 @@ struct CoreDataTests {
             FoodItem.update(cdFoodItem, with: foodItemVM, [])
             
             // Check results in DB and get the FoodItem
-            let allCDFoodItemsAfterUpdate = FoodItem.fetchAll()
-            try #require(allCDFoodItemsAfterUpdate.count == 1)
-            let cdFoodItemAfterUpdate = allCDFoodItemsAfterUpdate.first!
+            let cdFoodItemAfterUpdate = FoodItem.getFoodItemByID(id: foodItemID)
+            try #require(cdFoodItemAfterUpdate != nil, "The updated FoodItem should be found in the DB by the same ID as before.")
+            
+            // Both FoodItems should be identical objects
+            #expect(cdFoodItem == cdFoodItemAfterUpdate!)
             
             // Compare values
-            assessFoodItemValues(foodItemVM: foodItemVM, foodItem: cdFoodItemAfterUpdate)
+            assessFoodItemValues(foodItemVM: foodItemVM, foodItem: cdFoodItemAfterUpdate!)
             
             // Delete FoodItem and (cascading) TypicalAmounts
-            FoodItem.delete(cdFoodItemAfterUpdate)
-            #expect(FoodItem.fetchAll().count == 0)
-            #expect(TypicalAmount.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
         }
         
         @Test("ID: 8 - Update FoodItem - no associated Ingredients - TypicalAmounts to be deleted")
         func updateFoodItemNoAssociatedIngredientsTypicalAmountsToBeDeleted() throws {
-            // Get and save a FoodItem with TypicalAmounts
-            let foodItemVM = DataFactory.shared.tests78CreateFoodItemWithTypicalAmounts()
-            foodItemVM.save(allowDuplicate: false)
-            
-            // Check FoodItem results in DB and get the FoodItem
-            let allCDFoodItems = FoodItem.fetchAll()
-            try #require(allCDFoodItems.count == 1)
-            let cdFoodItem = allCDFoodItems.first!
+            // Create new FoodItem with TypicalAmounts in DB
+            let foodItemVM = try DataFactory.shared.createFoodItemVM()
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: true, allowDuplicate: false)
+            let foodItemID = cdFoodItem.id
             
             // Check TypicalAmount results in DB
-            try #require(TypicalAmount.fetchAll().count == 4)
+            try #require(cdFoodItem.typicalAmounts != nil, "There should be TypicalAmounts associated with the FoodItem.")
+            #expect(cdFoodItem.typicalAmounts!.count == 4, "There should be 4 TypicalAmounts associated with the FoodItem.")
             
             // Create the FoodItemViewModel from the Core Data FoodItem (including the TypicalAmounts)
             let newFoodItemVM = FoodItemViewModel(from: cdFoodItem)
@@ -231,58 +200,53 @@ struct CoreDataTests {
             FoodItem.update(cdFoodItem, with: newFoodItemVM, typicalAmountsToBeDeleted)
             
             // Check results in DB and get the FoodItem
-            let allCDFoodItemsAfterUpdate = FoodItem.fetchAll()
-            try #require(allCDFoodItemsAfterUpdate.count == 1)
-            let cdFoodItemAfterUpdate = allCDFoodItemsAfterUpdate.first!
+            let cdFoodItemAfterUpdate = FoodItem.getFoodItemByID(id: foodItemVM.id)
+            try #require(cdFoodItemAfterUpdate != nil, "The updated FoodItem should be found in the DB by the same ID as before.")
+            
+            // Both FoodItems should be identical objects
+            #expect(cdFoodItem == cdFoodItemAfterUpdate!)
             
             // Compare values
-            assessFoodItemValues(foodItemVM: newFoodItemVM, foodItem: cdFoodItemAfterUpdate)
+            assessFoodItemValues(foodItemVM: newFoodItemVM, foodItem: cdFoodItemAfterUpdate!)
             
             // Check that there are only TypicalAmount 1 and 3 left
-            let remainingTypicalAmounts = cdFoodItemAfterUpdate.typicalAmounts
+            let remainingTypicalAmounts = cdFoodItemAfterUpdate!.typicalAmounts
             try #require(remainingTypicalAmounts != nil)
             try #require(remainingTypicalAmounts!.count == 2)
             
-            // Check that the values are those of the initial TypicalAmount 1 and 3
+            // TODO: Check that the values are those of the initial TypicalAmount 1 and 3
             let remainingTypicalAmountsArray = remainingTypicalAmounts!.sorted {
                 ($0 as! TypicalAmount).amount < ($1 as! TypicalAmount).amount
             }
             
-            assessTypicalAmountValues(typicalAmountVM: DataFactory.shared.test710TypicalAmount1, typicalAmount: remainingTypicalAmountsArray[0] as! TypicalAmount)
-            assessTypicalAmountValues(typicalAmountVM: DataFactory.shared.test710TypicalAmount3, typicalAmount: remainingTypicalAmountsArray[1] as! TypicalAmount)
-            
             // Delete FoodItem and (cascading) TypicalAmounts
-            FoodItem.delete(cdFoodItemAfterUpdate)
-            #expect(FoodItem.fetchAll().count == 0)
-            #expect(TypicalAmount.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
         }
         
         @Test("ID: 9 - Duplicate FoodItem - with TypicalAmounts")
         func duplicateFoodItemWithTypicalAmounts() throws {
-            // Get and save a FoodItem with TypicalAmounts
-            let foodItemVM = DataFactory.shared.tests78CreateFoodItemWithTypicalAmounts()
-            foodItemVM.save(allowDuplicate: false)
+            // Create new FoodItem with TypicalAmounts in DB
+            let foodItemVM = try DataFactory.shared.createFoodItemVM()
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: true, allowDuplicate: false)
+            let foodItemID = cdFoodItem.id
             
-            // Check FoodItem results in DB and get the FoodItem
-            let allCDFoodItems = FoodItem.fetchAll()
-            try #require(allCDFoodItems.count == 1)
-            let cdFoodItem = allCDFoodItems.first!
-            
-            // Check TypicalAmount results in DB
-            try #require(TypicalAmount.fetchAll().count == 4)
+            // Check TypicalAmount results of FoodItem in DB
+            let foodItemTypicalAmounts = cdFoodItem.typicalAmounts.array(of: TypicalAmount.self)
+            #expect(foodItemTypicalAmounts.count == 4, "There should be 4 TypicalAmounts associated with the FoodItem.")
             
             // Duplicate the cdFoodItem
             let duplicatedCDFoodItem = FoodItem.duplicate(cdFoodItem)
             
-            // Check duplicated FoodItem results in DB and get the FoodItem
-            let allCDFoodItemsAfterDuplication = FoodItem.fetchAll()
-            try #require(allCDFoodItemsAfterDuplication.count == 2)
+            // Check results in DB and get the FoodItem
+            let duplicatedCDFoodItemInDB = FoodItem.getFoodItemByID(id: duplicatedCDFoodItem.id)
+            try #require(duplicatedCDFoodItemInDB != nil, "The duplicated FoodItem should be found in the DB by its ID.")
+            #expect(duplicatedCDFoodItem == duplicatedCDFoodItemInDB, "The FoodItems need to be identical.")
+            let duplicatedFoodItemID = duplicatedCDFoodItem.id
+            #expect(foodItemID != duplicatedFoodItemID, "The IDs of the FoodItem and the duplicated FoodItem need to be different.")
             
-            // Check TypicalAmount results in DB - there should be 2x4 now
-            try #require(TypicalAmount.fetchAll().count == 8)
+            // Check TypicalAmount results of duplicated FoodItem in DB
+            let duplicatedFoodItemTypicalAmounts = duplicatedCDFoodItem.typicalAmounts.array(of: TypicalAmount.self)
+            #expect(duplicatedFoodItemTypicalAmounts.count == 4, "There should be 4 TypicalAmounts associated with the duplicated FoodItem.")
             
             // Cross-check sum of all amounts of both FoodItems
             var foodItemTypicalAmountSum = 0
@@ -293,65 +257,44 @@ struct CoreDataTests {
             for typicalAmount in duplicatedCDFoodItem.typicalAmounts!  {
                 duplicatedFoodItemTypicalAmountSum += Int((typicalAmount as! TypicalAmount).amount)
             }
-            #expect(foodItemTypicalAmountSum == duplicatedFoodItemTypicalAmountSum)
+            #expect(foodItemTypicalAmountSum == duplicatedFoodItemTypicalAmountSum, "The sum of amounts of both FoodItems needs to be identical.")
             
             // Check values
             assessFoodItemValues(foodItem1: cdFoodItem, foodItem2: duplicatedCDFoodItem, sameName: false)
             
-            // Delete FoodItems and (cascading) TypicalAmounts
-            FoodItem.delete(cdFoodItem)
-            #expect(FoodItem.fetchAll().count == 0)
-            #expect(TypicalAmount.fetchAll().count == 0)
+            // Delete FoodItem and (cascading) TypicalAmounts
+            try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
             
-            // Reset DB
-            CoreDataTests.resetDB()
+            // Delete duplicated FoodItem and (cascading) TypicalAmounts
+            try CoreDataTests.deleteFoodItemFromDB(duplicatedCDFoodItem)
         }
         
         @Test("ID: 10 - Add TypicalAmount")
         func addTypicalAmount() throws {
-            let foodItemVM = DataFactory.shared.test710FoodItem
-            foodItemVM.save(allowDuplicate: false)
+            // Create new FoodItem in DB
+            let foodItemVM = try DataFactory.shared.createFoodItemVM()
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false, allowDuplicate: false)
             
-            // Check FoodItem results in DB and get the FoodItem
-            let allCDFoodItems = FoodItem.fetchAll()
-            try #require(allCDFoodItems.count == 1)
-            let cdFoodItem = allCDFoodItems.first!
-            
-            // Create (unlinked) typicalAmounts in DB
-            let cdTypicalAmount1 = TypicalAmount.create(from: DataFactory.shared.test710TypicalAmount1)
-            let cdTypicalAmount2 = TypicalAmount.create(from: DataFactory.shared.test710TypicalAmount2)
-            let cdTypicalAmount3 = TypicalAmount.create(from: DataFactory.shared.test710TypicalAmount3)
-            let cdTypicalAmount4 = TypicalAmount.create(from: DataFactory.shared.test710TypicalAmount4)
-            
-            // Add to FoodItem
-            FoodItem.add(cdTypicalAmount1, to: cdFoodItem)
-            FoodItem.add(cdTypicalAmount2, to: cdFoodItem)
-            FoodItem.add(cdTypicalAmount3, to: cdFoodItem)
-            FoodItem.add(cdTypicalAmount4, to: cdFoodItem)
+            // Create (unlinked) typicalAmounts in DB and add them to the FoodItem
+            let typicalAmountVMs = try DataFactory.shared.getTypicalAmounts()
+            for typicalAmountVM in typicalAmountVMs {
+                let cdTypicalAmount = TypicalAmount.create(from: typicalAmountVM)
+                FoodItem.add(cdTypicalAmount, to: cdFoodItem)
+            }
             
             // Check DB for TypicalAmounts
             try #require(cdFoodItem.typicalAmounts != nil)
             #expect(cdFoodItem.typicalAmounts!.count == 4)
-            #expect(TypicalAmount.fetchAll().count == 4)
             
             // Delete FoodItem and (cascading) TypicalAmounts
-            FoodItem.delete(cdFoodItem)
-            #expect(FoodItem.fetchAll().count == 0)
-            #expect(TypicalAmount.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
         }
         
         @Test("ID: 11 - Change category")
         func changeCategory() throws {
-            let foodItemVM = DataFactory.shared.test710FoodItem
-            foodItemVM.save(allowDuplicate: false)
-            
-            // Check FoodItem results in DB and get the FoodItem
-            let allCDFoodItems = FoodItem.fetchAll()
-            try #require(allCDFoodItems.count == 1)
-            let cdFoodItem = allCDFoodItems.first!
+            // Create new FoodItem in DB
+            let foodItemVM = try DataFactory.shared.createFoodItemVM()
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false, allowDuplicate: false)
             
             // Change category to FoodItemCategory.product
             FoodItem.setCategory(cdFoodItem, to: FoodItemCategory.product.rawValue)
@@ -361,167 +304,213 @@ struct CoreDataTests {
             FoodItem.setCategory(cdFoodItem, to: FoodItemCategory.ingredient.rawValue)
             #expect(cdFoodItem.category == FoodItemCategory.ingredient.rawValue)
             
-            // Delete FoodItem
-            FoodItem.delete(cdFoodItem)
-            #expect(FoodItem.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            // Delete FoodItem and (cascading) TypicalAmounts
+            try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
         }
     }
     
+    @Suite("ComposedFoodItem behavior")
     struct ComposedFoodItemBehavior {
         @Test("ID: 12 - Create ComposedFoodItem - import = true")
         func createComposedFoodItemImportTrue() throws {
             // Get the VM and and save as Core Data ComposedFoodItem
-            let composedFoodItemVM = DataFactory.shared.tests56CreateComposedFoodItem3() // Pizzateig with 5 Ingredients
+            let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel() // Pizzateig with 5 Ingredients
             try #require(composedFoodItemVM.save(isImport: true))
             
             // Check and get ComposedFoodItem from DB
-            let allCDComposedFoodItems = ComposedFoodItem.fetchAll()
-            try #require(allCDComposedFoodItems.count == 1)
-            let cdComposedFoodItem = allCDComposedFoodItems.first!
-            let cdFoodItem = cdComposedFoodItem.foodItem
+            let cdComposedFoodItem = ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemVM.id)
+            try #require(cdComposedFoodItem != nil, "The ComposedFoodItem should be found in the DB by the same ID as the ViewModel.")
+            let cdFoodItem = cdComposedFoodItem!.foodItem
             #expect(cdFoodItem != nil)
             
-            // Check and get FoodItem from DB (5 for ingredients, 1 for the ComposedFoodItem)
-            let allCDFoodItems = FoodItem.fetchAll()
-            try #require(allCDFoodItems.count == 6)
+            // Get the IDs of the FoodItems
+            var foodItemIDs = [UUID]()
+            foodItemIDs.append(cdFoodItem!.id) // The ID of the FoodItem related to the ComposedFoodItem
+            
+            // Get the Ingredients - for each of them, a corresponding FoodItem with identical ID should have been created
+            let allIngredients = cdComposedFoodItem!.ingredients.allObjects as! [Ingredient]
+            #expect(allIngredients.count == 5, "There should be 5 ingredients.")
+            for ingredient in allIngredients {
+                let ingredientID = ingredient.id
+                foodItemIDs.append(ingredientID)
+                #expect(FoodItem.getFoodItemByID(id: ingredientID) != nil, "A FoodItem with identical ID than the Ingredient should be in the DB.")
+            }
+            
+            // Check number of FoodItems (5 for ingredients, 1 for the ComposedFoodItem)
+            #expect(foodItemIDs.count == 6, "We expect 6 FoodItems: 5 for ingredients, 1 for the ComposedFoodItem")
+            
+            // Check if FoodItems are in DB and linked to an Ingredient
+            for foodItemID in foodItemIDs {
+                let foodItem = FoodItem.getFoodItemByID(id: foodItemID)
+                try #require(foodItem != nil, "The FoodItem should be found in the DB.")
+                try #require(foodItem!.ingredients != nil, "The FoodItem should have Ingredients.")
+                #expect(foodItem!.ingredients!.count >= 1, "The FoodItem should be linked to at least one Ingredient.")
+            }
             
             // Check for correct reference
-            #expect(cdComposedFoodItem.foodItem == cdFoodItem!)
+            #expect(cdComposedFoodItem!.foodItem == cdFoodItem!, "The ComposedFoodItem should have a reference to a FoodItem.")
             
             // Check for identical IDs
-            #expect(cdComposedFoodItem.id == cdFoodItem!.id)
+            #expect(cdComposedFoodItem!.id == cdFoodItem!.id, "The IDs of the ComposedFoodItem and the FoodItem should be identical.")
             
             // Check and get associated Ingredients from DB
-            let allIngredients = cdComposedFoodItem.ingredients
-            #expect(allIngredients.count == 5)
-            for case let ingredient as Ingredient in allIngredients {
-                #expect(ingredient.composedFoodItem == cdComposedFoodItem)
-                #expect(ingredient.foodItem != nil)
+            for ingredient in allIngredients {
+                #expect(ingredient.composedFoodItem == cdComposedFoodItem, "The Ingredient should have a reference to a ComposedFoodItem.")
+                #expect(ingredient.foodItem != nil, "The ingredient should have a reference to a FoodItem.")
                 try assessIngredientValues(ingredient: ingredient)
             }
             
-            // Delete ComposedFoodItem (and with it Ingredients)
-            ComposedFoodItem.delete(cdComposedFoodItem)
-            #expect(ComposedFoodItem.fetchAll().count == 0)
-            #expect(Ingredient.fetchAll().count == 0)
+            // Delete ComposedFoodItem and (cascading) Ingredients
+            try CoreDataTests.deleteComposedFoodItemFromDB(cdComposedFoodItem!)
+            
+            // The FoodItems created for the Ingredients should still be in the DB; their IDs are index 1 to 5 in the foodItemIDs array
+            for i in 1...5 {
+                let foodItem = FoodItem.getFoodItemByID(id: foodItemIDs[i])
+                #expect(foodItem != nil, "The FoodItem should still be in the DB.")
+                if let foodItem {
+                    try CoreDataTests.deleteFoodItemFromDB(foodItem)
+                }
+            }
             
             // Delete FoodItem - 5 FoodItems for Ingredients should remain
-            FoodItem.delete(cdFoodItem!)
-            #expect(FoodItem.fetchAll().count == 5)
-            
-            // Delete the remaining FoodItems
-            FoodItem.deleteAll()
-            #expect(FoodItem.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            try CoreDataTests.deleteFoodItemFromDB(cdFoodItem!)
         }
         
         @Test("ID: 13 - Create ComposedFoodItem - import = false")
         func createComposedFoodItemImportFalse() throws {
             // Get the VM and and save as Core Data ComposedFoodItem
-            let composedFoodItemVM = DataFactory.shared.tests56CreateComposedFoodItem3() // Pizzateig with 5 Ingredients
+            let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel() // Pizzateig with 5 Ingredients
             
             // Create FoodItems for ingredients
+            var foodItemIDs = [UUID]()
             for foodItemVM in composedFoodItemVM.foodItemVMs {
                 // Get existing or new FoodItem
                 let relatedFoodItem = FoodItem.create(from: foodItemVM, allowDuplicate: false)
                 foodItemVM.cdFoodItem = relatedFoodItem
+                foodItemIDs.append(relatedFoodItem.id)
             }
             
             // Check FoodItems in DB - it should be 5 (the 5 ingredients)
-            #expect(FoodItem.fetchAll().count == 5)
+            #expect(foodItemIDs.count == 5, "There should be 5 FoodItems.")
+            for foodItemId in foodItemIDs {
+                #expect(FoodItem.getFoodItemByID(id: foodItemId) != nil, "A FoodItem with this ID should exist.")
+            }
             
             // Save the ComposedFoodItem
             try #require(composedFoodItemVM.save(isImport: false))
             
             // Check and get ComposedFoodItem from DB
-            let allCDComposedFoodItems = ComposedFoodItem.fetchAll()
-            try #require(allCDComposedFoodItems.count == 1)
-            let cdComposedFoodItem = allCDComposedFoodItems.first!
-            let cdFoodItem = cdComposedFoodItem.foodItem
-            #expect(cdFoodItem != nil)
+            let cdComposedFoodItem = ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemVM.id)
+            try #require(cdComposedFoodItem != nil, "A ComposedFoodItem with the same ID as the view model should be in the DB.")
+            let cdFoodItem = cdComposedFoodItem!.foodItem
+            #expect(cdFoodItem != nil, "A FoodItem should be related to the ComposedFoodItem.")
             
-            // Check and get FoodItem from DB - now it should be 6, as one for the ComposedFoodItem has been created
-            let allCDFoodItems = FoodItem.fetchAll()
-            try #require(allCDFoodItems.count == 6)
+            // Check and get FoodItem from DB
+            let foodItemInDB = FoodItem.getFoodItemByID(id: cdFoodItem!.id)
+            try #require(foodItemInDB != nil, "The FoodItem should be in the DB.")
             
             // Check for correct reference
-            #expect(cdComposedFoodItem.foodItem == cdFoodItem!)
+            #expect(cdComposedFoodItem!.foodItem == cdFoodItem!)
             
             // Check for identical IDs
-            #expect(cdComposedFoodItem.id == cdFoodItem!.id)
+            #expect(cdComposedFoodItem!.id == cdFoodItem!.id)
             
             // Check and get associated Ingredients from DB
-            let allIngredients = cdComposedFoodItem.ingredients
+            let allIngredients = cdComposedFoodItem!.ingredients
             #expect(allIngredients.count == 5)
             for case let ingredient as Ingredient in allIngredients {
-                #expect(ingredient.composedFoodItem == cdComposedFoodItem)
+                #expect(ingredient.composedFoodItem == cdComposedFoodItem!)
                 #expect(ingredient.foodItem != nil)
                 try assessIngredientValues(ingredient: ingredient)
             }
             
             // Delete ComposedFoodItem (and with it Ingredients)
-            ComposedFoodItem.delete(cdComposedFoodItem)
-            #expect(ComposedFoodItem.fetchAll().count == 0)
-            #expect(Ingredient.fetchAll().count == 0)
+            try CoreDataTests.deleteComposedFoodItemFromDB(cdComposedFoodItem!)
+            
+            // The FoodItems created for the Ingredients should still be in the DB
+            for foodItemID in foodItemIDs {
+                let foodItem = FoodItem.getFoodItemByID(id: foodItemID)
+                #expect(foodItem != nil, "The FoodItem should still be in the DB.")
+                if let foodItem {
+                    try CoreDataTests.deleteFoodItemFromDB(foodItem)
+                }
+            }
             
             // Delete FoodItem - 5 FoodItems for Ingredients should remain
+            try CoreDataTests.deleteFoodItemFromDB(cdFoodItem!)
             FoodItem.delete(cdFoodItem!)
-            #expect(FoodItem.fetchAll().count == 5)
-            
-            // Delete the remaining FoodItems
-            FoodItem.deleteAll()
-            #expect(FoodItem.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
         }
         
         @Test("ID: 14 - Update ComposedFoodItem - related FoodItem")
         func updateComposedFoodItemRelatedFoodItem() throws {
             // Get the VM and and save as Core Data ComposedFoodItem
-            let composedFoodItemVM = DataFactory.shared.tests56CreateComposedFoodItem3() // Pizzateig with 5 Ingredients
+            let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel() // Pizzateig with 5 Ingredients
             try #require(composedFoodItemVM.save(isImport: true))
             try #require(composedFoodItemVM.foodItemVMs.count == 5)
             
-            // Modify the composedFoodItemVM - we remove 2 and add 1 ingredient, so we have 4 in total
+            // Check for the ComposedFoodItem and the relatedFoodItem in the DB
+            let cdComposedFoodItem = ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemVM.id)
+            try #require(cdComposedFoodItem != nil, "The ComposedFoodItem must be found in the DB by the same ID as the ComposedFoodItemViewModel.")
+            let cdRelatedFoodItem = FoodItem.getFoodItemByID(id: composedFoodItemVM.id)
+            try #require(cdRelatedFoodItem != nil, "The related FoodItem must be found in the DB by the same ID as the ComposedFoodItemViewModel.")
+            
+            // Store the related FoodItem's ID in the DB
+            var foodItemIDs = [UUID]()
+            foodItemIDs.append(cdRelatedFoodItem!.id)
+            
+            // Store the FoodItem IDs of the FoodItems (should be identical with those of their view models)
+            for foodItem in composedFoodItemVM.foodItemVMs {
+                foodItemIDs.append(foodItem.id)
+            }
+            
+            // Modify the composedFoodItemVM - we remove 3 and add 2 ingredient, so we have 4 in total
             let nameAppendix = " - Updated"
             composedFoodItemVM.name += nameAppendix
             composedFoodItemVM.numberOfPortions = composedFoodItemVM.numberOfPortions * 2
             composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[4])
+            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[1])
             composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[0])
-            let newIngredient = DataFactory.shared.foodItem3
-            newIngredient.cdFoodItem = FoodItem.create(from: newIngredient, allowDuplicate: false)
-            newIngredient.amount = 220
-            composedFoodItemVM.add(foodItem: newIngredient)
+            
+            // Get the two new ingredients, create them in the DB and add the IDs to the array of IDs
+            let newIngredients = try DataFactory.shared.getTwoIngredients()
+            for newIngredient in newIngredients {
+                newIngredient.cdFoodItem = FoodItem.create(from: newIngredient, allowDuplicate: false)
+                // TODO: Check if amount has been set, otherwise set manually
+                foodItemIDs.append(newIngredient.id)
+                composedFoodItemVM.add(foodItem: newIngredient)
+            }
             
             // Run the Core Data update
             #expect(composedFoodItemVM.update())
             
             // Check and get ComposedFoodItem from DB
-            let allCDComposedFoodItems = ComposedFoodItem.fetchAll()
-            try #require(allCDComposedFoodItems.count == 1)
-            let cdComposedFoodItem = allCDComposedFoodItems.first!
-            let cdFoodItem = cdComposedFoodItem.foodItem
-            #expect(cdFoodItem != nil)
+            let cdComposedFoodItemAfterUpdate = ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemVM.id)
+            try #require(cdComposedFoodItemAfterUpdate != nil, "The ComposedFoodItem needs to be found in the DB by the same ID as the initial view model.")
+            let cdFoodItemAfterUpdate = cdComposedFoodItemAfterUpdate!.foodItem
+            #expect(cdFoodItemAfterUpdate != nil, "The related FoodItem should still be found in the DB.")
+            #expect(cdFoodItemAfterUpdate == cdRelatedFoodItem, "The Core Data FoodItem should be identical before and after update.")
             
-            // Check and get FoodItem from DB - 6 for the ingredients (5 initial ones plus one new one),
-            // 1 for the ComposedFoodItem, so 7 in total
-            let allCDFoodItems = FoodItem.fetchAll()
-            try #require(allCDFoodItems.count == 7)
+            // Check and get FoodItem from DB - 7 for the ingredients (5 initial ones plus 2 new ones),
+            // 1 for the ComposedFoodItem, so 8 in total
+            #expect(foodItemIDs.count == 8)
+            for foodItemID in foodItemIDs {
+                let cdFoodItem = FoodItem.getFoodItemByID(id: foodItemID)
+                try #require(cdFoodItem != nil, "The FoodItem needs to be found in the DB by its ID.")
+                let foodItemID = cdFoodItem!.id
+                
+                // Delete FoodItem
+                FoodItem.delete(cdFoodItem!)
+                #expect(FoodItem.getFoodItemByID(id: foodItemID) == nil, "The FoodItem should not be found in the DB after deletion.")
+            }
             
             // Check for correct reference
-            #expect(cdComposedFoodItem.foodItem == cdFoodItem!)
+            #expect(cdComposedFoodItem!.foodItem == cdFoodItemAfterUpdate!)
             
             // Check for identical IDs
-            #expect(cdComposedFoodItem.id == cdFoodItem!.id)
+            #expect(cdComposedFoodItem!.id == cdFoodItemAfterUpdate!.id)
             
             // Check and get associated Ingredients from DB
-            let allIngredients = cdComposedFoodItem.ingredients
+            let allIngredients = cdComposedFoodItem!.ingredients
             #expect(allIngredients.count == 4)
             for case let ingredient as Ingredient in allIngredients {
                 #expect(ingredient.composedFoodItem == cdComposedFoodItem)
@@ -530,20 +519,7 @@ struct CoreDataTests {
             }
             
             // Delete ComposedFoodItem (and with it Ingredients)
-            ComposedFoodItem.delete(cdComposedFoodItem)
-            #expect(ComposedFoodItem.fetchAll().count == 0)
-            #expect(Ingredient.fetchAll().count == 0)
-            
-            // Delete FoodItem - 6 FoodItems for Ingredients should remain
-            FoodItem.delete(cdFoodItem!)
-            #expect(FoodItem.fetchAll().count == 6)
-            
-            // Delete the remaining FoodItems
-            FoodItem.deleteAll()
-            #expect(FoodItem.fetchAll().count == 0)
-            
-            // Reset DB
-            CoreDataTests.resetDB()
+            try CoreDataTests.deleteComposedFoodItemFromDB(cdComposedFoodItem!)
         }
     }
     
@@ -589,10 +565,60 @@ struct CoreDataTests {
         #expect(typicalAmount.comment == typicalAmountVM.comment)
     }
     
-    private static func resetDB() {
-        FoodItem.deleteAll()
-        ComposedFoodItem.deleteAll()
-        Ingredient.deleteAll()
-        TypicalAmount.deleteAll()
+    private static func createFoodItemInDB(from foodItemVM: FoodItemViewModel, withTypicalAmounts: Bool, allowDuplicate: Bool) throws -> FoodItem {
+        // Add TypicalAmounts if required
+        if withTypicalAmounts {
+            try DataFactory.shared.addTypicalAmounts(to: foodItemVM)
+        }
+        
+        // Save a new FoodItem to the DB
+        foodItemVM.save(allowDuplicate: allowDuplicate)
+        
+        // Check if FoodItem was created in DB
+        let foodItem = FoodItem.getFoodItemByID(id: foodItemVM.id)
+        try #require(foodItem != nil, "The saved FoodItem should be found in the DB by the same ID as the FoodItemViewModel.")
+        
+        // Return FoodItem
+        return foodItem!
+    }
+    
+    /// Deletes the FoodItem and its associated TypicalAmounts from the DB. Verifies if deleted.
+    /// - Parameter foodItem: The FoodItem to be deleted.
+    private static func deleteFoodItemFromDB(_ cdFoodItem: FoodItem) throws {
+        try #require(cdFoodItem != nil)
+        
+        // Get the TypicalAmounts - or an empty array if none is found
+        let typicalAmountIDs = cdFoodItem.typicalAmounts.array(of: TypicalAmount.self).map({ $0.id })
+        
+        // Get the ID of the FoodItem
+        let foodItemID = cdFoodItem.id
+        
+        // Delete the FoodItem
+        FoodItem.delete(cdFoodItem)
+        #expect(FoodItem.getFoodItemByID(id: foodItemID) == nil, "The FoodItem should no longer be found in the DB by its ID.")
+        
+        // The TypicalAmounts should have been deleted along with the FoodItem (cascade rule)
+        for typicalAmountID in typicalAmountIDs {
+            #expect(TypicalAmount.getTypicalAmountByID(id: typicalAmountID) == nil, "The TypicalAmount should have been deleted along with the FoodItem")
+        }
+    }
+    
+    private static func deleteComposedFoodItemFromDB(_ cdComposedFoodItem: ComposedFoodItem) throws {
+        try #require(cdComposedFoodItem != nil)
+        
+        // Get the Ingredients
+        let ingredientIDs = (cdComposedFoodItem.ingredients.allObjects as! [Ingredient]).map(\.id)
+        
+        // Get the ID of the ComposedFoodItem
+        let composedFoodItemID = cdComposedFoodItem.id
+        
+        // Delete the ComposedFoodItem
+        ComposedFoodItem.delete(cdComposedFoodItem)
+        #expect(ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemID) == nil, "The ComposedFoodItem should no longer be found in the DB by its ID.")
+        
+        // The Ingredients should have been deleted along with the ComposedFoodItem (cascade rule)
+        for ingredientID in ingredientIDs {
+            #expect(Ingredient.getIngredientByID(id: ingredientID) == nil, "The Ingredient should have been deleted along with the ComposedFoodItem")
+        }
     }
 }
