@@ -192,9 +192,11 @@ struct CoreDataTests {
             newFoodItemVM.carbsPer100gAsString = String(newFoodItemVM.carbsPer100g / 2)
             newFoodItemVM.sugarsPer100gAsString = String(newFoodItemVM.sugarsPer100g / 2)
             
-            // Extract no 2 and no 4
+            // Extract index 1 and 3
             let sortedTypicalAmounts = newFoodItemVM.typicalAmounts.sorted { $0.amount < $1.amount }
             let typicalAmountsToBeDeleted = [sortedTypicalAmounts[1], sortedTypicalAmounts[3]]
+            let deletedTypicalAmountIDs = typicalAmountsToBeDeleted.map({ $0.id })
+            let remainingTypicalAmountIDs = [sortedTypicalAmounts[0].id, sortedTypicalAmounts[2].id]
             
             // Update the cdFoodItem and pass the TypicalAmounts to be deleted
             FoodItem.update(cdFoodItem, with: newFoodItemVM, typicalAmountsToBeDeleted)
@@ -209,10 +211,20 @@ struct CoreDataTests {
             // Compare values
             assessFoodItemValues(foodItemVM: newFoodItemVM, foodItem: cdFoodItemAfterUpdate!)
             
-            // Check that there are only TypicalAmount 1 and 3 left
+            // Check that there are only TypicalAmount 0 and 2 left and 1 and 3 are deleted
             let remainingTypicalAmounts = cdFoodItemAfterUpdate!.typicalAmounts
             try #require(remainingTypicalAmounts != nil)
-            try #require(remainingTypicalAmounts!.count == 2)
+            for typicalAmountID in remainingTypicalAmountIDs {
+                let typicalAmount = TypicalAmount.getTypicalAmountByID(id: typicalAmountID)
+                #expect(typicalAmount != nil)
+                #expect(typicalAmount!.isDeleted == false)
+            }
+            for typicalAmountID in deletedTypicalAmountIDs {
+                if let typicalAmount = TypicalAmount.getTypicalAmountByID(id: typicalAmountID) {
+                    // The context is not saved yet, therefore the object is still available, but should have isDeleted=true
+                    #expect(typicalAmount.isDeleted == true, "The TypicalAmount should have been deleted.")
+                }
+            }
             
             // TODO: Check that the values are those of the initial TypicalAmount 1 and 3
             let remainingTypicalAmountsArray = remainingTypicalAmounts!.sorted {
@@ -339,10 +351,12 @@ struct CoreDataTests {
             // Check number of FoodItems (5 for ingredients, 1 for the ComposedFoodItem)
             #expect(foodItemIDs.count == 6, "We expect 6 FoodItems: 5 for ingredients, 1 for the ComposedFoodItem")
             
-            // Check if FoodItems are in DB and linked to an Ingredient
-            for foodItemID in foodItemIDs {
-                let foodItem = FoodItem.getFoodItemByID(id: foodItemID)
-                try #require(foodItem != nil, "The FoodItem should be found in the DB.")
+            // Check if the FoodItem related to the ComposedFoodItem is in the DB
+            try #require(FoodItem.getFoodItemByID(id: foodItemIDs[0]) != nil, "The FoodItem related to the ComposedFoodItem should be found in the DB.")
+            // Check if the FoodItems created from an ingredient are in DB and linked to an Ingredient
+            for i in 1...5 {
+                let foodItem = FoodItem.getFoodItemByID(id: foodItemIDs[i])
+                try #require(foodItem != nil, "The FoodItem related to the Ingredient should be found in the DB.")
                 try #require(foodItem!.ingredients != nil, "The FoodItem should have Ingredients.")
                 #expect(foodItem!.ingredients!.count >= 1, "The FoodItem should be linked to at least one Ingredient.")
             }
@@ -451,6 +465,7 @@ struct CoreDataTests {
             // Check for the ComposedFoodItem and the relatedFoodItem in the DB
             let cdComposedFoodItem = ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemVM.id)
             try #require(cdComposedFoodItem != nil, "The ComposedFoodItem must be found in the DB by the same ID as the ComposedFoodItemViewModel.")
+            #expect(cdComposedFoodItem!.foodItem != nil, "A FoodItem must be associated to the ComposedFoodItem.")
             let cdRelatedFoodItem = FoodItem.getFoodItemByID(id: composedFoodItemVM.id)
             try #require(cdRelatedFoodItem != nil, "The related FoodItem must be found in the DB by the same ID as the ComposedFoodItemViewModel.")
             
@@ -475,7 +490,6 @@ struct CoreDataTests {
             let newIngredients = try DataFactory.shared.getTwoIngredients()
             for newIngredient in newIngredients {
                 newIngredient.cdFoodItem = FoodItem.create(from: newIngredient, allowDuplicate: false)
-                // TODO: Check if amount has been set, otherwise set manually
                 foodItemIDs.append(newIngredient.id)
                 composedFoodItemVM.add(foodItem: newIngredient)
             }
@@ -490,24 +504,19 @@ struct CoreDataTests {
             #expect(cdFoodItemAfterUpdate != nil, "The related FoodItem should still be found in the DB.")
             #expect(cdFoodItemAfterUpdate == cdRelatedFoodItem, "The Core Data FoodItem should be identical before and after update.")
             
+            // Check for identical IDs
+            #expect(cdComposedFoodItem!.id == cdFoodItemAfterUpdate!.id)
+            
+            // Check for correct reference
+            #expect(cdComposedFoodItem!.foodItem == cdFoodItemAfterUpdate!)
+            
             // Check and get FoodItem from DB - 7 for the ingredients (5 initial ones plus 2 new ones),
             // 1 for the ComposedFoodItem, so 8 in total
             #expect(foodItemIDs.count == 8)
             for foodItemID in foodItemIDs {
                 let cdFoodItem = FoodItem.getFoodItemByID(id: foodItemID)
                 try #require(cdFoodItem != nil, "The FoodItem needs to be found in the DB by its ID.")
-                let foodItemID = cdFoodItem!.id
-                
-                // Delete FoodItem
-                FoodItem.delete(cdFoodItem!)
-                #expect(FoodItem.getFoodItemByID(id: foodItemID) == nil, "The FoodItem should not be found in the DB after deletion.")
             }
-            
-            // Check for correct reference
-            #expect(cdComposedFoodItem!.foodItem == cdFoodItemAfterUpdate!)
-            
-            // Check for identical IDs
-            #expect(cdComposedFoodItem!.id == cdFoodItemAfterUpdate!.id)
             
             // Check and get associated Ingredients from DB
             let allIngredients = cdComposedFoodItem!.ingredients
@@ -520,6 +529,15 @@ struct CoreDataTests {
             
             // Delete ComposedFoodItem (and with it Ingredients)
             try CoreDataTests.deleteComposedFoodItemFromDB(cdComposedFoodItem!)
+            
+            for foodItemID in foodItemIDs {
+                // Delete FoodItem
+                let cdFoodItem = FoodItem.getFoodItemByID(id: foodItemID)
+                FoodItem.delete(cdFoodItem!)
+                if let deletedFoodItem = FoodItem.getFoodItemByID(id: foodItemID) {
+                    #expect(deletedFoodItem.isDeleted == true, "The FoodItem should not be found in the DB after deletion.")
+                }
+            }
         }
     }
     
@@ -595,11 +613,17 @@ struct CoreDataTests {
         
         // Delete the FoodItem
         FoodItem.delete(cdFoodItem)
-        #expect(FoodItem.getFoodItemByID(id: foodItemID) == nil, "The FoodItem should no longer be found in the DB by its ID.")
+        if let deletedFoodItem = FoodItem.getFoodItemByID(id: foodItemID) {
+            // The context is not saved yet, therefore the object is still available, but should have isDeleted=true
+            #expect(deletedFoodItem.isDeleted == true, "The FoodItem should no longer be found in the DB by its ID.")
+        }
         
         // The TypicalAmounts should have been deleted along with the FoodItem (cascade rule)
         for typicalAmountID in typicalAmountIDs {
-            #expect(TypicalAmount.getTypicalAmountByID(id: typicalAmountID) == nil, "The TypicalAmount should have been deleted along with the FoodItem")
+            if let deletedTypicalAmount = TypicalAmount.getTypicalAmountByID(id: typicalAmountID) {
+                // The context is not saved yet, therefore the object is still available, but should have isDeleted=true
+                #expect(deletedTypicalAmount.isDeleted == true, "The TypicalAmount should have been deleted along with the FoodItem")
+            }
         }
     }
     
@@ -614,11 +638,17 @@ struct CoreDataTests {
         
         // Delete the ComposedFoodItem
         ComposedFoodItem.delete(cdComposedFoodItem)
-        #expect(ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemID) == nil, "The ComposedFoodItem should no longer be found in the DB by its ID.")
+        if let deletedComposedFoodItem = ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemID) {
+            // The context is not saved yet, therefore the object is still available, but should have isDeleted=true
+            #expect(deletedComposedFoodItem.isDeleted == true, "The ComposedFoodItem should no longer be found in the DB by its ID.")
+        }
         
         // The Ingredients should have been deleted along with the ComposedFoodItem (cascade rule)
         for ingredientID in ingredientIDs {
-            #expect(Ingredient.getIngredientByID(id: ingredientID) == nil, "The Ingredient should have been deleted along with the ComposedFoodItem")
+            if let deletedIngredient = Ingredient.getIngredientByID(id: ingredientID) {
+                // The context is not saved yet, therefore the object is still available, but should have isDeleted=true
+                #expect(deletedIngredient.isDeleted == true, "The Ingredient should have been deleted along with the ComposedFoodItem")
+            }
         }
     }
 }
