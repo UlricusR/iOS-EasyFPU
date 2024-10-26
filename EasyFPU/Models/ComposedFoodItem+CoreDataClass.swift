@@ -155,14 +155,14 @@ public class ComposedFoodItem: NSManagedObject {
         
         // Iterate through ingredients and calculate the updated nutritional values
         for case let ingredient as Ingredient in composedFoodItem.ingredients {
-            calories += ingredient.caloriesPer100g / 100 * Double(ingredient.amount)
-            carbs += ingredient.carbsPer100g / 100 * Double(ingredient.amount)
-            sugars += ingredient.sugarsPer100g / 100 * Double(ingredient.amount)
+            calories += ingredient.caloriesPer100g * Double(ingredient.amount)
+            carbs += ingredient.carbsPer100g * Double(ingredient.amount)
+            sugars += ingredient.sugarsPer100g * Double(ingredient.amount)
         }
         
-        relatedFoodItem.caloriesPer100g = calories / Double(composedFoodItem.amount) * 100
-        relatedFoodItem.carbsPer100g = carbs / Double(composedFoodItem.amount) * 100
-        relatedFoodItem.sugarsPer100g = sugars / Double(composedFoodItem.amount) * 100
+        relatedFoodItem.caloriesPer100g = calories / Double(composedFoodItem.amount)
+        relatedFoodItem.carbsPer100g = carbs / Double(composedFoodItem.amount)
+        relatedFoodItem.sugarsPer100g = sugars / Double(composedFoodItem.amount)
         
         CoreDataStack.shared.save()
         
