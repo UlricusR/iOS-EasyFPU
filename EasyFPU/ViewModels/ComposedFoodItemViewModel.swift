@@ -188,8 +188,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
     
     /// Saves the ComposedFoodItemViewModel as Core Data ComposedFoodItem.
     /// - Returns: False if no ingredients could be found in the ComposedFoodItemViewModel, otherwise true.
-    func save(isImport: Bool = false) -> Bool {
-        guard let cdComposedFoodItem = ComposedFoodItem.create(from: self, isImport) else { return false }
+    func save() -> Bool {
+        guard let cdComposedFoodItem = ComposedFoodItem.create(from: self) else { return false }
         self.cdComposedFoodItem = cdComposedFoodItem
         return true
     }

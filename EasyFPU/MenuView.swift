@@ -158,7 +158,7 @@ struct MenuView: View {
         
         if composedFoodItemVMsToBeImported != nil {
             for composedFoodItemVMToBeImported in composedFoodItemVMsToBeImported! {
-                _ = composedFoodItemVMToBeImported.save(isImport: true)
+                _ = composedFoodItemVMToBeImported.save()
             }
         }
          

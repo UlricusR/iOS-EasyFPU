@@ -39,7 +39,7 @@ public class ComposedFoodItem: NSManagedObject {
      
      - Returns: A Core Data ComposedFoodItem; nil if there are no Ingredients.
      */
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel, _ isImport: Bool) -> ComposedFoodItem? {
+    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) -> ComposedFoodItem? {
         // Create new ComposedFoodItem
         let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
         
@@ -56,7 +56,7 @@ public class ComposedFoodItem: NSManagedObject {
         CoreDataStack.shared.save()
         
         // Check for ingredients - there must be ingredients!
-        if Ingredient.create(from: composedFoodItemVM, relateTo: cdComposedFoodItem, isImport: isImport) != nil {
+        if Ingredient.create(from: composedFoodItemVM, relateTo: cdComposedFoodItem) != nil {
             // Create a related FoodItem and relate it to the ComposedFoodItem
             cdComposedFoodItem.foodItem = FoodItem.create(from: composedFoodItemVM)
             

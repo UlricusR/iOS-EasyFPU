@@ -319,7 +319,7 @@ struct CoreDataTests {
         func createComposedFoodItemImportTrue() throws {
             // Get the VM and and save as Core Data ComposedFoodItem
             let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel() // Pizzateig with 5 Ingredients
-            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM, isImport: true)
+            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM)
             let cdFoodItem = cdComposedFoodItem.foodItem
             
             // Get the IDs of the FoodItems
@@ -399,7 +399,7 @@ struct CoreDataTests {
             }
             
             // Save the ComposedFoodItem
-            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM, isImport: false)
+            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM)
             let cdFoodItem: FoodItem = cdComposedFoodItem.foodItem!
             
             // Check and get FoodItem from DB
@@ -442,7 +442,7 @@ struct CoreDataTests {
         func updateComposedFoodItemRelatedFoodItem() throws {
             // Get the VM and and save as Core Data ComposedFoodItem
             let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel() // Pizzateig with 5 Ingredients
-            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM, isImport: true)
+            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM)
             let cdRelatedFoodItem: FoodItem = cdComposedFoodItem.foodItem!
             try #require(composedFoodItemVM.foodItemVMs.count == 5)
             
@@ -521,7 +521,7 @@ struct CoreDataTests {
         func updateRelatedFoodItem() throws {
             // Get the VM and and save as Core Data ComposedFoodItem
             let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel() // Pizzateig with 5 Ingredients
-            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM, isImport: true)
+            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM)
             let cdRelatedFoodItem: FoodItem = cdComposedFoodItem.foodItem!
             
             // Modify the composedFoodItemVM - we remove 3 and add 2 ingredient, so we have 4 in total
@@ -559,7 +559,7 @@ struct CoreDataTests {
         func duplicateComposedFoodItem() throws {
             // Create new ComposedFoodItem with Ingredients in DB
             let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel()
-            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM, isImport: true)
+            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM)
             let composedFoodItemID = cdComposedFoodItem.id
             
             // Check Ingredients results of ComposedFoodItem in DB
@@ -694,9 +694,9 @@ struct CoreDataTests {
         }
     }
     
-    private static func createComposedFoodItemInDB(from composedFoodItemVM: ComposedFoodItemViewModel, isImport: Bool)throws -> ComposedFoodItem {
+    private static func createComposedFoodItemInDB(from composedFoodItemVM: ComposedFoodItemViewModel)throws -> ComposedFoodItem {
         // Get the VM and and save as Core Data ComposedFoodItem
-        try #require(composedFoodItemVM.save(isImport: isImport))
+        try #require(composedFoodItemVM.save())
         
         // Check for the ComposedFoodItem and the relatedFoodItem in the DB
         let cdComposedFoodItem = ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemVM.id)

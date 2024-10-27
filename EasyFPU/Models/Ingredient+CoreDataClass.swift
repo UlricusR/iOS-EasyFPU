@@ -36,7 +36,6 @@ public class Ingredient: NSManagedObject {
      - Parameter composedFoodItemVM: The source view model, the FoodItemViewModels of which are used as Ingredients,
      i.e., only amount and reference to Core Data FoodItem is used
      - cdComposedFoodItem: The Core Data ComposedFoodItem to relate the Ingredients to.
-     - isImport: If true, a new FoodItem is created for each ingredient, otherwise an existing FoodItem is expected.
      
      - Returns: A list of Ingredients, nil
      - if the VM has no ComposedFoodItem (should never be the case)
@@ -44,8 +43,7 @@ public class Ingredient: NSManagedObject {
      */
     static func create(
         from composedFoodItemVM: ComposedFoodItemViewModel,
-        relateTo cdComposedFoodItem: ComposedFoodItem,
-        isImport: Bool = false
+        relateTo cdComposedFoodItem: ComposedFoodItem
     ) -> [Ingredient]? {
         // We cannot create an Ingredient if no food item ingredients are attached
         if (composedFoodItemVM.foodItemVMs.count == 0) {
@@ -56,17 +54,11 @@ public class Ingredient: NSManagedObject {
         var cdIngredients = [Ingredient]()
         
         for foodItemVM in composedFoodItemVM.foodItemVMs {
-            // In case of an import, there might be no Core Data FoodItem for the ingredient yet
-            if isImport {
-                // Get existing or new FoodItem
-                let relatedFoodItem = FoodItem.create(from: foodItemVM, allowDuplicate: false)
-                foodItemVM.cdFoodItem = relatedFoodItem
-                
-                // Save
-                CoreDataStack.shared.save()
+            // We need a related cdFoodItem - if none attached, then get it from DB or create new
+            if foodItemVM.cdFoodItem == nil {
+                foodItemVM.cdFoodItem = FoodItem.create(from: foodItemVM, allowDuplicate: false)
             }
             
-            // If no import: We cannot create an Ingredient if we have no cdFoodItem
             if let associatedCDFoodItem = foodItemVM.cdFoodItem {
                 // Create Ingredient
                 let cdIngredient = Ingredient(context: CoreDataStack.viewContext)
