@@ -151,6 +151,10 @@ public class FoodItem: NSManagedObject {
         
         // Remove deleted typical amounts
         for typicalAmountToBeDeleted in typicalAmountsToBeDeleted {
+            // First remove from FoodItemVM
+            foodItemVM.typicalAmounts.removeAll(where: { $0.id == typicalAmountToBeDeleted.id })
+            
+            // Then remove from Core Data FoodItem
             if typicalAmountToBeDeleted.cdTypicalAmount != nil {
                 cdFoodItem.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
                 CoreDataStack.viewContext.delete(typicalAmountToBeDeleted.cdTypicalAmount!)

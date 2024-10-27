@@ -173,7 +173,6 @@ struct CoreDataTests {
             // Create new FoodItem with TypicalAmounts in DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
             let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: true, allowDuplicate: false)
-            let foodItemID = cdFoodItem.id
             
             // Check TypicalAmount results in DB
             try #require(cdFoodItem.typicalAmounts != nil, "There should be TypicalAmounts associated with the FoodItem.")
@@ -195,8 +194,6 @@ struct CoreDataTests {
             // Extract index 1 and 3
             let sortedTypicalAmounts = newFoodItemVM.typicalAmounts.sorted { $0.amount < $1.amount }
             let typicalAmountsToBeDeleted = [sortedTypicalAmounts[1], sortedTypicalAmounts[3]]
-            let deletedTypicalAmountIDs = typicalAmountsToBeDeleted.map({ $0.id })
-            let remainingTypicalAmountIDs = [sortedTypicalAmounts[0].id, sortedTypicalAmounts[2].id]
             
             // Update the cdFoodItem and pass the TypicalAmounts to be deleted
             FoodItem.update(cdFoodItem, with: newFoodItemVM, typicalAmountsToBeDeleted)
@@ -208,28 +205,23 @@ struct CoreDataTests {
             // Both FoodItems should be identical objects
             #expect(cdFoodItem == cdFoodItemAfterUpdate!)
             
+            // Check TypicalAmount results in DB
+            let remainingTypicalAmounts = cdFoodItem.typicalAmounts
+            try #require(remainingTypicalAmounts != nil, "There should be TypicalAmounts associated with the FoodItem.")
+            #expect(remainingTypicalAmounts!.count == 2, "There should be 2 TypicalAmounts associated with the FoodItem.")
+            
             // Compare values
-            assessFoodItemValues(foodItemVM: newFoodItemVM, foodItem: cdFoodItemAfterUpdate!)
+            assessFoodItemValues(foodItemVM: newFoodItemVM, foodItem: cdFoodItem)
             
-            // Check that there are only TypicalAmount 0 and 2 left and 1 and 3 are deleted
-            let remainingTypicalAmounts = cdFoodItemAfterUpdate!.typicalAmounts
-            try #require(remainingTypicalAmounts != nil)
-            for typicalAmountID in remainingTypicalAmountIDs {
-                let typicalAmount = TypicalAmount.getTypicalAmountByID(id: typicalAmountID)
-                #expect(typicalAmount != nil)
-                #expect(typicalAmount!.isDeleted == false)
-            }
-            for typicalAmountID in deletedTypicalAmountIDs {
-                if let typicalAmount = TypicalAmount.getTypicalAmountByID(id: typicalAmountID) {
-                    // The context is not saved yet, therefore the object is still available, but should have isDeleted=true
-                    #expect(typicalAmount.isDeleted == true, "The TypicalAmount should have been deleted.")
-                }
-            }
-            
-            // TODO: Check that the values are those of the initial TypicalAmount 1 and 3
+            // Check that the values are those of the initial TypicalAmount 0 and 2
             let remainingTypicalAmountsArray = remainingTypicalAmounts!.sorted {
                 ($0 as! TypicalAmount).amount < ($1 as! TypicalAmount).amount
             }
+            try #require(remainingTypicalAmountsArray.count == 2)
+            let initialTypicalAmountsArray = try DataFactory.shared.getTypicalAmounts()
+            try #require(initialTypicalAmountsArray.count == 4)
+            CoreDataTests.assessTypicalAmountValues(typicalAmountVM: initialTypicalAmountsArray[0], typicalAmount: remainingTypicalAmountsArray[0] as! TypicalAmount)
+            CoreDataTests.assessTypicalAmountValues(typicalAmountVM: initialTypicalAmountsArray[2], typicalAmount: remainingTypicalAmountsArray[1] as! TypicalAmount)
             
             // Delete FoodItem and (cascading) TypicalAmounts
             try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
