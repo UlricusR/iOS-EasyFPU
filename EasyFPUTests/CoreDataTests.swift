@@ -675,8 +675,6 @@ struct CoreDataTests {
         // Get the TypicalAmounts - or an empty array if none is found
         let typicalAmountIDs = cdFoodItem.typicalAmounts.array(of: TypicalAmount.self).map({ $0.id })
         
-        debugPrint(cdFoodItem)
-        
         // Get the ID of the FoodItem
         let foodItemID = cdFoodItem.id
         
