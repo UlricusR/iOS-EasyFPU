@@ -118,8 +118,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     }
     
     init(from cdIngredient: Ingredient) {
-        // Use new ID
-        self.id = cdIngredient.id // The id of the related FoodItem
+        self.id = cdIngredient.relatedFoodItemID ?? UUID() // The id of the related FoodItem
         self.name = cdIngredient.name
         self.category = FoodItemCategory.ingredient // Default is ingredient
         self.favorite = cdIngredient.favorite

@@ -330,9 +330,10 @@ struct CoreDataTests {
             let allIngredients = cdComposedFoodItem.ingredients.allObjects as! [Ingredient]
             #expect(allIngredients.count == 5, "There should be 5 ingredients.")
             for ingredient in allIngredients {
-                let ingredientID = ingredient.id
-                foodItemIDs.append(ingredientID)
-                #expect(FoodItem.getFoodItemByID(id: ingredientID) != nil, "A FoodItem with identical ID than the Ingredient should be in the DB.")
+                let relatedFoodItemID = ingredient.relatedFoodItemID
+                try #require(relatedFoodItemID != nil)
+                foodItemIDs.append(relatedFoodItemID!)
+                #expect(FoodItem.getFoodItemByID(id: relatedFoodItemID!) != nil, "A FoodItem with identical ID than the Ingredient should be in the DB.")
             }
             
             // Check number of FoodItems (5 for ingredients, 1 for the ComposedFoodItem)
@@ -553,6 +554,50 @@ struct CoreDataTests {
             try CoreDataTests.deleteFoodItemFromDB(cdUpdatedFoodItem!)
             try CoreDataTests.deleteComposedFoodItemFromDB(cdComposedFoodItem)
         }
+        
+        @Test("ID: 16 - Duplicate ComposedFoodItem")
+        func duplicateComposedFoodItem() throws {
+            // Create new ComposedFoodItem with Ingredients in DB
+            let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel()
+            let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM, isImport: true)
+            let composedFoodItemID = cdComposedFoodItem.id
+            
+            // Check Ingredients results of ComposedFoodItem in DB
+            let cdIngredients = cdComposedFoodItem.ingredients
+            #expect(cdIngredients.count == 5, "There should be 5 Ingredients associated with the ComposedFoodItem.")
+            
+            // Duplicate the cdFoodItem
+            let duplicatedCDComposedFoodItem = ComposedFoodItem.duplicate(cdComposedFoodItem)
+            try #require(duplicatedCDComposedFoodItem != nil, "The duplicated ComposedFoodItem should be found in the DB.")
+            
+            // Check results in DB and get the FoodItem
+            let duplicatedCDComposedFoodItemInDB = ComposedFoodItem.getComposedFoodItemByID(id: duplicatedCDComposedFoodItem!.id)
+            try #require(duplicatedCDComposedFoodItemInDB != nil, "The duplicated ComposedFoodItem should be found in the DB by its ID.")
+            #expect(duplicatedCDComposedFoodItem == duplicatedCDComposedFoodItemInDB, "The ComposedFoodItems need to be identical.")
+            let duplicatedComposedFoodItemID = duplicatedCDComposedFoodItem!.id
+            #expect(composedFoodItemID != duplicatedComposedFoodItemID, "The IDs of the ComposedFoodItem and the duplicated ComposedFoodItem need to be different.")
+            
+            // Check Ingredients results of duplicated ComposedFoodItem in DB
+            let duplicatedIngredients = duplicatedCDComposedFoodItem!.ingredients
+            #expect(duplicatedIngredients.count == 5, "There should be 5 Ingredients associated with the duplicated ComposedFoodItem.")
+            
+            // Cross-check sum of all Ingredients of both ComposedFoodItems
+            var ingredientSum = 0
+            for ingredient in cdIngredients  {
+                ingredientSum += Int((ingredient as! Ingredient).amount)
+            }
+            var duplicatedIngredientSum = 0
+            for ingredient in duplicatedIngredients  {
+                duplicatedIngredientSum += Int((ingredient as! Ingredient).amount)
+            }
+            #expect(ingredientSum == duplicatedIngredientSum, "The sum of amounts of Ingredients of both ComposedFoodItems needs to be identical.")
+            
+            // Delete ComposedFoodItem and (cascading) Ingredients
+            try CoreDataTests.deleteComposedFoodItemFromDB(cdComposedFoodItem)
+            
+            // Delete duplicated ComposedFoodItem and (cascading) Ingredients
+            try CoreDataTests.deleteComposedFoodItemFromDB(duplicatedCDComposedFoodItem!)
+        }
     }
 
         
@@ -588,7 +633,7 @@ struct CoreDataTests {
     
     private static func assessIngredientValues(ingredient: Ingredient) throws {
         try #require(ingredient.foodItem != nil)
-        #expect(ingredient.id == ingredient.foodItem!.id)
+        #expect(ingredient.relatedFoodItemID == ingredient.foodItem!.id)
         #expect(ingredient.name == ingredient.foodItem!.name)
         #expect(ingredient.favorite == ingredient.foodItem!.favorite)
         #expect(ingredient.caloriesPer100g == ingredient.foodItem!.caloriesPer100g)

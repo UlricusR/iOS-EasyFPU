@@ -55,31 +55,31 @@ public class Ingredient: NSManagedObject {
         // Initialize ingredients array
         var cdIngredients = [Ingredient]()
         
-        for ingredient in composedFoodItemVM.foodItemVMs {
+        for foodItemVM in composedFoodItemVM.foodItemVMs {
             // In case of an import, there might be no Core Data FoodItem for the ingredient yet
             if isImport {
                 // Get existing or new FoodItem
-                let relatedFoodItem = FoodItem.create(from: ingredient, allowDuplicate: false)
-                ingredient.cdFoodItem = relatedFoodItem
+                let relatedFoodItem = FoodItem.create(from: foodItemVM, allowDuplicate: false)
+                foodItemVM.cdFoodItem = relatedFoodItem
                 
                 // Save
                 CoreDataStack.shared.save()
             }
             
             // If no import: We cannot create an Ingredient if we have no cdFoodItem
-            if let associatedCDFoodItem = ingredient.cdFoodItem {
+            if let associatedCDFoodItem = foodItemVM.cdFoodItem {
                 // Create Ingredient
                 let cdIngredient = Ingredient(context: CoreDataStack.viewContext)
                 
                 // Fill data
-                // We use the identical UUID as the FoodItem, so that we can identify the related FoodItem later
-                cdIngredient.id = associatedCDFoodItem.id // The id of the related FoodItem
-                cdIngredient.name = ingredient.name
-                cdIngredient.favorite = ingredient.favorite
-                cdIngredient.amount = Int64(ingredient.amount)
-                cdIngredient.caloriesPer100g = ingredient.caloriesPer100g
-                cdIngredient.carbsPer100g = ingredient.carbsPer100g
-                cdIngredient.sugarsPer100g = ingredient.sugarsPer100g
+                cdIngredient.id = UUID()
+                cdIngredient.relatedFoodItemID = associatedCDFoodItem.id // The id of the related FoodItem
+                cdIngredient.name = foodItemVM.name
+                cdIngredient.favorite = foodItemVM.favorite
+                cdIngredient.amount = Int64(foodItemVM.amount)
+                cdIngredient.caloriesPer100g = foodItemVM.caloriesPer100g
+                cdIngredient.carbsPer100g = foodItemVM.carbsPer100g
+                cdIngredient.sugarsPer100g = foodItemVM.sugarsPer100g
                 
                 // Create 1:1 references to ComposedFoodItem and FoodItem
                 cdIngredient.composedFoodItem = cdComposedFoodItem
@@ -117,7 +117,8 @@ public class Ingredient: NSManagedObject {
         let cdIngredient = Ingredient(context: CoreDataStack.viewContext)
         
         // Fill data
-        cdIngredient.id = existingIngredient.id // The id of the related FoodItem
+        cdIngredient.id = UUID()
+        cdIngredient.relatedFoodItemID = existingIngredient.relatedFoodItemID // The id of the related FoodItem
         cdIngredient.name = existingIngredient.name
         cdIngredient.favorite = existingIngredient.favorite
         cdIngredient.amount = Int64(existingIngredient.amount)
