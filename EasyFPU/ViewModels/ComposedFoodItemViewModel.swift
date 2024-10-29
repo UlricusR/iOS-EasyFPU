@@ -114,17 +114,11 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
         self.cdComposedFoodItem = cdComposedFoodItem
         
-        for ingredient in cdComposedFoodItem.ingredients {
-            let ingredient = ingredient as! Ingredient
+        for case let ingredient as Ingredient in cdComposedFoodItem.ingredients {
             var newCDFoodItem: FoodItem
-            if ingredient.relatedFoodItemID != nil {
-                if let cdFoodItem = FoodItem.getFoodItemByID(id: ingredient.relatedFoodItemID!) {
-                    // A FoodItem exists, so use it
-                    newCDFoodItem = cdFoodItem
-                } else {
-                    // Create a new FoodItem
-                    newCDFoodItem = FoodItem.create(from: self)
-                }
+            if let cdFoodItem = ingredient.foodItem {
+                // A FoodItem exists, so use it
+                newCDFoodItem = cdFoodItem
             } else {
                 // Create a new FoodItem
                 newCDFoodItem = FoodItem.create(from: self)
