@@ -1,5 +1,15 @@
 {
+  "originHash" : "e66d61ddf5634018bd4b881349b11f4a0260366a2bd97f7e4cb604bc2d5dcbc4",
   "pins" : [
+    {
+      "identity" : "charts",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ChartsOrg/Charts",
+      "state" : {
+        "revision" : "dd9c72e3d7e751e769971092a6bd72d39198ae63",
+        "version" : "5.1.0"
+      }
+    },
     {
       "identity" : "codescanner",
       "kind" : "remoteSourceControl",
@@ -8,7 +18,34 @@
         "revision" : "8a9ce909a4ea502d4a2ccf327ae8c16b7e48e740",
         "version" : "1.1.0"
       }
+    },
+    {
+      "identity" : "countrypicker",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SURYAKANTSHARMA/CountryPicker",
+      "state" : {
+        "revision" : "416404cce633a2039846ae2cb6951fd93cf7d588",
+        "version" : "4.0.0"
+      }
+    },
+    {
+      "identity" : "swiftyjson",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftyJSON/SwiftyJSON",
+      "state" : {
+        "revision" : "af76cf3ef710b6ca5f8c05f3a31307d44a3c5828",
+        "version" : "5.0.2"
+      }
+    },
+    {
+      "identity" : "url-image",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dmytro-anokhin/url-image",
+      "state" : {
+        "revision" : "4042f955f1fdff00ced85545e1eecdbf969b5cd0",
+        "version" : "3.1.1"
+      }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

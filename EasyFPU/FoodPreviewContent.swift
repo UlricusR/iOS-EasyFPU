@@ -82,7 +82,7 @@ struct FoodPreviewContent: View {
     @ViewBuilder
     private func getThumbView(image: FoodDatabaseImage?) -> some View {
         if image != nil {
-            URLImage(url: image!.thumb) { image in
+            URLImage(image!.thumb) { image in
                 image
             }
         }
@@ -150,7 +150,7 @@ struct FoodPreviewContent: View {
     
     @ViewBuilder
     private func getImageView(url: URL, for reader: GeometryProxy) -> some View {
-        URLImage(url: url) { image in
+        URLImage(url) { image in
             image
                 .resizable()
                 .scaledToFit()

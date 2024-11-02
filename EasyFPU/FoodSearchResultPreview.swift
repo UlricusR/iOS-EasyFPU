@@ -28,7 +28,7 @@ struct FoodSearchResultPreview: View {
             }.buttonStyle(BorderlessButtonStyle())
             
             if let imageObject = product.imageFront {
-                URLImage(url: imageObject.thumb) { image in
+                URLImage(imageObject.thumb) { image in
                     image
                         .resizable()
                         .scaledToFit()

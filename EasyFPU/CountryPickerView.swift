@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SKCountryPicker
+import CountryPicker
 
 struct CountryPickerView: View {
     @Binding var selectedCountry: Country

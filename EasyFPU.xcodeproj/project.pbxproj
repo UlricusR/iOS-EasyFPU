@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,6 +28,17 @@
 		1B0CE2BA250663B5008B04E3 /* HealthDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0CE2B9250663B5008B04E3 /* HealthDataHelper.swift */; };
 		1B12690D2A8E52B40047B1F5 /* DataWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B12690C2A8E52B40047B1F5 /* DataWrapper.swift */; };
 		1B12690F2A8E699C0047B1F5 /* DataVersionFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B12690E2A8E699C0047B1F5 /* DataVersionFinder.swift */; };
+		1B16208A2CD68F360083DDF2 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 1B1620892CD68F360083DDF2 /* DGCharts */; };
+		1B16208D2CD68F970083DDF2 /* CountryPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 1B16208C2CD68F970083DDF2 /* CountryPicker */; };
+		1B1620902CD68FE40083DDF2 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 1B16208F2CD68FE40083DDF2 /* URLImage */; };
+		1B1620932CD6922E0083DDF2 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 1B1620922CD6922E0083DDF2 /* SwiftyJSON */; };
+		1B16209B2CD693480083DDF2 /* EasyFPU_FoodList_DataModel2.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B1620992CD693480083DDF2 /* EasyFPU_FoodList_DataModel2.json */; };
+		1B16209C2CD693480083DDF2 /* EasyFPU.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 1B1620972CD693480083DDF2 /* EasyFPU.xctestplan */; };
+		1B16209D2CD693480083DDF2 /* EasyFPU_FoodList_DataModel1.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B1620982CD693480083DDF2 /* EasyFPU_FoodList_DataModel1.json */; };
+		1B16209E2CD693480083DDF2 /* ImportExportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B16209A2CD693480083DDF2 /* ImportExportTests.swift */; };
+		1B16209F2CD693480083DDF2 /* CoreDataMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1620942CD693480083DDF2 /* CoreDataMigrationTests.swift */; };
+		1B1620A02CD693480083DDF2 /* DataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1620962CD693480083DDF2 /* DataFactory.swift */; };
+		1B1620A12CD693480083DDF2 /* CoreDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1620952CD693480083DDF2 /* CoreDataTests.swift */; };
 		1B188444253B329000B671A2 /* OpenFoodFacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B188443253B329000B671A2 /* OpenFoodFacts.swift */; };
 		1B188447253B32DE00B671A2 /* FoodDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B188446253B32DE00B671A2 /* FoodDatabase.swift */; };
 		1B18844A253B336500B671A2 /* FoodDatabaseEntry+FoodDatabaseImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B188449253B336500B671A2 /* FoodDatabaseEntry+FoodDatabaseImage.swift */; };
@@ -45,7 +56,6 @@
 		1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */; };
 		1B3CEB9B24D32D38001D64DA /* SettingsEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9A24D32D38001D64DA /* SettingsEditor.swift */; };
 		1B3CEB9D24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */; };
-		1B3EEB1025334A0C004C110A /* Pods_EasyFPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */; };
 		1B3EEB16253368B3004C110A /* HealthExportCarbsPreviewChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */; };
 		1B4329C12CBEB1A500C478C3 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4329C02CBEB19F00C478C3 /* CoreDataStack.swift */; };
 		1B4827522CAC4D410080D5BF /* IngredientSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4827512CAC4D410080D5BF /* IngredientSelectionListView.swift */; };
@@ -146,6 +156,13 @@
 		1B0CE2B9250663B5008B04E3 /* HealthDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataHelper.swift; sourceTree = "<group>"; };
 		1B12690C2A8E52B40047B1F5 /* DataWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataWrapper.swift; sourceTree = "<group>"; };
 		1B12690E2A8E699C0047B1F5 /* DataVersionFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataVersionFinder.swift; sourceTree = "<group>"; };
+		1B1620942CD693480083DDF2 /* CoreDataMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMigrationTests.swift; sourceTree = "<group>"; };
+		1B1620952CD693480083DDF2 /* CoreDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTests.swift; sourceTree = "<group>"; };
+		1B1620962CD693480083DDF2 /* DataFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFactory.swift; sourceTree = "<group>"; };
+		1B1620972CD693480083DDF2 /* EasyFPU.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyFPU.xctestplan; sourceTree = "<group>"; };
+		1B1620982CD693480083DDF2 /* EasyFPU_FoodList_DataModel1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EasyFPU_FoodList_DataModel1.json; sourceTree = "<group>"; };
+		1B1620992CD693480083DDF2 /* EasyFPU_FoodList_DataModel2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EasyFPU_FoodList_DataModel2.json; sourceTree = "<group>"; };
+		1B16209A2CD693480083DDF2 /* ImportExportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportTests.swift; sourceTree = "<group>"; };
 		1B188443253B329000B671A2 /* OpenFoodFacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFacts.swift; sourceTree = "<group>"; };
 		1B188446253B32DE00B671A2 /* FoodDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDatabase.swift; sourceTree = "<group>"; };
 		1B188449253B336500B671A2 /* FoodDatabaseEntry+FoodDatabaseImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodDatabaseEntry+FoodDatabaseImage.swift"; sourceTree = "<group>"; };
@@ -230,24 +247,19 @@
 		1BF8A4BE24C21A52008634DF /* FoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsRegimeCalculator.swift; sourceTree = "<group>"; };
-		2CE0A6239381CBD7B93933F9 /* Pods-EasyFPU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EasyFPU.release.xcconfig"; path = "Target Support Files/Pods-EasyFPU/Pods-EasyFPU.release.xcconfig"; sourceTree = "<group>"; };
-		7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EasyFPU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA50480835A2B36F0BC9C947 /* Pods-EasyFPU.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EasyFPU.debug.xcconfig"; path = "Target Support Files/Pods-EasyFPU/Pods-EasyFPU.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		1B93041E2CBCECE700DE7CDD /* EasyFPUTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EasyFPUTests; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1B004A2624BA3035001E362A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B16208D2CD68F970083DDF2 /* CountryPicker in Frameworks */,
+				1B16208A2CD68F360083DDF2 /* DGCharts in Frameworks */,
 				1B51B3302540B31300064EB1 /* CodeScanner in Frameworks */,
 				1B004A4624BA338A001E362A /* CloudKit.framework in Frameworks */,
+				1B1620902CD68FE40083DDF2 /* URLImage in Frameworks */,
 				1BAEE0862500C5FB00B4891F /* HealthKit.framework in Frameworks */,
-				1B3EEB1025334A0C004C110A /* Pods_EasyFPU.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,6 +267,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B1620932CD6922E0083DDF2 /* SwiftyJSON in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,7 +281,6 @@
 				1B93041E2CBCECE700DE7CDD /* EasyFPUTests */,
 				1B004A2A24BA3035001E362A /* Products */,
 				1B004A4424BA338A001E362A /* Frameworks */,
-				BABA6DB766EB131AE23C7102 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -359,7 +371,6 @@
 				1BE506F12A840DE60087DD59 /* XCTest.framework */,
 				1BAEE0852500C5FB00B4891F /* HealthKit.framework */,
 				1B004A4524BA338A001E362A /* CloudKit.framework */,
-				7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -456,6 +467,20 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		1B93041E2CBCECE700DE7CDD /* EasyFPUTests */ = {
+			isa = PBXGroup;
+			children = (
+				1B1620942CD693480083DDF2 /* CoreDataMigrationTests.swift */,
+				1B1620952CD693480083DDF2 /* CoreDataTests.swift */,
+				1B1620962CD693480083DDF2 /* DataFactory.swift */,
+				1B1620972CD693480083DDF2 /* EasyFPU.xctestplan */,
+				1B1620982CD693480083DDF2 /* EasyFPU_FoodList_DataModel1.json */,
+				1B1620992CD693480083DDF2 /* EasyFPU_FoodList_DataModel2.json */,
+				1B16209A2CD693480083DDF2 /* ImportExportTests.swift */,
+			);
+			path = EasyFPUTests;
+			sourceTree = "<group>";
+		};
 		1BAEE0892500E15600B4891F /* UIHelpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -479,15 +504,6 @@
 			path = HealthKit;
 			sourceTree = "<group>";
 		};
-		BABA6DB766EB131AE23C7102 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				CA50480835A2B36F0BC9C947 /* Pods-EasyFPU.debug.xcconfig */,
-				2CE0A6239381CBD7B93933F9 /* Pods-EasyFPU.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -495,11 +511,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1B004A4024BA3038001E362A /* Build configuration list for PBXNativeTarget "EasyFPU" */;
 			buildPhases = (
-				EDE6D7DAFA28DD11B51B9738 /* [CP] Check Pods Manifest.lock */,
 				1B004A2524BA3035001E362A /* Sources */,
 				1B004A2624BA3035001E362A /* Frameworks */,
 				1B004A2724BA3035001E362A /* Resources */,
-				678E44126022C15D99320AD4 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -508,6 +522,9 @@
 			name = EasyFPU;
 			packageProductDependencies = (
 				1B51B32F2540B31300064EB1 /* CodeScanner */,
+				1B1620892CD68F360083DDF2 /* DGCharts */,
+				1B16208C2CD68F970083DDF2 /* CountryPicker */,
+				1B16208F2CD68FE40083DDF2 /* URLImage */,
 			);
 			productName = EasyFPU;
 			productReference = 1B004A2924BA3035001E362A /* EasyFPU.app */;
@@ -526,12 +543,7 @@
 			dependencies = (
 				1B9304222CBCECE700DE7CDD /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				1B93041E2CBCECE700DE7CDD /* EasyFPUTests */,
-			);
 			name = EasyFPUTests;
-			packageProductDependencies = (
-			);
 			productName = EasyFPUTests;
 			productReference = 1B93041D2CBCECE700DE7CDD /* EasyFPUTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -553,6 +565,7 @@
 					};
 					1B93041C2CBCECE700DE7CDD = {
 						CreatedOnToolsVersion = 16.0;
+						LastSwiftMigration = 1610;
 						TestTargetID = 1B004A2824BA3035001E362A;
 					};
 				};
@@ -569,6 +582,10 @@
 			mainGroup = 1B004A2024BA3035001E362A;
 			packageReferences = (
 				1B51B32E2540B31300064EB1 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				1B1620882CD68F360083DDF2 /* XCRemoteSwiftPackageReference "Charts" */,
+				1B16208B2CD68F970083DDF2 /* XCRemoteSwiftPackageReference "CountryPicker" */,
+				1B16208E2CD68FE40083DDF2 /* XCRemoteSwiftPackageReference "url-image" */,
+				1B1620912CD6922E0083DDF2 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = 1B004A2A24BA3035001E362A /* Products */;
 			projectDirPath = "";
@@ -598,52 +615,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B16209B2CD693480083DDF2 /* EasyFPU_FoodList_DataModel2.json in Resources */,
+				1B16209C2CD693480083DDF2 /* EasyFPU.xctestplan in Resources */,
+				1B16209D2CD693480083DDF2 /* EasyFPU_FoodList_DataModel1.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		678E44126022C15D99320AD4 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-EasyFPU/Pods-EasyFPU-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-EasyFPU/Pods-EasyFPU-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-EasyFPU/Pods-EasyFPU-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EDE6D7DAFA28DD11B51B9738 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-EasyFPU-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1B004A2524BA3035001E362A /* Sources */ = {
@@ -749,6 +727,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B16209E2CD693480083DDF2 /* ImportExportTests.swift in Sources */,
+				1B16209F2CD693480083DDF2 /* CoreDataMigrationTests.swift in Sources */,
+				1B1620A02CD693480083DDF2 /* DataFactory.swift in Sources */,
+				1B1620A12CD693480083DDF2 /* CoreDataTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -906,7 +888,6 @@
 		};
 		1B004A4124BA3038001E362A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CA50480835A2B36F0BC9C947 /* Pods-EasyFPU.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -931,6 +912,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -939,7 +921,6 @@
 		};
 		1B004A4224BA3038001E362A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2CE0A6239381CBD7B93933F9 /* Pods-EasyFPU.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -964,6 +945,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -975,6 +957,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q4HRNRLV9A;
@@ -986,8 +969,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPUTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EasyFPU.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EasyFPU";
@@ -1000,6 +988,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q4HRNRLV9A;
@@ -1011,6 +1000,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPUTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1051,6 +1044,38 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1B1620882CD68F360083DDF2 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ChartsOrg/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+		1B16208B2CD68F970083DDF2 /* XCRemoteSwiftPackageReference "CountryPicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SURYAKANTSHARMA/CountryPicker";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		1B16208E2CD68FE40083DDF2 /* XCRemoteSwiftPackageReference "url-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dmytro-anokhin/url-image";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
+		1B1620912CD6922E0083DDF2 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
 		1B51B32E2540B31300064EB1 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twostraws/CodeScanner";
@@ -1062,6 +1087,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1B1620892CD68F360083DDF2 /* DGCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1B1620882CD68F360083DDF2 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGCharts;
+		};
+		1B16208C2CD68F970083DDF2 /* CountryPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1B16208B2CD68F970083DDF2 /* XCRemoteSwiftPackageReference "CountryPicker" */;
+			productName = CountryPicker;
+		};
+		1B16208F2CD68FE40083DDF2 /* URLImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1B16208E2CD68FE40083DDF2 /* XCRemoteSwiftPackageReference "url-image" */;
+			productName = URLImage;
+		};
+		1B1620922CD6922E0083DDF2 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1B1620912CD6922E0083DDF2 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
 		1B51B32F2540B31300064EB1 /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1B51B32E2540B31300064EB1 /* XCRemoteSwiftPackageReference "CodeScanner" */;

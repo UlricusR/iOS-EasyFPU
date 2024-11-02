@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SKCountryPicker
+import CountryPicker
 
 struct SettingsEditor: View {
     @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
