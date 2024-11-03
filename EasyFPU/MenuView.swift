@@ -152,7 +152,7 @@ struct MenuView: View {
         
         if foodItemVMsToBeImported != nil {
             for foodItemVMToBeImported in foodItemVMsToBeImported! {
-                foodItemVMToBeImported.save(allowDuplicate: false)
+                foodItemVMToBeImported.save()
             }
         }
         

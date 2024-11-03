@@ -339,9 +339,20 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     }
     
     /// Saves the FoodItemViewModel to a Core Data FoodItem
-    /// - Parameter allowDuplicate: If true, a FoodItem will be created even if one with identical ID is found.
-    func save(allowDuplicate: Bool) {
-        _ = FoodItem.create(from: self, allowDuplicate: allowDuplicate)
+    func save() {
+        // Check for an existing FoodItem with same ID
+        if let existingFoodItem = FoodItem.getFoodItemByID(id: self.id) {
+            if FoodItemViewModel.hasSameNutritionalValues(lhs: existingFoodItem, rhs: self) {
+                // In case of an existing FoodItem with identical nutritional values, no new FoodItem needs to be created
+                return
+            } else {
+                // Otherwise we need to create a new UUID before saving the VM to Core Data
+                self.id = UUID()
+            }
+        }
+        
+        // Create the new FoodItem
+        _ = FoodItem.create(from: self)
     }
     
     /// Updates the related Core Data FoodItem with the values of this FoodItemViewModel.
@@ -419,6 +430,17 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         lhs.id == rhs.id
     }
 
+    /// Compares the nutritional values (calories per 100g, carbs per 100g, sugars per 100g) of a FoodItem and a FoodItemViewModel.
+    /// - Parameters:
+    ///   - lhs: The FoodItem to be compared.
+    ///   - rhs: The FoodItemViewModel to be compared.
+    /// - Returns: True if all nutritional values are identical.
+    static func hasSameNutritionalValues(lhs: FoodItem, rhs: FoodItemViewModel) -> Bool {
+        lhs.caloriesPer100g == rhs.caloriesPer100g &&
+        lhs.carbsPer100g == rhs.carbsPer100g &&
+        lhs.sugarsPer100g == rhs.sugarsPer100g
+    }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

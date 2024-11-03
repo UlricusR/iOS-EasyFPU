@@ -312,7 +312,7 @@ struct FoodItemEditor: View {
                     presentation.wrappedValue.dismiss()
                 }
             } else { // We have a new food item
-                self.updatedFoodItemVM!.save(allowDuplicate: false)
+                self.updatedFoodItemVM!.save()
                 
                 // Quit edit mode
                 presentation.wrappedValue.dismiss()

@@ -54,9 +54,24 @@ public class Ingredient: NSManagedObject {
         var cdIngredients = [Ingredient]()
         
         for foodItemVM in composedFoodItemVM.foodItemVMs {
-            // We need a related cdFoodItem - if none attached, then get it from DB or create new
+            // We need a related cdFoodItem - if none attached, try to get an existing one first
             if foodItemVM.cdFoodItem == nil {
-                foodItemVM.cdFoodItem = FoodItem.create(from: foodItemVM, allowDuplicate: false)
+                if let existingCDFoodItem = FoodItem.getFoodItemByID(id: foodItemVM.id) {
+                    // There is an existing FoodItem with identical ID, so check the nutritional values
+                    if FoodItemViewModel.hasSameNutritionalValues(lhs: existingCDFoodItem, rhs: foodItemVM) {
+                        // The nutritional values are identical, so relate it to the foodItemVM
+                        foodItemVM.cdFoodItem = existingCDFoodItem
+                    } else {
+                        // Although there is a FoodItem with the same ID, the nutritional values are not identical.
+                        // We better create a new one (next step below), but it requires a new UUID
+                        foodItemVM.id = UUID()
+                    }
+                }
+            }
+            
+            // If there's still no related FoodItem, we need to create a new one
+            if foodItemVM.cdFoodItem == nil {
+                foodItemVM.cdFoodItem = FoodItem.create(from: foodItemVM)
             }
             
             if let associatedCDFoodItem = foodItemVM.cdFoodItem {

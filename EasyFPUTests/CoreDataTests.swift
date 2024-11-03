@@ -16,11 +16,11 @@ struct CoreDataTests {
     @Suite("FoodItem behavior")
     struct FoodItemBehavior {
         
-        @Test("ID: 1/2 - Create FoodItem - no FoodItem", arguments: [false, true])
-        func createFoodItemDuplicateFalseNoFoodItem(allowDuplicate: Bool) throws {
+        @Test("ID: 1 - Create FoodItem - no FoodItem")
+        func createFoodItemDuplicateFalseNoFoodItem() throws {
             // Create new FoodItem in DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
-            foodItemVM.save(allowDuplicate: allowDuplicate)
+            foodItemVM.save()
             
             // Check if FoodItem was created in DB
             let foodItem = FoodItem.getFoodItemByID(id: foodItemVM.id)
@@ -31,15 +31,15 @@ struct CoreDataTests {
             try CoreDataTests.deleteFoodItemFromDB(foodItem!)
         }
         
-        @Test("ID: 3 - Create FoodItem - allowDuplicate=false - existing identical FoodItem")
-        func createFoodItemDuplicateFalseIdenticalFoodItem() throws {
+        @Test("ID: 3 - Create FoodItem - existing FoodItem with identical ID and nutritional values")
+        func createFoodItemIdenticalFoodItem() throws {
             // Create new FoodItem in DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
-            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false, allowDuplicate: false)
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false)
             
-            // Add duplicate with same ID, but don't allow duplicates
+            // Add duplicate with same ID and same nutritional values
             let duplicateFoodItemVM = try DataFactory.shared.createFoodItemVM(id: foodItemVM.id)
-            duplicateFoodItemVM.save(allowDuplicate: false)
+            duplicateFoodItemVM.save()
             
             // Check for all FoodItems with this name - we still only expect one
             let foodItems = FoodItem.getFoodItemsByName(name: foodItemVM.name)
@@ -54,15 +54,20 @@ struct CoreDataTests {
             try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
         }
         
-        @Test("ID: 4 - Create FoodItem - allowDuplicate=true - existing identical FoodItem")
-        func createFoodItemDuplicateTrueIdenticalFoodItem() throws {
+        @Test("ID: 4 - Create FoodItem - existing FoodItem with identical ID but different nutritional values")
+        func createFoodItemIdenticalFoodItemIDOnly() throws {
             // Create a new FoodItem in the DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
-            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false, allowDuplicate: false)
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false)
             
             // Add duplicate with same ID
             let duplicateFoodItemVM = try DataFactory.shared.createFoodItemVM(id: foodItemVM.id)
-            duplicateFoodItemVM.save(allowDuplicate: true)
+            
+            // Modify nutritional values
+            duplicateFoodItemVM.carbsPer100gAsString = String(45)
+            
+            // Save the duplicate
+            duplicateFoodItemVM.save()
             
             // Check if duplicated FoodItem was created in DB
             let bothFoodItems = FoodItem.getFoodItemsByName(name: duplicateFoodItemVM.name)
@@ -112,7 +117,7 @@ struct CoreDataTests {
             let existingFoodItemVM = try DataFactory.shared.createFoodItemViewModel(for: composedFoodItemVM)
             
             // Save related FoodItem
-            existingFoodItemVM.save(allowDuplicate: false)
+            existingFoodItemVM.save()
             
             // Check if FoodItem exists with identical ID as ComposedFoodItemViewModel
             let existingCDFoodItem = FoodItem.getFoodItemByID(id: composedFoodItemVM.id)
@@ -141,7 +146,7 @@ struct CoreDataTests {
         func updateFoodItemNoAssociatedIngredientsNoTypicalAmountsToBeDeleted() throws {
             // Create new FoodItem in DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
-            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false, allowDuplicate: false)
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false)
             let foodItemID = cdFoodItem.id
             
             // Modify the foodItemVM
@@ -172,7 +177,7 @@ struct CoreDataTests {
         func updateFoodItemNoAssociatedIngredientsTypicalAmountsToBeDeleted() throws {
             // Create new FoodItem with TypicalAmounts in DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
-            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: true, allowDuplicate: false)
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: true)
             
             // Check TypicalAmount results in DB
             try #require(cdFoodItem.typicalAmounts != nil, "There should be TypicalAmounts associated with the FoodItem.")
@@ -231,7 +236,7 @@ struct CoreDataTests {
         func duplicateFoodItemWithTypicalAmounts() throws {
             // Create new FoodItem with TypicalAmounts in DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
-            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: true, allowDuplicate: false)
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: true)
             let foodItemID = cdFoodItem.id
             
             // Check TypicalAmount results of FoodItem in DB
@@ -277,7 +282,7 @@ struct CoreDataTests {
         func addTypicalAmount() throws {
             // Create new FoodItem in DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
-            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false, allowDuplicate: false)
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false)
             
             // Create (unlinked) typicalAmounts in DB and add them to the FoodItem
             let typicalAmountVMs = try DataFactory.shared.getTypicalAmounts()
@@ -298,7 +303,7 @@ struct CoreDataTests {
         func changeCategory() throws {
             // Create new FoodItem in DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
-            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false, allowDuplicate: false)
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false)
             
             // Change category to FoodItemCategory.product
             FoodItem.setCategory(cdFoodItem, to: FoodItemCategory.product.rawValue)
@@ -387,7 +392,7 @@ struct CoreDataTests {
             var foodItemIDs = [UUID]()
             for foodItemVM in composedFoodItemVM.foodItemVMs {
                 // Get existing or new FoodItem
-                let relatedFoodItem = FoodItem.create(from: foodItemVM, allowDuplicate: false)
+                let relatedFoodItem = FoodItem.create(from: foodItemVM)
                 foodItemVM.cdFoodItem = relatedFoodItem
                 foodItemIDs.append(relatedFoodItem.id)
             }
@@ -466,7 +471,7 @@ struct CoreDataTests {
             // Get the two new ingredients, create them in the DB and add the IDs to the array of IDs
             let newIngredients = try DataFactory.shared.getTwoIngredients()
             for newIngredient in newIngredients {
-                newIngredient.cdFoodItem = FoodItem.create(from: newIngredient, allowDuplicate: false)
+                newIngredient.cdFoodItem = FoodItem.create(from: newIngredient)
                 foodItemIDs.append(newIngredient.id)
                 composedFoodItemVM.add(foodItem: newIngredient)
             }
@@ -535,7 +540,7 @@ struct CoreDataTests {
             // Get the two new ingredients, create them in the DB and add the IDs to the array of IDs
             let newIngredients = try DataFactory.shared.getTwoIngredients()
             for newIngredient in newIngredients {
-                newIngredient.cdFoodItem = FoodItem.create(from: newIngredient, allowDuplicate: false)
+                newIngredient.cdFoodItem = FoodItem.create(from: newIngredient)
                 composedFoodItemVM.add(foodItem: newIngredient)
             }
             
@@ -650,14 +655,14 @@ struct CoreDataTests {
         return Double(round(1000 * value) / 1000)
     }
     
-    private static func createFoodItemInDB(from foodItemVM: FoodItemViewModel, withTypicalAmounts: Bool, allowDuplicate: Bool) throws -> FoodItem {
+    private static func createFoodItemInDB(from foodItemVM: FoodItemViewModel, withTypicalAmounts: Bool) throws -> FoodItem {
         // Add TypicalAmounts if required
         if withTypicalAmounts {
             try DataFactory.shared.addTypicalAmounts(to: foodItemVM)
         }
         
         // Save a new FoodItem to the DB
-        foodItemVM.save(allowDuplicate: allowDuplicate)
+        foodItemVM.save()
         
         // Check if FoodItem was created in DB
         let foodItem = FoodItem.getFoodItemByID(id: foodItemVM.id)

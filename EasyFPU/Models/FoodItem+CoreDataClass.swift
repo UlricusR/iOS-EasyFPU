@@ -35,23 +35,15 @@ public class FoodItem: NSManagedObject {
      
      - Parameters:
         - foodItedVM: the source FoodItemViewModel.
-        - allowDuplicate: if true, duplicates are allowed, but they will get their own UUID.
-     
-     - Returns: the new Core Data FoodItem, or the existing one if a duplicate was found and is not allowed.
-     */
-    static func create(from foodItemVM: FoodItemViewModel, allowDuplicate: Bool) -> FoodItem {
-        let existingFoodItem = FoodItem.getFoodItemByID(id: foodItemVM.id)
-        if !allowDuplicate && existingFoodItem != nil {
-            return existingFoodItem!
-        }
         
+     - Returns: the new Core Data FoodItem.
+     */
+    static func create(from foodItemVM: FoodItemViewModel) -> FoodItem {
         // Create the FoodItem
         let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         
-        // If we have a duplicate, then a new UUID is required
-        cdFoodItem.id = existingFoodItem != nil ? UUID() : foodItemVM.id
-        
         // Fill data
+        cdFoodItem.id = foodItemVM.id
         cdFoodItem.name = foodItemVM.name
         cdFoodItem.category = foodItemVM.category.rawValue
         cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
