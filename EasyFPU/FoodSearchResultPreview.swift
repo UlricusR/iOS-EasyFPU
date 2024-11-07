@@ -25,7 +25,9 @@ struct FoodSearchResultPreview: View {
                 self.foodDatabaseResults.selectedEntry = product
             }) {
                 Image(systemName: self.foodDatabaseResults.selectedEntry == product ? "checkmark.circle.fill" : "circle").foregroundStyle(.green)
-            }.buttonStyle(BorderlessButtonStyle())
+            }
+            .buttonStyle(BorderlessButtonStyle())
+            .accessibilityIdentifierLeaf("FoodSearchSelectButton")
             
             if let imageObject = product.imageFront {
                 URLImage(imageObject.thumb) { image in
@@ -34,12 +36,14 @@ struct FoodSearchResultPreview: View {
                         .scaledToFit()
                         .frame(height: 100)
                 }
+                .accessibilityIdentifierLeaf("ProductImage")
             }
             
             Text(product.name).font(.headline)
                 .onTapGesture {
                     self.foodDatabaseResults.selectedEntry = product
                 }
+                .accessibilityIdentifierLeaf("ProductName")
             
             Button(action: {
                 withAnimation {
@@ -48,7 +52,10 @@ struct FoodSearchResultPreview: View {
             }) {
                 Image(systemName: "info.circle")
                     .imageScale(.large)
-            }.buttonStyle(BorderlessButtonStyle())
+            }
+            .buttonStyle(BorderlessButtonStyle())
+            .accessibilityIdentifierLeaf("ProductDetailsButton")
+            
         }
         .sheet(isPresented: $showDetails) {
             FoodPreview(product: $selectedEntry, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected)
@@ -57,6 +64,7 @@ struct FoodSearchResultPreview: View {
                     parentPresentation.wrappedValue.dismiss()
                 }
             }
+            .accessibilityIdentifierBranch("ProductDetails")
         }
         .onAppear() {
             self.selectedEntry = self.product

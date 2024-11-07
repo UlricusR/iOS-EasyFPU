@@ -23,56 +23,56 @@ struct MenuView: View {
         NavigationStack {
             Form {
                 Section(header: Text("Settings")) {
-                    // Absorption Scheme
-                    Button(action: {
+                    // Therapy Settings
+                    Button("Therapy Settings") {
                         activeSheet = .editAbsorptionScheme
-                    }) {
-                        Text("App Settings")
                     }
+                    .accessibilityIdentifierLeaf("TherapySettingsButton")
+                    
+                    // App Settings
+                    Button("App Settings") {
+                        activeSheet = .editAppSettings
+                    }
+                    .accessibilityIdentifierLeaf("AppSettingsButton")
                 }
                 
                 Section(header: Text("Import/Export")) {
                     // Import
-                    Button(action: {
+                    Button("Import from JSON") {
                         activeSheet = .pickFileToImport
-                    }) {
-                        Text("Import from JSON")
                     }
+                    .accessibilityIdentifierLeaf("ImportFromJSONButton")
                     
                     // Export
-                    Button(action: {
+                    Button("Export to JSON") {
                         activeSheet = .pickExportDirectory
-                    }) {
-                        Text("Export to JSON")
                     }
+                    .accessibilityIdentifierLeaf("ExportToJSONButton")
                 }
                 
                 Section(header: Text("Info")) {
                     // About
-                    Button(action: {
+                    Button("About") {
                         activeSheet = .about
-                    }) {
-                        Text("About")
                     }
+                    .accessibilityIdentifierLeaf("AboutButton")
                     
                     // Disclaimer
-                    Button(action: {
+                    Button("Disclaimer") {
                         if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &alertMessage) {
                             self.showingAlert = true
                         }
                         
                         // Display disclaimer
                         UserSettings.shared.disclaimerAccepted = false
-                    }) {
-                        Text("Disclaimer")
                     }
+                    .accessibilityIdentifierLeaf("DisclaimerButton")
                     
                     // Web help
-                    Button(action: {
+                    Button("Help on the Web") {
                         UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
-                    }) {
-                        Text("Help on the Web")
                     }
+                    .accessibilityIdentifierLeaf("HelpOnWebButton")
                 }
             }
             .navigationBarTitle("Settings")
@@ -104,14 +104,20 @@ struct MenuView: View {
     private func sheetContent(_ state: MenuViewSheets.State) -> some View {
         switch state {
         case .editAbsorptionScheme:
-            SettingsEditor(draftAbsorptionScheme: self.draftAbsorptionScheme)
-                    .environment(\.managedObjectContext, managedObjectContext)
+            TherapySettingsEditor(draftAbsorptionScheme: self.draftAbsorptionScheme)
+                .accessibilityIdentifierBranch("TherapySettingsEditor")
+        case .editAppSettings:
+            AppSettingsEditor()
+                .accessibilityIdentifierBranch("AppSettingsEditor")
         case .pickFileToImport:
             FilePickerView(callback: self.importJSON, documentTypes: [UTType.json])
+                .accessibilityIdentifierBranch("FilePickerForImport")
         case .pickExportDirectory:
             FilePickerView(callback: self.exportJSON, documentTypes: [UTType.folder])
+                .accessibilityIdentifierBranch("FilePickerForExport")
         case .about:
             AboutView()
+                .accessibilityIdentifierBranch("About")
         }
     }
     

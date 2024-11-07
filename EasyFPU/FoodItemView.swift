@@ -24,44 +24,76 @@ struct FoodItemView: View {
             HStack {
                 if listType == .selection {
                     if let foodItemIndex = composedFoodItemVM.foodItemVMs.firstIndex(of: foodItemVM) {
-                        Image(systemName: "xmark.circle").foregroundStyle(.red)
+                        Image(systemName: "xmark.circle")
+                            .foregroundStyle(.red)
+                            .accessibilityIdentifierLeaf("DeselectFoodItemButton")
                         Text("\(composedFoodItemVM.foodItemVMs[foodItemIndex].amount)").font(.headline).foregroundStyle(.blue)
                         Text("g").font(.headline).foregroundStyle(.blue)
                     } else {
-                        Image(systemName: "plus.circle").foregroundStyle(.gray)
+                        Image(systemName: "plus.circle")
+                            .foregroundStyle(.gray)
+                            .accessibilityIdentifierLeaf("SelectFoodItemButton")
                     }
                 }
-                Text(foodItemVM.name).font(.headline).foregroundStyle(listType == .selection && composedFoodItemVM.foodItemVMs.contains(foodItemVM) ? .blue : .primary)
+                Text(foodItemVM.name)
+                    .font(.headline)
+                    .foregroundStyle(listType == .selection && composedFoodItemVM.foodItemVMs.contains(foodItemVM) ? .blue : .primary)
+                    .accessibilityIdentifierLeaf("FoodItemNameLabel")
                 if foodItemVM.hasAssociatedRecipe() {
                     Image(systemName: "frying.pan.fill").foregroundStyle(.gray).imageScale(.small)
+                        .accessibilityIdentifierLeaf("HasAssociatedRecipeSymbol")
                 }
                 if foodItemVM.favorite {
-                    Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small)
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(.yellow)
+                        .imageScale(.small)
+                        .accessibilityIdentifierLeaf("IsFavoriteSymbol")
                 }
                 Spacer()
             }
             
             // Second line: Nutritional values per 100g
             HStack {
-                Text("Nutritional values per 100g:").font(.caption).foregroundStyle(.gray)
+                Text("Nutritional values per 100g:")
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                    .accessibilityIdentifierLeaf("HeadingNutritionalValues")
 
                 Spacer()
 
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItemVM.caloriesPer100g))!).font(.caption).foregroundStyle(.gray)
-                Text("kcal").font(.caption).foregroundStyle(.gray)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItemVM.caloriesPer100g))!)
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                    .accessibilityIdentifierLeaf("CaloriesValue")
+                Text("kcal")
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                    .accessibilityIdentifierLeaf("CaloriesUnit")
 
                 Text("|").foregroundStyle(.gray)
 
                 VStack(alignment: .leading) {
                     HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItemVM.carbsPer100g))!).font(.caption).foregroundStyle(.gray)
-                        Text("g Carbs").font(.caption).foregroundStyle(.gray)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItemVM.carbsPer100g))!)
+                            .font(.caption)
+                            .foregroundStyle(.gray)
+                            .accessibilityIdentifierLeaf("CarbsValue")
+                        Text("g Carbs")
+                            .font(.caption)
+                            .foregroundStyle(.gray)
+                            .accessibilityIdentifierLeaf("CarbsUnit")
                     }
                     
                     HStack {
                         Text("Thereof").font(.caption).foregroundStyle(.gray)
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItemVM.sugarsPer100g))!).font(.caption).foregroundStyle(.gray)
-                        Text("g Sugars").font(.caption).foregroundStyle(.gray)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItemVM.sugarsPer100g))!)
+                            .font(.caption)
+                            .foregroundStyle(.gray)
+                            .accessibilityIdentifierLeaf("SugarsValue")
+                        Text("g Sugars")
+                            .font(.caption)
+                            .foregroundStyle(.gray)
+                            .accessibilityIdentifierLeaf("SugarsUnit")
                     }
                 }
             }
@@ -88,12 +120,14 @@ struct FoodItemView: View {
                 }
             }
             .tint(.blue)
+            .accessibilityIdentifierLeaf("EditButton")
             
             // Duplicating the food item
             Button("Duplicate", systemImage: "document.on.document") {
                 foodItemVM.duplicate()
             }
             .tint(.indigo)
+            .accessibilityIdentifierLeaf("DuplicateButton")
             
             // Delete the food item
             Button("Delete", systemImage: "trash", role: .destructive) {
@@ -108,6 +142,7 @@ struct FoodItemView: View {
                     }
                 }
             }
+            .accessibilityIdentifierLeaf("DeleteButton")
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             // Moving the food item to another category
@@ -116,12 +151,14 @@ struct FoodItemView: View {
                 foodItemVM.changeCategory(to: foodItemVM.category == .product ? .ingredient : .product)
             }
             .tint(.yellow)
+            .accessibilityIdentifierLeaf("MoveButton")
             
             // Sharing the food item
             Button("Share", systemImage: "square.and.arrow.up") {
                 activeSheet = .exportFoodItem
             }
             .tint(.green)
+            .accessibilityIdentifierLeaf("ShareButton")
         }
         .sheet(item: $activeSheet) {
             sheetContent($0)
@@ -151,15 +188,19 @@ struct FoodItemView: View {
                     navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
                     draftFoodItemVM: self.foodItemVM,
                     category: category
-                ).environment(\.managedObjectContext, managedObjectContext)
+                )
+                .environment(\.managedObjectContext, managedObjectContext)
+                .accessibilityIdentifierBranch("EditFoodItem")
             } else {
                 Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
             }
         case .selectFoodItem:
             FoodItemSelector(draftFoodItem: self.foodItemVM, composedFoodItem: composedFoodItemVM, category: self.category)
+                .accessibilityIdentifierBranch("SelectFoodItems")
         case .exportFoodItem:
             if let path = foodItemVM.exportToURL() {
                 ActivityView(activityItems: [path], applicationActivities: nil)
+                    .accessibilityIdentifierBranch("ExportFoodItem")
             } else {
                 Text(NSLocalizedString("Could not generate data export", comment: ""))
             }

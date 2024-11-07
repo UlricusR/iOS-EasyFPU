@@ -64,6 +64,7 @@ struct FoodItemEditor: View {
                             HStack {
                                 // Name
                                 CustomTextField(titleKey: "Name", text: $draftFoodItemVM.name, keyboardType: .default)
+                                    .accessibilityIdentifierLeaf("NameValue")
                                 
                                 // Search and Scan buttons
                                 Button(action: {
@@ -78,8 +79,11 @@ struct FoodItemEditor: View {
                                         }
                                     }
                                 }) {
-                                    Image(systemName: "magnifyingglass").imageScale(.large)
-                                }.buttonStyle(BorderlessButtonStyle())
+                                    Image(systemName: "magnifyingglass")
+                                        .imageScale(.large)
+                                }
+                                .buttonStyle(BorderlessButtonStyle())
+                                .accessibilityIdentifierLeaf("SearchButton")
                                 
                                 Button(action: {
                                     if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
@@ -88,8 +92,11 @@ struct FoodItemEditor: View {
                                         self.activeAlert = .scan
                                     }
                                 }) {
-                                    Image(systemName: "barcode.viewfinder").imageScale(.large)
-                                }.buttonStyle(BorderlessButtonStyle())
+                                    Image(systemName: "barcode.viewfinder")
+                                        .imageScale(.large)
+                                }
+                                .buttonStyle(BorderlessButtonStyle())
+                                .accessibilityIdentifierLeaf("ScanButton")
                             }
                             
                             // Category
@@ -97,41 +104,53 @@ struct FoodItemEditor: View {
                                 Text("Product").tag(FoodItemCategory.product)
                                 Text("Ingredient").tag(FoodItemCategory.ingredient)
                             }
+                            .accessibilityIdentifierLeaf("CategoryPicker")
                             
                             // Favorite
                             Toggle("Favorite", isOn: $draftFoodItemVM.favorite)
+                                .accessibilityIdentifierLeaf("FavoriteToggle")
                         }
                         
                         Section(header: Text("Nutritional values per 100g:")) {
                             // Calories
                             HStack {
                                 CustomTextField(titleKey: "Calories per 100g", text: $draftFoodItemVM.caloriesPer100gAsString, keyboardType: .decimalPad)
+                                    .accessibilityIdentifierLeaf("CaloriesValue")
                                 Text("kcal")
+                                    .accessibilityIdentifierLeaf("CaloriesUnit")
                             }
                             
                             // Carbs
                             HStack {
                                 CustomTextField(titleKey: "Carbs per 100g", text: $draftFoodItemVM.carbsPer100gAsString, keyboardType: .decimalPad)
+                                    .accessibilityIdentifierLeaf("CarbsValue")
                                 Text("g Carbs")
+                                    .accessibilityIdentifierLeaf("CarbsUnit")
                             }
                             
                             // Sugars
                             HStack {
                                 CustomTextField(titleKey: "Thereof Sugars per 100g", text: $draftFoodItemVM.sugarsPer100gAsString, keyboardType: .decimalPad)
+                                    .accessibilityIdentifierLeaf("SugarsValue")
                                 Text("g Sugars")
+                                    .accessibilityIdentifierLeaf("SugarsUnit")
                             }
                         }
                         
                         Section(header: Text("Typical amounts:")) {
                             HStack {
                                 CustomTextField(titleKey: "Amount", text: $newTypicalAmount, keyboardType: .decimalPad)
+                                    .accessibilityIdentifierLeaf("EditTypicalAmountValue")
                                 Text("g")
+                                    .accessibilityIdentifierLeaf("AmountUnit")
                                 CustomTextField(titleKey: "Comment", text: $newTypicalAmountComment, keyboardType: .default)
+                                    .accessibilityIdentifierLeaf("EditTypicalAmountComment")
                                 Button(action: {
                                     self.addTypicalAmount()
                                 }) {
                                     Image(systemName: self.updateButton ? "checkmark.circle.fill" : "plus.circle").foregroundStyle(self.updateButton ? .blue : .green)
                                 }
+                                .accessibilityIdentifierLeaf("AddTypicalAmountButton")
                             }
                         }
                         
@@ -141,8 +160,11 @@ struct FoodItemEditor: View {
                                     HStack {
                                         HStack {
                                             Text(typicalAmount.amountAsString)
+                                                .accessibilityIdentifierLeaf("TypicalAmountValue")
                                             Text("g")
+                                                .accessibilityIdentifierLeaf("TypicalAmountUnit")
                                             Text(typicalAmount.comment)
+                                                .accessibilityIdentifierLeaf("TypicalAmountComment")
                                         }
                                         
                                         
@@ -169,6 +191,7 @@ struct FoodItemEditor: View {
                                             self.deleteTypicalAmount(typicalAmount)
                                         }
                                     }
+                                    .accessibilityIdentifierBranch("TAmount" + typicalAmount.amountAsString)
                                 }
                             }
                         }
@@ -183,6 +206,7 @@ struct FoodItemEditor: View {
                                     // Delete food item
                                     self.draftFoodItemVM.delete(includeAssociatedRecipe: false)
                                 }
+                                .accessibilityIdentifierLeaf("DeleteButton")
                             }
                         }
                     }
@@ -195,6 +219,7 @@ struct FoodItemEditor: View {
                         }) {
                             Image(systemName: "questionmark.circle").imageScale(.large)
                         }
+                        .accessibilityIdentifierLeaf("HelpButton")
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -211,6 +236,7 @@ struct FoodItemEditor: View {
                             Image(systemName: "xmark.circle")
                                 .imageScale(.large)
                         }
+                        .accessibilityIdentifierLeaf("ClearButton")
                         
                         Button(action: {
                             // Trim white spaces from name
@@ -227,6 +253,7 @@ struct FoodItemEditor: View {
                             Image(systemName: "checkmark.circle.fill")
                                 .imageScale(.large)
                         }
+                        .accessibilityIdentifierLeaf("SaveButton")
                     }
                 }
             }
@@ -474,12 +501,16 @@ struct FoodItemEditor: View {
         switch state {
         case .help:
             HelpView(helpScreen: self.helpScreen)
+                .accessibilityIdentifierBranch("HelpEditFoodItem")
         case .search:
             FoodSearch(foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItemVM, category: category)
+                .accessibilityIdentifierBranch("SearchFood")
         case .scan:
             CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "4101530002123", completion: self.handleScan)
+                .accessibilityIdentifierBranch("ScanBarCode")
         case .foodPreview:
             FoodPreview(product: $scanResult, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItemVM, category: category, foodSelected: $foodSelected)
+                .accessibilityIdentifierBranch("PreviewFood")
         }
     }
     

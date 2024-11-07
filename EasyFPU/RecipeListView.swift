@@ -68,6 +68,7 @@ struct RecipeListView: View {
                                     .fill(.yellow)
                             )
                         }
+                        .accessibilityIdentifierLeaf("StartCookingButton")
                     } else {
                         List {
                             ForEach(self.filteredComposedFoodItems) { composedFoodItem in
@@ -76,6 +77,7 @@ struct RecipeListView: View {
                                     notificationState: $notificationState
                                 )
                                 .environment(\.managedObjectContext, self.managedObjectContext)
+                                .accessibilityIdentifierBranch(String(composedFoodItem.name.prefix(10)))
                             }
                         }
                     }
@@ -91,6 +93,7 @@ struct RecipeListView: View {
                             Image(systemName: "questionmark.circle")
                                 .imageScale(.large)
                         }
+                        .accessibilityIdentifierLeaf("HelpButton")
                         
                         Button(action: {
                             // Reset the shared ComposedViewVM
@@ -102,6 +105,7 @@ struct RecipeListView: View {
                                 .foregroundStyle(.green)
                                 .imageScale(.large)
                         }
+                        .accessibilityIdentifierLeaf("AddRecipeButton")
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -120,6 +124,7 @@ struct RecipeListView: View {
                                     .imageScale(.large)
                             }
                         }
+                        .accessibilityIdentifierLeaf("FavoriteButton")
                     }
                 }
             }
@@ -197,8 +202,10 @@ struct RecipeListView: View {
             FoodItemComposerView(
                 composedFoodItemVM: UserSettings.shared.composedProduct,
                 notificationState: $notificationState)
+            .accessibilityIdentifierBranch("EditRecipe")
         case .recipeListHelp:
             HelpView(helpScreen: .recipeList)
+                .accessibilityIdentifierBranch("HelpRecipeList")
         }
     }
 }

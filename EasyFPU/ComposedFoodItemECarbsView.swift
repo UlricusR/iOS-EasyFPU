@@ -29,33 +29,41 @@ struct ComposedFoodItemECarbsView: View {
         VStack {
             HStack(alignment: .center) {
                 Image(systemName: "tortoise.fill")
+                    .accessibilityIdentifierLeaf("Symbol")
                 Text("e-Carbs").font(.headline).fontWeight(.bold).lineLimit(2)
+                    .accessibilityIdentifierLeaf("Title")
             }
             .multilineTextAlignment(.center)
             .foregroundStyle(Color(ComposedFoodItemECarbsView.color))
             
             HStack {
                 VStack(alignment: .trailing) { // Questions
-                    Text("How much?")
-                    Text("When?")
-                    Text("How long?")
+                    Text("How much?").accessibilityIdentifierLeaf("AmountLabel")
+                    Text("When?").accessibilityIdentifierLeaf("TimeLabel")
+                    Text("How long?").accessibilityIdentifierLeaf("DurationLabel")
                 }.foregroundStyle(Color(ComposedFoodItemECarbsView.color))
                 
                 VStack(alignment: .leading) { // Answers
                     HStack {
                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.fpus.getExtendedCarbs()))!)
+                            .accessibilityIdentifierLeaf("AmountValue")
                         Text("g Carbs")
+                            .accessibilityIdentifierLeaf("AmountUnit")
                     }
                     HStack {
                         Text("In")
                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: userSettings.absorptionTimeECarbsDelayInMinutes + userSettings.mealDelayInMinutes))!)
+                            .accessibilityIdentifierLeaf("PauseValue")
                         Text("min at")
                         Text(self.extendedCarbsTimeAsString)
+                            .accessibilityIdentifierLeaf("TimeValue")
                     }
                     HStack {
                         Text("For")
                         Text(self.absorptionTimeAsString)
+                            .accessibilityIdentifierLeaf("DurationValue")
                         Text("h")
+                            .accessibilityIdentifierLeaf("DurationUnit")
                     }
                 }
             }

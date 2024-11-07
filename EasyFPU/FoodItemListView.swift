@@ -71,6 +71,7 @@ struct FoodItemListView: View {
                                     .fill(.yellow)
                             )
                         }
+                        .accessibilityIdentifierLeaf("AddFoodItemButton")
                     } else {
                         List {
                             ForEach(self.filteredFoodItems.sorted {
@@ -84,6 +85,7 @@ struct FoodItemListView: View {
                             }) { foodItem in
                                 FoodItemView(composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
                                     .environment(\.managedObjectContext, self.managedObjectContext)
+                                    .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                             }
                         }
                     }
@@ -99,6 +101,7 @@ struct FoodItemListView: View {
                             Image(systemName: "questionmark.circle")
                             .imageScale(.large)
                         }
+                        .accessibilityIdentifierLeaf("HelpButton")
                         
                         Button(action: {
                             // Add new food item
@@ -108,6 +111,7 @@ struct FoodItemListView: View {
                                 .imageScale(.large)
                                 .foregroundStyle(.green)
                         }
+                        .accessibilityIdentifierLeaf("AddFoodItemButton")
                         
                         if listType == .selection && !composedFoodItem.foodItemVMs.isEmpty {
                             Button(action: {
@@ -121,6 +125,7 @@ struct FoodItemListView: View {
                                 Image(systemName: "xmark.circle").foregroundStyle(.red)
                                     .imageScale(.large)
                             }
+                            .accessibilityIdentifierLeaf("ClearButton")
                         }
                     }
                     
@@ -140,6 +145,7 @@ struct FoodItemListView: View {
                                     .imageScale(.large)
                             }
                         }
+                        .accessibilityIdentifierLeaf("ClearButton")
                         
                         if listType == .selection {
                             Button(action: {
@@ -150,6 +156,7 @@ struct FoodItemListView: View {
                                     .imageScale(.large)
                             }
                             .disabled(composedFoodItem.foodItemVMs.isEmpty)
+                            .accessibilityIdentifierLeaf("SaveButton")
                         }
                     }
                 }
@@ -186,15 +193,21 @@ struct FoodItemListView: View {
                         amount: 0
                     ),
                 category: category
-            ).environment(\.managedObjectContext, managedObjectContext)
+            )
+            .environment(\.managedObjectContext, managedObjectContext)
+            .accessibilityIdentifierBranch("EditFoodItem")
         case .productMaintenanceListHelp:
             HelpView(helpScreen: .productMaintenanceList)
+                .accessibilityIdentifierBranch("HelpProductMaintenanceList")
         case .productSelectionListHelp:
             HelpView(helpScreen: .productSelectionList)
+                .accessibilityIdentifierBranch("HelpProductSelectionList")
         case .ingredientMaintenanceListHelp:
             HelpView(helpScreen: .ingredientMaintenanceList)
+                .accessibilityIdentifierBranch("HelpIngredientMaintenanceList")
         case .ingredientSelectionListHelp:
             HelpView(helpScreen: .ingredientSelectionList)
+                .accessibilityIdentifierBranch("HelpIngredientSelectionList")
         }
     }
 }

@@ -222,7 +222,6 @@
 "Interval" = "Interval";
 "min" = "min";
 "Treat sugars separately" = "Treat sugars separately";
-"Other Parameters" = "Other Parameters";
 "Alert duration between exports" = "Alert duration between exports";
 "Country" = "Country";
 "Select food database country" = "Select food database country";
@@ -231,6 +230,7 @@
 
 // Menu actions
 "App Settings" = "App Settings";
+"Therapy Settings" = "Therapy Settings";
 "Settings" = "Settings";
 "Import from JSON" = "Import (format: JSON)";
 "Export to JSON" = "Export (format: JSON)";

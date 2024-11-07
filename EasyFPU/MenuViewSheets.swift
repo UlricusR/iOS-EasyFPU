@@ -11,6 +11,7 @@ import Foundation
 class MenuViewSheets {
     enum State: Identifiable {
         case editAbsorptionScheme
+        case editAppSettings
         case pickFileToImport
         case pickExportDirectory
         case about

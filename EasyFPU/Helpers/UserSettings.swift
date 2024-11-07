@@ -42,6 +42,7 @@ class UserSettings: ObservableObject {
         case absorptionTimeCarbsInterval = "AbsorptionTimeCarbsInterval"
         case absorptionTimeECarbsDelay = "AbsorptionTimeECarbsDelay"
         case absorptionTimeECarbsInterval = "AbsorptionTimeECarbsInterval"
+        case alertPeriodAfterExportInMinutes = "AlertPeriodAfterExportInMinutes"
     }
     
     enum UserDefaultsDateKey: String, CaseIterable {
@@ -105,6 +106,7 @@ class UserSettings: ObservableObject {
         absorptionTimeECarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault,
         eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault,
         treatSugarsSeparately: UserSettings.getValue(for: UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault,
+        alertPeriodAfterExportInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.alertPeriodAfterExportInMinutes) ?? 15,
         foodDatabase: FoodDatabaseType.getFoodDatabase(type: UserSettings.getFoodDatabaseType()),
         searchWorldwide: UserSettings.getValue(for: UserDefaultsBoolKey.searchWorldwide) ?? false,
         countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode)
@@ -123,6 +125,7 @@ class UserSettings: ObservableObject {
         absorptionTimeECarbsIntervalInMinutes: Int,
         eCarbsFactor: Double,
         treatSugarsSeparately: Bool,
+        alertPeriodAfterExportInMinutes: Int,
         foodDatabase: FoodDatabase,
         searchWorldwide: Bool,
         countryCode: String?
@@ -139,6 +142,7 @@ class UserSettings: ObservableObject {
         self.absorptionTimeECarbsIntervalInMinutes = absorptionTimeECarbsIntervalInMinutes // in minutes
         self.eCarbsFactor = eCarbsFactor
         self.treatSugarsSeparately = treatSugarsSeparately
+        self.alertPeriodAfterExportInMinutes = alertPeriodAfterExportInMinutes
         self.foodDatabase = foodDatabase
         self.searchWorldwide = searchWorldwide
         self.countryCode = countryCode

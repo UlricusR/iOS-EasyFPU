@@ -47,34 +47,46 @@ struct FoodItemComposerView: View {
                                     .fill(.yellow)
                             )
                         }
+                        .accessibilityIdentifierLeaf("AddIngredientsButton")
                     } else {
                         Form {
                             Section(header: Text("Final product")) {
                                 HStack {
                                     Text("Name")
+                                        .accessibilityIdentifierLeaf("NameLabel")
                                     TextField("Name", text: self.$composedFoodItemVM.name)
+                                        .accessibilityIdentifierLeaf("NameValue")
                                 }
                                 
                                 HStack {
                                     Text("Weight")
+                                        .accessibilityIdentifierLeaf("WeightLabel")
                                     CustomTextField(titleKey: "Weight", text: self.$composedFoodItemVM.amountAsString, keyboardType: .numberPad)
                                         .multilineTextAlignment(.trailing)
+                                        .accessibilityIdentifierLeaf("WeightValue")
                                     Text("g")
+                                        .accessibilityIdentifierLeaf("WeightUnit")
                                 }
                                 
                                 // Buttons to ease input
                                 HStack {
                                     Spacer()
                                     NumberButton(number: 100, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
+                                        .accessibilityIdentifierLeaf("Add100Button")
                                     NumberButton(number: 50, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
+                                        .accessibilityIdentifierLeaf("Add50Button")
                                     NumberButton(number: 10, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
+                                        .accessibilityIdentifierLeaf("Add10Button")
                                     NumberButton(number: 5, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
+                                        .accessibilityIdentifierLeaf("Add5Button")
                                     NumberButton(number: 1, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
+                                        .accessibilityIdentifierLeaf("Add1Button")
                                     Spacer()
                                 }
                                 
                                 // Favorite
                                 Toggle("Favorite", isOn: $composedFoodItemVM.favorite)
+                                    .accessibilityIdentifierLeaf("FavoriteToggle")
                             }
                             
                             
@@ -82,13 +94,16 @@ struct FoodItemComposerView: View {
                                 // Number of portions
                                 HStack {
                                     Stepper("Number of portions", value: $composedFoodItemVM.numberOfPortions, in: 0...100)
+                                        .accessibilityIdentifierLeaf("NumberOfPortionsStepper")
                                     Text("\(composedFoodItemVM.numberOfPortions)")
+                                        .accessibilityIdentifierLeaf("NumberOfPortionsValue")
                                 }
                                 
                                 Text("If the number of portions is set to 0, no typical amounts will be created.").font(.caption)
                                 
                                 if composedFoodItemVM.numberOfPortions > 0 {
                                     Text("\(composedFoodItemVM.amount / composedFoodItemVM.numberOfPortions)g " + NSLocalizedString("per portion", comment: ""))
+                                        .accessibilityIdentifierLeaf("AmountPerPortionLabel")
                                 }
                             }
                             
@@ -102,13 +117,18 @@ struct FoodItemComposerView: View {
                                         Text("Edit ingredients")
                                     }
                                 }
+                                .accessibilityIdentifierLeaf("EditIngredientsButton")
                                 List {
                                     ForEach(composedFoodItemVM.foodItemVMs) { foodItem in
                                         HStack {
                                             Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
+                                                .accessibilityIdentifierLeaf("IngredientAmountValue")
                                             Text("g")
+                                                .accessibilityIdentifierLeaf("IngredientAmountUnit")
                                             Text(foodItem.name)
+                                                .accessibilityIdentifierLeaf("IngredientName")
                                         }
+                                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                                     }
                                 }
                             }
@@ -124,6 +144,7 @@ struct FoodItemComposerView: View {
                             Image(systemName: "questionmark.circle")
                                 .imageScale(.large)
                         }
+                        .accessibilityIdentifierLeaf("HelpButton")
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -133,6 +154,7 @@ struct FoodItemComposerView: View {
                             Image(systemName: "xmark.circle")
                                 .imageScale(.large)
                         }
+                        .accessibilityIdentifierLeaf("ClearButton")
                         
                         Button(action: {
                             // Trim white spaces from name
@@ -158,7 +180,9 @@ struct FoodItemComposerView: View {
                         }) {
                             Image(systemName: "checkmark.circle.fill")
                                 .imageScale(.large)
-                        }.disabled(composedFoodItemVM.foodItemVMs.count == 0)
+                        }
+                        .disabled(composedFoodItemVM.foodItemVMs.count == 0)
+                        .accessibilityIdentifierLeaf("SaveButton")
                     }
                 }
             }
@@ -213,8 +237,10 @@ struct FoodItemComposerView: View {
         switch state {
         case .addIngredients:
             IngredientSelectionListView(composedFoodItemVM: self.composedFoodItemVM)
+                .accessibilityIdentifierBranch("SelectIngredients")
         case .help:
             HelpView(helpScreen: self.helpScreen)
+                .accessibilityIdentifierBranch("HelpComposeMeal")
         }
     }
     

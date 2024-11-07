@@ -32,17 +32,24 @@ struct FoodItemSelector: View {
                                 Text(category == .product ? "Amount consumed": "Amount used")
                                 CustomTextField(titleKey: category == .product ? "Amount consumed" : "Amount used", text: self.$draftFoodItem.amountAsString, keyboardType: .numberPad)
                                     .multilineTextAlignment(.trailing)
+                                    .accessibilityIdentifierLeaf("AmountConsumed")
                                 Text("g")
+                                    .accessibilityIdentifierLeaf("UnitConsumed")
                             }
                             
                             // Buttons to ease input
                             HStack {
                                 Spacer()
                                 NumberButton(number: 100, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                                    .accessibilityIdentifierLeaf("Add100Button")
                                 NumberButton(number: 50, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                                    .accessibilityIdentifierLeaf("Add50Button")
                                 NumberButton(number: 10, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                                    .accessibilityIdentifierLeaf("Add10Button")
                                 NumberButton(number: 5, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                                    .accessibilityIdentifierLeaf("Add5Button")
                                 NumberButton(number: 1, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
+                                    .accessibilityIdentifierLeaf("Add1Button")
                                 Spacer()
                             }
                             
@@ -57,14 +64,14 @@ struct FoodItemSelector: View {
                                         }) {
                                             Image(systemName: "checkmark.circle.fill")
                                         }
+                                        .accessibilityIdentifierLeaf("EditTypicalAmountComment")
                                     }
                                 } else {
                                     // Give user possibility to add the entered amount to typical amounts
-                                    Button(action: {
+                                    Button("Add to typical amounts") {
                                         self.addToTypicalAmounts = true
-                                    }) {
-                                        Text("Add to typical amounts")
                                     }
+                                    .accessibilityIdentifierLeaf("AddTypicalAmountButton")
                                 }
                             }
                         }
@@ -74,12 +81,16 @@ struct FoodItemSelector: View {
                                 ForEach(self.draftFoodItem.typicalAmounts.sorted()) { typicalAmount in
                                     HStack {
                                         Text(typicalAmount.amountAsString)
+                                            .accessibilityIdentifierLeaf("TypicalAmountValue")
                                         Text("g")
+                                            .accessibilityIdentifierLeaf("TypicalAmountUnit")
                                         Text(typicalAmount.comment)
+                                            .accessibilityIdentifierLeaf("TypicalAmountComment")
                                     }
                                     .onTapGesture {
                                         self.draftFoodItem.amountAsString = typicalAmount.amountAsString
                                     }
+                                    .accessibilityIdentifierBranch("TAmount" + typicalAmount.amountAsString)
                                 }
                             }
                         }
@@ -93,6 +104,7 @@ struct FoodItemSelector: View {
                     }
                     .padding()
                     .buttonStyle(.bordered)
+                    .accessibilityIdentifierLeaf("CancelButton")
                     
                     Button("Add") {
                         // First check for unsaved typical amount
@@ -116,6 +128,7 @@ struct FoodItemSelector: View {
                     .padding()
                     .buttonStyle(.borderedProminent)
                     .disabled(draftFoodItem.amount <= 0)
+                    .accessibilityIdentifierLeaf("AddButton")
                 }
             }
             .navigationBarTitle(self.draftFoodItem.name)
@@ -127,6 +140,7 @@ struct FoodItemSelector: View {
                         Image(systemName: "questionmark.circle")
                             .imageScale(.large)
                     }
+                    .accessibilityIdentifierLeaf("HelpButton")
                 }
             }
         }
@@ -139,6 +153,7 @@ struct FoodItemSelector: View {
         }
         .sheet(isPresented: self.$showingSheet) {
             HelpView(helpScreen: self.helpScreen)
+                .accessibilityIdentifierBranch("HelpSelectFoodItem")
         }
     }
     

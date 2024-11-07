@@ -22,6 +22,7 @@ struct FoodSearch: View {
                 List {
                     ForEach(searchResults) { searchResult in
                         FoodSearchResultPreview(product: searchResult, foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem, category: self.category, parentPresentation: _presentation)
+                            .accessibilityIdentifierBranch(String(searchResult.name.prefix(10)))
                     }
                 }
                 .navigationBarTitle("Food Database Search")
@@ -31,8 +32,10 @@ struct FoodSearch: View {
                             // Just close
                             presentation.wrappedValue.dismiss()
                         }) {
-                            Text("Cancel")
+                            Image(systemName: "xmark.circle")
+                                .imageScale(.large)
                         }
+                        .accessibilityIdentifierLeaf("CancelButton")
                     }
                     
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -46,6 +49,7 @@ struct FoodSearch: View {
                         }) {
                             Text("Select").disabled(foodDatabaseResults.selectedEntry == nil)
                         }
+                        .accessibilityIdentifierLeaf("SelectButton")
                     }
                 }
             }

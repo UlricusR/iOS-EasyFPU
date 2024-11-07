@@ -20,10 +20,11 @@ struct DisclaimerView: View {
                 Text("Applying the nutrition information calculated by this app in a diabetes therapy may bear the risk of high or low blood glucose values. Use at your own risk!").padding()
                 Text("Please consult your medical doctor before modifying your diabetes therapy and applying Fat Protein Units.").padding().foregroundStyle(.red).font(.headline)
                 Text("Read more here!")
-                .padding().foregroundStyle(.blue)
-                .onTapGesture {
-                    UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
-                }
+                    .padding().foregroundStyle(.blue)
+                    .onTapGesture {
+                        UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
+                    }
+                    .accessibilityIdentifierLeaf("LinkToDisclaimer")
                 
                 Text("Declining will not let you continue to use the app.").padding()
                 Spacer()
@@ -31,7 +32,7 @@ struct DisclaimerView: View {
             .navigationBarTitle(Text("Disclaimer"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
+                    Button("Decline") {
                         var settingsError = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
                             self.alertTitle = NSLocalizedString("Notice", comment: "")
@@ -42,13 +43,12 @@ struct DisclaimerView: View {
                             self.alertMessage = NSLocalizedString("You need to accept the disclaimer to continue.", comment: "")
                         }
                         self.showingAlert = true
-                    }) {
-                        Text("Decline")
                     }
+                    .accessibilityIdentifierLeaf("DeclineButton")
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
+                    Button("Accept") {
                         var settingsError = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
                             self.alertTitle = NSLocalizedString("Notice", comment: "")
@@ -58,9 +58,8 @@ struct DisclaimerView: View {
                         
                         // Set dynamic variable and broadcast change in UserSettings
                         UserSettings.shared.disclaimerAccepted = true
-                    }) {
-                        Text("Accept")
                     }
+                    .accessibilityIdentifierLeaf("AcceptButton")
                 }
             }
         }

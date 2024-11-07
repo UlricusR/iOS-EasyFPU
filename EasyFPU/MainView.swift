@@ -31,6 +31,7 @@ struct MainView: View {
         if !userSettings.disclaimerAccepted {
             return AnyView(
                 DisclaimerView()
+                    .accessibilityIdentifierBranch("Disclaimer")
             )
         } else {
             return AnyView(
@@ -42,6 +43,7 @@ struct MainView: View {
                             Text("Eat")
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
+                        .accessibilityIdentifierBranch("CalculateMeal")
                     
                     RecipeListView(composedFoodItem: UserSettings.shared.composedMeal, helpSheet: RecipeListViewSheets.State.recipeListHelp)
                         .tag(Tab.cook.rawValue)
@@ -50,6 +52,7 @@ struct MainView: View {
                             Text("Cook")
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
+                        .accessibilityIdentifierBranch("CookAndBake")
                     
                     ProductMaintenanceListView()
                         .tag(Tab.products.rawValue)
@@ -58,6 +61,7 @@ struct MainView: View {
                             Text("Products")
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
+                        .accessibilityIdentifierBranch("MaintainProducts")
                     
                     IngredientMaintenanceListView()
                         .tag(Tab.ingredients.rawValue)
@@ -66,6 +70,7 @@ struct MainView: View {
                             Text("Ingredients")
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
+                        .accessibilityIdentifierBranch("MaintainIngredients")
                     
                     MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme))
                         .tag(Tab.settings.rawValue)
@@ -74,6 +79,7 @@ struct MainView: View {
                             Text("Settings")
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
+                        .accessibilityIdentifierBranch("Settings")
                 }
                 .alert(isPresented: self.$showingAlert) {
                     Alert(
@@ -101,6 +107,7 @@ struct MainView: View {
                         }
                     }
                 }
+                .accessibilityIdentifierBranch("MainView")
             )
         }
     }

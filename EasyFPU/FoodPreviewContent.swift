@@ -21,7 +21,10 @@ struct FoodPreviewContent: View {
     var body: some View {
         VStack {
             // The food name
-            Text(selectedEntry.name).font(.headline).padding()
+            Text(selectedEntry.name)
+                .font(.headline)
+                .padding()
+                .accessibilityIdentifierLeaf("FoodName")
             
             ScrollView(.horizontal) {
                 HStack {
@@ -43,25 +46,35 @@ struct FoodPreviewContent: View {
                             self.activeSheet = .ingredients
                         }
                 }
+                .accessibilityIdentifierLeaf("FoodImages")
             }
             
             HStack {
                 Text("Calories per 100g")
+                    .accessibilityIdentifierLeaf("CaloriesLabel")
                 Spacer()
                 Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.caloriesPer100g.getEnergyInKcal()))!)
+                    .accessibilityIdentifierLeaf("CaloriesValue")
                 Text("kcal")
+                    .accessibilityIdentifierLeaf("CaloriesUnit")
             }.padding([.leading, .trailing])
             HStack {
                 Text("Carbs per 100g")
+                    .accessibilityIdentifierLeaf("CarbsLabel")
                 Spacer()
                 Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.carbsPer100g))!)
+                    .accessibilityIdentifierLeaf("CarbsValue")
                 Text("g")
+                    .accessibilityIdentifierLeaf("CarbsUnit")
             }.padding([.leading, .trailing])
             HStack {
                 Text("Thereof Sugars per 100g")
+                    .accessibilityIdentifierLeaf("SugarsLabel")
                 Spacer()
                 Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.sugarsPer100g))!)
+                    .accessibilityIdentifierLeaf("SugarsValue")
                 Text("g")
+                    .accessibilityIdentifierLeaf("SugarsUnit")
             }.padding([.leading, .trailing])
             
             HStack {
@@ -70,6 +83,7 @@ struct FoodPreviewContent: View {
                     .onTapGesture {
                         try? UIApplication.shared.open(UserSettings.shared.foodDatabase.getLink(for: selectedEntry.sourceId))
                     }
+                    .accessibilityIdentifierLeaf("LinkToFoodDatabaseEntry")
             }
             
             Spacer()

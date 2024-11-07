@@ -21,6 +21,7 @@ struct AboutView: View {
                     .onTapGesture {
                         UIApplication.shared.open(URL(string: NSLocalizedString("Home-Link", comment: ""))!)
                     }
+                    .accessibilityIdentifierLeaf("LinkToDocumentationButton")
                 Text("Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String) Build \(Bundle.main.infoDictionary!["CFBundleVersion"] as! String)").padding()
                 
                 Spacer()
@@ -34,6 +35,7 @@ struct AboutView: View {
                         Image(systemName: "xmark.circle.fill")
                             .imageScale(.large)
                     }
+                    .accessibilityIdentifierLeaf("CloseButton")
                 }
             }
         }

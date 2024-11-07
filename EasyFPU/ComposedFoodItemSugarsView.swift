@@ -21,33 +21,40 @@ struct ComposedFoodItemSugarsView: View {
         VStack {
             HStack(alignment: .center) {
                 Image(systemName: "cube.fill")
+                    .accessibilityIdentifierLeaf("Symbol")
                 Text("Sugars").font(.headline).fontWeight(.bold).lineLimit(2)
+                    .accessibilityIdentifierLeaf("Title")
             }
             .multilineTextAlignment(.center)
             .foregroundStyle(Color(ComposedFoodItemSugarsView.color))
             
             HStack {
                 VStack(alignment: .trailing) { // Questions
-                    Text("How much?")
-                    Text("When?")
-                    Text("How long?")
+                    Text("How much?").accessibilityIdentifierLeaf("AmountLabel")
+                    Text("When?").accessibilityIdentifierLeaf("TimeLabel")
+                    Text("How long?").accessibilityIdentifierLeaf("DurationLabel")
                 }.foregroundStyle(Color(ComposedFoodItemSugarsView.color))
                 
                 VStack(alignment: .leading) { // Answers
                     HStack { // How much?
                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.getSugars(when: userSettings.treatSugarsSeparately)))!)
-                        Text("g Carbs")
+                            .accessibilityIdentifierLeaf("AmountValue")
+                        Text("g Carbs").accessibilityIdentifierLeaf("AmountUnit")
                     }
                     HStack {
                         Text("In")
                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: userSettings.absorptionTimeSugarsDelayInMinutes + userSettings.mealDelayInMinutes))!)
+                            .accessibilityIdentifierLeaf("PauseValue")
                         Text("min at")
                         Text(self.sugarsTimeAsString)
+                            .accessibilityIdentifierLeaf("TimeValue")
                     }
                     HStack {
                         Text("For")
                         Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: UserSettings.shared.absorptionTimeSugarsDurationInHours))!)
+                            .accessibilityIdentifierLeaf("DurationValue")
                         Text("h")
+                            .accessibilityIdentifierLeaf("DurationUnit")
                     }
                 }
             }

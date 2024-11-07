@@ -28,28 +28,35 @@ struct ComposedFoodItemExportView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
-                Text("Please choose the data to export:").padding().font(.headline)
+                Text("Please choose the data to export:")
+                    .padding()
+                    .font(.headline)
                 
                 if userSettings.treatSugarsSeparately {
                     Toggle(isOn: $carbsRegimeCalculator.includeTotalMealSugars) {
                         Text("Sugars")
                     }
                     .padding([.leading, .trailing])
+                    .accessibilityIdentifierLeaf("ExportSugarsToggle")
                 }
                 
                 Toggle(isOn: $carbsRegimeCalculator.includeTotalMealCarbs) {
                     Text("Regular Carbs")
                 }
                 .padding([.leading, .trailing])
+                .accessibilityIdentifierLeaf("ExportCarbsToggle")
                 
                 Toggle(isOn: $carbsRegimeCalculator.includeECarbs) {
                     Text("Extended Carbs")
                 }
                 .padding([.leading, .trailing])
+                .accessibilityIdentifierLeaf("ExportECarbsToggle")
                 
                 Toggle(isOn: $exportTotalMealCalories) {
                     Text("Total Meal Calories")
-                }.padding([.leading, .trailing, .top])
+                }
+                .padding([.leading, .trailing, .top])
+                .accessibilityIdentifierLeaf("ExportCaloriesToggle")
                 
                 HStack {
                     Stepper("Delay until meal", onIncrement: {
@@ -59,8 +66,12 @@ struct ComposedFoodItemExportView: View {
                         userSettings.mealDelayInMinutes = max(0, userSettings.mealDelayInMinutes - 5)
                         carbsRegimeCalculator.recalculate()
                     })
+                    .accessibilityIdentifierLeaf("MealDelayStepper")
+                    
                     Text("\(userSettings.mealDelayInMinutes)")
+                        .accessibilityIdentifierLeaf("MealDelayValue")
                     Text("min")
+                        .accessibilityIdentifierLeaf("MealDelayUnit")
                 }.padding()
                 
                 // The carbs preview
@@ -76,6 +87,7 @@ struct ComposedFoodItemExportView: View {
                 }
                 .padding()
                 .buttonStyle(.borderedProminent)
+                .accessibilityIdentifierLeaf("ExportToHealthButton")
             }
             .navigationBarTitle("Export to Health", displayMode: .inline)
             .toolbar {
@@ -86,6 +98,7 @@ struct ComposedFoodItemExportView: View {
                         Image(systemName: "questionmark.circle")
                             .imageScale(.large)
                     }
+                    .accessibilityIdentifierLeaf("HelpButton")
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -107,6 +120,7 @@ struct ComposedFoodItemExportView: View {
                         Image(systemName: "xmark.circle.fill")
                             .imageScale(.large)
                     }
+                    .accessibilityIdentifierLeaf("CloseButton")
                 }
             }
         }

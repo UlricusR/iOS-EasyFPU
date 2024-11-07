@@ -222,7 +222,6 @@
 "Interval" = "Intervall";
 "min" = "min";
 "Treat sugars separately" = "KH aus Zucker separat behandeln";
-"Other Parameters" = "Andere Einstellungen";
 "Alert duration between exports" = "Hinweis-Dauer zwischen Exporten";
 "Country" = "Land";
 "Select food database country" = "Land für Lebensmitteldatenbank wählen";
@@ -231,6 +230,7 @@
 
 // Menu actions
 "App Settings" = "App-Einstellungen";
+"Therapy Settings" = "Therapieeinstellungen";
 "Settings" = "Einstellungen";
 "Import from JSON" = "Importieren (Format: JSON)";
 "Export to JSON" = "Exportieren (Format: JSON)";

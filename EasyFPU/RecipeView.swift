@@ -23,6 +23,7 @@ struct RecipeView: View {
             if composedFoodItemVM.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
             Spacer()
         }
+        .accessibilityIdentifierLeaf("RecipeName")
         .swipeActions(edge: .trailing) {
             // Editing the recipe
             Button("Edit", systemImage: "pencil") {
@@ -38,12 +39,14 @@ struct RecipeView: View {
                 }
             }
             .tint(.blue)
+            .accessibilityIdentifierLeaf("EditButton")
             
             // Duplicating the recipe
             Button("Duplicate", systemImage: "document.on.document") {
                 composedFoodItemVM.duplicate()
             }
             .tint(.indigo)
+            .accessibilityIdentifierLeaf("DuplicateButton")
             
             // Delete the recipe
             Button("Delete", systemImage: "trash", role: .destructive) {
@@ -56,6 +59,7 @@ struct RecipeView: View {
                     }
                 }
             }
+            .accessibilityIdentifierLeaf("DeleteButton")
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             // Sharing the recipe
@@ -63,6 +67,7 @@ struct RecipeView: View {
                 activeSheet = .exportRecipe
             }
             .tint(.green)
+            .accessibilityIdentifierLeaf("ShareButton")
         }
         .sheet(item: $activeSheet) {
             sheetContent($0)

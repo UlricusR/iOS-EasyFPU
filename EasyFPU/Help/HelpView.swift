@@ -62,6 +62,7 @@ struct HelpView: View {
                     }) {
                         Image(systemName: "xmark.circle.fill")
                     }
+                    .accessibilityIdentifierLeaf("CloseButton")
                 }
             }
         }

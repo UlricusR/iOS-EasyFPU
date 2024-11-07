@@ -30,12 +30,14 @@ struct FoodPreview: View {
                             foodSelected = false
                             presentation.wrappedValue.dismiss()
                         }) {
-                            Text("Cancel")
+                            Image(systemName: "xmark.circle")
+                                .imageScale(.large)
                         }
+                        .accessibilityIdentifierLeaf("CancelButton")
                     }
                     
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
+                        Button("Select") {
                             databaseResults.selectedEntry = product
                             databaseResults.selectedEntry?.category = category
                             draftFoodItem.fill(with: product)
@@ -43,9 +45,8 @@ struct FoodPreview: View {
                             // Close sheet
                             foodSelected = true
                             presentation.wrappedValue.dismiss()
-                        }) {
-                            Text("Select")
                         }
+                        .accessibilityIdentifierLeaf("SelectButton")
                     }
                 }
             }
