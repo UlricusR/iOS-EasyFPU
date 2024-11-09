@@ -16,7 +16,7 @@ struct FoodItemView: View {
     var listType: FoodItemListView.FoodItemListType
     @State private var activeSheet: FoodItemViewSheets.State?
     @State private var activeAlert: FoodItemViewSheets.AlertState?
-    @State private var actionSheetIsPresented: Bool = false
+    @State private var isConfirming = false
     
     var body: some View {
         VStack {
@@ -130,18 +130,19 @@ struct FoodItemView: View {
             .accessibilityIdentifierLeaf("DuplicateButton")
             
             // Delete the food item
-            Button("Delete", systemImage: "trash", role: .destructive) {
+            Button("Delete", systemImage: "trash") {
                 if foodItemVM.hasAssociatedFoodItem() {
                     // Check if FoodItem is related to an Ingredient
                     if !foodItemVM.canBeDeleted() {
                         self.activeAlert = .associatedIngredient
                     } else if foodItemVM.hasAssociatedRecipe() {
-                        self.actionSheetIsPresented.toggle()
+                        self.isConfirming.toggle()
                     } else {
                         self.activeAlert = .confirmDelete
                     }
                 }
             }
+            .tint(.red)
             .accessibilityIdentifierLeaf("DeleteButton")
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
@@ -166,16 +167,21 @@ struct FoodItemView: View {
         .alert(item: $activeAlert) {
             alertContent($0)
         }
-        .actionSheet(isPresented: $actionSheetIsPresented) {
-            ActionSheet(title: Text("Warning"), message: Text("There's an associated recipe, do you want to delete it as well?"), buttons: [
-                .default(Text("Delete both")) {
-                    deleteFoodItemAndComposedFoodItem()
-                },
-                .default(Text("Keep recipe")) {
-                    deleteFoodItemOnly()
-                },
-                .cancel()
-            ])
+        .confirmationDialog(
+            "Warning",
+            isPresented: $isConfirming
+        ) {
+            Button("Delete both") {
+                deleteFoodItemAndComposedFoodItem()
+            }
+            Button("Keep recipe") {
+                deleteFoodItemOnly()
+            }
+            Button("Cancel", role: .cancel) {
+                isConfirming.toggle()
+            }
+        } message: {
+            Text("There's an associated recipe, do you want to delete it as well?")
         }
     }
     

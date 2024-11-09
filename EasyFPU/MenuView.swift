@@ -12,12 +12,11 @@ import UniformTypeIdentifiers
 struct MenuView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
-    @State private var foodItemVMsToBeImported: [FoodItemViewModel]?
-    @State private var composedFoodItemVMsToBeImported: [ComposedFoodItemViewModel]?
+    @State private var isConfirming = false
+    @State private var importData: ImportData?
     @State private var activeSheet: MenuViewSheets.State?
     @State private var showingAlert = false
     @State private var alertMessage = ""
-    @State private var showActionSheet = false
     
     var body: some View {
         NavigationStack {
@@ -40,6 +39,23 @@ struct MenuView: View {
                     // Import
                     Button("Import from JSON") {
                         activeSheet = .pickFileToImport
+                    }
+                    .confirmationDialog(
+                        "Import food list",
+                        isPresented: $isConfirming,
+                        titleVisibility: .visible
+                    ) {
+                        Button("Replace") {
+                            self.importFoodItems(replaceExisting: true)
+                        }
+                        Button("Append") {
+                            self.importFoodItems(replaceExisting: false)
+                        }
+                        Button("Cancel", role: .cancel) {
+                            isConfirming.toggle()
+                        }
+                    } message: {
+                        Text("Please select")
                     }
                     .accessibilityIdentifierLeaf("ImportFromJSONButton")
                     
@@ -77,17 +93,6 @@ struct MenuView: View {
             }
             .navigationBarTitle("Settings")
         }
-        .actionSheet(isPresented: self.$showActionSheet) {
-            ActionSheet(title: Text("Import food list"), message: Text("Please select"), buttons: [
-                .default(Text("Replace")) {
-                    self.importFoodItems(replaceExisting: true)
-                },
-                .default(Text("Append")) {
-                    self.importFoodItems(replaceExisting: false)
-                },
-                .cancel()
-            ])
-        }
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
@@ -122,8 +127,16 @@ struct MenuView: View {
     }
     
     private func importJSON(_ url: URL) {
-        if DataHelper.importFoodItems(url, foodItemVMsToBeImported: &foodItemVMsToBeImported, composedFoodItemVMsToBeImported: &composedFoodItemVMsToBeImported, errorMessage: &alertMessage) {
-            self.showActionSheet = true
+        if let importData = DataHelper.importFoodItems(url, errorMessage: &alertMessage) {
+            self.importData = importData
+            
+            if DataHelper.hasData() {
+                // There are already data, so ask user what to do with it
+                self.isConfirming = true
+            } else {
+                // Import the data
+                importFoodItems(replaceExisting: false)
+            }
         } else {
             // Some error happened
             showingAlert = true
@@ -152,27 +165,26 @@ struct MenuView: View {
     }
     
     private func importFoodItems(replaceExisting: Bool) {
-        if replaceExisting {
-            DataHelper.deleteAllFood()
-        }
+        if let importData {
+            if replaceExisting {
+                DataHelper.deleteAllFood()
+            }
         
-        if foodItemVMsToBeImported != nil {
-            for foodItemVMToBeImported in foodItemVMsToBeImported! {
+            for foodItemVMToBeImported in importData.foodItemVMsToBeImported {
                 foodItemVMToBeImported.save()
             }
-        }
-        
-        if composedFoodItemVMsToBeImported != nil {
-            for composedFoodItemVMToBeImported in composedFoodItemVMsToBeImported! {
-                _ = composedFoodItemVMToBeImported.save()
+            
+            if importData.composedFoodItemVMsToBeImported != nil {
+                for composedFoodItemVMToBeImported in importData.composedFoodItemVMsToBeImported! {
+                    _ = composedFoodItemVMToBeImported.save()
+                }
             }
-        }
          
-        if foodItemVMsToBeImported != nil || composedFoodItemVMsToBeImported != nil {
             alertMessage = NSLocalizedString("Successfully imported food list", comment: "")
             showingAlert = true
         } else {
-            alertMessage = NSLocalizedString("Could not import food list", comment: "")
+            // This should never happen
+            alertMessage = NSLocalizedString("Failed to import food list", comment: "")
             showingAlert = true
         }
     }

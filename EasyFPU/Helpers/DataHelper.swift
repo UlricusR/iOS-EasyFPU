@@ -26,6 +26,12 @@ enum InvalidNumberError: Error {
     }
 }
 
+struct ImportData: Identifiable {
+    var id = UUID()
+    let foodItemVMsToBeImported: [FoodItemViewModel]
+    let composedFoodItemVMsToBeImported: [ComposedFoodItemViewModel]?
+}
+
 class DataHelper {
     
     // MARK: - Reading the default absorption block JSON
@@ -61,17 +67,15 @@ class DataHelper {
     
     static func importFoodItems(
         _ file: URL,
-        foodItemVMsToBeImported: inout [FoodItemViewModel]?,
-        composedFoodItemVMsToBeImported: inout [ComposedFoodItemViewModel]?,
         errorMessage: inout String
-    ) -> Bool {
+    ) -> ImportData? {
         debugPrint("Trying to import following file: \(file)")
         
         // Make sure we can access file
         guard file.startAccessingSecurityScopedResource() else {
             debugPrint("Failed to access \(file)")
             errorMessage = "Failed to access \(file)"
-            return false
+            return nil
         }
         defer { file.stopAccessingSecurityScopedResource() }
         
@@ -82,7 +86,7 @@ class DataHelper {
         } catch {
             debugPrint(error.localizedDescription)
             errorMessage = error.localizedDescription
-            return false
+            return nil
         }
         
         // Decode JSON
@@ -96,38 +100,39 @@ class DataHelper {
             dataModelVersion = dataVersionFinder.dataModelVersion
         } catch DataVersionFinder.DataModelError.invalidDataModelVersion(let message) {
             errorMessage = message
-            return false
+            return nil
         } catch {
             errorMessage = NSLocalizedString("Failed to decode - ", comment: "") + error.localizedDescription
-            return false
+            return nil
         }
         
         do {
+            var importData: ImportData
             switch dataModelVersion {
             case .version1:
-                foodItemVMsToBeImported = try decoder.decode([FoodItemViewModel].self, from: jsonData)
+                let foodItemVMsToBeImported = try decoder.decode([FoodItemViewModel].self, from: jsonData)
+                importData = ImportData(foodItemVMsToBeImported: foodItemVMsToBeImported, composedFoodItemVMsToBeImported: nil)
             case .version2:
                 let wrappedData = try decoder.decode(DataWrapper.self, from: jsonData)
-                foodItemVMsToBeImported = wrappedData.foodItemVMs
-                composedFoodItemVMsToBeImported = wrappedData.composedFoodItemVMs
+                importData = ImportData(foodItemVMsToBeImported: wrappedData.foodItemVMs, composedFoodItemVMsToBeImported: wrappedData.composedFoodItemVMs)
             }
             // All has gone fine, we return true
-            return true
+            return importData
         } catch DecodingError.keyNotFound(let key, let context) {
             errorMessage = NSLocalizedString("Failed to decode due to missing key ", comment: "") + key.stringValue + " - " + context.debugDescription
-            return false
+            return nil
         } catch DecodingError.typeMismatch(_, let context) {
             errorMessage = NSLocalizedString("Failed to decode due to type mismatch - ", comment: "") + context.debugDescription
-            return false
+            return nil
         } catch DecodingError.valueNotFound(let type, let context) {
             errorMessage = NSLocalizedString("Failed to decode due to missing value - ", comment: "") + "\(type)" + " - " + context.debugDescription
-            return false
+            return nil
         } catch DecodingError.dataCorrupted(_) {
             errorMessage = NSLocalizedString("Failed to decode because it appears to be invalid JSON", comment: "")
-            return false
+            return nil
         } catch {
             errorMessage = NSLocalizedString("Failed to decode - ", comment: "") + error.localizedDescription
-            return false
+            return nil
         }
     }
     
@@ -172,6 +177,12 @@ class DataHelper {
     static func deleteAllFood() {
         ComposedFoodItem.deleteAll()
         FoodItem.deleteAll()
+    }
+    
+    /// Checks if either FoodItems or ComposedFoodItems exist in the database.
+    /// - Returns: True if either of them exist.
+    static func hasData() -> Bool {
+        !ComposedFoodItem.fetchAll().isEmpty || !FoodItem.fetchAll().isEmpty
     }
     
     // MARK: - Data checker and formatter

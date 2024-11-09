@@ -88,6 +88,20 @@ struct ComposedFoodItemExportView: View {
                 .padding()
                 .buttonStyle(.borderedProminent)
                 .accessibilityIdentifierLeaf("ExportToHealthButton")
+                .confirmationDialog(
+                    "Notice",
+                    isPresented: $showingExportWarning
+                ) {
+                    Button("Export anyway") {
+                        alertMessages.removeAll()
+                        authenticate()
+                    }
+                    Button("Cancel", role: .cancel) {
+                        alertMessages.removeAll()
+                    }
+                } message: {
+                    Text(getExportWarningText())
+                }
             }
             .navigationBarTitle("Export to Health", displayMode: .inline)
             .toolbar {
@@ -136,15 +150,6 @@ struct ComposedFoodItemExportView: View {
         }
         .sheet(isPresented: self.$showingSheet) {
             HelpView(helpScreen: self.helpScreen)
-        }
-        .actionSheet(isPresented: $showingExportWarning) {
-            ActionSheet(title: Text("Warning"), message: Text(getExportWarningText()), buttons: [
-                .default(Text("Export anyway")) {
-                    alertMessages.removeAll()
-                    authenticate()
-                },
-                .cancel()
-            ])
         }
     }
     

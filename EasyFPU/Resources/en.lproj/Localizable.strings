@@ -35,6 +35,12 @@
 "Tap to edit" = "Tap to edit";
 " - Copy" = " - Copy";
 
+// Alert titles
+"Error" = "Error";
+"Warning" = "Warning";
+"Notice" = "Notice";
+"Success" = "Success";
+
 // About
 "About" = "About";
 "About this app" = "About this app";
@@ -238,10 +244,9 @@
 "Failed to access " = "Failed to access ";
 "Failed to export food list to: " = "Failed to export food list to: ";
 "Successfully imported food list" = "Successfully imported food list";
-"Failed to import food list" = "Failed to import food list";
-"Notice" = "Notice";
-"Import food list" = "Import food list";
-"Please select" = "Please select";
+"Failed to import food list" = "Oops! Failed to import food list. This should not have happened, please contact the developer.";
+"Import food list" = "There's already food in the database.";
+"Please select" = "Should the imported food replace it or be added to it?";
 "Replace" = "Replace";
 "Append" = "Add";
 "Keep both" = "Keep both";
@@ -275,7 +280,6 @@
 "LastCarbsExport" = "carbs";
 "LastECarbsExport" = "e-carbs";
 "LastCaloriesExport" = "calories";
-"Warning" = "Warning";
 "You have exported the following data less than " = "You have exported the following data less than ";
 " minutes ago: " = " minutes ago: ";
 "Export anyway" = "Export anyway";

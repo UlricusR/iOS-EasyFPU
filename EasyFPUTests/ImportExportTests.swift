@@ -26,18 +26,20 @@ class ImportExportTests {
         try #require(fileUrl != nil)
         
         // Prepare arrays to store imported FoodItemViewModels and ComposedFoodItemViewModels
-        var foodItemVMsToBeImported: [FoodItemViewModel]? = [FoodItemViewModel]()
-        var composedFoodItemVMsToBeImported: [ComposedFoodItemViewModel]? = [ComposedFoodItemViewModel]()
         var errorMessage = ""
         
         // Import
-        try #require(DataHelper.importFoodItems(fileUrl!, foodItemVMsToBeImported: &foodItemVMsToBeImported, composedFoodItemVMsToBeImported: &composedFoodItemVMsToBeImported, errorMessage: &errorMessage))
+        let importData = DataHelper.importFoodItems(fileUrl!, errorMessage: &errorMessage)
+        try #require(importData != nil, "Import data should not be nil")
         #expect(errorMessage.isEmpty, "There should be no error message")
-        try #require(foodItemVMsToBeImported != nil && composedFoodItemVMsToBeImported != nil, "Both FoodItemVM and ComposedFoodItemVM arrays should not be nil")
         
         // Check number of ComposedFoodItemVMs and FoodItemVMs
-        #expect(foodItemVMsToBeImported!.count == numberOfItems.0, "The number of FoodItemVMs should be \(numberOfItems.0).")
-        #expect(composedFoodItemVMsToBeImported!.count == numberOfItems.1, "The number of ComposedFoodItemVMs should be \(numberOfItems.1).")
+        #expect(importData!.foodItemVMsToBeImported.count == numberOfItems.0, "The number of FoodItemVMs should be \(numberOfItems.0).")
+        if numberOfItems.1 == 0 {
+            #expect(importData!.composedFoodItemVMsToBeImported == nil || importData!.composedFoodItemVMsToBeImported!.isEmpty, "ComposedFoodItemVM array should be nil or empty.")
+        } else {
+            #expect(importData!.composedFoodItemVMsToBeImported!.count == numberOfItems.1, "The number of ComposedFoodItemVMs should be \(numberOfItems.1).")
+        }
     }
 
     @Test("ID: 2 - Export data")

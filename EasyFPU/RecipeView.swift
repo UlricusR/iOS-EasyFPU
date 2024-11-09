@@ -13,7 +13,7 @@ struct RecipeView: View {
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @Binding var notificationState: RecipeListView.NotificationState?
     @State private var activeSheet: RecipeViewSheets.State?
-    @State private var actionSheetIsPresented: Bool = false
+    @State private var isConfirming = false
     @State private var alertIsPresented: Bool = false
     
     var body: some View {
@@ -49,16 +49,17 @@ struct RecipeView: View {
             .accessibilityIdentifierLeaf("DuplicateButton")
             
             // Delete the recipe
-            Button("Delete", systemImage: "trash", role: .destructive) {
+            Button("Delete", systemImage: "trash") {
                 if composedFoodItemVM.hasAssociatedComposedFoodItem() {
                     // Check for associated product
                     if composedFoodItemVM.hasAssociatedFoodItem() {
-                        actionSheetIsPresented.toggle()
+                        isConfirming.toggle()
                     } else {
                         alertIsPresented.toggle()
                     }
                 }
             }
+            .tint(.red)
             .accessibilityIdentifierLeaf("DeleteButton")
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
@@ -72,29 +73,34 @@ struct RecipeView: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert(isPresented: $alertIsPresented) {
-            Alert(
-                title: Text("Delete recipe"),
-                message: Text("Do you really want to delete this recipe? This cannot be undone!"),
-                primaryButton: .default(
-                    Text("Do not delete")
-                ),
-                secondaryButton: .destructive(
-                    Text("Delete"),
-                    action: deleteRecipeOnly
-                )
-            )
+        .alert(
+            "Delete recipe",
+            isPresented: $alertIsPresented
+        ) {
+            Button("Delete", role: .destructive) {
+                deleteRecipeOnly()
+            }
+            Button("Cancel", role: .cancel) {
+                alertIsPresented = false
+            }
+        } message: {
+            Text("Do you really want to delete this recipe? This cannot be undone!")
         }
-        .actionSheet(isPresented: $actionSheetIsPresented) {
-            ActionSheet(title: Text("Warning"), message: Text("There's an associated product, do you want to delete it as well?"), buttons: [
-                .default(Text("Delete both")) {
-                    deleteRecipeAndFoodItem()
-                },
-                .default(Text("Keep product")) {
-                    deleteRecipeOnly()
-                },
-                .cancel()
-            ])
+        .confirmationDialog(
+            "Warning",
+            isPresented: $isConfirming
+        ) {
+            Button("Delete both") {
+                deleteRecipeAndFoodItem()
+            }
+            Button("Keep product") {
+                deleteRecipeOnly()
+            }
+            Button("Cancel", role: .cancel) {
+                isConfirming.toggle()
+            }
+        } message: {
+            Text("There's an associated product, do you want to delete it as well?")
         }
     }
     

@@ -35,6 +35,12 @@
 "Tap to edit" = "Zum Bearbeiten antippen";
 " - Copy" = " - Kopie";
 
+// Alert titles
+"Error" = "Fehler";
+"Warning" = "Warnung";
+"Notice" = "Hinweis";
+"Success" = "Erfolg";
+
 // About
 "About" = "Über";
 "About this app" = "Über diese App";
@@ -238,12 +244,11 @@
 "Failed to export food list to: " = "Konnte Essensliste nicht exportieren nach: ";
 "Failed to access " = "Zugriff nicht möglich auf ";
 "Successfully imported food list" = "Essensliste erfolgreich importiert";
-"Failed to import food list" = "Konnte Essensliste nicht importieren";
-"Notice" = "Hinweis";
-"Import food list" = "Essensliste importieren";
-"Please select" = "Bitte auswählen";
+"Failed to import food list" = "Hoppla! Konnte die Essensliste nicht importieren. Dies hätte nicht passieren dürfen, bitte melde es dem Entwicklerteam.";
+"Import food list" = "Es ist bereits Essen in der Datenbank.";
+"Please select" = "Soll das importierte Essen dieses ersetzen oder hinzugefügt werden?";
 "Replace" = "Ersetzen";
-"Append" = "Anhängen";
+"Append" = "Hinzufügen";
 "Keep both" = "Beide behalten";
 "Create Food Item" = "Essen erstellen";
 "Only update Composed Food Item" = "Nur das Rezept aktualisieren";
@@ -275,7 +280,6 @@
 "LastCarbsExport" = "reguläre Kohlenhydrate";
 "LastECarbsExport" = "verlängerte Kohlenhydrate";
 "LastCaloriesExport" = "Kalorien";
-"Warning" = "Achtung!";
 "You have exported the following data less than " = "Du hast folgende Daten vor weniger als ";
 " minutes ago: " = " Minuten exportiert: ";
 "Export anyway" = "Trotzdem exportieren";
