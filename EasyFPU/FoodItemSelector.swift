@@ -144,13 +144,7 @@ struct FoodItemSelector: View {
                 }
             }
         }
-        .alert(isPresented: self.$showingAlert) {
-            Alert(
-                title: Text("Data alert"),
-                message: Text(self.errorMessage),
-                dismissButton: .default(Text("OK"))
-            )
-        }
+        .alert("Data alert", isPresented: self.$showingAlert, actions: {}, message: { Text(self.errorMessage) })
         .sheet(isPresented: self.$showingSheet) {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpSelectFoodItem")

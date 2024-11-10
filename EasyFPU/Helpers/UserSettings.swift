@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class UserSettings: ObservableObject {
     // MARK: - The keys

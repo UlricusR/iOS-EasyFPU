@@ -9,14 +9,21 @@
 import SwiftUI
 
 struct FoodItemView: View {
+    enum DeleteAlertChoice {
+        case associatedIngredient
+        case confirmDelete
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @ObservedObject var foodItemVM: FoodItemViewModel
     var category: FoodItemCategory
     var listType: FoodItemListView.FoodItemListType
     @State private var activeSheet: FoodItemViewSheets.State?
-    @State private var activeAlert: FoodItemViewSheets.AlertState?
+    @State private var showingDeleteAlert = false
+    @State private var activeDeleteAlert: DeleteAlertChoice?
     @State private var isConfirming = false
+    @State private var showingNoEditAlert = false
     
     var body: some View {
         VStack {
@@ -114,13 +121,20 @@ struct FoodItemView: View {
             Button("Edit", systemImage: "pencil") {
                 if foodItemVM.cdFoodItem?.composedFoodItem != nil {
                     // There's an associated recipe, so show message to open Recipe Editor
-                    activeAlert = .associatedRecipe
+                    showingNoEditAlert = true
                 } else {
                     activeSheet = .editFoodItem
                 }
             }
             .tint(.blue)
             .accessibilityIdentifierLeaf("EditButton")
+            .alert(
+                "Edit food",
+                isPresented: $showingNoEditAlert,
+                actions: {},
+                message: { Text("This food item is created from a recipe, please open it in the recipe editor") }
+            )
+            
             
             // Duplicating the food item
             Button("Duplicate", systemImage: "document.on.document") {
@@ -134,11 +148,13 @@ struct FoodItemView: View {
                 if foodItemVM.hasAssociatedFoodItem() {
                     // Check if FoodItem is related to an Ingredient
                     if !foodItemVM.canBeDeleted() {
-                        self.activeAlert = .associatedIngredient
+                        self.activeDeleteAlert = .associatedIngredient
+                        self.showingDeleteAlert = true
                     } else if foodItemVM.hasAssociatedRecipe() {
                         self.isConfirming.toggle()
                     } else {
-                        self.activeAlert = .confirmDelete
+                        self.activeDeleteAlert = .confirmDelete
+                        self.showingDeleteAlert = true
                     }
                 }
             }
@@ -164,8 +180,10 @@ struct FoodItemView: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert(item: $activeAlert) {
-            alertContent($0)
+        .alert(deleteAlertTitle, isPresented: $showingDeleteAlert, presenting: activeDeleteAlert) {
+            deleteAlertActions(for: $0)
+        } message: {
+            deleteAlertMessage(for: $0)
         }
         .confirmationDialog(
             "Warning",
@@ -213,31 +231,37 @@ struct FoodItemView: View {
         }
     }
     
-    private func alertContent(_ state: FoodItemViewSheets.AlertState) -> Alert {
-        switch state {
-        case .associatedRecipe:
-            return Alert(
-                title: Text("Edit food"),
-                message: Text("This food item is created from a recipe, please open it in the recipe editor"),
-                dismissButton: .default(Text("OK"))
-            )
-        case .confirmDelete:
-            return Alert(
-                title: Text("Delete food"),
-                message: Text("Do you really want to delete this food item? This cannot be undone!"),
-                primaryButton: .default(
-                    Text("Do not delete")
-                ),
-                secondaryButton: .destructive(
-                    Text("Delete"),
-                    action: deleteFoodItemOnly
-                )
-            )
+    @ViewBuilder
+    private func deleteAlertMessage(for alert: DeleteAlertChoice) -> some View {
+        switch alert {
         case .associatedIngredient:
-            return Alert(
-                title: Text("Cannot delete food"),
-                message: Text("This food item is in use in a recipe, please remove it from the recipe before deleting.")
-            )
+            Text("This food item is in use in a recipe, please remove it from the recipe before deleting.")
+        case .confirmDelete:
+            Text("Do you really want to delete this food item? This cannot be undone!")
+        }
+    }
+    
+    @ViewBuilder
+    private func deleteAlertActions(for alert: DeleteAlertChoice) -> some View {
+        switch alert {
+        case .associatedIngredient:
+            Button("OK", role: .cancel) {}
+        case .confirmDelete:
+            Button("Do not delete", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                deleteFoodItemOnly()
+            }
+        }
+    }
+    
+    private var deleteAlertTitle: LocalizedStringKey {
+        switch activeDeleteAlert {
+        case .associatedIngredient:
+            LocalizedStringKey("Cannot delete food")
+        case .confirmDelete:
+            LocalizedStringKey("Delete food")
+        case nil:
+            ""
         }
     }
     

@@ -17,13 +17,4 @@ class FoodItemEditorSheets {
         
         var id: State { self }
     }
-    
-    enum AlertState: Identifiable {
-        case alertMessage
-        case scan
-        case search
-        case warningUpdateIngredients
-        
-        var id: AlertState { self }
-    }
 }

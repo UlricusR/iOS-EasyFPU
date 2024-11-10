@@ -392,6 +392,25 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         CoreDataStack.shared.save()
     }
     
+    /// Resets the values of the FoodItemVM to those of the related Core Data FoodItem (if available).
+    func reset() {
+        if let cdFoodItem {
+            self.name = cdFoodItem.name
+            self.favorite = cdFoodItem.favorite
+            self.category = FoodItemCategory(rawValue: cdFoodItem.category) ?? .product
+            self.caloriesPer100gAsString = String(cdFoodItem.caloriesPer100g)
+            self.carbsPer100gAsString = String(cdFoodItem.carbsPer100g)
+            self.sugarsPer100gAsString = String(cdFoodItem.sugarsPer100g)
+            
+            self.typicalAmounts.removeAll()
+            if let cdTypicalAmounts = cdFoodItem.typicalAmounts {
+                for case let cdTypicalAmount as TypicalAmount in cdTypicalAmounts {
+                    self.typicalAmounts.append(TypicalAmountViewModel(from: cdTypicalAmount))
+                }
+            }
+        }
+    }
+    
     func exportToURL() -> URL? {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted

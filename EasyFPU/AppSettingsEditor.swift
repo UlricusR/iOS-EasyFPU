@@ -96,17 +96,9 @@ struct AppSettingsEditor: View {
                             .imageScale(.large)
                     }
                     .accessibilityIdentifierLeaf("SaveButton")
+                    .alert("Data alert", isPresented: self.$showingAlert, actions: {}, message: { Text(self.errorMessage) })
                 }
             }
-        }
-            
-        // Alert
-        .alert(isPresented: $showingAlert) {
-            Alert(
-                title: Text("Data alert"),
-                message: Text(self.errorMessage),
-                dismissButton: .default(Text("OK"))
-            )
         }
     }
 }

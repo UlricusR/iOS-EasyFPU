@@ -63,12 +63,6 @@ struct DisclaimerView: View {
                 }
             }
         }
-        .alert(isPresented: self.$showingAlert) {
-            Alert(
-                title: Text(self.alertTitle),
-                message: Text(self.alertMessage),
-                dismissButton: .default(Text("OK"))
-            )
-        }
+        .alert(self.alertTitle, isPresented: self.$showingAlert, actions: {}, message: { Text(self.alertMessage) })
     }
 }

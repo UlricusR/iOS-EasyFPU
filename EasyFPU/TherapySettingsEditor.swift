@@ -110,15 +110,7 @@ struct TherapySettingsEditor: View {
                 }
             }
         }
-            
-        // Alert
-        .alert(isPresented: $showingAlert) {
-            Alert(
-                title: Text("Data alert"),
-                message: Text(self.errorMessage),
-                dismissButton: .default(Text("OK"))
-            )
-        }
+        .alert("Data alert", isPresented: self.$showingAlert, actions: {}, message: { Text(self.errorMessage) })
         .sheet(isPresented: self.$showingScreen) {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpSettingsEditor")

@@ -27,7 +27,6 @@ struct FoodItemListView: View {
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
     @State private var activeSheet: FoodItemListViewSheets.State?
-    @State private var showingAlert: Bool = false
     @State private var errorMessage: String = ""
     
     @FetchRequest(
@@ -164,13 +163,6 @@ struct FoodItemListView: View {
             .searchable(text: self.$searchString)
             .sheet(item: $activeSheet) {
                 sheetContent($0)
-            }
-            .alert(isPresented: self.$showingAlert) {
-                Alert(
-                    title: Text("Notice"),
-                    message: Text(self.errorMessage),
-                    dismissButton: .default(Text("OK"))
-                )
             }
         }
     }

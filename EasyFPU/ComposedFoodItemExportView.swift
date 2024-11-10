@@ -141,13 +141,7 @@ struct ComposedFoodItemExportView: View {
         .onAppear() {
             self.processHealthSample()
         }
-        .alert(isPresented: self.$showingAlert) {
-            Alert(
-                title: Text("Notice"),
-                message: Text(self.errorMessage),
-                dismissButton: .default(Text("OK"))
-            )
-        }
+        .alert("Notice", isPresented: self.$showingAlert, actions: {}, message: { Text(self.errorMessage) })
         .sheet(isPresented: self.$showingSheet) {
             HelpView(helpScreen: self.helpScreen)
         }

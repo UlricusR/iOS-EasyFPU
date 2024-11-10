@@ -16,7 +16,6 @@ struct FoodPreview: View {
     @Binding var foodSelected: Bool
     @Environment(\.presentationMode) var presentation
     @State private var errorMessage = ""
-    @State private var showingAlert = false
     
     var body: some View {
         if let product = product {
@@ -49,13 +48,6 @@ struct FoodPreview: View {
                         .accessibilityIdentifierLeaf("SelectButton")
                     }
                 }
-            }
-            .alert(isPresented: self.$showingAlert) {
-                Alert(
-                    title: Text("Data alert"),
-                    message: Text(self.errorMessage),
-                    dismissButton: .default(Text("OK"))
-                )
             }
         } else {
             NotificationView {

@@ -23,7 +23,6 @@ struct MainView: View {
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     @ObservedObject var absorptionScheme = AbsorptionScheme()
     @State private var selectedTab: Int = 0
-    @State private var showingAlert = false
     @State private var errorMessage = ""
     
     var body: some View {
@@ -81,13 +80,6 @@ struct MainView: View {
                         .environment(\.managedObjectContext, managedObjectContext)
                         .accessibilityIdentifierBranch("Settings")
                 }
-                .alert(isPresented: self.$showingAlert) {
-                    Alert(
-                        title: Text("Notice"),
-                        message: Text(self.errorMessage),
-                        dismissButton: .default(Text("OK"))
-                    )
-                }
                 .onAppear {
                     if self.absorptionScheme.absorptionBlocks.isEmpty {
                         // Absorption scheme hasn't been loaded yet
@@ -95,7 +87,7 @@ struct MainView: View {
                             // Absorption blocks are empty, so initialize with default absorption scheme
                             // and store default blocks back to core data
                             guard let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks(errorMessage: &self.errorMessage) else {
-                                self.showingAlert = true
+                                debugPrint("Error loading default absorption blocks: \(self.errorMessage)")
                                 return
                             }
                             

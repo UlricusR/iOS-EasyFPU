@@ -23,11 +23,17 @@ struct FoodItemEditor: View {
     @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
     @State private var scanResult: FoodDatabaseEntry?
     @State private var notificationState = NotificationState.void
-    @State private var errorMessage: String = ""
     @State private var activeSheet: FoodItemEditorSheets.State?
     @State private var foodSelected = false // We don't need this variable here
     
-    @State private var activeAlert: FoodItemEditorSheets.AlertState?
+    // Specific alerts
+    @State private var showingScanAlert = false
+    @State private var showingSearchAlert = false
+    @State private var showingUpdateIngredientsAlert = false
+    
+    // The general alert
+    @State private var showingAlert = false
+    @State private var errorMessage: String = ""
     
     @FetchRequest(
         entity: FoodItem.entity(),
@@ -70,12 +76,12 @@ struct FoodItemEditor: View {
                                 Button(action: {
                                     if draftFoodItemVM.name.isEmpty {
                                         self.errorMessage = NSLocalizedString("Search term must not be empty", comment: "")
-                                        self.activeAlert = .alertMessage
+                                        self.showingAlert = true
                                     } else {
                                         if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
                                             performSearch()
                                         } else {
-                                            self.activeAlert = .search
+                                            self.showingSearchAlert = true
                                         }
                                     }
                                 }) {
@@ -84,12 +90,33 @@ struct FoodItemEditor: View {
                                 }
                                 .buttonStyle(BorderlessButtonStyle())
                                 .accessibilityIdentifierLeaf("SearchButton")
+                                .alert(
+                                    "Disclaimer",
+                                    isPresented: $showingSearchAlert
+                                ) {
+                                    Button("Accept and continue") {
+                                        var settingsError = ""
+                                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
+                                            errorMessage = settingsError
+                                            self.showingAlert = true
+                                        }
+
+                                        // Set dynamic variable
+                                        UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
+                                        
+                                        // Perform search
+                                        self.performSearch()
+                                    }
+                                    Button("Decline and cancel", role: .cancel) {}
+                                } message: {
+                                    Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk.")
+                                }
                                 
                                 Button(action: {
                                     if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
                                         self.activeSheet = .scan
                                     } else {
-                                        self.activeAlert = .scan
+                                        self.showingScanAlert = true
                                     }
                                 }) {
                                     Image(systemName: "barcode.viewfinder")
@@ -97,6 +124,27 @@ struct FoodItemEditor: View {
                                 }
                                 .buttonStyle(BorderlessButtonStyle())
                                 .accessibilityIdentifierLeaf("ScanButton")
+                                .alert(
+                                    "Disclaimer",
+                                    isPresented: $showingScanAlert
+                                ) {
+                                    Button("Accept and continue") {
+                                        var settingsError = ""
+                                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
+                                            errorMessage = settingsError
+                                            self.showingAlert = true
+                                        }
+
+                                        // Set dynamic variable
+                                        UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
+                                        
+                                        // Perform scan
+                                        self.activeSheet = .scan
+                                    }
+                                    Button("Decline and cancel", role: .cancel) {}
+                                } message: {
+                                    Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk.")
+                                }
                             }
                             
                             // Category
@@ -245,7 +293,7 @@ struct FoodItemEditor: View {
                             // Check if we have duplicate names (if this is a new food item)
                             if !draftFoodItemVM.hasAssociatedFoodItem() && draftFoodItemVM.nameExists() {
                                 errorMessage = NSLocalizedString("A food item with this name already exists", comment: "")
-                                self.activeAlert = .alertMessage
+                                self.showingAlert = true
                             } else {
                                 saveFoodItem()
                             }
@@ -254,12 +302,40 @@ struct FoodItemEditor: View {
                                 .imageScale(.large)
                         }
                         .accessibilityIdentifierLeaf("SaveButton")
+                        .alert(
+                            "Associated Ingredients",
+                            isPresented: self.$showingUpdateIngredientsAlert
+                        ) {
+                            Button("Update recipes") {
+                                // Update FoodItem
+                                if let updatedFoodItemVM {
+                                    updatedFoodItemVM.update(typicalAmountsToBeDeleted)
+                                    
+                                    // Reset typical amounts to be deleted
+                                    self.typicalAmountsToBeDeleted.removeAll()
+                                }
+                                
+                                // Quit edit mode
+                                presentation.wrappedValue.dismiss()
+                            }
+                            Button("Cancel", role: .cancel) {
+                                // Reset to original values
+                                draftFoodItemVM.reset()
+                                
+                                // Quit edit mode
+                                presentation.wrappedValue.dismiss()
+                            }
+                        } message: {
+                            Text(
+                                NSLocalizedString("This food item is used as ingredient in the following recipes:", comment: "") +
+                                "\n\n\(self.associatedRecipes.joined(separator: "\n"))\n\n" +
+                                NSLocalizedString("Updating the food item will also update the associated recipes.", comment: "")
+                            )
+                        }
                     }
                 }
             }
-            .alert(item: $activeAlert) { state in
-                alertContent(state)
-            }
+            .alert("Data alert", isPresented: $showingAlert, actions: {}, message: { Text(self.errorMessage) })
             .sheet(item: $activeSheet) {
                 sheetContent($0)
             }
@@ -318,7 +394,7 @@ struct FoodItemEditor: View {
                     }
                     
                     // Show alert
-                    activeAlert = .warningUpdateIngredients
+                    self.showingUpdateIngredientsAlert = true
                 } else {
                     // No associated recipe
                     
@@ -373,7 +449,7 @@ struct FoodItemEditor: View {
             }
             
             // Display alert and stay in edit mode
-            self.activeAlert = .alertMessage
+            self.showingAlert = true
         }
     }
     
@@ -397,12 +473,12 @@ struct FoodItemEditor: View {
                 self.newTypicalAmountComment = ""
                 self.updateButton = false
             } else {
-                self.activeAlert = .alertMessage
+                self.showingAlert = true
             }
         } else { // This is an existing typical amount
             guard let index = self.draftFoodItemVM.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
                 self.errorMessage = NSLocalizedString("Fatal error: Could not identify typical amount", comment: "")
-                self.activeAlert = .alertMessage
+                self.showingAlert = true
                 return
             }
             self.draftFoodItemVM.typicalAmounts[index].amountAsString = self.newTypicalAmount
@@ -446,12 +522,12 @@ struct FoodItemEditor: View {
                     DispatchQueue.main.async { self.notificationState = .void }
                     errorMessage = error.evaluate()
                     debugPrint(errorMessage)
-                    self.activeAlert = .alertMessage
+                    self.showingAlert = true
                 }
             }
         case .failure(let error):
             errorMessage = NSLocalizedString("Error scanning food: ", comment: "") + error.localizedDescription
-            self.activeAlert = .alertMessage
+            self.showingAlert = true
         }
     }
     
@@ -474,7 +550,7 @@ struct FoodItemEditor: View {
                 DispatchQueue.main.async { self.notificationState = .void }
                 errorMessage = error.evaluate()
                 debugPrint(errorMessage)
-                self.activeAlert = .alertMessage
+                self.showingAlert = true
             }
         }
     }
@@ -511,77 +587,6 @@ struct FoodItemEditor: View {
         case .foodPreview:
             FoodPreview(product: $scanResult, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItemVM, category: category, foodSelected: $foodSelected)
                 .accessibilityIdentifierBranch("PreviewFood")
-        }
-    }
-    
-    private func alertContent(_ state: FoodItemEditorSheets.AlertState) -> Alert {
-        switch state {
-        case .alertMessage:
-            return Alert(
-                title: Text("Data alert"),
-                message: Text(self.errorMessage),
-                dismissButton: .default(Text("OK"))
-            )
-        case .scan:
-            return Alert(
-                title: Text("Disclaimer"),
-                message: Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk."),
-                primaryButton: .default(Text("Accept and continue"), action: {
-                    var settingsError = ""
-                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                        errorMessage = settingsError
-                        self.activeAlert = .alertMessage
-                    }
-
-                    // Set dynamic variable
-                    UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
-                    
-                    // Perform scan
-                    self.activeSheet = .scan
-                }),
-                secondaryButton: .default(Text("Decline and cancel"))
-            )
-        case .search:
-            return Alert(
-                title: Text("Disclaimer"),
-                message: Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk."),
-                primaryButton: .default(Text("Accept and continue"), action:  {
-                    var settingsError = ""
-                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                        errorMessage = settingsError
-                        self.activeAlert = .alertMessage
-                    }
-
-                    // Set dynamic variable
-                    UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
-                    
-                    // Perform search
-                    self.performSearch()
-                }),
-                secondaryButton: .default(Text("Decline and cancel"))
-            )
-        case .warningUpdateIngredients:
-            return Alert(
-                title: Text("Associated Ingredients"),
-                message: Text(
-                    NSLocalizedString("This food item is used as ingredient in the following recipes:", comment: "") +
-                    "\n\n\(self.associatedRecipes.joined(separator: "\n"))\n\n" +
-                    NSLocalizedString("Updating the food item will also update the associated recipes.", comment: "")
-                ),
-                primaryButton: .default(Text("Update recipes"), action: {
-                    // Update FoodItem
-                    if let updatedFoodItemVM {
-                        updatedFoodItemVM.update(typicalAmountsToBeDeleted)
-                        
-                        // Reset typical amounts to be deleted
-                        self.typicalAmountsToBeDeleted.removeAll()
-                    }
-                    
-                    // Quit edit mode
-                    presentation.wrappedValue.dismiss()
-                }),
-                secondaryButton: .cancel()
-            )
         }
     }
 }

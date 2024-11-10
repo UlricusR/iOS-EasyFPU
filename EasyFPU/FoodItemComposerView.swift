@@ -203,13 +203,7 @@ struct FoodItemComposerView: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert(isPresented: self.$showingAlert) {
-            Alert(
-                title: Text("Notice"),
-                message: Text(self.alertMessage),
-                dismissButton: .default(Text("OK"))
-            )
-        }
+        .alert("Notice", isPresented: self.$showingAlert, actions: {}, message: { Text(self.alertMessage) })
     }
     
     private func weightCheck(isLess: Bool) -> Bool {
