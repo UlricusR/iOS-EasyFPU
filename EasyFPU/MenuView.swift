@@ -10,11 +10,21 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct MenuView: View {
+    enum SheetState: Identifiable {
+        case editAbsorptionScheme
+        case editAppSettings
+        case pickFileToImport
+        case pickExportDirectory
+        case about
+        
+        var id: SheetState { self }
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     var draftAbsorptionScheme: AbsorptionSchemeViewModel
     @State private var isConfirming = false
     @State private var importData: ImportData?
-    @State private var activeSheet: MenuViewSheets.State?
+    @State private var activeSheet: SheetState?
     @State private var showingAlert = false
     @State private var alertMessage = ""
     
@@ -100,7 +110,7 @@ struct MenuView: View {
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: MenuViewSheets.State) -> some View {
+    private func sheetContent(_ state: SheetState) -> some View {
         switch state {
         case .editAbsorptionScheme:
             TherapySettingsEditor(draftAbsorptionScheme: self.draftAbsorptionScheme)

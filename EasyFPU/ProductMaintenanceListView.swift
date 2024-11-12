@@ -14,7 +14,7 @@ struct ProductMaintenanceListView: View {
             category: .product,
             listType: FoodItemListView.FoodItemListType.maintenance,
             composedFoodItem: UserSettings.shared.composedMeal,
-            helpSheet: FoodItemListViewSheets.State.productMaintenanceListHelp,
+            helpSheet: FoodItemListView.SheetState.productMaintenanceListHelp,
             foodItemListTitle: NSLocalizedString("My Products", comment: ""),
             emptyStateImage: Image("nachos"),
             emptyStateMessage: Text("Oops! There are no dishes in your list yet. Start by adding some!"),

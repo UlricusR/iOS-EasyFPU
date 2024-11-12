@@ -16,7 +16,7 @@ struct ProductSelectionListView: View {
             category: .product,
             listType: FoodItemListView.FoodItemListType.selection,
             composedFoodItem: composedFoodItemVM,
-            helpSheet: FoodItemListViewSheets.State.productSelectionListHelp,
+            helpSheet: FoodItemListView.SheetState.productSelectionListHelp,
             foodItemListTitle: NSLocalizedString("My Products", comment: ""),
             emptyStateImage: Image("nachos"),
             emptyStateMessage: Text("Oops! There are no dishes in your list yet. Start by adding some!"),

@@ -9,6 +9,14 @@
 import SwiftUI
 
 struct FoodItemView: View {
+    enum SheetState: Identifiable {
+        case editFoodItem
+        case selectFoodItem
+        case exportFoodItem
+        
+        var id: SheetState { self }
+    }
+    
     enum DeleteAlertChoice {
         case associatedIngredient
         case confirmDelete
@@ -19,7 +27,7 @@ struct FoodItemView: View {
     @ObservedObject var foodItemVM: FoodItemViewModel
     var category: FoodItemCategory
     var listType: FoodItemListView.FoodItemListType
-    @State private var activeSheet: FoodItemViewSheets.State?
+    @State private var activeSheet: SheetState?
     @State private var showingDeleteAlert = false
     @State private var activeDeleteAlert: DeleteAlertChoice?
     @State private var isConfirming = false
@@ -204,7 +212,7 @@ struct FoodItemView: View {
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: FoodItemViewSheets.State) -> some View {
+    private func sheetContent(_ state: SheetState) -> some View {
         switch state {
         case .editFoodItem:
             if self.foodItemVM.cdFoodItem != nil {

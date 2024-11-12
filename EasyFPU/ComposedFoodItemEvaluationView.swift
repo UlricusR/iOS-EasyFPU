@@ -9,11 +9,20 @@
 import SwiftUI
 
 struct ComposedFoodItemEvaluationView: View {
+    enum SheetState: Identifiable {
+        case help
+        case exportToHealth
+        case addProduct
+        case details
+        
+        var id: SheetState { self }
+    }
+    
     @ObservedObject var absorptionScheme: AbsorptionScheme
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
-    @State var activeSheet: ComposedFoodItemEvaluationViewSheets.State?
+    @State var activeSheet: SheetState?
     
     var body: some View {
         NavigationStack {
@@ -151,7 +160,7 @@ struct ComposedFoodItemEvaluationView: View {
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: ComposedFoodItemEvaluationViewSheets.State) -> some View {
+    private func sheetContent(_ state: SheetState) -> some View {
         switch state {
         case .help:
             HelpView(helpScreen: self.helpScreen)

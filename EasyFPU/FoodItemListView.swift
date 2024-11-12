@@ -9,6 +9,16 @@
 import SwiftUI
 
 struct FoodItemListView: View {
+    enum SheetState: Identifiable {
+        case addFoodItem
+        case productSelectionListHelp
+        case productMaintenanceListHelp
+        case ingredientSelectionListHelp
+        case ingredientMaintenanceListHelp
+        
+        var id: SheetState { self }
+    }
+    
     enum FoodItemListType {
         case maintenance
         case selection
@@ -19,14 +29,14 @@ struct FoodItemListView: View {
     var category: FoodItemCategory
     var listType: FoodItemListType
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
-    var helpSheet: FoodItemListViewSheets.State
+    var helpSheet: SheetState
     var foodItemListTitle: String
     var emptyStateImage: Image
     var emptyStateMessage: Text
     var emptyStateButtonText: Text
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
-    @State private var activeSheet: FoodItemListViewSheets.State?
+    @State private var activeSheet: SheetState?
     @State private var errorMessage: String = ""
     
     @FetchRequest(
@@ -168,7 +178,7 @@ struct FoodItemListView: View {
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: FoodItemListViewSheets.State) -> some View {
+    private func sheetContent(_ state: FoodItemListView.SheetState) -> some View {
         switch state {
         case .addFoodItem:
             FoodItemEditor(

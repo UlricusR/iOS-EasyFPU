@@ -9,10 +9,17 @@
 import SwiftUI
 
 struct FoodItemComposerView: View {
+    enum SheetState: Identifiable {
+        case addIngredients
+        case help
+        
+        var id: SheetState { self }
+    }
+    
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
-    @State private var activeSheet: FoodItemComposerViewSheets.State?
+    @State private var activeSheet: SheetState?
     @Binding var notificationState: RecipeListView.NotificationState?
     private let helpScreen = HelpScreen.foodItemComposer
     @State private var showingAlert: Bool = false
@@ -239,7 +246,7 @@ struct FoodItemComposerView: View {
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: FoodItemComposerViewSheets.State) -> some View {
+    private func sheetContent(_ state: SheetState) -> some View {
         switch state {
         case .addIngredients:
             IngredientSelectionListView(composedFoodItemVM: self.composedFoodItemVM)

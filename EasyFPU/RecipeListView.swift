@@ -9,6 +9,13 @@
 import SwiftUI
 
 struct RecipeListView: View {
+    enum SheetState: Identifiable {
+        case createRecipe
+        case recipeListHelp
+        
+        var id: SheetState { self }
+    }
+    
     enum NotificationState {
         case successfullySavedNewFoodItem(String)
         case successfullySavedNewComposedFoodItemOnly(String)
@@ -20,10 +27,10 @@ struct RecipeListView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
-    var helpSheet: RecipeListViewSheets.State
+    var helpSheet: SheetState
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
-    @State private var activeSheet: RecipeListViewSheets.State?
+    @State private var activeSheet: SheetState?
     
     @FetchRequest(
         entity: ComposedFoodItem.entity(),
@@ -196,7 +203,7 @@ struct RecipeListView: View {
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: RecipeListViewSheets.State) -> some View {
+    private func sheetContent(_ state: SheetState) -> some View {
         switch state {
         case .createRecipe:
             FoodItemComposerView(

@@ -14,7 +14,7 @@ struct IngredientMaintenanceListView: View {
             category: .ingredient,
             listType: FoodItemListView.FoodItemListType.maintenance,
             composedFoodItem: UserSettings.shared.composedProduct,
-            helpSheet: FoodItemListViewSheets.State.ingredientMaintenanceListHelp,
+            helpSheet: FoodItemListView.SheetState.ingredientMaintenanceListHelp,
             foodItemListTitle: NSLocalizedString("My Ingredients", comment: ""),
             emptyStateImage: Image("eggs-color"),
             emptyStateMessage: Text("Oops! There are no ingredients in your list yet. Start by adding some!"),

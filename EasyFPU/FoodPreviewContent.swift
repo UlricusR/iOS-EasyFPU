@@ -10,8 +10,16 @@ import SwiftUI
 import URLImage
 
 struct FoodPreviewContent: View {
+    enum SheetState: Identifiable {
+        case front
+        case nutriments
+        case ingredients
+        
+        var id: SheetState { self }
+    }
+    
     var selectedEntry: FoodDatabaseEntry
-    @State var activeSheet: FoodPreviewContentSheets.State?
+    @State var activeSheet: SheetState?
     @State var scale: CGFloat = 1.0
     @State var isTapped: Bool = false
     @State var pointTapped: CGPoint = CGPoint.zero
@@ -103,7 +111,7 @@ struct FoodPreviewContent: View {
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: FoodPreviewContentSheets.State) -> some View {
+    private func sheetContent(_ state: SheetState) -> some View {
         switch state {
         case .front:
             if selectedEntry.imageFront != nil {

@@ -11,6 +11,15 @@ import Combine
 import CodeScanner
 
 struct FoodItemEditor: View {
+    enum SheetState: Identifiable {
+        case help
+        case search
+        case scan
+        case foodPreview
+        
+        var id: SheetState { self }
+    }
+    
     enum NotificationState {
         case void, searching, noSearchResults
     }
@@ -23,7 +32,7 @@ struct FoodItemEditor: View {
     @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
     @State private var scanResult: FoodDatabaseEntry?
     @State private var notificationState = NotificationState.void
-    @State private var activeSheet: FoodItemEditorSheets.State?
+    @State private var activeSheet: SheetState?
     @State private var foodSelected = false // We don't need this variable here
     
     // Specific alerts
@@ -573,7 +582,7 @@ struct FoodItemEditor: View {
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: FoodItemEditorSheets.State) -> some View {
+    private func sheetContent(_ state: SheetState) -> some View {
         switch state {
         case .help:
             HelpView(helpScreen: self.helpScreen)

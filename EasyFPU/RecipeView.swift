@@ -9,10 +9,17 @@
 import SwiftUI
 
 struct RecipeView: View {
+    enum SheetState: Identifiable {
+        case editRecipe
+        case exportRecipe
+        
+        var id: SheetState { self }
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @Binding var notificationState: RecipeListView.NotificationState?
-    @State private var activeSheet: RecipeViewSheets.State?
+    @State private var activeSheet: SheetState?
     @State private var isConfirming = false
     @State private var alertIsPresented: Bool = false
     
@@ -105,7 +112,7 @@ struct RecipeView: View {
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: RecipeViewSheets.State) -> some View {
+    private func sheetContent(_ state: SheetState) -> some View {
         switch state {
         case .editRecipe:
             if self.composedFoodItemVM.cdComposedFoodItem != nil {

@@ -16,7 +16,7 @@ struct IngredientSelectionListView: View {
             category: .ingredient,
             listType: FoodItemListView.FoodItemListType.selection,
             composedFoodItem: composedFoodItemVM,
-            helpSheet: FoodItemListViewSheets.State.ingredientSelectionListHelp,
+            helpSheet: FoodItemListView.SheetState.ingredientSelectionListHelp,
             foodItemListTitle: NSLocalizedString("Ingredients", comment: ""),
             emptyStateImage: Image("eggs-color"),
             emptyStateMessage: Text("Oops! There are no ingredients in your list yet. Start by adding some!"),

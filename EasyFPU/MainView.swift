@@ -44,7 +44,7 @@ struct MainView: View {
                         .environment(\.managedObjectContext, managedObjectContext)
                         .accessibilityIdentifierBranch("CalculateMeal")
                     
-                    RecipeListView(composedFoodItem: UserSettings.shared.composedMeal, helpSheet: RecipeListViewSheets.State.recipeListHelp)
+                    RecipeListView(composedFoodItem: UserSettings.shared.composedMeal, helpSheet: RecipeListView.SheetState.recipeListHelp)
                         .tag(Tab.cook.rawValue)
                         .tabItem{
                             Image(systemName: "frying.pan")
