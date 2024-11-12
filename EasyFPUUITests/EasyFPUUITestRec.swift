@@ -38,23 +38,25 @@ final class EasyFPUUITests: XCTestCase {
         
         snapshot("02ListFoodSelection")
         
-        let collectionViewsQuery = app.collectionViews
-        collectionViewsQuery/*@START_MENU_TOKEN@*/.images["MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItemButton"]/*[[".cells.images[\"MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItemButton\"]",".images[\"MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItemButton\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        collectionViewsQuery/*@START_MENU_TOKEN@*/.staticTexts["MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItems.TAmount110.TypicalAmountComment"]/*[[".cells",".staticTexts[\"6 Stück\"]",".staticTexts[\"MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItems.TAmount110.TypicalAmountComment\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app/*@START_MENU_TOKEN@*/.images["MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItemButton"]/*[[".cells.images[\"MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItemButton\"]",".images[\"MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItemButton\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
         
+        app/*@START_MENU_TOKEN@*/.staticTexts["MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItems.TAmount110.TypicalAmountComment"]/*[[".cells",".staticTexts[\"6 Stück\"]",".staticTexts[\"MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItems.TAmount110.TypicalAmountComment\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
         snapshot("03SelectAmount")
-        
         app/*@START_MENU_TOKEN@*/.buttons["MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItems.AddButton"]/*[[".buttons[\"Hinzufügen\"]",".buttons[\"MainView.CalculateMeal.AddProductToMeal.Chicken Mc.SelectFoodItems.AddButton\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        collectionViewsQuery/*@START_MENU_TOKEN@*/.images["MainView.CalculateMeal.AddProductToMeal.Chips.SelectFoodItemButton"]/*[[".cells.images[\"MainView.CalculateMeal.AddProductToMeal.Chips.SelectFoodItemButton\"]",".images[\"MainView.CalculateMeal.AddProductToMeal.Chips.SelectFoodItemButton\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        collectionViewsQuery/*@START_MENU_TOKEN@*/.staticTexts["MainView.CalculateMeal.AddProductToMeal.Chips.SelectFoodItems.TAmount30.TypicalAmountComment"]/*[[".cells",".staticTexts[\"1 Portion\"]",".staticTexts[\"MainView.CalculateMeal.AddProductToMeal.Chips.SelectFoodItems.TAmount30.TypicalAmountComment\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
-        app/*@START_MENU_TOKEN@*/.buttons["MainView.CalculateMeal.AddProductToMeal.Chips.SelectFoodItems.AddButton"]/*[[".buttons[\"Hinzufügen\"]",".buttons[\"MainView.CalculateMeal.AddProductToMeal.Chips.SelectFoodItems.AddButton\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app/*@START_MENU_TOKEN@*/.staticTexts["MainView.CalculateMeal.AddProductToMeal.Alpenzwerg.FoodItemNameLabel"]/*[[".cells",".staticTexts[\"Alpenzwerg Bioschokomilch (Berchtesgadener Land)\"]",".staticTexts[\"MainView.CalculateMeal.AddProductToMeal.Alpenzwerg.FoodItemNameLabel\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.swipeDown()
+        
+        snapshot("04SearchFood")
+        
+        app.images["MainView.CalculateMeal.AddProductToMeal.Chips.SelectFoodItemButton"].tap()
+        app.staticTexts["MainView.CalculateMeal.AddProductToMeal.Chips.SelectFoodItems.TAmount30.TypicalAmountComment"].tap()
+        app.buttons["MainView.CalculateMeal.AddProductToMeal.Chips.SelectFoodItems.AddButton"].tap()
         
         app/*@START_MENU_TOKEN@*/.buttons["MainView.CalculateMeal.AddProductToMeal.SaveButton"]/*[[".otherElements[\"Ausgewählt\"]",".buttons[\"Ausgewählt\"]",".buttons[\"MainView.CalculateMeal.AddProductToMeal.SaveButton\"]",".otherElements[\"MainView.CalculateMeal.AddProductToMeal.SaveButton\"]"],[[[-1,2],[-1,1],[-1,3,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
-        snapshot("04CalculateMealOverview")
+        snapshot("05CalculateMealOverview")
         
-        collectionViewsQuery.children(matching: .cell).element(boundBy: 3).children(matching: .other).element(boundBy: 1).children(matching: .other).element.swipeUp()
+        app.buttons["MainView.CalculateMeal.MealDelayStepper"].swipeUp()
         app.buttons["MainView.CalculateMeal.MealDetailsButton"].tap()
-        snapshot("05CalculateMealDetails")
+        snapshot("06CalculateMealDetails")
         app.buttons["MainView.CalculateMeal.MealDetails.CloseButton"].tap()
         
         app/*@START_MENU_TOKEN@*/.buttons["MainView.CalculateMeal.ExportButton"]/*[[".otherElements[\"Teilen\"]",".buttons[\"Teilen\"]",".buttons[\"MainView.CalculateMeal.ExportButton\"]",".otherElements[\"MainView.CalculateMeal.ExportButton\"]"],[[[-1,2],[-1,1],[-1,3,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
@@ -62,7 +64,7 @@ final class EasyFPUUITests: XCTestCase {
         let mainviewCalculatemealExportmealtohealthMealdelaystepperIncrementButton = app.steppers["MainView.CalculateMeal.ExportMealToHealth.MealDelayStepper"].buttons["MainView.CalculateMeal.ExportMealToHealth.MealDelayStepper-Increment"]
         mainviewCalculatemealExportmealtohealthMealdelaystepperIncrementButton.tap()
         mainviewCalculatemealExportmealtohealthMealdelaystepperIncrementButton.tap()
-        snapshot("06AppleHealthExportOverview")
+        snapshot("07AppleHealthExportOverview")
         
         app/*@START_MENU_TOKEN@*/.buttons["MainView.CalculateMeal.ExportMealToHealth.CloseButton"]/*[[".otherElements[\"Schließen\"]",".buttons[\"Schließen\"]",".buttons[\"MainView.CalculateMeal.ExportMealToHealth.CloseButton\"]",".otherElements[\"MainView.CalculateMeal.ExportMealToHealth.CloseButton\"]"],[[[-1,2],[-1,1],[-1,3,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
         app/*@START_MENU_TOKEN@*/.buttons["MainView.CalculateMeal.ClearButton"]/*[[".otherElements[\"Schließen\"]",".buttons[\"Schließen\"]",".buttons[\"MainView.CalculateMeal.ClearButton\"]",".otherElements[\"MainView.CalculateMeal.ClearButton\"]"],[[[-1,2],[-1,1],[-1,3,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
