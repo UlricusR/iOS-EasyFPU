@@ -251,6 +251,35 @@ struct BusinessLogicTests {
         }
     }
     
+    @Suite("ComposedFoodItemViewModel Tests")
+    struct ComposedFoodItemViewModelTests {
+        @Test func verifyComposedFoodItemViewModel() async throws {
+            let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel()
+            let allFoodItemVMs = composedFoodItemVM.foodItemVMs
+            
+            // Calculate nutritional values
+            var calories = 0.0
+            var carbs = 0.0
+            var sugars = 0.0
+            var fpus = 0.0
+            for foodItemVM in allFoodItemVMs {
+                calories += foodItemVM.caloriesPer100g / 100 * Double(foodItemVM.amount)
+                carbs += foodItemVM.carbsPer100g / 100 * Double(foodItemVM.amount)
+                sugars += foodItemVM.sugarsPer100g / 100 * Double(foodItemVM.amount)
+                fpus += foodItemVM.getFPU().fpu
+            }
+            
+            #expect(BusinessLogicTests.roundToFiveDecimals(composedFoodItemVM.calories) == BusinessLogicTests.roundToFiveDecimals(calories))
+            #expect(BusinessLogicTests.roundToFiveDecimals(composedFoodItemVM.getCarbsInclSugars()) == BusinessLogicTests.roundToFiveDecimals(carbs))
+            #expect(BusinessLogicTests.roundToFiveDecimals(composedFoodItemVM.getSugarsOnly()) == BusinessLogicTests.roundToFiveDecimals(sugars))
+            #expect(BusinessLogicTests.roundToFiveDecimals(composedFoodItemVM.getRegularCarbs(treatSugarsSeparately: false)) == BusinessLogicTests.roundToFiveDecimals(carbs))
+            #expect(composedFoodItemVM.getSugars(treatSugarsSeparately: false) == 0)
+            #expect(BusinessLogicTests.roundToFiveDecimals(composedFoodItemVM.getRegularCarbs(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals(carbs - sugars))
+            #expect(BusinessLogicTests.roundToFiveDecimals(composedFoodItemVM.getSugars(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals(sugars))
+            #expect(BusinessLogicTests.roundToFiveDecimals(composedFoodItemVM.fpus.fpu) == BusinessLogicTests.roundToFiveDecimals(fpus))
+        }
+    }
+    
     //
     // Helper functions
     //

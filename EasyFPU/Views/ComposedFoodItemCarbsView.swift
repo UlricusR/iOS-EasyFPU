@@ -37,7 +37,7 @@ struct ComposedFoodItemCarbsView: View {
                 
                 VStack(alignment: .leading) { // Answers
                     HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.getRegularCarbs(when: userSettings.treatSugarsSeparately)))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.getRegularCarbs(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                             .accessibilityIdentifierLeaf("AmountValue")
                         Text("g Carbs")
                             .accessibilityIdentifierLeaf("AmountUnit")

@@ -58,7 +58,7 @@ struct CoreDataTests {
         func createFoodItemIdenticalFoodItemIDOnly() throws {
             // Create a new FoodItem in the DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
-            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false)
+            _ = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false)
             
             // Add duplicate with same ID
             let duplicateFoodItemVM = try DataFactory.shared.createFoodItemVM(id: foodItemVM.id)
@@ -93,7 +93,6 @@ struct CoreDataTests {
             // Get ComposedFoodItemViewModel and create the related FoodItem
             let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel()
             let relatedFoodItem = FoodItem.create(from: composedFoodItemVM)
-            let foodItemID = relatedFoodItem.id
             
             // Check if FoodItem was created in DB
             let cdFoodItem = FoodItem.getFoodItemByID(id: composedFoodItemVM.id)

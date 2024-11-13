@@ -292,11 +292,11 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         self.sugars
     }
     
-    func getRegularCarbs(when treatSugarsSeparately: Bool) -> Double {
+    func getRegularCarbs(treatSugarsSeparately: Bool) -> Double {
         treatSugarsSeparately ? self.carbs - self.sugars : self.carbs
     }
     
-    func getSugars(when treatSugarsSeparately: Bool) -> Double {
+    func getSugars(treatSugarsSeparately: Bool) -> Double {
         treatSugarsSeparately ? self.sugars : 0
     }
     
