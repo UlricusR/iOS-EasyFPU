@@ -32,7 +32,7 @@ struct ImportData: Identifiable {
     let composedFoodItemVMsToBeImported: [ComposedFoodItemViewModel]?
 }
 
-class DataHelper {
+struct DataHelper {
     
     // MARK: - Reading the default absorption block JSON
     

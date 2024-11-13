@@ -8,7 +8,7 @@
 
 import Foundation
 
-class AbsorptionBlockFromJson: Codable {
+struct AbsorptionBlockFromJson: Codable {
     enum CodingKeys: String, CodingKey {
         case maxFpu, absorptionTime
     }
