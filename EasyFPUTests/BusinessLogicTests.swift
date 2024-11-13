@@ -22,6 +22,7 @@ struct BusinessLogicTests {
     private static let carbsPer100gAsString: String = "83" + Locale.current.decimalSeparator! + "321"
     private static let sugarsPer100gAsString: String = "12" + Locale.current.decimalSeparator! + "21"
     private static let amountAsString: String = "456"
+    private static let comment: String = "This is a comment"
 
     @Suite("FoodItemViewModel Tests")
     struct FoodItemViewModelTests {
@@ -253,7 +254,8 @@ struct BusinessLogicTests {
     
     @Suite("ComposedFoodItemViewModel Tests")
     struct ComposedFoodItemViewModelTests {
-        @Test func verifyComposedFoodItemViewModel() async throws {
+        @Test("ID: 1 - Verify ComposedFoodItemViewModel business logic")
+        func verifyComposedFoodItemViewModel() async throws {
             let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel()
             let allFoodItemVMs = composedFoodItemVM.foodItemVMs
             
@@ -277,6 +279,43 @@ struct BusinessLogicTests {
             #expect(BusinessLogicTests.roundToFiveDecimals(composedFoodItemVM.getRegularCarbs(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals(carbs - sugars))
             #expect(BusinessLogicTests.roundToFiveDecimals(composedFoodItemVM.getSugars(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals(sugars))
             #expect(BusinessLogicTests.roundToFiveDecimals(composedFoodItemVM.fpus.fpu) == BusinessLogicTests.roundToFiveDecimals(fpus))
+        }
+    }
+    
+    @Suite("TypicalAmountViewModel Tests")
+    struct TypicalAmountViewModelTests {
+        @Test("ID 1 - Initialize with amount as number")
+        func initializeWithAmountAsNumber() async throws {
+            let typicalAmountVM = TypicalAmountViewModel(amount: BusinessLogicTests.amount, comment: BusinessLogicTests.comment)
+            BusinessLogicTests.checkTypicalAmountValues(typicalAmountVM: typicalAmountVM)
+        }
+        
+        @Test("ID 2 - Initialize with amount as string")
+        func initializeWithAmountAsString() async throws {
+            var errorMessage = ""
+            let typicalAmountVM = TypicalAmountViewModel(amountAsString: BusinessLogicTests.amountAsString, comment: BusinessLogicTests.comment, errorMessage: &errorMessage)
+            #expect(errorMessage.isEmpty)
+            try #require(typicalAmountVM != nil)
+            BusinessLogicTests.checkTypicalAmountValues(typicalAmountVM: typicalAmountVM!)
+        }
+        
+        @Test("ID 3 - Initialize with amount as string with errors", arguments: zip(
+            [
+                "asdf",
+                "-3",
+                "0"
+            ],
+            [
+                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value not a number", comment: ""),
+                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be zero or negative", comment: ""),
+                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be zero or negative", comment: "")
+            ]
+        ))
+        func initializeWithAmountAsStringWithErrors(inputString: String, errorString: String) async throws {
+            var errorMessage = ""
+            let typicalAmountVM = TypicalAmountViewModel(amountAsString: inputString, comment: BusinessLogicTests.comment, errorMessage: &errorMessage)
+            #expect(typicalAmountVM == nil)
+            #expect(errorMessage == errorString)
         }
     }
     
@@ -319,6 +358,12 @@ struct BusinessLogicTests {
         let eCarbsFactor = UserSettings.shared.eCarbsFactor
         let eCarbs = fpus * eCarbsFactor
         #expect(foodItemVM.getFPU().getExtendedCarbs() == eCarbs)
+    }
+    
+    private static func checkTypicalAmountValues(typicalAmountVM: TypicalAmountViewModel) {
+        #expect(typicalAmountVM.amount == BusinessLogicTests.amount)
+        #expect(typicalAmountVM.comment == BusinessLogicTests.comment)
+        #expect(typicalAmountVM.amountAsString == String(BusinessLogicTests.amount))
     }
         
     private static func roundToFiveDecimals(_ value: Double) -> Double {

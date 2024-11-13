@@ -38,6 +38,12 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, I
         self.comment = cdTypicalAmount.comment ?? ""
     }
     
+    /// Initializes the TypicalAmountViewModel from a string representation of the amount, which should be an whole positive number.
+    /// Decimal numbers need to contain the decimal separator of the current locale and the decimal part will be cropped.
+    /// - Parameters:
+    ///   - amountAsString: The string representation of the amount.
+    ///   - comment: The related comment.
+    ///   - errorMessage: Stores the error type and message in case the amount cannot be generated from its string representation.
     init?(amountAsString: String, comment: String, errorMessage: inout String) {
         self.comment = comment
         
@@ -53,6 +59,10 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, I
         self.amountAsString = amountAsString
     }
     
+    /// Initializes the TypicalAmountViewModel with an Integer amount. The string representation is automatically generated.
+    /// - Parameters:
+    ///   - amount: The amount.
+    ///   - comment: The related comment.
     init(amount: Int, comment: String) {
         self.amount = amount
         self.comment = comment
