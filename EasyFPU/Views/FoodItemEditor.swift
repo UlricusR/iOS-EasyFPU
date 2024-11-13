@@ -372,7 +372,7 @@ struct FoodItemEditor: View {
         }
         
         // Create error to store feedback from FoodItemViewModel
-        var error = FoodItemViewModelError.name("Dummy")
+        var error = FoodItemViewModelError.none
         
         // Create updated food item
         if let updatedFoodItemVM = FoodItemViewModel(
@@ -455,6 +455,8 @@ struct FoodItemEditor: View {
             case .amount(let errorMessage):
                 self.errorMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
                 self.draftFoodItemVM.amountAsString = self.oldAmountAsString
+            case .none:
+                debugPrint("No error")
             }
             
             // Display alert and stay in edit mode

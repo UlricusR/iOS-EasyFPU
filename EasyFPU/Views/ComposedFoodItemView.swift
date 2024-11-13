@@ -49,7 +49,7 @@ struct ComposedFoodItemView: View {
             // Sugars
             if userSettings.treatSugarsSeparately {
                 HStack {
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getSugars(when: userSettings.treatSugarsSeparately)))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getSugars(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                         .accessibilityIdentifierLeaf("SugarsValue")
                     Text("g Sugars")
                         .accessibilityIdentifierLeaf("SugarsUnit")
@@ -67,7 +67,7 @@ struct ComposedFoodItemView: View {
             
             // Regular Carbs
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getRegularCarbs(when: userSettings.treatSugarsSeparately)))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getRegularCarbs(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                     .accessibilityIdentifierLeaf("CarbsValue")
                 Text("g Regular Carbs")
                     .accessibilityIdentifierLeaf("CarbsUnit")

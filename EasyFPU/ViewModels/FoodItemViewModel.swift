@@ -8,8 +8,9 @@
 
 import Foundation
 
-enum FoodItemViewModelError {
+enum FoodItemViewModelError: Equatable {
     case name(String), calories(String), carbs(String), sugars(String), amount(String), tooMuchCarbs(String), tooMuchSugars(String)
+    case none
 }
 
 enum FoodItemCategory: String {
@@ -83,6 +84,17 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         case typicalAmounts
     }
     
+    /// Initializes the FoodItemViewModel from numeric values for the nutritional values and the amount.
+    /// Their string representations will be generated, using the decimal separator of the current locale.
+    /// - Parameters:
+    ///   - id: The ID of the food item.
+    ///   - name: The name of the food item.
+    ///   - category: The category of the food item.
+    ///   - favorite: Whether the food item is a favorite.
+    ///   - caloriesPer100g: The calories per 100g of the food item.
+    ///   - carbsPer100g: The carbs per 100g of the food item.
+    ///   - sugarsPer100g: The sugars per 100g of the food item.
+    ///   - amount: The amount of the food item.
     init(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, sugarsPer100g: Double, amount: Int) {
         self.id = id
         self.name = name
@@ -96,6 +108,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
     }
     
+    /// Initializes the FoodItemViewModel from a Core Data FoodItem. If the Core Data FoodItem is related to TypicalAmounts, TypicalAmountViewModels will be added.
+    /// - Parameter cdFoodItem: The source Core Data FoodItem.
     init(from cdFoodItem: FoodItem) {
         // Use ID from Core Date FoodItem
         self.id = cdFoodItem.id
@@ -117,19 +131,18 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         }
     }
     
-    init(from cdIngredient: Ingredient) {
-        self.id = cdIngredient.relatedFoodItemID ?? UUID() // The id of the related FoodItem
-        self.name = cdIngredient.name
-        self.category = FoodItemCategory.ingredient // Default is ingredient
-        self.favorite = cdIngredient.favorite
-        self.caloriesPer100g = cdIngredient.caloriesPer100g
-        self.carbsPer100g = cdIngredient.carbsPer100g
-        self.sugarsPer100g = cdIngredient.sugarsPer100g
-        self.amount = Int(cdIngredient.amount)
-        
-        initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
-    }
-    
+    /// Initializes the FoodItemViewModel from string representations of the nutritional values and the amount.
+    /// In case of decimal numbers, the decimal separator needs to match the current locale.
+    /// - Parameters:
+    ///   - id: The ID of the food item.
+    ///   - name: The name of the food item.
+    ///   - category: The category of the food item.
+    ///   - favorite: Whether the food item is a favorite.
+    ///   - caloriesAsString: The string representation of a decimal number of the calories per 100g of the food item.
+    ///   - carbsAsString: The string representation of a decimal number of the carbs per 100g of the food item.
+    ///   - sugarsAsString: The string representation of a decimal number of the sugars per 100g of the food item.
+    ///   - amountAsString: The string representation of a integer number of the amount of the food item.
+    ///   - error: Stores potential errors when creating the food item, e.g., unsuccessful conversion of the string representations into numbers.
     init?(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError) {
         // Check for a correct name
         let foodName = name.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -276,11 +289,11 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         Double(self.amount) / 100 * self.sugarsPer100g
     }
     
-    func getRegularCarbs(when treatSugarsSeparately: Bool) -> Double {
+    func getRegularCarbs(treatSugarsSeparately: Bool) -> Double {
         Double(self.amount) / 100 * (treatSugarsSeparately ? (self.carbsPer100g - self.sugarsPer100g) : self.carbsPer100g)
     }
     
-    func getSugars(when treatSugarsSeparately: Bool) -> Double {
+    func getSugars(treatSugarsSeparately: Bool) -> Double {
         Double(self.amount) / 100 * (treatSugarsSeparately ? self.sugarsPer100g : 0)
     }
     
