@@ -23,6 +23,11 @@ struct BusinessLogicTests {
     private static let sugarsPer100gAsString: String = "12" + Locale.current.decimalSeparator! + "21"
     private static let amountAsString: String = "456"
     private static let comment: String = "This is a comment"
+    
+    private static let absorptionTime: Int = 5
+    private static let absorptionTimeAsString = "5"
+    private static let maxFPU: Int = 3
+    private static let maxFPUAsString = "3"
 
     @Suite("FoodItemViewModel Tests")
     struct FoodItemViewModelTests {
@@ -316,6 +321,62 @@ struct BusinessLogicTests {
             let typicalAmountVM = TypicalAmountViewModel(amountAsString: inputString, comment: BusinessLogicTests.comment, errorMessage: &errorMessage)
             #expect(typicalAmountVM == nil)
             #expect(errorMessage == errorString)
+        }
+    }
+    
+    @Suite("Absorption Scheme Tests")
+    struct AbsorptionSchemeTests {
+        @Test("ID 1 - Test Absorption Block initializer from string values")
+        func absorptionBlockInitializerFromStringValues() async throws {
+            let absorptionBlock = AbsorptionBlockFromJson(
+                maxFpu: BusinessLogicTests.maxFPU,
+                absorptionTime: BusinessLogicTests.absorptionTime
+            )
+            let absorptionBlockVM1 = AbsorptionBlockViewModel(from: absorptionBlock)
+            
+            var errorMessage = ""
+            let absorptionBlockVM2 = AbsorptionBlockViewModel(maxFpuAsString: BusinessLogicTests.maxFPUAsString, absorptionTimeAsString: BusinessLogicTests.absorptionTimeAsString, errorMessage: &errorMessage)
+            #expect(errorMessage.isEmpty)
+            try #require(absorptionBlockVM2 != nil)
+            #expect(absorptionBlockVM1 == absorptionBlockVM2)
+        }
+        
+        @Test("ID 2 - Test Absorption Block initializer with wrong maxFPU", arguments: zip(
+            [
+                "54kc",
+                "-3",
+                "0"
+            ],
+            [
+                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value not a number", comment: ""),
+                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be zero or negative", comment: ""),
+                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be zero or negative", comment: "")
+            ]
+        ))
+        func absorptionBlockInitializerWithWrongMaxFPU(inputString: String, errorString: String) async throws {
+            var errorMessage = ""
+            let absorptionBlockVM = AbsorptionBlockViewModel(maxFpuAsString: inputString, absorptionTimeAsString: BusinessLogicTests.absorptionTimeAsString, errorMessage: &errorMessage)
+            #expect(errorMessage == errorString)
+            #expect(absorptionBlockVM == nil)
+        }
+        
+        @Test("ID 3 - Test Absorption Block initializer with wrong absorption time", arguments: zip(
+            [
+                "54kc",
+                "-3",
+                "0"
+            ],
+            [
+                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value not a number", comment: ""),
+                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be zero or negative", comment: ""),
+                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be zero or negative", comment: "")
+            ]
+        ))
+        func absorptionBlockInitializerWithWrongAbsorptionTime(inputString: String, errorString: String) async throws {
+            var errorMessage = ""
+            let absorptionBlockVM = AbsorptionBlockViewModel(maxFpuAsString: BusinessLogicTests.maxFPUAsString, absorptionTimeAsString: inputString, errorMessage: &errorMessage)
+            #expect(errorMessage == errorString)
+            #expect(absorptionBlockVM == nil)
         }
     }
     
