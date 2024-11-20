@@ -7,7 +7,6 @@
 //
 
 import XCTest
-@testable import EasyFPU
 
 final class EasyFPUUITests: XCTestCase {
     var app: XCUIApplication!
