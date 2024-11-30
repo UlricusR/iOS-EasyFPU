@@ -81,6 +81,27 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
         self.absorptionTimeAsString = absorptionTimeAsString
     }
     
+    func hasAssociatedAbsorptionBlock() -> Bool {
+        cdAbsorptionBlock != nil
+    }
+    
+    /// Creates a new Core Data AbsorptionBlock from the passed AbsorptionBlockViewModel
+    /// and adds it to the AbsorptionScheme associated with the AbsorptionSchemeViewModel.
+    /// - Parameter absorptionScheme: The AbsorptionSchemeViewModel, the Core Data AbsorptionScheme of which the AbsorptionBlock should be added.
+    func save(to absorptionScheme: AbsorptionSchemeViewModel) {
+        let newCdAbsorptionBlock = AbsorptionBlock.create(from: self)
+        absorptionScheme.cdAbsorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
+    }
+    
+    /// Removes the Core Data AbsorptionBlock from the AbsorptionScheme related to the passed AbsorptionSchemeViewModel.
+    /// - Parameter absorptionScheme: The AbsorptionSchemeViewModel the AbsorptionScheme is related to.
+    /// - Returns: False if the AbsorptionBlockViewModel has no Core Data AbsorptionBlock (should not happen), otherwise true.
+    func remove(from absorptionScheme: AbsorptionSchemeViewModel) -> Bool {
+        guard let cdAbsorptionBlock else { return false }
+        AbsorptionBlock.remove(cdAbsorptionBlock, from: absorptionScheme.cdAbsorptionScheme)
+        return true
+    }
+    
     func updateCdAbsorptionBlock() -> Bool {
         if cdAbsorptionBlock == nil {
             return false

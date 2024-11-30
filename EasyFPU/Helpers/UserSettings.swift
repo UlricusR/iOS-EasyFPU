@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class UserSettings: ObservableObject {
     // MARK: - The keys
@@ -42,6 +43,7 @@ class UserSettings: ObservableObject {
         case absorptionTimeCarbsInterval = "AbsorptionTimeCarbsInterval"
         case absorptionTimeECarbsDelay = "AbsorptionTimeECarbsDelay"
         case absorptionTimeECarbsInterval = "AbsorptionTimeECarbsInterval"
+        case alertPeriodAfterExportInMinutes = "AlertPeriodAfterExportInMinutes"
     }
     
     enum UserDefaultsDateKey: String, CaseIterable {
@@ -79,8 +81,18 @@ class UserSettings: ObservableObject {
     @Published var countryCode: String?
     
     // The ComposedFoodItems
-    @Published var composedMeal = ComposedFoodItemViewModel(name: NSLocalizedString(ProductsListView.composedFoodItemName, comment: ""), category: .product, favorite: false)
-    @Published var composedProduct = ComposedFoodItemViewModel(name: NSLocalizedString(IngredientsListView.composedFoodItemName, comment: ""), category: .ingredient, favorite: false)
+    @Published var composedMeal = ComposedFoodItemViewModel(
+        id: UUID(),
+        name: NSLocalizedString("Total meal", comment: ""),
+        category: .product,
+        favorite: false
+    )
+    @Published var composedProduct = ComposedFoodItemViewModel(
+        id: UUID(),
+        name: NSLocalizedString("Composed product", comment: ""),
+        category: .ingredient,
+        favorite: false
+    )
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,
@@ -95,6 +107,7 @@ class UserSettings: ObservableObject {
         absorptionTimeECarbsIntervalInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.absorptionTimeECarbsInterval) ?? AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault,
         eCarbsFactor: UserSettings.getValue(for: UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault,
         treatSugarsSeparately: UserSettings.getValue(for: UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault,
+        alertPeriodAfterExportInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.alertPeriodAfterExportInMinutes) ?? 15,
         foodDatabase: FoodDatabaseType.getFoodDatabase(type: UserSettings.getFoodDatabaseType()),
         searchWorldwide: UserSettings.getValue(for: UserDefaultsBoolKey.searchWorldwide) ?? false,
         countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode)
@@ -113,6 +126,7 @@ class UserSettings: ObservableObject {
         absorptionTimeECarbsIntervalInMinutes: Int,
         eCarbsFactor: Double,
         treatSugarsSeparately: Bool,
+        alertPeriodAfterExportInMinutes: Int,
         foodDatabase: FoodDatabase,
         searchWorldwide: Bool,
         countryCode: String?
@@ -129,6 +143,7 @@ class UserSettings: ObservableObject {
         self.absorptionTimeECarbsIntervalInMinutes = absorptionTimeECarbsIntervalInMinutes // in minutes
         self.eCarbsFactor = eCarbsFactor
         self.treatSugarsSeparately = treatSugarsSeparately
+        self.alertPeriodAfterExportInMinutes = alertPeriodAfterExportInMinutes
         self.foodDatabase = foodDatabase
         self.searchWorldwide = searchWorldwide
         self.countryCode = countryCode

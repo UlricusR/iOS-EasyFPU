@@ -1,0 +1,43 @@
+{
+  "configurations" : [
+    {
+      "id" : "28E1CC7E-71BD-408C-8BAF-2DABAADA1947",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "com.apple.CoreData.SQLDebug 1"
+      },
+      {
+        "argument" : "com.apple.CoreData.MigrationDebug 1"
+      }
+    ],
+    "environmentVariableEntries" : [
+      {
+        "key" : "persistent_store_type",
+        "value" : "in_memory"
+      }
+    ],
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:EasyFPU.xcodeproj",
+      "identifier" : "1B004A2824BA3035001E362A",
+      "name" : "EasyFPU"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:EasyFPU.xcodeproj",
+        "identifier" : "1B93041C2CBCECE700DE7CDD",
+        "name" : "EasyFPUTests"
+      }
+    }
+  ],
+  "version" : 1
+}

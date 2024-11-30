@@ -1,0 +1,1010 @@
+[
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 72,
+      "favorite" : false,
+      "sugarsPer100g" : 9.4000000000000004,
+      "name" : "Alpenzwerg Bioschokomilch (Berchtesgadener Land)",
+      "carbsPer100g" : 10.4
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 75,
+          "comment" : "eine Halbe"
+        },
+        {
+          "amount" : 150,
+          "comment" : "eine ganze"
+        }
+      ],
+      "caloriesPer100g" : 160,
+      "favorite" : false,
+      "sugarsPer100g" : 0,
+      "name" : "Avocado",
+      "carbsPer100g" : 0.40000000000000002
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 90,
+      "favorite" : false,
+      "sugarsPer100g" : 0,
+      "name" : "Backpulver",
+      "carbsPer100g" : 22
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 528,
+          "comment" : "3 Bratwürste "
+        },
+        {
+          "amount" : 352,
+          "comment" : "2 Bratwürste"
+        },
+        {
+          "amount" : 176,
+          "comment" : "1 Bratwurst"
+        }
+      ],
+      "caloriesPer100g" : 290,
+      "favorite" : false,
+      "sugarsPer100g" : 0,
+      "name" : "Bratwurst (fränkische)",
+      "carbsPer100g" : 0
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 686,
+      "favorite" : false,
+      "sugarsPer100g" : 1.6000000000000001,
+      "name" : "Butter",
+      "carbsPer100g" : 1.6000000000000001
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 72,
+          "comment" : "4 Stück"
+        },
+        {
+          "amount" : 165,
+          "comment" : "9 Stück"
+        },
+        {
+          "amount" : 110,
+          "comment" : "6 Stück"
+        }
+      ],
+      "caloriesPer100g" : 243,
+      "favorite" : true,
+      "sugarsPer100g" : 0,
+      "name" : "Chicken McNuggets",
+      "carbsPer100g" : 19
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 300,
+          "comment" : "1 ganzes"
+        }
+      ],
+      "caloriesPer100g" : 210,
+      "favorite" : true,
+      "sugarsPer100g" : 0,
+      "name" : "Cordon Bleu",
+      "carbsPer100g" : 4
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 70,
+          "comment" : "1 Croissant"
+        }
+      ],
+      "caloriesPer100g" : 406,
+      "favorite" : false,
+      "sugarsPer100g" : 11,
+      "name" : "Croissant",
+      "carbsPer100g" : 46
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 150,
+          "comment" : "1 großes Stück"
+        },
+        {
+          "amount" : 110,
+          "comment" : "1 normales Stück"
+        }
+      ],
+      "caloriesPer100g" : 320,
+      "favorite" : false,
+      "sugarsPer100g" : 15,
+      "name" : "Donauwelle",
+      "carbsPer100g" : 35
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 152.40000000000001,
+      "favorite" : false,
+      "sugarsPer100g" : 0.5,
+      "name" : "Eier (GutBio)",
+      "carbsPer100g" : 0.59999999999999998
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 57,
+          "comment" : "Ein halber"
+        },
+        {
+          "amount" : 114,
+          "comment" : "Ein ganzer"
+        }
+      ],
+      "caloriesPer100g" : 402,
+      "favorite" : false,
+      "sugarsPer100g" : 19.600000000000001,
+      "name" : "Granatsplitter",
+      "carbsPer100g" : 48.399999999999999
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 357,
+      "favorite" : false,
+      "sugarsPer100g" : 0.5,
+      "name" : "Kakaopulver (Backfee)",
+      "carbsPer100g" : 8.8000000000000007
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 46,
+          "comment" : "2 Tütchen"
+        },
+        {
+          "amount" : 69,
+          "comment" : "3 Tütchen"
+        },
+        {
+          "amount" : 23,
+          "comment" : "1 Tütchen"
+        }
+      ],
+      "caloriesPer100g" : 125,
+      "favorite" : true,
+      "sugarsPer100g" : 19,
+      "name" : "Ketchup McDonalds",
+      "carbsPer100g" : 28
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 360,
+      "favorite" : false,
+      "sugarsPer100g" : 18,
+      "name" : "Kokosmehl (Alnatura)",
+      "carbsPer100g" : 20
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 604,
+      "favorite" : false,
+      "sugarsPer100g" : 46,
+      "name" : "Kuchenglasur dunkel (Dr. Oetker)",
+      "carbsPer100g" : 49
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 200,
+          "comment" : "normale Portion"
+        }
+      ],
+      "caloriesPer100g" : 246,
+      "favorite" : true,
+      "sugarsPer100g" : 0,
+      "name" : "Käsespätzle",
+      "carbsPer100g" : 31
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 200,
+          "comment" : "große Portion"
+        },
+        {
+          "amount" : 266,
+          "comment" : "Omas Portion"
+        },
+        {
+          "amount" : 160,
+          "comment" : "normale Portion"
+        }
+      ],
+      "caloriesPer100g" : 170,
+      "favorite" : false,
+      "sugarsPer100g" : 0,
+      "name" : "Lasagne",
+      "carbsPer100g" : 12
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 610.60000000000002,
+      "favorite" : false,
+      "sugarsPer100g" : 5.7000000000000002,
+      "name" : "Mandeln gemahlen",
+      "carbsPer100g" : 5.7000000000000002
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 100,
+          "comment" : "1 Portion(en) (1\/12)"
+        },
+        {
+          "amount" : 1200,
+          "comment" : "12 Portion(en) (12\/12)"
+        },
+        {
+          "amount" : 1000,
+          "comment" : "10 Portion(en) (10\/12)"
+        },
+        {
+          "amount" : 800,
+          "comment" : "8 Portion(en) (8\/12)"
+        },
+        {
+          "amount" : 600,
+          "comment" : "6 Portion(en) (6\/12)"
+        },
+        {
+          "amount" : 400,
+          "comment" : "4 Portion(en) (4\/12)"
+        },
+        {
+          "amount" : 200,
+          "comment" : "2 Portion(en) (2\/12)"
+        },
+        {
+          "amount" : 1100,
+          "comment" : "11 Portion(en) (11\/12)"
+        },
+        {
+          "amount" : 900,
+          "comment" : "9 Portion(en) (9\/12)"
+        },
+        {
+          "amount" : 700,
+          "comment" : "7 Portion(en) (7\/12)"
+        },
+        {
+          "amount" : 500,
+          "comment" : "5 Portion(en) (5\/12)"
+        },
+        {
+          "amount" : 300,
+          "comment" : "3 Portion(en) (3\/12)"
+        }
+      ],
+      "composedFoodItem" : {
+        "composedFoodItem" : {
+          "amount" : 1200,
+          "favorite" : false,
+          "foodItems" : [
+            {
+              "foodItem" : {
+                "amount" : 5,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 90,
+                "favorite" : false,
+                "sugarsPer100g" : 0,
+                "name" : "Backpulver",
+                "carbsPer100g" : 22
+              }
+            },
+            {
+              "foodItem" : {
+                "amount" : 200,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 152.40000000000001,
+                "favorite" : false,
+                "sugarsPer100g" : 0.5,
+                "name" : "Eier (GutBio)",
+                "carbsPer100g" : 0.59999999999999998
+              }
+            },
+            {
+              "foodItem" : {
+                "amount" : 300,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 348,
+                "favorite" : false,
+                "sugarsPer100g" : 0.69999999999999996,
+                "name" : "Weizenmehl Type 405",
+                "carbsPer100g" : 72
+              }
+            },
+            {
+              "foodItem" : {
+                "amount" : 150,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 604,
+                "favorite" : false,
+                "sugarsPer100g" : 46,
+                "name" : "Kuchenglasur dunkel (Dr. Oetker)",
+                "carbsPer100g" : 49
+              }
+            },
+            {
+              "foodItem" : {
+                "amount" : 200,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 47,
+                "favorite" : false,
+                "sugarsPer100g" : 4.9000000000000004,
+                "name" : "Milch",
+                "carbsPer100g" : 4.9000000000000004
+              }
+            },
+            {
+              "foodItem" : {
+                "amount" : 200,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 400,
+                "favorite" : false,
+                "sugarsPer100g" : 100,
+                "name" : "Zucker",
+                "carbsPer100g" : 100
+              }
+            },
+            {
+              "foodItem" : {
+                "amount" : 25,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 357,
+                "favorite" : false,
+                "sugarsPer100g" : 0.5,
+                "name" : "Kakaopulver (Backfee)",
+                "carbsPer100g" : 8.8000000000000007
+              }
+            },
+            {
+              "foodItem" : {
+                "amount" : 200,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 686,
+                "favorite" : false,
+                "sugarsPer100g" : 1.6000000000000001,
+                "name" : "Butter",
+                "carbsPer100g" : 1.6000000000000001
+              }
+            }
+          ],
+          "name" : "Marmorkuchen mit Schokoglasur",
+          "category" : "Ingredient",
+          "numberOfPortions" : 12
+        }
+      },
+      "caloriesPer100g" : 384.54583000000002,
+      "favorite" : false,
+      "sugarsPer100g" : 23.768750000000001,
+      "name" : "Marmorkuchen mit Schokoglasur",
+      "carbsPer100g" : 42.25
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 47,
+      "favorite" : false,
+      "sugarsPer100g" : 4.9000000000000004,
+      "name" : "Milch",
+      "carbsPer100g" : 4.9000000000000004
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 48.200000000000003,
+      "favorite" : false,
+      "sugarsPer100g" : 5.0999999999999996,
+      "name" : "Milch fettarm (Berchtesgadener Land)",
+      "carbsPer100g" : 5.0999999999999996
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 643,
+      "favorite" : false,
+      "sugarsPer100g" : 5.2999999999999998,
+      "name" : "Nusskernmischung ohne Rosinen (Seeberger)",
+      "carbsPer100g" : 11
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 20,
+          "comment" : "Regular portion"
+        }
+      ],
+      "caloriesPer100g" : 539,
+      "favorite" : false,
+      "sugarsPer100g" : 56.299999999999997,
+      "name" : "Nutella",
+      "carbsPer100g" : 57.5
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 300,
+          "comment" : "groß"
+        },
+        {
+          "amount" : 150,
+          "comment" : "klein"
+        },
+        {
+          "amount" : 200,
+          "comment" : "mittel"
+        }
+      ],
+      "caloriesPer100g" : 150,
+      "favorite" : false,
+      "sugarsPer100g" : 0,
+      "name" : "One pot Mac&Cheese",
+      "carbsPer100g" : 20
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 135,
+          "comment" : "5 Bällchen"
+        },
+        {
+          "amount" : 81,
+          "comment" : "3 Bällchen"
+        },
+        {
+          "amount" : 54,
+          "comment" : "2 Bällchen"
+        }
+      ],
+      "caloriesPer100g" : 256,
+      "favorite" : true,
+      "sugarsPer100g" : 0,
+      "name" : "Pao de Queso",
+      "carbsPer100g" : 40
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 328,
+          "comment" : "4 Portion(en) (4\/10)"
+        },
+        {
+          "amount" : 410,
+          "comment" : "5 Portion(en) (5\/10)"
+        },
+        {
+          "amount" : 492,
+          "comment" : "6 Portion(en) (6\/10)"
+        },
+        {
+          "amount" : 82,
+          "comment" : "1 Portion(en) (1\/10)"
+        },
+        {
+          "amount" : 574,
+          "comment" : "7 Portion(en) (7\/10)"
+        },
+        {
+          "amount" : 656,
+          "comment" : "8 Portion(en) (8\/10)"
+        },
+        {
+          "amount" : 164,
+          "comment" : "2 Portion(en) (2\/10)"
+        },
+        {
+          "amount" : 738,
+          "comment" : "9 Portion(en) (9\/10)"
+        },
+        {
+          "amount" : 246,
+          "comment" : "3 Portion(en) (3\/10)"
+        },
+        {
+          "amount" : 820,
+          "comment" : "10 Portion(en) (10\/10)"
+        }
+      ],
+      "composedFoodItem" : {
+        "composedFoodItem" : {
+          "amount" : 825,
+          "favorite" : false,
+          "foodItems" : [
+            {
+              "foodItem" : {
+                "amount" : 450,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 47,
+                "favorite" : false,
+                "sugarsPer100g" : 4.9000000000000004,
+                "name" : "Milch",
+                "carbsPer100g" : 4.9000000000000004
+              }
+            },
+            {
+              "foodItem" : {
+                "amount" : 150,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 152.40000000000001,
+                "favorite" : false,
+                "sugarsPer100g" : 0.5,
+                "name" : "Eier (GutBio)",
+                "carbsPer100g" : 0.59999999999999998
+              }
+            },
+            {
+              "foodItem" : {
+                "amount" : 225,
+                "category" : "Ingredient",
+                "typicalAmounts" : [
+
+                ],
+                "caloriesPer100g" : 348,
+                "favorite" : false,
+                "sugarsPer100g" : 0.69999999999999996,
+                "name" : "Weizenmehl Type 405",
+                "carbsPer100g" : 72
+              }
+            }
+          ],
+          "name" : "Pfannkuchen",
+          "category" : "Ingredient",
+          "numberOfPortions" : 10
+        }
+      },
+      "caloriesPer100g" : 148.25454999999999,
+      "favorite" : false,
+      "sugarsPer100g" : 2.9545499999999998,
+      "name" : "Pfannkuchen",
+      "carbsPer100g" : 22.41818
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 220,
+          "comment" : "1\/2 kleine"
+        },
+        {
+          "amount" : 260,
+          "comment" : "1\/2 große"
+        },
+        {
+          "amount" : 440,
+          "comment" : "1 kleine"
+        }
+      ],
+      "caloriesPer100g" : 199,
+      "favorite" : false,
+      "sugarsPer100g" : 0,
+      "name" : "Pizza Margherita",
+      "carbsPer100g" : 25
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 80,
+          "comment" : "klein"
+        },
+        {
+          "amount" : 115,
+          "comment" : "mittel"
+        },
+        {
+          "amount" : 150,
+          "comment" : "groß"
+        }
+      ],
+      "caloriesPer100g" : 289,
+      "favorite" : true,
+      "sugarsPer100g" : 0,
+      "name" : "Pommes McDonalds",
+      "carbsPer100g" : 36
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 400,
+      "favorite" : false,
+      "sugarsPer100g" : 100,
+      "name" : "Puderzucker",
+      "carbsPer100g" : 100
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 130,
+          "comment" : "ein Achtel"
+        },
+        {
+          "amount" : 260,
+          "comment" : "ein Viertel"
+        }
+      ],
+      "caloriesPer100g" : 321,
+      "favorite" : false,
+      "sugarsPer100g" : 0,
+      "name" : "Quiche",
+      "carbsPer100g" : 13
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 240,
+          "comment" : "normale Portion"
+        }
+      ],
+      "caloriesPer100g" : 210,
+      "favorite" : false,
+      "sugarsPer100g" : 0,
+      "name" : "Risotto mit Butter und Parmesan a la Mama😘❤💜💙💚💛🧡",
+      "carbsPer100g" : 20
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 20,
+          "comment" : "Eine Portion"
+        }
+      ],
+      "caloriesPer100g" : 611,
+      "favorite" : false,
+      "sugarsPer100g" : 34,
+      "name" : "Samba Haselnuss (Rapunzel)",
+      "carbsPer100g" : 35
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 20,
+          "comment" : "1 Portion"
+        }
+      ],
+      "caloriesPer100g" : 583,
+      "favorite" : false,
+      "sugarsPer100g" : 31,
+      "name" : "Samba dark (Rapunzel)",
+      "carbsPer100g" : 36
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 397,
+      "favorite" : false,
+      "sugarsPer100g" : 15,
+      "name" : "Schokoladiges Hafer Porridge (Kölln)",
+      "carbsPer100g" : 55
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 50,
+          "comment" : "Klein"
+        }
+      ],
+      "caloriesPer100g" : 150,
+      "favorite" : false,
+      "sugarsPer100g" : 2,
+      "name" : "Schupfnudeln , Kartoffelnudeln (Henglein)",
+      "carbsPer100g" : 30
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 200,
+          "comment" : "große Portion"
+        },
+        {
+          "amount" : 160,
+          "comment" : "normale Portion"
+        }
+      ],
+      "caloriesPer100g" : 212,
+      "favorite" : true,
+      "sugarsPer100g" : 0,
+      "name" : "Spaghetti Bolognese",
+      "carbsPer100g" : 26
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 200,
+          "comment" : "große Portion"
+        },
+        {
+          "amount" : 160,
+          "comment" : "normale Portion"
+        }
+      ],
+      "caloriesPer100g" : 144,
+      "favorite" : true,
+      "sugarsPer100g" : 0,
+      "name" : "Spaghetti mit Tomatensoße",
+      "carbsPer100g" : 17
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+        {
+          "amount" : 8,
+          "comment" : "1 Päckchen"
+        },
+        {
+          "amount" : 16,
+          "comment" : "2 Päckchen"
+        }
+      ],
+      "caloriesPer100g" : 397.80000000000001,
+      "favorite" : false,
+      "sugarsPer100g" : 98,
+      "name" : "Vanillezucker",
+      "carbsPer100g" : 98
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 348,
+      "favorite" : false,
+      "sugarsPer100g" : 0.69999999999999996,
+      "name" : "Weizenmehl Type 405",
+      "carbsPer100g" : 72
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Product",
+      "typicalAmounts" : [
+        {
+          "amount" : 50,
+          "comment" : "2 Scheiben"
+        },
+        {
+          "amount" : 75,
+          "comment" : "3 Scheiben"
+        },
+        {
+          "amount" : 25,
+          "comment" : "1 Scheibe"
+        }
+      ],
+      "caloriesPer100g" : 257.89999999999998,
+      "favorite" : false,
+      "sugarsPer100g" : 5.5999999999999996,
+      "name" : "Weizenvollkorn-Toastbrot (Rewe)",
+      "carbsPer100g" : 45.600000000000001
+    }
+  },
+  {
+    "foodItem" : {
+      "amount" : 0,
+      "category" : "Ingredient",
+      "typicalAmounts" : [
+
+      ],
+      "caloriesPer100g" : 400,
+      "favorite" : false,
+      "sugarsPer100g" : 100,
+      "name" : "Zucker",
+      "carbsPer100g" : 100
+    }
+  }
+]

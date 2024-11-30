@@ -8,7 +8,7 @@
 
 import Foundation
 
-class FPU {
+struct FPU {
     var fpu: Double
     
     init(fpu: Double) {

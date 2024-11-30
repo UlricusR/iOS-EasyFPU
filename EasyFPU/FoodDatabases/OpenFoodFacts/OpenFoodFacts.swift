@@ -8,7 +8,7 @@
 
 import Foundation
 
-class OpenFoodFacts: FoodDatabase {
+struct OpenFoodFacts: FoodDatabase {
     var databaseType = FoodDatabaseType.openFoodFacts
     private var countrycode: String {
         if UserSettings.shared.searchWorldwide {
