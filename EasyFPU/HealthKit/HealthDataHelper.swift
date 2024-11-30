@@ -9,7 +9,7 @@
 import Foundation
 import HealthKit
 
-class HealthDataHelper {
+struct HealthDataHelper {
     static private var healthStore: HKHealthStore = HKHealthStore()
     static var errorMessage: String?
     

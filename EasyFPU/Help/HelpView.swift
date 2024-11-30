@@ -9,11 +9,14 @@
 import SwiftUI
 
 enum HelpScreen: String {
-    case productsList = "Product List"
-    case ingredientsList = "Ingredients List"
+    case productMaintenanceList = "Product Maintenance List"
+    case productSelectionList = "Product Selection List"
+    case ingredientMaintenanceList = "Ingredient Maintenance List"
+    case ingredientSelectionList = "Ingredient Selection List"
+    case recipeList = "Recipe List"
     case foodItemSelector = "Select Food Item"
     case foodItemEditor = "Edit Food Item"
-    case mealDetails = "Meal Details"
+    case mealDetails = "Calculate meal"
     case absorptionSchemeEditor = "Edit Absorption Scheme"
     case mealExport = "Export to Health"
     case foodItemComposer = "Food Item Composer"
@@ -24,13 +27,19 @@ struct HelpView: View {
     var helpScreen: HelpScreen
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView<AnyView> {
                 switch helpScreen {
-                case .productsList:
+                case .productMaintenanceList:
+                    return AnyView(HelpViewFoodItemMaintenanceList())
+                case .productSelectionList:
                     return AnyView(HelpViewProductsList())
-                case .ingredientsList:
+                case .ingredientMaintenanceList:
+                    return AnyView(HelpViewFoodItemMaintenanceList())
+                case .ingredientSelectionList:
                     return AnyView(HelpViewIngredientsList())
+                case .recipeList:
+                    return AnyView(HelpViewRecipeList())
                 case .foodItemSelector:
                     return AnyView(HelpViewFoodItemSelector())
                 case .foodItemEditor:
@@ -51,10 +60,11 @@ struct HelpView: View {
                     Button(action: {
                         presentation.wrappedValue.dismiss()
                     }) {
-                        Text("Done")
+                        Image(systemName: "xmark.circle.fill")
                     }
+                    .accessibilityIdentifierLeaf("CloseButton")
                 }
             }
-        }.navigationViewStyle(StackNavigationViewStyle())
+        }
     }
 }

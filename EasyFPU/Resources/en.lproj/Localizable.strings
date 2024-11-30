@@ -25,11 +25,21 @@
 "Edit" = "Edit";
 "Duplicate" = "Duplicate";
 "Share" = "Share";
-"Move to Product List" = "Move to Products";
+"Clear" = "Clear";
+"Close" = "Close";
+"Move to Product List" = "Move to Dishes";
 "Move to Ingredient List" = "Move to Ingredients";
 "Delete" = "Delete";
+"Do not delete" = "Do not delete";
 "Copy" = "Copy";
 "Tap to edit" = "Tap to edit";
+" - Copy" = " - Copy";
+
+// Alert titles
+"Error" = "Error";
+"Warning" = "Warning";
+"Notice" = "Notice";
+"Success" = "Success";
 
 // About
 "About" = "About";
@@ -37,13 +47,22 @@
 "Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal." = "An iOS app - mainly for Type 1 Diabetes patients - to ease the calculation of sugars, regular carbs, extended carbs from fat-protein-units (FPUs) and their matching absorption times - synchronized across all your iOS devices via iCloud (optional).";
 "It's free and open-source, so I'll never ask you for money." = "It's free and open-source, so I'll never ask you for money.";
 "Documentation on rueth.info" = "Documentation on rueth.info";
-"Home-Link" = "https://rueth.info/index.php/en/easyfpu/easyfpu-for-ios";
+"Home-Link" = "https://www.rueth.info/iOS-EasyFPU/en/";
 
-// Products List
-"Food List" = "Food List";
-"Products" = "Products";
-"Product" = "Product";
-"Product List" = "Product List";
+// Calculate Meal
+"Calculate meal" = "Calculate meal";
+"Total meal" = "My meal";
+"This is where you will see the nutritial data of your meal and where you can export it to Loop." = "This is where you will see the nutritial data of your meal and where you can export it to Loop.";
+"Make sure that you have your favorite products added to 'My Dishes' before you start adding some to your meal." = "Make sure that you have your favorite food added to 'My Dishes' before you start adding some to your meal.";
+"Add products to your meal" = "Add dishes to your meal";
+"Add products" = "Add dishes";
+"Edit products" = "Edit dishes";
+
+// Dishes List
+"Products" = "Dishes";
+"My Products" = "My Dishes";
+"Product" = "Dish";
+"Oops! There are no dishes in your list yet. Start by adding some!" = "Oops! There are no dishes in your list yet. Start by adding some!";
 "Name" = "Name";
 "Favorite" = "Favorite";
 "Carbs per 100g" = "Carbs per 100g";
@@ -55,59 +74,78 @@
 "Carbs" = "Carbs";
 "Sugars" = "Sugars";
 "Thereof Sugars per 100g" = "Thereof Sugars per 100g";
-"g Extended Carbs" = "g Extended Carbs";
+"g Extended Carbs" = "g e-Carbs";
 "Extended Carbs" = "Extended Carbs";
 "kcal" = "kcal";
 "g/FPU" = "g/FPU";
 "e-Carbs Factor" = "e-Carbs Faktor";
-"New Product" = "New Product";
-"Edit food item" = "Edit food item";
-"Nutritional values per 100g:" = "Nutritional values per 100g:";
+"New Product" = "New Dish";
+"Edit food item" = "Edit Dish";
+"Nutritional values per 100g:" = "Per 100g:";
 "Nutritional values for" = "Nutritional values for";
 "Amount" = "Amount";
 "Amount consumed" = "Amount consumed";
+"Amount used" = "Amount used";
 "h Absorption Time" = "h Absorption Time";
 "Absorption Time" = "Absorption Time";
 "Total nutritional values" = "Total nutritional values";
-"Total meal" = "Total meal";
 "Typical amount" = "Typical amount";
 "Typical amounts:" = "Typical amounts:";
 "Add to typical amounts" = "Add to typical amounts";
 "Comment" = "Comment";
 "Enter amount consumed or select typical amount" = "Enter amount consumed or select typical amount";
+"Enter amount used or select typical amount" = "Enter amount used or select typical amount";
 "Enter amount consumed" = "Enter amount consumed";
+"Enter amount used" = "Enter amount used";
 "Select amount" = "Select amount";
 "Cannot delete food item" = "Cannot delete food item";
 "Delay of Extended Carbs" = "Delay of Extended Carbs";
 "Cannot delete ingredient" = "Cannot delete ingredient";
 "Could not generate data export" = "Could not generate data export";
+"is not a valid data model" = "is not a valid data model. Could not import data.";
+"This food item is created from a recipe, please open it in the recipe editor" = "This food item is created from a recipe, please open it in the recipe editor";
+"There's an associated recipe, do you want to delete it as well?" = "There's an associated recipe, do you want to delete it as well?";
+"Keep recipe" = "Delete dish only";
+"Edit food" = "Edit food";
+"Delete food" = "Delete food";
+"Do you really want to delete this food item? This cannot be undone!" = "Do you really want to delete this food item? This cannot be undone!";
+"Cannot delete food" = "Cannot delete food";
+"This food item is in use in a recipe, please remove it from the recipe before deleting." = "This food item is in use in a recipe, please remove it from the recipe before deleting.";
 
 // Ingredients
 "Ingredients" = "Ingredients";
+"My Ingredients" = "My Ingredients";
 "Ingredient" = "Ingredient";
+"Oops! There are no ingredients in your list yet. Start by adding some!" = "Oops! There are no ingredients in your list yet. Start by adding some!";
 "Ingredient List" = "Ingredient List";
 "New Ingredient" = "New Ingredient";
 "Category" = "Category";
-"Composed product" = "Composed product";
+"Composed product" = "My recipe";
 "Weight" = "Weight";
-"Final product" = "Final product";
-"The weight of the composed product is less than the sum of its ingredients" = "The weight of the composed product is less than the sum of its ingredients";
-"The weight of the composed product is more than the sum of its ingredients" = "The weight of the composed product is more than the sum of its ingredients";
+"Final product" = "My recipe";
+"The weight of the composed product is less than the sum of its ingredients" = "The weight of the finished dish is less than the sum of its ingredients";
+"The weight of the composed product is more than the sum of its ingredients" = "The weight of the finished dish is more than the sum of its ingredients";
 "Save" = "Save";
 "Save anyway" = "Save anyway";
-"Generate typical amounts" = "Generate typical amounts";
 "Number of portions" = "Number of portions";
+"If the number of portions is set to 0, no typical amounts will be created." = "If the number of portions is set to 0, no typical amounts will be created.";
 "Generate" = "Generate";
 "portion(s)" = "portions(s)";
+"per portion" = "per portion";
 "Cannot create typical amount: " = "Cannot create typical amount: ";
-"successfully saved in Products" = "successfully saved in Products";
-"Missing Ingredients" = "Missing Ingredients";
-"The following ingredients are no longer available: " = "The following ingredients are no longer available: ";
-". Do you want to create them or remove them from your product?" = ". Do you want to create them or remove them from your product?";
-"Create missing ingredients" = "Create missing ingredients";
-"Remove from product" = "Remove from product";
+"successfully saved in Products" = "successfully saved as Recipe and added to Dishes";
+"successfully saved as Recipe" = "successfully saved as Recipe, but not added to Dishes";
+"successfully updated in Products" = "successfully updated as Recipe and in Dishes";
+"successfully updated as Recipe" = "successfully updated as Recipe, but not in Dishes";
+"Could not create the composed food item" = "Oops! Could not create the composed food item due to missing ingredients. This should not happen. Please inform the App developer.";
+"Could not update the composed food item" = "Oops! Could not update the composed food item, as no Recipe was found. This should not happen. Please inform the App developer.";
+"Associated Ingredients" = "Associated Recipes";
+"This food item is used as ingredient in the following recipes:" = "This ingredient is used in the following recipes:";
+"Updating the food item will also update the associated recipes." = "Updating the ingredient will change the nutritional values of these recipes.";
+"Update recipes" = "Update recipes";
 
 // Meal preview
+"Eat" = "Eat";
 "e-Carbs" = "e-Carbs";
 "Regular Carbs" = "Regular Carbs";
 "How much?" = "How much?";
@@ -120,8 +158,10 @@
 // Meal details
 "Further details" = "Further details";
 "Export to Apple Health" = "Export to Apple Health";
+"FPU" = "FPU";
 
 // Food item editor
+"Carbs" = "Carbs";
 "Carbs: " = "Carbs: ";
 "Calories: " = "Calories: ";
 "Amount: " = "Amount: ";
@@ -138,6 +178,26 @@
 "Sugars exceed carbs" = "Sugars exceed carbs";
 "Thereof" = "Thereof";
 "Search term must not be empty" = "Search term must not be empty";
+" - new" = " - new";
+"This should not have happened - please inform the app developer" = "Oops! This should not have happened - please inform the app developer";
+"A food item with this name already exists" = "An entry with this name already exists";
+
+// Recipe list and editor
+"Recipe List" = "Recipe List";
+"Cook" = "Cook & Bake";
+"Recipes" = "My recipes";
+"Oops! No recipe yet! Then let's go!" = "Oops! No recipe yet! Then let's go!";
+"Start cooking or baking" = "Start cooking or baking";
+"Your yummy recipe will appear here once you add some ingredients." = "Your yummy recipe will appear here once you add some ingredients.";
+"Have you added ingredients to 'My Ingredients'?" = "Have you added ingredients to 'My Ingredients'?";
+"Add ingredients" = "Add ingredients";
+"Edit ingredients" = "Edit ingredients";
+"No associated cdComposedFoodItem" = "No associated cdComposedFoodItem - should not happen - please contact the app developer";
+"There's an associated product, do you want to delete it as well?" = "There's an associated dish, do you want to delete it as well?";
+"Delete both" = "Delete recipe and dish";
+"Keep product" = "Delete recipe only";
+"Delete recipe" = "Delete recipe";
+"Do you really want to delete this recipe? This cannot be undone!" = "Do you really want to delete this recipe? This cannot be undone!";
 
 // Settings editor
 "Absorption scheme" = "Absorption scheme";
@@ -145,6 +205,7 @@
 "Tap to edit, swipe left to delete" = "Tap to edit, swipe left to delete";
 "New absorption block:" = "New absorption block:";
 "Edit absorption block:" = "Edit absorption block:";
+"Absorption blocks:" = "Absorption blocks:";
 "Max. FPUs" = "Max. FPUs";
 "Absorption time" = "Absorption time";
 "FPU -" = "FPU -";
@@ -167,26 +228,30 @@
 "Interval" = "Interval";
 "min" = "min";
 "Treat sugars separately" = "Treat sugars separately";
-"Other Parameters" = "Other Parameters";
 "Alert duration between exports" = "Alert duration between exports";
 "Country" = "Country";
 "Select food database country" = "Select food database country";
+"Select country" = "Select country";
 "Search worldwide" = "Search worldwide";
 
 // Menu actions
 "App Settings" = "App Settings";
+"Therapy Settings" = "Therapy Settings";
 "Settings" = "Settings";
 "Import from JSON" = "Import (format: JSON)";
 "Export to JSON" = "Export (format: JSON)";
 "Successfully exported food list to: " = "Successfully exported food list to: ";
+"Failed to access " = "Failed to access ";
 "Failed to export food list to: " = "Failed to export food list to: ";
 "Successfully imported food list" = "Successfully imported food list";
-"Failed to import food list" = "Failed to import food list";
-"Notice" = "Notice";
-"Import food list" = "Import food list";
-"Please select" = "Please select";
+"Failed to import food list" = "Oops! Failed to import food list. This should not have happened, please contact the developer.";
+"Import food list" = "There's already food in the database.";
+"Please select" = "Should the imported food replace it or be added to it?";
 "Replace" = "Replace";
 "Append" = "Add";
+"Keep both" = "Keep both";
+"Create Food Item" = "Create Food Item";
+"Only update Composed Food Item" = "Only update Recipe";
 "Unable to open URL: " = "Unable to open URL: ";
 "Failed to decode due to missing key " = "Failed to decode due to missing key ";
 "Failed to decode due to type mismatch - " = "Failed to decode due to type mismatch - ";
@@ -215,7 +280,6 @@
 "LastCarbsExport" = "carbs";
 "LastECarbsExport" = "e-carbs";
 "LastCaloriesExport" = "calories";
-"Warning" = "Warning";
 "You have exported the following data less than " = "You have exported the following data less than ";
 " minutes ago: " = " minutes ago: ";
 "Export anyway" = "Export anyway";
@@ -260,41 +324,47 @@
 "The nutritional values from the database may not be correct, please cross-check! Use at your own risk." = "The author of the app is not liable for the correctness of the nutritional values in the database. Please cross-check those! Use at your own risk!";
 "Accept and continue" = "Use at own risk";
 "Decline and cancel" = "Decline and cancel";
-"Typical Amounts" = "Typical Amounts";
+"Generate Typical Amounts" = "Generate Typical Amounts";
 
-// Food List help
-"The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer." = "The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.";
-"The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food." = "The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food.";
-"To add a new food item, tap on the large Plus button in the top right corner to add a new food item." = "To add a new food item, tap on the large Plus button in the top right corner to add a new food item.";
-"As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed." = "As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed.";
-"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
-"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal." = "A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
-"In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:" = "In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented in a hovering window on the bottom of the screen:";
-"Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.";
-"Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.";
-"Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.";
-"Tapping the red X icon in the meal summary will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero." = "Tapping the red X icon in the meal summary will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero.";
-"Tapping the export button in the summary will open the Meal Export view." = "Tapping the export button in the summary will open the Meal Export view.";
-"Tapping the info icon in the summary will open the Meal Details view." = "Tapping the chevron icon in the summary will reveil the Meal's details.";
+// Help screens
+"Menu bar" = "Menu bar";
 
-// Ingredients list help
-"Ingredients List" = "Ingredients List";
-"The ingredients list contains the ingredients required to compose a recipe." = "The ingredients list contains the ingredients required to compose a recipe.";
-"To add a new ingredient, tap on the large Plus button in the top right corner." = "To add a new ingredient, tap on the large Plus button in the top right corner.";
+// Food item maintenance list help
+"Product Maintenance List" = "Maintain Dishes";
+"Ingredient Maintenance List" = "Maintain Ingredients";
+"Here you maintain your dishes or ingredients." = "Here you maintain your dishes or ingredients.";
+"A frying pan symbol indicates that the food item is associated to a recipe." = "A frying pan symbol indicates that the food item is associated to a recipe.";
+"Adds a new dish or ingredient to the list." = "Adds a new dish or ingredient to the list.";
+"Filters by favorite dishes or ingredients." = "Filters by favorite dishes or ingredients.";
+"To edit, duplicate, share, move or delete a dish or ingredient, swipe left or right." = "To edit, duplicate, share, move or delete a dish or ingredient, swipe left or right.";
+
+// Dishes selection help
+"Product Selection List" = "Choose Dishes";
+"The dishes list contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes." = "The list of dishes contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes.";
+"As soon as your dishes list contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount." = "As soon as your list of dishes contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount.";
+"Indicates that the dish is available for being added to your meal." = "Indicates that the dish is available for being added to your meal by tapping it.";
+"Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal." = "Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal.";
+"Adds new dishes to the list. This is not selecting it, this needs to be done separately." = "Add a new dish to the list. This is not selecting it, this needs to be done separately.";
+"The red X at the top of the screen lets you remove all selected dishes at once." = "Removes all selected dishes at once.";
+"Filters by your favorite dishes." = "Filters by your favorite dishes.";
+
+// Ingredients selection list help
+"Ingredient Selection List" = "Choose Ingredients";
+"The ingredients list contains all ingredients available to compose a recipe. Here you select which ingredients to include in your recipe. If the list is empty, you need to first add ingredients." = "The ingredients list contains all ingredients available to compose a recipe. Here you select which ingredients to include in your recipe. If the list is empty, you need to first add ingredients.";
 "As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount." = "As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount.";
-"A green Plus icon indicates that the food item has not yet been selected." = "A green Plus icon indicates that the food item has not yet been selected.";
-"A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.";
-"In case you have selected one or more ingredients, a hovering window will appear at the bottom of the screen, showing the summary of your recipe." = "In case you have selected one or more ingredients, a hovering window will appear at the bottom of the screen, showing the summary of your recipe.";
-"Tapping the red X icon in the recipe summary will clear your recipe, i.e. remove all ingredients." = "Tapping the red X icon in the recipe summary will clear your recipe, i.e. remove all ingredients.";
+"Adds new ingredients to the list. This is not selecting it, this needs to be done separately." = "Adds new ingredients to the list. This is not selecting it, this needs to be done separately.";
+"Indicates that the ingredient is available for being added to your recipe." = "Indicates that the ingredient is available for being added to your recipe by tapping it.";
+"Indicates that the ingredient has been selected and is included in your recipe. Tapping it again will remove it from your recipe." = "Indicates that the ingredient has been selected and is included in your recipe. Tapping it again will remove it from your recipe.";
+"The red X at the top of the screen lets you remove all selected ingredients at once." = "The red X at the top of the screen lets you remove all selected ingredients at once.";
 
 // Select Food Item help
-"Select Food Item" = "Select Food Item";
+"Select Food Item" = "Enter amount";
 "You may enter the consumed amount in three different ways." = "You may enter the consumed amount in three different ways.";
 "1. You directly enter it in the text field." = "1. You directly enter it in the text field.";
 "2. You use the green number fields to add to the amount already displayed in the text field." = "2. You use the green number fields to add to the amount already displayed in the text field.";
 "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value." = "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value.";
 "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment." = "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment.";
-"Save the typical amount by confirming with the green plus." = "Save the typical amount by confirming with the green plus.";
+"Saves the typical amount." = "Saves the typical amount.";
 "Use the food item editor to maintain existing typical amounts." = "Use the food item editor to maintain existing typical amounts.";
 
 // Food Item Editor help
@@ -303,8 +373,8 @@
 "All fields are mandatory, but you may leave away typical amounts." = "All fields are mandatory, but you may leave away typical amounts.";
 "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal.";
 "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button.";
-"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button.";
-"Swipe left to remove a typical amount." = "Swipe left or hit the small red X to remove a typical amount.";
+"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the blue Checkmark button.";
+"Swipe left to remove a typical amount." = "Swipe left to remove a typical amount.";
 "A good source for nutritional values (calories and carbs per 100g) is:" = "A good source for nutritional values (calories and carbs per 100g) is:";
 "Link-text-to-nutritional-values" = "Nutrition value";
 "Link-URL-to-nutritional-values" = "https://www.nutritionvalue.org/";
@@ -312,14 +382,21 @@
 
 // Meal Details help
 "Meal Details" = "Meal Details";
-"This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid. It displays the same information as the Meal Summary on the Food List view, plus - on request - the details about all selected food items." = "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid. It displays the same information as the Meal Summary on the Food List view, plus - on request - the details about all selected food items.";
+"This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid." = "This view displays the details of your meal in a way that you can easily send a screenshot to e.g. your kid.";
 "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal." = "With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal.";
-"For each of the three carbs type, the same set of information is displayed:" = "For each of the three carbs type, the same set of information is displayed:";
-"- The total amount consumed in grams" = "- The total amount consumed in grams";
-"- The total energy consumed in kcal" = "- The total energy consumed in kcal";
-"- The total amount of carbs consumed in grams" = "- The total amount of carbs consumed in grams";
-"You may export the extended carbs to the Apple Health app" = "You may export sugars, regular carbs, extended carbs and calories to the Apple Health app, if Apple Health is available on your device.";
-"Below the total meal details, a list of the individual food items considered in the calculation is displayed, containing the same information as above." = "Below the total meal details, further details as well as a list of the individual food items considered in the calculation are displayed on request.";
+"Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog." = "Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.";
+"Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.";
+"Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.";
+"Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero." = "Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero.";
+"Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet." = "Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet.";
+"Lets you add and edit the dishes included in the meal." = "Lets you add and edit the dishes included in the meal.";
+"Opens a view with all the details of the meal and its dishes." = "Opens a view with all the details of the meal and its dishes.";
+
+// Recipe list help
+"You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients)." = "You find your recipes on the recipe list. An EasyFPU recipe consists of a number of ingredients, which make up a final dish. Example: A cake (final dish) consists of flour, milk, sugar, eggs, etc. (its ingredients).";
+"Start creating a new recipe." = "Creates a new recipe.";
+"Filter your recipes by your favorites." = "Filters your recipes by your favorites.";
+"To edit, duplicate, share or delete a recipe, swipe left or right." = "To edit, duplicate, share or delete a recipe, swipe left or right.";
 
 // Absorption scheme help
 "Edit Absorption Scheme" = "Edit Absorption Scheme";
@@ -342,10 +419,12 @@
 // Food item composer help
 "Food Item Composer" = "Recipe Editor";
 "This view summarizes your recipe. It shows the selected ingredients and lets you edit the following details:" = "This view summarizes your recipe. It shows the selected ingredients and lets you edit the following details:";
-"- The name of the composed product / recipe" = "- The name of the composed product / recipe";
-"- The total weight of the final product" = "- The total weight of the final product";
+"- The name of the composed product / recipe" = "- The name of the finished dish / recipe";
+"- The total weight of the final product" = "- The total weight of the finished dish";
 "- Whether or not the recipe is a favorite" = "- Whether or not the recipe is a favorite";
 "- The number of portions" = "- The number of portions";
+"Lets you add and edit the ingredients included in the dish." = "Lets you add and edit the ingredients included in the recipe.";
+"Saves your recipe to the recipe list and creates a new dish in the list of dishes." = "Saves your recipe to the recipe list and creates a new dish in the list of dishes.";
 
 // Health export help
 "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles.";

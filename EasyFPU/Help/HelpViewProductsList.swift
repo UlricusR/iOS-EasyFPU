@@ -11,59 +11,37 @@ import SwiftUI
 struct HelpViewProductsList: View {
     var body: some View {
         VStack(alignment: .leading) {
-            // The Food List
-            Text("The food list is the main screen of the app. It automatically appears when opening the app the first time, after you accepted the disclaimer.").padding()
-            Text("The food list is empty on purpose when first opening the app, as everybody prefers different FPU relevant food.").padding()
+            // The product selection list
+            Text("The dishes list contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes.").padding()
+            
+            Text("As soon as your dishes list contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount.").padding()
             
             HStack {
-                Image(systemName: "plus.circle").foregroundColor(.green).imageScale(.large)
-                Text("To add a new food item, tap on the large Plus button in the top right corner to add a new food item.")
+                Image(systemName: "plus.circle").foregroundStyle(.gray)
+                Text("Indicates that the dish is available for being added to your meal.")
+            }.padding()
+			
+            HStack {
+                Image(systemName: "xmark.circle").foregroundStyle(.red)
+                Text("Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal.")
             }.padding()
             
-            Text("As soon as your food list contains one or more food items, you can go ahead and create a meal. To do so, tap once on the respective food item. This will open the screen to select the amount consumed.").padding()
+            Text("Menu bar").font(.headline).padding()
+			
+            HStack {
+                Image(systemName: "plus.circle").foregroundStyle(.green).imageScale(.large)
+                Text("Adds new dishes to the list. This is not selecting it, this needs to be done separately.")
+            }.padding()
             
             HStack {
-                Image(systemName: "plus.circle").foregroundColor(.green)
-                Text("A green Plus icon indicates that the food item has not yet been selected.")
-            }.padding()
-            HStack {
-                Image(systemName: "xmark.circle").foregroundColor(.red)
-                Text("A red X icon indicates that the food item has been selected and is included in your meal. Tapping the the food item again will remove it from your meal.")
+				Image(systemName: "xmark.circle").foregroundStyle(.red).imageScale(.large)
+				Text("The red X at the top of the screen lets you remove all selected dishes at once.")
             }.padding()
             
-            Group {
-                Text("In case you have selected one or more food items, the three carb types - sugars, regular carbs and extended carbs - will be presented on the bottom of the screen:").padding()
-                
-                HStack {
-                    Image(systemName: "cube.fill").foregroundColor(Color(ComposedFoodItemSugarsView.color))
-                    Text("Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Absorption Scheme settings dialog.")
-                }.padding()
-                
-                HStack {
-                    Image(systemName: "hare.fill").foregroundColor(Color(ComposedFoodItemCarbsView.color))
-                    Text("Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.")
-                }.padding()
-                
-                HStack {
-                    Image(systemName: "tortoise.fill").foregroundColor(Color(ComposedFoodItemECarbsView.color))
-                    Text("Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.")
-                }.padding()
-                
-                HStack {
-                    Image(systemName: "xmark.circle").foregroundColor(.red)
-                    Text("Tapping the red X icon in the meal summary will clear your meal, i.e. remove all food items and reset the time period the meal will start in to zero.")
-                }.padding()
-                
-                HStack {
-                    Image(systemName: "square.and.arrow.up").foregroundColor(.accentColor)
-                    Text("Tapping the export button in the summary will open the Meal Export view.")
-                }.padding()
-                
-                HStack {
-                    Image(systemName: "chevron.right.circle").foregroundColor(.accentColor)
-                    Text("Tapping the info icon in the summary will open the Meal Details view.")
-                }.padding()
-            }
+            HStack {
+                Image(systemName: "star").foregroundStyle(Color.blue).imageScale(.large)
+                Text("Filters by your favorite dishes.")
+            }.padding()
         }
     }
 }

@@ -18,8 +18,8 @@ extension TypicalAmount {
 
     @NSManaged public var amount: Int64
     @NSManaged public var comment: String?
-    @NSManaged public var foodItem: FoodItem?
-    @NSManaged public var id: UUID?
+    @NSManaged public var foodItem: FoodItem // required as of 2023-08-04
+    @NSManaged public var id: UUID // required as of 2023-08-04
 }
 
 extension TypicalAmount: Identifiable {

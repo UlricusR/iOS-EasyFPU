@@ -12,7 +12,7 @@ enum CarbsEntryType {
     case sugars, carbs, eCarbs
 }
 
-class CarbsEntry: Hashable {
+struct CarbsEntry: Hashable {
     var type: CarbsEntryType
     var value: Double
     var date: Date

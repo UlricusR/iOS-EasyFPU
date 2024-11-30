@@ -24,16 +24,14 @@ struct NumberButton<T: VariableAmountItem>: View {
     var width: CGFloat
     
     var body: some View {
-        Button(action: {
+        Button("+\(self.number)") {
             let newValue = self.variableAmountItem.amount + self.number
             self.variableAmountItem.amountAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
-        }) {
-            Text("+\(self.number)")
         }
         .frame(width: width, height: 40, alignment: .center)
         .background(Color.green)
-        .foregroundColor(.white)
-        .buttonStyle(BorderlessButtonStyle())
+        .foregroundStyle(.white)
+        .buttonStyle(.borderless)
         .cornerRadius(20)
     }
 }
