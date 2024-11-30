@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -18,36 +18,48 @@
 		1B004A4F24BA3EF1001E362A /* AbsorptionBlockFromJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B004A4E24BA3EF1001E362A /* AbsorptionBlockFromJson.swift */; };
 		1B004A5424BA532E001E362A /* absorptionscheme_default.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B004A5324BA532E001E362A /* absorptionscheme_default.json */; };
 		1B0868AB254EDDC0005953CC /* FoodItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0868AA254EDDC0005953CC /* FoodItemListView.swift */; };
-		1B0868AE254EDF35005953CC /* FoodItemListViewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0868AD254EDF35005953CC /* FoodItemListViewSheets.swift */; };
 		1B0868B2254F0D3E005953CC /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0868B1254F0D3E005953CC /* NotificationView.swift */; };
-		1B0868B5254F0EEF005953CC /* ProductsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0868B4254F0EEF005953CC /* ProductsListView.swift */; };
-		1B0868B9254F1CE4005953CC /* IngredientsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0868B8254F1CE4005953CC /* IngredientsListView.swift */; };
-		1B0868BD254F3523005953CC /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0868BC254F3523005953CC /* BottomSheetView.swift */; };
-		1B0AB0DC254F755000A7BFBD /* FoodItemComposerViewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0AB0DB254F755000A7BFBD /* FoodItemComposerViewSheets.swift */; };
+		1B0868B5254F0EEF005953CC /* ProductMaintenanceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0868B4254F0EEF005953CC /* ProductMaintenanceListView.swift */; };
+		1B0868B9254F1CE4005953CC /* IngredientMaintenanceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0868B8254F1CE4005953CC /* IngredientMaintenanceListView.swift */; };
 		1B0AB0DF254F760D00A7BFBD /* HelpFoodItemComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0AB0DE254F760D00A7BFBD /* HelpFoodItemComposer.swift */; };
 		1B0CE2BA250663B5008B04E3 /* HealthDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0CE2B9250663B5008B04E3 /* HealthDataHelper.swift */; };
+		1B12690D2A8E52B40047B1F5 /* DataWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B12690C2A8E52B40047B1F5 /* DataWrapper.swift */; };
+		1B12690F2A8E699C0047B1F5 /* DataVersionFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B12690E2A8E699C0047B1F5 /* DataVersionFinder.swift */; };
+		1B16208A2CD68F360083DDF2 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 1B1620892CD68F360083DDF2 /* DGCharts */; };
+		1B16208D2CD68F970083DDF2 /* CountryPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 1B16208C2CD68F970083DDF2 /* CountryPicker */; };
+		1B1620902CD68FE40083DDF2 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 1B16208F2CD68FE40083DDF2 /* URLImage */; };
+		1B1620932CD6922E0083DDF2 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 1B1620922CD6922E0083DDF2 /* SwiftyJSON */; };
+		1B16209B2CD693480083DDF2 /* EasyFPU_FoodList_DataModel2.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B1620992CD693480083DDF2 /* EasyFPU_FoodList_DataModel2.json */; };
+		1B16209C2CD693480083DDF2 /* EasyFPU.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 1B1620972CD693480083DDF2 /* EasyFPU.xctestplan */; };
+		1B16209D2CD693480083DDF2 /* EasyFPU_FoodList_DataModel1.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B1620982CD693480083DDF2 /* EasyFPU_FoodList_DataModel1.json */; };
+		1B16209E2CD693480083DDF2 /* ImportExportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B16209A2CD693480083DDF2 /* ImportExportTests.swift */; };
+		1B1620A02CD693480083DDF2 /* DataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1620962CD693480083DDF2 /* DataFactory.swift */; };
+		1B1620A12CD693480083DDF2 /* CoreDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1620952CD693480083DDF2 /* CoreDataTests.swift */; };
 		1B188444253B329000B671A2 /* OpenFoodFacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B188443253B329000B671A2 /* OpenFoodFacts.swift */; };
 		1B188447253B32DE00B671A2 /* FoodDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B188446253B32DE00B671A2 /* FoodDatabase.swift */; };
 		1B18844A253B336500B671A2 /* FoodDatabaseEntry+FoodDatabaseImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B188449253B336500B671A2 /* FoodDatabaseEntry+FoodDatabaseImage.swift */; };
 		1B1CC90F24DC4F390014DD7D /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1CC90E24DC4F390014DD7D /* MenuView.swift */; };
-		1B1CC91124DC57300014DD7D /* MenuViewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1CC91024DC57300014DD7D /* MenuViewSheets.swift */; };
 		1B1CC91924DD2FC50014DD7D /* FilePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */; };
 		1B24AD6C24BE38E800F3A100 /* FoodItemSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */; };
-		1B25D480253DAFDD00848C2A /* FoodItemEditorSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B25D47F253DAFDD00848C2A /* FoodItemEditorSheets.swift */; };
 		1B25D483253DB0A900848C2A /* FoodSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B25D482253DB0A900848C2A /* FoodSearch.swift */; };
 		1B25D487253DC8DB00848C2A /* FoodSearchResultPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B25D486253DC8DB00848C2A /* FoodSearchResultPreview.swift */; };
 		1B2D99872541D72F0012EC40 /* FoodDatabaseResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2D99862541D72F0012EC40 /* FoodDatabaseResults.swift */; };
-		1B2EB5E22544808500E1B5FC /* CountryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2EB5E12544808500E1B5FC /* CountryPicker.swift */; };
+		1B30351D2CB4326300F1210A /* HelpViewFoodItemMaintenanceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B30351C2CB4326300F1210A /* HelpViewFoodItemMaintenanceList.swift */; };
 		1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */; };
 		1B377A6824FAA935005AC5C6 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6724FAA935005AC5C6 /* AboutView.swift */; };
 		1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */; };
-		1B3CEB9B24D32D38001D64DA /* SettingsEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9A24D32D38001D64DA /* SettingsEditor.swift */; };
+		1B3CEB9B24D32D38001D64DA /* TherapySettingsEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9A24D32D38001D64DA /* TherapySettingsEditor.swift */; };
 		1B3CEB9D24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */; };
-		1B3EEB1025334A0C004C110A /* Pods_EasyFPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */; };
 		1B3EEB16253368B3004C110A /* HealthExportCarbsPreviewChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */; };
+		1B4329C12CBEB1A500C478C3 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4329C02CBEB19F00C478C3 /* CoreDataStack.swift */; };
+		1B4827522CAC4D410080D5BF /* IngredientSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4827512CAC4D410080D5BF /* IngredientSelectionListView.swift */; };
+		1B4827542CAC4D8A0080D5BF /* ProductSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4827532CAC4D8A0080D5BF /* ProductSelectionListView.swift */; };
 		1B51B3302540B31300064EB1 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 1B51B32F2540B31300064EB1 /* CodeScanner */; };
 		1B51B3332540BCB800064EB1 /* FoodPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B51B3322540BCB800064EB1 /* FoodPreview.swift */; };
+		1B5B91062CA9B6B200135569 /* CountryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B91052CA9B6B200135569 /* CountryPickerView.swift */; };
+		1B5E644F2CC8360700022BDF /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5E644E2CC835C600022BDF /* Optional+Extensions.swift */; };
 		1B6106BB24D93346001F2284 /* DataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6106BA24D93346001F2284 /* DataHelper.swift */; };
+		1B6654B52A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6654B42A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift */; };
 		1B68548324BC6FE0005ABB8B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1B68548524BC6FE0005ABB8B /* Localizable.strings */; };
 		1B68548824BC70ED005ABB8B /* FoodItemEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B68548724BC70ED005ABB8B /* FoodItemEditor.swift */; };
 		1B68548A24BC9E12005ABB8B /* FoodItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B68548924BC9E12005ABB8B /* FoodItemView.swift */; };
@@ -61,19 +73,22 @@
 		1B6B93752554008C00F0CC7D /* Ingredient+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93712554008C00F0CC7D /* Ingredient+CoreDataProperties.swift */; };
 		1B6B93762554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */; };
 		1B6B93772554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93732554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift */; };
+		1B816B4F2CAB2FCF008670B5 /* RecipeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B4E2CAB2FCF008670B5 /* RecipeListView.swift */; };
+		1B816B532CAB345C008670B5 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B522CAB345C008670B5 /* RecipeView.swift */; };
+		1B816B572CAB4675008670B5 /* HelpViewRecipeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B562CAB4675008670B5 /* HelpViewRecipeList.swift */; };
 		1B870FC124C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */; };
 		1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */; };
 		1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */; };
-		1B90D2DA24F7A8EB0059BFFA /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2D924F7A8EB0059BFFA /* SearchView.swift */; };
-		1B90D2DC24F7A9660059BFFA /* ResignKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2DB24F7A9660059BFFA /* ResignKeyboard.swift */; };
 		1B90D2DE24F7BAB40059BFFA /* ComposedFoodItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90D2DD24F7BAB40059BFFA /* ComposedFoodItemView.swift */; };
-		1B919950254894370049672D /* FoodPreviewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B91994F254894370049672D /* FoodPreviewSheets.swift */; };
 		1B9723ED2508AC5C00E606A7 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9723EC2508AC5C00E606A7 /* UserSettings.swift */; };
 		1BA040CA24BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA040C624BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift */; };
 		1BA040CB24BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA040C724BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift */; };
+		1BA1035B2CDBFF2D00776D15 /* AccessibilityIdentifierBranchModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA103592CDBFF2D00776D15 /* AccessibilityIdentifierBranchModifier.swift */; };
+		1BA1035C2CDBFF2D00776D15 /* AccessibilityIdentifierLeafModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA1035A2CDBFF2D00776D15 /* AccessibilityIdentifierLeafModifier.swift */; };
+		1BA1035E2CDBFF6A00776D15 /* ParentAccessibilityBranchKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA1035D2CDBFF6A00776D15 /* ParentAccessibilityBranchKey.swift */; };
+		1BA1041F2CE4B39400562BFD /* BusinessLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA1041E2CE4B39400562BFD /* BusinessLogicTests.swift */; };
 		1BA2F762259F8AA9004300A4 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA2F761259F8AA9004300A4 /* ActivityView.swift */; };
 		1BA963E02507DFC200375650 /* ComposedFoodItemExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA963DF2507DFC200375650 /* ComposedFoodItemExportView.swift */; };
-		1BA963E22507E03100375650 /* ComposedFoodItemEvaluationViewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA963E12507E03000375650 /* ComposedFoodItemEvaluationViewSheets.swift */; };
 		1BA963E4250807DD00375650 /* HelpMealExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA963E3250807DD00375650 /* HelpMealExportView.swift */; };
 		1BA97D9029ABB5A5006D6754 /* ActivityIndicatorSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA97D8F29ABB5A5006D6754 /* ActivityIndicatorSpinner.swift */; };
 		1BAD273D25495B4100A730FB /* FoodPreviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAD273C25495B4100A730FB /* FoodPreviewContent.swift */; };
@@ -81,7 +96,9 @@
 		1BAEE0862500C5FB00B4891F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAEE0852500C5FB00B4891F /* HealthKit.framework */; };
 		1BAEE0882500E12400B4891F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BAEE0872500E12400B4891F /* Default-568h@2x.png */; };
 		1BB631DA24FBDA9400B75EF3 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB631D924FBDA9400B75EF3 /* HelpView.swift */; };
-		1BBD6C4924C9D5700025AB84 /* FoodItemViewSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBD6C4824C9D5700025AB84 /* FoodItemViewSheets.swift */; };
+		1BB9BD9E2CDD4F750043B465 /* AppSettingsEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9BD9D2CDD4F750043B465 /* AppSettingsEditor.swift */; };
+		1BB9BDA02CDD54650043B465 /* AbsorptionParameterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9BD9F2CDD54650043B465 /* AbsorptionParameterSettingsView.swift */; };
+		1BB9BDA22CDD56DB0043B465 /* AbsorptionBlockSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9BDA12CDD56DB0043B465 /* AbsorptionBlockSettingsView.swift */; };
 		1BBFA9A32523B2FE00FB78D3 /* CustomViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBFA9A22523B2FE00FB78D3 /* CustomViews.swift */; };
 		1BC75243254AF786001C4D27 /* ComposedFoodItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC75242254AF786001C4D27 /* ComposedFoodItemViewModel.swift */; };
 		1BC75246254AF8CF001C4D27 /* HelpViewIngredientsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC75245254AF8CF001C4D27 /* HelpViewIngredientsList.swift */; };
@@ -100,6 +117,23 @@
 		1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		1B9304212CBCECE700DE7CDD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1B004A2124BA3035001E362A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1B004A2824BA3035001E362A;
+			remoteInfo = EasyFPU;
+		};
+		1BC969252CD7B8AE00A35ACA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1B004A2124BA3035001E362A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1B004A2824BA3035001E362A;
+			remoteInfo = EasyFPU;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		1B004A2924BA3035001E362A /* EasyFPU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasyFPU.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B004A2C24BA3035001E362A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -115,34 +149,43 @@
 		1B004A4E24BA3EF1001E362A /* AbsorptionBlockFromJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionBlockFromJson.swift; sourceTree = "<group>"; };
 		1B004A5324BA532E001E362A /* absorptionscheme_default.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = absorptionscheme_default.json; sourceTree = "<group>"; };
 		1B0868AA254EDDC0005953CC /* FoodItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemListView.swift; sourceTree = "<group>"; };
-		1B0868AD254EDF35005953CC /* FoodItemListViewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemListViewSheets.swift; sourceTree = "<group>"; };
 		1B0868B1254F0D3E005953CC /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
-		1B0868B4254F0EEF005953CC /* ProductsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsListView.swift; sourceTree = "<group>"; };
-		1B0868B8254F1CE4005953CC /* IngredientsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsListView.swift; sourceTree = "<group>"; };
-		1B0868BC254F3523005953CC /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
-		1B0AB0DB254F755000A7BFBD /* FoodItemComposerViewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemComposerViewSheets.swift; sourceTree = "<group>"; };
+		1B0868B4254F0EEF005953CC /* ProductMaintenanceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductMaintenanceListView.swift; sourceTree = "<group>"; };
+		1B0868B8254F1CE4005953CC /* IngredientMaintenanceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientMaintenanceListView.swift; sourceTree = "<group>"; };
 		1B0AB0DE254F760D00A7BFBD /* HelpFoodItemComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpFoodItemComposer.swift; sourceTree = "<group>"; };
 		1B0CE2B9250663B5008B04E3 /* HealthDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataHelper.swift; sourceTree = "<group>"; };
+		1B12690C2A8E52B40047B1F5 /* DataWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataWrapper.swift; sourceTree = "<group>"; };
+		1B12690E2A8E699C0047B1F5 /* DataVersionFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataVersionFinder.swift; sourceTree = "<group>"; };
+		1B1620952CD693480083DDF2 /* CoreDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTests.swift; sourceTree = "<group>"; };
+		1B1620962CD693480083DDF2 /* DataFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFactory.swift; sourceTree = "<group>"; };
+		1B1620972CD693480083DDF2 /* EasyFPU.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyFPU.xctestplan; sourceTree = "<group>"; };
+		1B1620982CD693480083DDF2 /* EasyFPU_FoodList_DataModel1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EasyFPU_FoodList_DataModel1.json; sourceTree = "<group>"; };
+		1B1620992CD693480083DDF2 /* EasyFPU_FoodList_DataModel2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EasyFPU_FoodList_DataModel2.json; sourceTree = "<group>"; };
+		1B16209A2CD693480083DDF2 /* ImportExportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportTests.swift; sourceTree = "<group>"; };
 		1B188443253B329000B671A2 /* OpenFoodFacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFoodFacts.swift; sourceTree = "<group>"; };
 		1B188446253B32DE00B671A2 /* FoodDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDatabase.swift; sourceTree = "<group>"; };
 		1B188449253B336500B671A2 /* FoodDatabaseEntry+FoodDatabaseImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodDatabaseEntry+FoodDatabaseImage.swift"; sourceTree = "<group>"; };
 		1B1CC90E24DC4F390014DD7D /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
-		1B1CC91024DC57300014DD7D /* MenuViewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewSheets.swift; sourceTree = "<group>"; };
 		1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePickerView.swift; sourceTree = "<group>"; };
 		1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemSelector.swift; sourceTree = "<group>"; };
-		1B25D47F253DAFDD00848C2A /* FoodItemEditorSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemEditorSheets.swift; sourceTree = "<group>"; };
 		1B25D482253DB0A900848C2A /* FoodSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodSearch.swift; sourceTree = "<group>"; };
 		1B25D486253DC8DB00848C2A /* FoodSearchResultPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodSearchResultPreview.swift; sourceTree = "<group>"; };
 		1B2D99862541D72F0012EC40 /* FoodDatabaseResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDatabaseResults.swift; sourceTree = "<group>"; };
-		1B2EB5E12544808500E1B5FC /* CountryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPicker.swift; sourceTree = "<group>"; };
+		1B30351C2CB4326300F1210A /* HelpViewFoodItemMaintenanceList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewFoodItemMaintenanceList.swift; sourceTree = "<group>"; };
 		1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 		1B377A6724FAA935005AC5C6 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbsorptionBlockViewModel.swift; sourceTree = "<group>"; };
-		1B3CEB9A24D32D38001D64DA /* SettingsEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditor.swift; sourceTree = "<group>"; };
+		1B3CEB9A24D32D38001D64DA /* TherapySettingsEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TherapySettingsEditor.swift; sourceTree = "<group>"; };
 		1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionSchemeViewModel.swift; sourceTree = "<group>"; };
 		1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthExportCarbsPreviewChart.swift; sourceTree = "<group>"; };
+		1B4329C02CBEB19F00C478C3 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		1B4827512CAC4D410080D5BF /* IngredientSelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientSelectionListView.swift; sourceTree = "<group>"; };
+		1B4827532CAC4D8A0080D5BF /* ProductSelectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectionListView.swift; sourceTree = "<group>"; };
 		1B51B3322540BCB800064EB1 /* FoodPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodPreview.swift; sourceTree = "<group>"; };
+		1B5B91052CA9B6B200135569 /* CountryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPickerView.swift; sourceTree = "<group>"; };
+		1B5E644E2CC835C600022BDF /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		1B6106BA24D93346001F2284 /* DataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataHelper.swift; sourceTree = "<group>"; };
+		1B6654B42A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemDetailsView.swift; sourceTree = "<group>"; };
 		1B68548424BC6FE0005ABB8B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1B68548624BC6FF2005ABB8B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1B68548724BC70ED005ABB8B /* FoodItemEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemEditor.swift; sourceTree = "<group>"; };
@@ -153,23 +196,28 @@
 		1B6867E424FD37F80057EC6A /* HelpViewMealDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewMealDetails.swift; sourceTree = "<group>"; };
 		1B6867E624FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewAbsorptionSchemeEditor.swift; sourceTree = "<group>"; };
 		1B6B86192517D1AC00ED10FE /* CarbsEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsEntry.swift; sourceTree = "<group>"; };
-		1B6B93702554008C00F0CC7D /* Ingredient+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ingredient+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		1B6B93712554008C00F0CC7D /* Ingredient+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ingredient+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedFoodItem+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		1B6B93732554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedFoodItem+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		1B6B93702554008C00F0CC7D /* Ingredient+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Ingredient+CoreDataClass.swift"; path = "EasyFPU/Models/Ingredient+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		1B6B93712554008C00F0CC7D /* Ingredient+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Ingredient+CoreDataProperties.swift"; path = "EasyFPU/Models/Ingredient+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ComposedFoodItem+CoreDataClass.swift"; path = "EasyFPU/Models/ComposedFoodItem+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		1B6B93732554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ComposedFoodItem+CoreDataProperties.swift"; path = "EasyFPU/Models/ComposedFoodItem+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		1B71EBED2A80E21100343C89 /* EasyFPU 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "EasyFPU 2.xcdatamodel"; sourceTree = "<group>"; };
+		1B816B4E2CAB2FCF008670B5 /* RecipeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListView.swift; sourceTree = "<group>"; };
+		1B816B522CAB345C008670B5 /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
+		1B816B562CAB4675008670B5 /* HelpViewRecipeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewRecipeList.swift; sourceTree = "<group>"; };
 		1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemEvaluationView.swift; sourceTree = "<group>"; };
 		1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewModel.swift; sourceTree = "<group>"; };
 		1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmountViewModel.swift; sourceTree = "<group>"; };
-		1B90D2D924F7A8EB0059BFFA /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
-		1B90D2DB24F7A9660059BFFA /* ResignKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResignKeyboard.swift; sourceTree = "<group>"; };
 		1B90D2DD24F7BAB40059BFFA /* ComposedFoodItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemView.swift; sourceTree = "<group>"; };
-		1B91994F254894370049672D /* FoodPreviewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodPreviewSheets.swift; sourceTree = "<group>"; };
+		1B93041D2CBCECE700DE7CDD /* EasyFPUTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EasyFPUTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B9723EC2508AC5C00E606A7 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		1BA040C624BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TypicalAmount+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BA040C724BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TypicalAmount+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1BA103592CDBFF2D00776D15 /* AccessibilityIdentifierBranchModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityIdentifierBranchModifier.swift; sourceTree = "<group>"; };
+		1BA1035A2CDBFF2D00776D15 /* AccessibilityIdentifierLeafModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityIdentifierLeafModifier.swift; sourceTree = "<group>"; };
+		1BA1035D2CDBFF6A00776D15 /* ParentAccessibilityBranchKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentAccessibilityBranchKey.swift; sourceTree = "<group>"; };
+		1BA1041E2CE4B39400562BFD /* BusinessLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessLogicTests.swift; sourceTree = "<group>"; };
 		1BA2F761259F8AA9004300A4 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		1BA963DF2507DFC200375650 /* ComposedFoodItemExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemExportView.swift; sourceTree = "<group>"; };
-		1BA963E12507E03000375650 /* ComposedFoodItemEvaluationViewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemEvaluationViewSheets.swift; sourceTree = "<group>"; };
 		1BA963E3250807DD00375650 /* HelpMealExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpMealExportView.swift; sourceTree = "<group>"; };
 		1BA97D8F29ABB5A5006D6754 /* ActivityIndicatorSpinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorSpinner.swift; sourceTree = "<group>"; };
 		1BAD273C25495B4100A730FB /* FoodPreviewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodPreviewContent.swift; sourceTree = "<group>"; };
@@ -177,15 +225,19 @@
 		1BAEE0852500C5FB00B4891F /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		1BAEE0872500E12400B4891F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		1BB631D924FBDA9400B75EF3 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
-		1BBD6C4824C9D5700025AB84 /* FoodItemViewSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemViewSheets.swift; sourceTree = "<group>"; };
+		1BB9BD9D2CDD4F750043B465 /* AppSettingsEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsEditor.swift; sourceTree = "<group>"; };
+		1BB9BD9F2CDD54650043B465 /* AbsorptionParameterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionParameterSettingsView.swift; sourceTree = "<group>"; };
+		1BB9BDA12CDD56DB0043B465 /* AbsorptionBlockSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionBlockSettingsView.swift; sourceTree = "<group>"; };
 		1BBFA9A22523B2FE00FB78D3 /* CustomViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViews.swift; sourceTree = "<group>"; };
 		1BC75242254AF786001C4D27 /* ComposedFoodItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemViewModel.swift; sourceTree = "<group>"; };
 		1BC75245254AF8CF001C4D27 /* HelpViewIngredientsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewIngredientsList.swift; sourceTree = "<group>"; };
 		1BC7524E254AFD5D001C4D27 /* FoodItemComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemComposerView.swift; sourceTree = "<group>"; };
+		1BC9691F2CD7B8AE00A35ACA /* EasyFPUUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EasyFPUUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BCC1BEE2519036F00920264 /* CarbsRegime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsRegime.swift; sourceTree = "<group>"; };
 		1BD0693B254D97DD00B0E15A /* VariableAmountItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariableAmountItem.swift; sourceTree = "<group>"; };
 		1BDBE39D24FE384C00ED61F1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1BDBE39F24FE385F00ED61F1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1BE506F12A840DE60087DD59 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		1BEE525324D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AbsorptionBlock+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BEE525424D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AbsorptionBlock+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BF1A159251AA1F8001E561C /* ComposedFoodItemSugarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemSugarsView.swift; sourceTree = "<group>"; };
@@ -195,20 +247,38 @@
 		1BF8A4BE24C21A52008634DF /* FoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsRegimeCalculator.swift; sourceTree = "<group>"; };
-		2CE0A6239381CBD7B93933F9 /* Pods-EasyFPU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EasyFPU.release.xcconfig"; path = "Target Support Files/Pods-EasyFPU/Pods-EasyFPU.release.xcconfig"; sourceTree = "<group>"; };
-		7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EasyFPU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA50480835A2B36F0BC9C947 /* Pods-EasyFPU.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EasyFPU.debug.xcconfig"; path = "Target Support Files/Pods-EasyFPU/Pods-EasyFPU.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1BC969202CD7B8AE00A35ACA /* EasyFPUUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EasyFPUUITests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1B004A2624BA3035001E362A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B16208D2CD68F970083DDF2 /* CountryPicker in Frameworks */,
+				1B16208A2CD68F360083DDF2 /* DGCharts in Frameworks */,
 				1B51B3302540B31300064EB1 /* CodeScanner in Frameworks */,
 				1B004A4624BA338A001E362A /* CloudKit.framework in Frameworks */,
+				1B1620902CD68FE40083DDF2 /* URLImage in Frameworks */,
 				1BAEE0862500C5FB00B4891F /* HealthKit.framework in Frameworks */,
-				1B3EEB1025334A0C004C110A /* Pods_EasyFPU.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1B93041A2CBCECE700DE7CDD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B1620932CD6922E0083DDF2 /* SwiftyJSON in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1BC9691C2CD7B8AE00A35ACA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,9 +289,10 @@
 			isa = PBXGroup;
 			children = (
 				1B004A2B24BA3035001E362A /* EasyFPU */,
+				1B93041E2CBCECE700DE7CDD /* EasyFPUTests */,
+				1BC969202CD7B8AE00A35ACA /* EasyFPUUITests */,
 				1B004A2A24BA3035001E362A /* Products */,
 				1B004A4424BA338A001E362A /* Frameworks */,
-				BABA6DB766EB131AE23C7102 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -229,6 +300,8 @@
 			isa = PBXGroup;
 			children = (
 				1B004A2924BA3035001E362A /* EasyFPU.app */,
+				1B93041D2CBCECE700DE7CDD /* EasyFPUTests.xctest */,
+				1BC9691F2CD7B8AE00A35ACA /* EasyFPUUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -246,40 +319,9 @@
 				1BAEE0892500E15600B4891F /* UIHelpers */,
 				1B004A4324BA3383001E362A /* EasyFPU.entitlements */,
 				1B004A2C24BA3035001E362A /* AppDelegate.swift */,
+				1B4329C02CBEB19F00C478C3 /* CoreDataStack.swift */,
 				1B004A2E24BA3035001E362A /* SceneDelegate.swift */,
-				1BAD273F254A008000A730FB /* MainView.swift */,
-				1B0868B4254F0EEF005953CC /* ProductsListView.swift */,
-				1B0868B8254F1CE4005953CC /* IngredientsListView.swift */,
-				1B0868AA254EDDC0005953CC /* FoodItemListView.swift */,
-				1B0868AD254EDF35005953CC /* FoodItemListViewSheets.swift */,
-				1B68548924BC9E12005ABB8B /* FoodItemView.swift */,
-				1BBD6C4824C9D5700025AB84 /* FoodItemViewSheets.swift */,
-				1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */,
-				1B68548724BC70ED005ABB8B /* FoodItemEditor.swift */,
-				1B25D47F253DAFDD00848C2A /* FoodItemEditorSheets.swift */,
-				1B25D482253DB0A900848C2A /* FoodSearch.swift */,
-				1B25D486253DC8DB00848C2A /* FoodSearchResultPreview.swift */,
-				1B51B3322540BCB800064EB1 /* FoodPreview.swift */,
-				1BAD273C25495B4100A730FB /* FoodPreviewContent.swift */,
-				1B91994F254894370049672D /* FoodPreviewSheets.swift */,
-				1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */,
-				1BA963E12507E03000375650 /* ComposedFoodItemEvaluationViewSheets.swift */,
-				1BF1A159251AA1F8001E561C /* ComposedFoodItemSugarsView.swift */,
-				1BF1A15C251AA2B2001E561C /* ComposedFoodItemCarbsView.swift */,
-				1BF1A15F251AA336001E561C /* ComposedFoodItemECarbsView.swift */,
-				1B90D2DD24F7BAB40059BFFA /* ComposedFoodItemView.swift */,
-				1BA963DF2507DFC200375650 /* ComposedFoodItemExportView.swift */,
-				1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */,
-				1BC7524E254AFD5D001C4D27 /* FoodItemComposerView.swift */,
-				1B0AB0DB254F755000A7BFBD /* FoodItemComposerViewSheets.swift */,
-				1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */,
-				1B377A6724FAA935005AC5C6 /* AboutView.swift */,
-				1B1CC90E24DC4F390014DD7D /* MenuView.swift */,
-				1B1CC91024DC57300014DD7D /* MenuViewSheets.swift */,
-				1B3CEB9A24D32D38001D64DA /* SettingsEditor.swift */,
-				1B2EB5E12544808500E1B5FC /* CountryPicker.swift */,
-				1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */,
-				1B90D2D924F7A8EB0059BFFA /* SearchView.swift */,
+				1BA104202CE4B41900562BFD /* Views */,
 				1B004A3524BA3038001E362A /* Assets.xcassets */,
 				1B004A3D24BA3038001E362A /* Info.plist */,
 				1BDBE39E24FE384C00ED61F1 /* InfoPlist.strings */,
@@ -300,9 +342,9 @@
 		1B004A4424BA338A001E362A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1BE506F12A840DE60087DD59 /* XCTest.framework */,
 				1BAEE0852500C5FB00B4891F /* HealthKit.framework */,
 				1B004A4524BA338A001E362A /* CloudKit.framework */,
-				7BB2BCB4670FF2BD819E2D77 /* Pods_EasyFPU.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -310,6 +352,7 @@
 		1B004A4724BA3419001E362A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1B5E644E2CC835C600022BDF /* Optional+Extensions.swift */,
 				1B6B93702554008C00F0CC7D /* Ingredient+CoreDataClass.swift */,
 				1B6B93712554008C00F0CC7D /* Ingredient+CoreDataProperties.swift */,
 				1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */,
@@ -353,6 +396,8 @@
 			children = (
 				1B6106BA24D93346001F2284 /* DataHelper.swift */,
 				1B9723EC2508AC5C00E606A7 /* UserSettings.swift */,
+				1B12690C2A8E52B40047B1F5 /* DataWrapper.swift */,
+				1B12690E2A8E699C0047B1F5 /* DataVersionFinder.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -361,7 +406,9 @@
 			isa = PBXGroup;
 			children = (
 				1BB631D924FBDA9400B75EF3 /* HelpView.swift */,
+				1B30351C2CB4326300F1210A /* HelpViewFoodItemMaintenanceList.swift */,
 				1B6867DE24FD00F40057EC6A /* HelpViewProductsList.swift */,
+				1B816B562CAB4675008670B5 /* HelpViewRecipeList.swift */,
 				1BC75245254AF8CF001C4D27 /* HelpViewIngredientsList.swift */,
 				1B6867E024FD0C6B0057EC6A /* HelpViewFoodItemSelector.swift */,
 				1B6867E224FD22D60057EC6A /* HelpViewFoodItemEditor.swift */,
@@ -394,13 +441,68 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		1B93041E2CBCECE700DE7CDD /* EasyFPUTests */ = {
+			isa = PBXGroup;
+			children = (
+				1BA1041E2CE4B39400562BFD /* BusinessLogicTests.swift */,
+				1B1620952CD693480083DDF2 /* CoreDataTests.swift */,
+				1B16209A2CD693480083DDF2 /* ImportExportTests.swift */,
+				1B1620962CD693480083DDF2 /* DataFactory.swift */,
+				1B1620972CD693480083DDF2 /* EasyFPU.xctestplan */,
+				1B1620982CD693480083DDF2 /* EasyFPU_FoodList_DataModel1.json */,
+				1B1620992CD693480083DDF2 /* EasyFPU_FoodList_DataModel2.json */,
+			);
+			path = EasyFPUTests;
+			sourceTree = "<group>";
+		};
+		1BA104202CE4B41900562BFD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1BAD273F254A008000A730FB /* MainView.swift */,
+				1B0868B4254F0EEF005953CC /* ProductMaintenanceListView.swift */,
+				1B4827532CAC4D8A0080D5BF /* ProductSelectionListView.swift */,
+				1B0868B8254F1CE4005953CC /* IngredientMaintenanceListView.swift */,
+				1B4827512CAC4D410080D5BF /* IngredientSelectionListView.swift */,
+				1B0868AA254EDDC0005953CC /* FoodItemListView.swift */,
+				1B68548924BC9E12005ABB8B /* FoodItemView.swift */,
+				1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */,
+				1B68548724BC70ED005ABB8B /* FoodItemEditor.swift */,
+				1B25D482253DB0A900848C2A /* FoodSearch.swift */,
+				1B25D486253DC8DB00848C2A /* FoodSearchResultPreview.swift */,
+				1B51B3322540BCB800064EB1 /* FoodPreview.swift */,
+				1BAD273C25495B4100A730FB /* FoodPreviewContent.swift */,
+				1B870FC024C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift */,
+				1B6654B42A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift */,
+				1BF1A159251AA1F8001E561C /* ComposedFoodItemSugarsView.swift */,
+				1BF1A15C251AA2B2001E561C /* ComposedFoodItemCarbsView.swift */,
+				1BF1A15F251AA336001E561C /* ComposedFoodItemECarbsView.swift */,
+				1B90D2DD24F7BAB40059BFFA /* ComposedFoodItemView.swift */,
+				1BA963DF2507DFC200375650 /* ComposedFoodItemExportView.swift */,
+				1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */,
+				1BC7524E254AFD5D001C4D27 /* FoodItemComposerView.swift */,
+				1B816B4E2CAB2FCF008670B5 /* RecipeListView.swift */,
+				1B816B522CAB345C008670B5 /* RecipeView.swift */,
+				1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */,
+				1B377A6724FAA935005AC5C6 /* AboutView.swift */,
+				1B1CC90E24DC4F390014DD7D /* MenuView.swift */,
+				1B3CEB9A24D32D38001D64DA /* TherapySettingsEditor.swift */,
+				1BB9BD9F2CDD54650043B465 /* AbsorptionParameterSettingsView.swift */,
+				1BB9BDA12CDD56DB0043B465 /* AbsorptionBlockSettingsView.swift */,
+				1BB9BD9D2CDD4F750043B465 /* AppSettingsEditor.swift */,
+				1B5B91052CA9B6B200135569 /* CountryPickerView.swift */,
+				1B1CC91824DD2FC50014DD7D /* FilePickerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		1BAEE0892500E15600B4891F /* UIHelpers */ = {
 			isa = PBXGroup;
 			children = (
-				1B90D2DB24F7A9660059BFFA /* ResignKeyboard.swift */,
+				1BA1035D2CDBFF6A00776D15 /* ParentAccessibilityBranchKey.swift */,
+				1BA103592CDBFF2D00776D15 /* AccessibilityIdentifierBranchModifier.swift */,
+				1BA1035A2CDBFF2D00776D15 /* AccessibilityIdentifierLeafModifier.swift */,
 				1BBFA9A22523B2FE00FB78D3 /* CustomViews.swift */,
 				1B0868B1254F0D3E005953CC /* NotificationView.swift */,
-				1B0868BC254F3523005953CC /* BottomSheetView.swift */,
 				1BA97D8F29ABB5A5006D6754 /* ActivityIndicatorSpinner.swift */,
 				1BF21B062552813000590068 /* ActivityIndicatorDynamicText.swift */,
 				1BA2F761259F8AA9004300A4 /* ActivityView.swift */,
@@ -419,15 +521,6 @@
 			path = HealthKit;
 			sourceTree = "<group>";
 		};
-		BABA6DB766EB131AE23C7102 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				CA50480835A2B36F0BC9C947 /* Pods-EasyFPU.debug.xcconfig */,
-				2CE0A6239381CBD7B93933F9 /* Pods-EasyFPU.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -435,11 +528,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1B004A4024BA3038001E362A /* Build configuration list for PBXNativeTarget "EasyFPU" */;
 			buildPhases = (
-				EDE6D7DAFA28DD11B51B9738 /* [CP] Check Pods Manifest.lock */,
 				1B004A2524BA3035001E362A /* Sources */,
 				1B004A2624BA3035001E362A /* Frameworks */,
 				1B004A2724BA3035001E362A /* Resources */,
-				678E44126022C15D99320AD4 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -448,10 +539,54 @@
 			name = EasyFPU;
 			packageProductDependencies = (
 				1B51B32F2540B31300064EB1 /* CodeScanner */,
+				1B1620892CD68F360083DDF2 /* DGCharts */,
+				1B16208C2CD68F970083DDF2 /* CountryPicker */,
+				1B16208F2CD68FE40083DDF2 /* URLImage */,
 			);
 			productName = EasyFPU;
 			productReference = 1B004A2924BA3035001E362A /* EasyFPU.app */;
 			productType = "com.apple.product-type.application";
+		};
+		1B93041C2CBCECE700DE7CDD /* EasyFPUTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1B9304252CBCECE700DE7CDD /* Build configuration list for PBXNativeTarget "EasyFPUTests" */;
+			buildPhases = (
+				1B9304192CBCECE700DE7CDD /* Sources */,
+				1B93041A2CBCECE700DE7CDD /* Frameworks */,
+				1B93041B2CBCECE700DE7CDD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1B9304222CBCECE700DE7CDD /* PBXTargetDependency */,
+			);
+			name = EasyFPUTests;
+			productName = EasyFPUTests;
+			productReference = 1B93041D2CBCECE700DE7CDD /* EasyFPUTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1BC9691E2CD7B8AE00A35ACA /* EasyFPUUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1BC969272CD7B8AE00A35ACA /* Build configuration list for PBXNativeTarget "EasyFPUUITests" */;
+			buildPhases = (
+				1BC9691B2CD7B8AE00A35ACA /* Sources */,
+				1BC9691C2CD7B8AE00A35ACA /* Frameworks */,
+				1BC9691D2CD7B8AE00A35ACA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1BC969262CD7B8AE00A35ACA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1BC969202CD7B8AE00A35ACA /* EasyFPUUITests */,
+			);
+			name = EasyFPUUITests;
+			packageProductDependencies = (
+			);
+			productName = EasyFPUUITests;
+			productReference = 1BC9691F2CD7B8AE00A35ACA /* EasyFPUUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -459,13 +594,23 @@
 		1B004A2124BA3035001E362A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1200;
+				BuildIndependentTargetsInParallel = YES;
+				LastSwiftUpdateCheck = 1610;
+				LastUpgradeCheck = 1600;
 				ORGANIZATIONNAME = "Ulrich Rüth";
 				TargetAttributes = {
 					1B004A2824BA3035001E362A = {
 						CreatedOnToolsVersion = 11.5;
 						LastSwiftMigration = 1170;
+					};
+					1B93041C2CBCECE700DE7CDD = {
+						CreatedOnToolsVersion = 16.0;
+						LastSwiftMigration = 1610;
+						TestTargetID = 1B004A2824BA3035001E362A;
+					};
+					1BC9691E2CD7B8AE00A35ACA = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 1B004A2824BA3035001E362A;
 					};
 				};
 			};
@@ -481,12 +626,18 @@
 			mainGroup = 1B004A2024BA3035001E362A;
 			packageReferences = (
 				1B51B32E2540B31300064EB1 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				1B1620882CD68F360083DDF2 /* XCRemoteSwiftPackageReference "Charts" */,
+				1B16208B2CD68F970083DDF2 /* XCRemoteSwiftPackageReference "CountryPicker" */,
+				1B16208E2CD68FE40083DDF2 /* XCRemoteSwiftPackageReference "url-image" */,
+				1B1620912CD6922E0083DDF2 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = 1B004A2A24BA3035001E362A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				1B004A2824BA3035001E362A /* EasyFPU */,
+				1B93041C2CBCECE700DE7CDD /* EasyFPUTests */,
+				1BC9691E2CD7B8AE00A35ACA /* EasyFPUUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -505,49 +656,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1B93041B2CBCECE700DE7CDD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B16209B2CD693480083DDF2 /* EasyFPU_FoodList_DataModel2.json in Resources */,
+				1B16209C2CD693480083DDF2 /* EasyFPU.xctestplan in Resources */,
+				1B16209D2CD693480083DDF2 /* EasyFPU_FoodList_DataModel1.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1BC9691D2CD7B8AE00A35ACA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		678E44126022C15D99320AD4 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-EasyFPU/Pods-EasyFPU-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-EasyFPU/Pods-EasyFPU-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-EasyFPU/Pods-EasyFPU-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EDE6D7DAFA28DD11B51B9738 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-EasyFPU-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1B004A2524BA3035001E362A /* Sources */ = {
@@ -570,17 +696,20 @@
 				1B0AB0DF254F760D00A7BFBD /* HelpFoodItemComposer.swift in Sources */,
 				1B6867E124FD0C6B0057EC6A /* HelpViewFoodItemSelector.swift in Sources */,
 				1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */,
-				1B2EB5E22544808500E1B5FC /* CountryPicker.swift in Sources */,
-				1B1CC91124DC57300014DD7D /* MenuViewSheets.swift in Sources */,
 				1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */,
+				1B816B4F2CAB2FCF008670B5 /* RecipeListView.swift in Sources */,
 				1B004A2D24BA3035001E362A /* AppDelegate.swift in Sources */,
 				1B8A4A9024CABA2100542212 /* FoodItemViewModel.swift in Sources */,
 				1B2D99872541D72F0012EC40 /* FoodDatabaseResults.swift in Sources */,
 				1BF1A15A251AA1F8001E561C /* ComposedFoodItemSugarsView.swift in Sources */,
 				1BC75243254AF786001C4D27 /* ComposedFoodItemViewModel.swift in Sources */,
+				1B30351D2CB4326300F1210A /* HelpViewFoodItemMaintenanceList.swift in Sources */,
 				1BF1A160251AA336001E561C /* ComposedFoodItemECarbsView.swift in Sources */,
+				1BA1035E2CDBFF6A00776D15 /* ParentAccessibilityBranchKey.swift in Sources */,
+				1B12690F2A8E699C0047B1F5 /* DataVersionFinder.swift in Sources */,
 				1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */,
-				1B0AB0DC254F755000A7BFBD /* FoodItemComposerViewSheets.swift in Sources */,
+				1BB9BD9E2CDD4F750043B465 /* AppSettingsEditor.swift in Sources */,
+				1B816B532CAB345C008670B5 /* RecipeView.swift in Sources */,
 				1B68548824BC70ED005ABB8B /* FoodItemEditor.swift in Sources */,
 				1BF8A4C024C21A52008634DF /* FoodItem+CoreDataClass.swift in Sources */,
 				1B6B93742554008C00F0CC7D /* Ingredient+CoreDataClass.swift in Sources */,
@@ -589,14 +718,13 @@
 				1B25D487253DC8DB00848C2A /* FoodSearchResultPreview.swift in Sources */,
 				1BA963E02507DFC200375650 /* ComposedFoodItemExportView.swift in Sources */,
 				1B6B93762554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift in Sources */,
-				1BA963E22507E03100375650 /* ComposedFoodItemEvaluationViewSheets.swift in Sources */,
-				1B0868B5254F0EEF005953CC /* ProductsListView.swift in Sources */,
+				1B0868B5254F0EEF005953CC /* ProductMaintenanceListView.swift in Sources */,
+				1B816B572CAB4675008670B5 /* HelpViewRecipeList.swift in Sources */,
 				1BF8A4C124C21A52008634DF /* FoodItem+CoreDataProperties.swift in Sources */,
+				1B12690D2A8E52B40047B1F5 /* DataWrapper.swift in Sources */,
 				1B6867E524FD37F80057EC6A /* HelpViewMealDetails.swift in Sources */,
-				1B90D2DA24F7A8EB0059BFFA /* SearchView.swift in Sources */,
-				1B0868AE254EDF35005953CC /* FoodItemListViewSheets.swift in Sources */,
+				1B6654B52A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift in Sources */,
 				1BF1A15D251AA2B2001E561C /* ComposedFoodItemCarbsView.swift in Sources */,
-				1B0868BD254F3523005953CC /* BottomSheetView.swift in Sources */,
 				1B004A4D24BA3E7F001E362A /* AbsorptionScheme.swift in Sources */,
 				1B6B861A2517D1AC00ED10FE /* CarbsEntry.swift in Sources */,
 				1B004A3224BA3035001E362A /* EasyFPU.xcdatamodeld in Sources */,
@@ -607,28 +735,33 @@
 				1B18844A253B336500B671A2 /* FoodDatabaseEntry+FoodDatabaseImage.swift in Sources */,
 				1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */,
 				1BA040CA24BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift in Sources */,
-				1B919950254894370049672D /* FoodPreviewSheets.swift in Sources */,
 				1BA040CB24BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift in Sources */,
 				1B6867E724FD5F910057EC6A /* HelpViewAbsorptionSchemeEditor.swift in Sources */,
 				1BC75246254AF8CF001C4D27 /* HelpViewIngredientsList.swift in Sources */,
 				1B004A4F24BA3EF1001E362A /* AbsorptionBlockFromJson.swift in Sources */,
 				1B188444253B329000B671A2 /* OpenFoodFacts.swift in Sources */,
-				1B90D2DC24F7A9660059BFFA /* ResignKeyboard.swift in Sources */,
+				1B5E644F2CC8360700022BDF /* Optional+Extensions.swift in Sources */,
 				1BAD2740254A008000A730FB /* MainView.swift in Sources */,
 				1B0868B2254F0D3E005953CC /* NotificationView.swift in Sources */,
 				1BBFA9A32523B2FE00FB78D3 /* CustomViews.swift in Sources */,
 				1B188447253B32DE00B671A2 /* FoodDatabase.swift in Sources */,
 				1B870FC124C9A32E00183C9F /* ComposedFoodItemEvaluationView.swift in Sources */,
-				1BBD6C4924C9D5700025AB84 /* FoodItemViewSheets.swift in Sources */,
+				1B4827522CAC4D410080D5BF /* IngredientSelectionListView.swift in Sources */,
+				1BB9BDA22CDD56DB0043B465 /* AbsorptionBlockSettingsView.swift in Sources */,
+				1B5B91062CA9B6B200135569 /* CountryPickerView.swift in Sources */,
 				1B004A2F24BA3035001E362A /* SceneDelegate.swift in Sources */,
 				1B25D483253DB0A900848C2A /* FoodSearch.swift in Sources */,
 				1BA2F762259F8AA9004300A4 /* ActivityView.swift in Sources */,
-				1B0868B9254F1CE4005953CC /* IngredientsListView.swift in Sources */,
-				1B3CEB9B24D32D38001D64DA /* SettingsEditor.swift in Sources */,
+				1B0868B9254F1CE4005953CC /* IngredientMaintenanceListView.swift in Sources */,
+				1B3CEB9B24D32D38001D64DA /* TherapySettingsEditor.swift in Sources */,
 				1B3CEB9D24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift in Sources */,
-				1B25D480253DAFDD00848C2A /* FoodItemEditorSheets.swift in Sources */,
+				1BA1035B2CDBFF2D00776D15 /* AccessibilityIdentifierBranchModifier.swift in Sources */,
+				1BA1035C2CDBFF2D00776D15 /* AccessibilityIdentifierLeafModifier.swift in Sources */,
 				1B6867DF24FD00F40057EC6A /* HelpViewProductsList.swift in Sources */,
 				1B1CC90F24DC4F390014DD7D /* MenuView.swift in Sources */,
+				1B4827542CAC4D8A0080D5BF /* ProductSelectionListView.swift in Sources */,
+				1BB9BDA02CDD54650043B465 /* AbsorptionParameterSettingsView.swift in Sources */,
+				1B4329C12CBEB1A500C478C3 /* CoreDataStack.swift in Sources */,
 				1B6B93752554008C00F0CC7D /* Ingredient+CoreDataProperties.swift in Sources */,
 				1BEE525524D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift in Sources */,
 				1B004A4B24BA36C1001E362A /* FPU.swift in Sources */,
@@ -638,7 +771,38 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1B9304192CBCECE700DE7CDD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1BA1041F2CE4B39400562BFD /* BusinessLogicTests.swift in Sources */,
+				1B16209E2CD693480083DDF2 /* ImportExportTests.swift in Sources */,
+				1B1620A02CD693480083DDF2 /* DataFactory.swift in Sources */,
+				1B1620A12CD693480083DDF2 /* CoreDataTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1BC9691B2CD7B8AE00A35ACA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1B9304222CBCECE700DE7CDD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1B004A2824BA3035001E362A /* EasyFPU */;
+			targetProxy = 1B9304212CBCECE700DE7CDD /* PBXContainerItemProxy */;
+		};
+		1BC969262CD7B8AE00A35ACA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1B004A2824BA3035001E362A /* EasyFPU */;
+			targetProxy = 1BC969252CD7B8AE00A35ACA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		1B68548524BC6FE0005ABB8B /* Localizable.strings */ = {
@@ -700,6 +864,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -762,6 +927,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -782,7 +948,6 @@
 		};
 		1B004A4124BA3038001E362A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CA50480835A2B36F0BC9C947 /* Pods-EasyFPU.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -792,18 +957,22 @@
 				DEVELOPMENT_ASSET_PATHS = "\"EasyFPU/Preview Content\"";
 				DEVELOPMENT_TEAM = Q4HRNRLV9A;
 				ENABLE_PREVIEWS = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = EasyFPU/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				INFOPLIST_KEY_CFBundleDisplayName = EasyFPU;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -812,7 +981,6 @@
 		};
 		1B004A4224BA3038001E362A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2CE0A6239381CBD7B93933F9 /* Pods-EasyFPU.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -822,20 +990,140 @@
 				DEVELOPMENT_ASSET_PATHS = "\"EasyFPU/Preview Content\"";
 				DEVELOPMENT_TEAM = Q4HRNRLV9A;
 				ENABLE_PREVIEWS = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = EasyFPU/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				INFOPLIST_KEY_CFBundleDisplayName = EasyFPU;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		1B9304232CBCECE700DE7CDD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q4HRNRLV9A;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPUTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EasyFPU.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EasyFPU";
+			};
+			name = Debug;
+		};
+		1B9304242CBCECE700DE7CDD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q4HRNRLV9A;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPUTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EasyFPU.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EasyFPU";
+			};
+			name = Release;
+		};
+		1BC969282CD7B8AE00A35ACA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q4HRNRLV9A;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPUUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EasyFPU;
+			};
+			name = Debug;
+		};
+		1BC969292CD7B8AE00A35ACA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q4HRNRLV9A;
+				ENABLE_TESTABILITY = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.rueth.EasyFPUUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EasyFPU;
 			};
 			name = Release;
 		};
@@ -860,9 +1148,59 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		1B9304252CBCECE700DE7CDD /* Build configuration list for PBXNativeTarget "EasyFPUTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B9304232CBCECE700DE7CDD /* Debug */,
+				1B9304242CBCECE700DE7CDD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1BC969272CD7B8AE00A35ACA /* Build configuration list for PBXNativeTarget "EasyFPUUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1BC969282CD7B8AE00A35ACA /* Debug */,
+				1BC969292CD7B8AE00A35ACA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1B1620882CD68F360083DDF2 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ChartsOrg/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+		1B16208B2CD68F970083DDF2 /* XCRemoteSwiftPackageReference "CountryPicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SURYAKANTSHARMA/CountryPicker";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		1B16208E2CD68FE40083DDF2 /* XCRemoteSwiftPackageReference "url-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dmytro-anokhin/url-image";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
+		1B1620912CD6922E0083DDF2 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
 		1B51B32E2540B31300064EB1 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twostraws/CodeScanner";
@@ -874,6 +1212,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1B1620892CD68F360083DDF2 /* DGCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1B1620882CD68F360083DDF2 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGCharts;
+		};
+		1B16208C2CD68F970083DDF2 /* CountryPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1B16208B2CD68F970083DDF2 /* XCRemoteSwiftPackageReference "CountryPicker" */;
+			productName = CountryPicker;
+		};
+		1B16208F2CD68FE40083DDF2 /* URLImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1B16208E2CD68FE40083DDF2 /* XCRemoteSwiftPackageReference "url-image" */;
+			productName = URLImage;
+		};
+		1B1620922CD6922E0083DDF2 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1B1620912CD6922E0083DDF2 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
 		1B51B32F2540B31300064EB1 /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1B51B32E2540B31300064EB1 /* XCRemoteSwiftPackageReference "CodeScanner" */;
@@ -885,9 +1243,10 @@
 		1B004A3024BA3035001E362A /* EasyFPU.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1B71EBED2A80E21100343C89 /* EasyFPU 2.xcdatamodel */,
 				1B004A3124BA3035001E362A /* EasyFPU.xcdatamodel */,
 			);
-			currentVersion = 1B004A3124BA3035001E362A /* EasyFPU.xcdatamodel */;
+			currentVersion = 1B71EBED2A80E21100343C89 /* EasyFPU 2.xcdatamodel */;
 			path = EasyFPU.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
