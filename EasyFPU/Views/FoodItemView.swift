@@ -17,9 +17,10 @@ struct FoodItemView: View {
         var id: SheetState { self }
     }
     
-    enum DeleteAlertChoice {
+    enum AlertChoice {
         case associatedIngredient
         case confirmDelete
+        case editRecipe
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -28,10 +29,9 @@ struct FoodItemView: View {
     var category: FoodItemCategory
     var listType: FoodItemListView.FoodItemListType
     @State private var activeSheet: SheetState?
-    @State private var showingDeleteAlert = false
-    @State private var activeDeleteAlert: DeleteAlertChoice?
+    @State private var showingAlert = false
+    @State private var activeAlert: AlertChoice?
     @State private var isConfirming = false
-    @State private var showingNoEditAlert = false
     
     var body: some View {
         VStack {
@@ -129,20 +129,14 @@ struct FoodItemView: View {
             Button("Edit", systemImage: "pencil") {
                 if foodItemVM.cdFoodItem?.composedFoodItem != nil {
                     // There's an associated recipe, so show message to open Recipe Editor
-                    showingNoEditAlert = true
+                    activeAlert = .editRecipe
+                    showingAlert = true
                 } else {
                     activeSheet = .editFoodItem
                 }
             }
             .tint(.blue)
             .accessibilityIdentifierLeaf("EditButton")
-            .alert(
-                "Edit food",
-                isPresented: $showingNoEditAlert,
-                actions: {},
-                message: { Text("This food item is created from a recipe, please open it in the recipe editor") }
-            )
-            
             
             // Duplicating the food item
             Button("Duplicate", systemImage: "document.on.document") {
@@ -156,13 +150,13 @@ struct FoodItemView: View {
                 if foodItemVM.hasAssociatedFoodItem() {
                     // Check if FoodItem is related to an Ingredient
                     if !foodItemVM.canBeDeleted() {
-                        self.activeDeleteAlert = .associatedIngredient
-                        self.showingDeleteAlert = true
+                        self.activeAlert = .associatedIngredient
+                        self.showingAlert = true
                     } else if foodItemVM.hasAssociatedRecipe() {
                         self.isConfirming.toggle()
                     } else {
-                        self.activeDeleteAlert = .confirmDelete
-                        self.showingDeleteAlert = true
+                        self.activeAlert = .confirmDelete
+                        self.showingAlert = true
                     }
                 }
             }
@@ -188,10 +182,10 @@ struct FoodItemView: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert(deleteAlertTitle, isPresented: $showingDeleteAlert, presenting: activeDeleteAlert) {
-            deleteAlertActions(for: $0)
+        .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
+            alertAction(for: $0)
         } message: {
-            deleteAlertMessage(for: $0)
+            alertMessage(for: $0)
         }
         .confirmationDialog(
             "Warning",
@@ -240,17 +234,19 @@ struct FoodItemView: View {
     }
     
     @ViewBuilder
-    private func deleteAlertMessage(for alert: DeleteAlertChoice) -> some View {
+    private func alertMessage(for alert: AlertChoice) -> some View {
         switch alert {
         case .associatedIngredient:
             Text("This food item is in use in a recipe, please remove it from the recipe before deleting.")
         case .confirmDelete:
             Text("Do you really want to delete this food item? This cannot be undone!")
+        case .editRecipe:
+            Text("This food item is created from a recipe, please open it in the recipe editor")
         }
     }
-    
+
     @ViewBuilder
-    private func deleteAlertActions(for alert: DeleteAlertChoice) -> some View {
+    private func alertAction(for alert: AlertChoice) -> some View {
         switch alert {
         case .associatedIngredient:
             Button("OK", role: .cancel) {}
@@ -259,15 +255,19 @@ struct FoodItemView: View {
             Button("Delete", role: .destructive) {
                 deleteFoodItemOnly()
             }
+        case .editRecipe:
+            Button("OK", role: .cancel) {}
         }
     }
     
-    private var deleteAlertTitle: LocalizedStringKey {
-        switch activeDeleteAlert {
+    private var alertTitle: LocalizedStringKey {
+        switch activeAlert {
         case .associatedIngredient:
             LocalizedStringKey("Cannot delete food")
         case .confirmDelete:
             LocalizedStringKey("Delete food")
+        case .editRecipe:
+            LocalizedStringKey("Edit food")
         case nil:
             ""
         }
