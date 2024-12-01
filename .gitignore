@@ -1,4 +1,4 @@
-ep2021_venv/
+venv/
 site/
 .DS_Store
 EasyFPU.xcworkspace
