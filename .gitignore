@@ -41,7 +41,7 @@ fastlane/test_output
 
 # Generated documentation
 
-/ep2021_venv
+/venv
 /site
 
 # Others
