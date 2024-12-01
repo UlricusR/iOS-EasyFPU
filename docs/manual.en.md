@@ -1,279 +1,279 @@
 # User Manual
 
-## Installation
+## Install
 
-Get the app from Apple's App Store:
+The app is available on the Apple App Store:
 
-[![Apple App Store](assets/images/appstore.png){ .off-glb }](https://apps.apple.com/de/app/easyfpu/id1529949520){:target="_blank"}
+[![Apple App Store](assets/images/appstore.png){ .off-glb }](https://apps.apple.com/en/app/easyfpu/id1529949520){:target="_blank"}
 
-## The Main Screen with the Food List
+## The Menu Bar
 
-![The main screen with the food list](assets/images/01_FoodList.png){style="width:100px", align=right }
+![The Menu Bar](assets/images/00TabMenu.png){align=center}
 
-The main screen appears when opening the app and contains a list of food items. It will be empty after first installation - after updating the app, the existing list will be taken over.
+Using the tab menu at the bottom of the screen, you can navigate between the following screens:
 
-A food item in the sense of this app represents one component of a meal, which is „homogenous“ in itself. Several food items make up a meal. For example: A Schnitzel with French Fries and Ketchup (the meal) consists of the Schnitzel, the Fries and Ketchup (the food items).
+- [Eat](#screen-eat): Here, a new meal consisting of one or more dishes can be created. The nutritional values are then calculated and can be exported to Loop.
+- [Cook & Bake](#screen-cook-bake): This is where you can create and manage your own recipes.
+- [Dishes](#screen-dishes): This is where the dishes used to create meals are managed.
+- [Ingredients](#screen-ingredients): This is where the ingredients used in recipes are managed.
+- [Settings](#screen-settings): Here, various therapy and app settings can be configured.
 
-The food list on the main screen is sorted in alphabetical order. It is recommended to assign unique names to each food item and not repeat existing names, although the app won‘t hinder you to do so.
+## Screen: Eat
 
-![The food list filtered by favorites](assets/images/02_FoodList-filtered.png){style="width:100px", align=left }
+![Calculate a meal - start screen](assets/images/01CalculateMeal.png){style="width:100px", align=right}
 
-When clicking the small star in the top right corner of the food list, only food items marked as favorites will be displayed. Favorites can be defined in the Edit Food dialog. Furthermore you may search for food using the search field (any string in the food name).
+### Creating a Meal
 
-Long pressing a food item opens the dialog to edit the food item.
+On this screen, which appears when the app is opened, a new meal is created. The nutritional values are then calculated and can be exported to Loop. A meal consists of one or more dishes, which must be [created beforehand](#screen-dishes).
 
-Swipe left to delete a food item.
+To create a meal, tap the yellow button labeled "Add dishes to your meal."
 
-## Adding new Food Items
+### Select Dishes
 
-Tapping the large green Plus symbol on top right corner of the main screen opens a dialog to add a new food item.
+![Select dishes](assets/images/02ListFoodSelection.png){style="width:100px", align=left}
 
-You have three ways how to add a new food item (Product or Ingredient):
+The list of created dishes appears. By clicking the small star above the list of dishes, only the dishes marked as favorites will be displayed. Additionally, you can use the search field to look for dishes (searching within the names).
 
-### Option 1: Manual entry
+![Enter amount](assets/images/03SelectAmount.png){style="width:100px", align=right}
 
-![Add a new or edit a food item](assets/images/10_FoodEdit.png){style="width:100px", align=right }
+To add a dish to the meal, tap on it once. This opens a window to input the consumed amount. If typical amounts were defined when the dish was created, you can select one of those or enter a custom amount. Alternatively, green buttons are available to add their displayed value to the already entered quantity. The amount entered here should correspond to the actual consumed quantity of the dish in grams.
 
-The following entries are mandatory:
+You also have the option to save the currently entered amount as a new typical amount. To do so, tap "Add to typical amounts," enter a comment, and confirm with the green plus symbol. Managing or modifying typical amounts is done in the dialog for [editing dishes](#screen-dishes).
 
-- Name: The (unique) name of the food item.
-- Favorite: Whether or not the food will be displayed in the list of favorite food items
-- Calories per 100g: The calories of the food per 100g in kcal
-- Carbs per 100g: The carbs per 100g of the food in grams
-- Thereof Sugars per 100g: The sugars per 100g as part of the carbs
-
-Optionally you can define as many typical amounts as required for each food item, and you can comment each of them. The respective comment will later be displayed in the dialog to define a new meal and allows users to easily select a certain amount. Typical amounts can be used for defined food sizes and ease the use especially for children.
-
-After saving a new food item, it will be displayed in the food list (sorted by alphabet).
-
-### Option 2: Search in a Food Database
-
-![The search results](assets/images/03_FoodSearch-results.png){style="width:100px", align=left }
-![The detail view of a search or scan result](assets/images/03_FoodSearch-details.png){style="width:100px", align=left }
-
-As of version 2.0.0, searching a food database is supported. To do so, enter a search term in the name field and hit the search icon.
-
-The currently only available food database is [OpenFoodFacts](https://world.openfoodfacts.org/){:target=blank}. As OpenFoodFacts is an open food database, i.e. everybody can contribute just like in Wikipedia, please make sure that you cross-check the entries, as they might be wrong. You may use the details view for this, where pictures of the nutritional data will be displayed and can be zoomed.
-
-### Option 3: Scan the Barcode of a Product
-
-To scan a barcode, hit the scan icon beside the search icon and point your divice's camera towards the barcode of the product. If found, it will display the scan result view. Here you can decide whether or not to use the result.
-
-If no scan is possible, simply wipe away the camera window from top to bottom.
-
-## Composing a Meal
-
-### Selection of Food Items
-
-![Entering the consumed amount](assets/images/03_FoodSelect.png){style="width:100px", align=right }
-
-A meal consists of at least one food item. To calculate a meal, start with selecting a food item from the food list on the main screen. A dialog appears to enter the consumed amount.
-
-If typical amounts have been defined while adding the food item, these can now be selected. Alternatively you can enter your own consumed amount. This amount should represent the actually consumed amount.
-
-Alternatively, you may use the green buttons to add the amount shown on the respective button to the actually entered amount.
-
-In addition, you may store the actually entered amount as new typical amount. To do so, tap "Add to typical amounts", enter a comment and confirm by hitting the green Plus button.
-
-Repeat these steps for each food item you want to add to your meal.
+This process can be optionally repeated for additional dishes in the meal.
 
 ### The Meal Summary
 
-![The e-carbs summary](assets/images/04_MealSummary.png){style="width:100px", align=left }
+![Die nutritional values of the meal](assets/images/04CalculateMealOverview.png){style="width:100px", align=left}
 
-In case you have selected one or more food items, a hovering window will appear at the bottom of the screen. If you open this window by swiping it up from the bottom, you'll find the following information:
+Once at least one dish has been selected, a summary of the meal's nutritional values appears, including the three types of carbohydrates - sugar, regular, and extended carbohydrates:
 
-Red sugar icon: Carbs from sugars are usually the fastest to be absorbed. You can set the parameters in the Settings dialog.
+- Red sugar cube icon: Carbohydrates from sugar are typically absorbed the fastest. The corresponding parameters can be adjusted in the therapy settings.
+- Green rabbit icon: Regular carbohydrates are absorbed more slowly than sugar. These parameters can also be adjusted in the therapy settings.
+- Blue turtle icon: Extended carbohydrates (also known as e-Carbs or Fake Carbs) do not come from carbohydrates but from fats and proteins. Therefore, they are absorbed much later and over a longer period.
 
-Green hare icon: Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Settings dialog.
+At this point, the insulin-to-food ratio can also be adjusted.
 
-Blue tortoise icon: Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.
-Here you can as well set the "Meal starts in x minutes" parameter, which normally is the waiting time between your insulin injection and the start of your meal.
+Through the "Edit dishes" link, additional dishes can be added or existing ones removed.
 
-You can clear a meal by tapping the red X symbol in the Meal Summary. Clearing a meal means that the amounts of all food items as well as the "Meal starts in x minutes" parameter will be set to zero.
+Tapping the red cross at the top of the screen will reset the meal, meaning all food components and the insulin-to-food ratio will be set to zero.
 
 ### The Meal Details
 
-![The meal details showing additional information](assets/images/08_MealDetails_full.png){style="width:100px", align=right }
+![The details of the meal and its dishes](assets/images/05CalculateMealDetails.png){style="width:100px", align=right}
 
-Tapping the chevron icon in the summary will open the Meal Details view. You can verify which food items are part of your meal.
+Tapping the info icon opens the view with the details of the meal.
 
-## Export to Apple Health
+### Export to Apple Health
 
-EasyFPU can export fast and regular carbs, the extended carbs calculated from fat-protein-units, as well as calories to Apple Health. This is a useful feature if other apps, e.g., dietary management apps, require these data. It's especially useful for Loopers, who control their insulin pumps using the [Loop App](https://loopkit.github.io/loopdocs/){:target="_blank"}.
+EasyFPU can export rapid and regular carbohydrates, "extended" carbohydrates calculated from fat-protein units, and calories to Apple Health. This is useful when the data is to be used by other apps (e.g., nutrition apps), especially [Loop](https://loopkit.github.io/loopdocs/){:target="_blank"}, an app for controlling insulin pumps.
 
-### Data Export
+![The preview of the Apple Health export](assets/images/06AppleHealthExportOverview.png){style="width:100px", align=left}
 
-![The preview of carbs exported to Apple Health](assets/images/09_HealthExport.png){style="width:100px", align=left }
+By tapping the export button (a rectangle with an upward arrow), the calculated carbohydrates, as well as the calories of the meal, can be exported to Apple Health.
 
-By tapping the Export button (the rectangle with the upward pointing arrow) you can export the calculated carbs as well as the total meal calories to Apple Health.
+By toggling the switches on or off, the data to be exported can be selected.
 
-By toggling the switches, you can select or deselect the data to be exported to Apple Health.
+The insulin-to-food ratio can also be adjusted here.
 
-Furthermore, you can set the "Meal starts in x minutes" parameter, which normally is the waiting time between your insulin injection and the start of your meal.
+A preview is created for the carbohydrates, showing when each type of carbohydrate will be active. Carbohydrates from sugar are displayed in red, regular carbohydrates in green, and extended carbohydrates in blue.
 
-For carbs, a preview of data is generated representing your selection. It shows at which point in time which carbs portions of which type will be exported. Red bars represent sugars, green bars regular carbs, and blue bars e-carbs. Zoom in our out to see more or less details.
+The distribution of the respective carbohydrates into small portions over the absorption time period is controlled using the interval parameters in the therapy settings.
 
-You may control the amount of "carbs chunks" via the interval parameters in the Settings dialog.
+### Connecting Loop
 
-### Loop Integration
-
-Are you planning to use the carbs calculated by EasyFPU directly in your Loop app, then you need to allow Loop to access Apple Health data:
+If the carbohydrates calculated by EasyFPU are to be used in Loop, Loop must be allowed to access Apple Health:
 
 - [Loop 2.2.x Apple Health Permissions](https://loopkit.github.io/loopdocs/build/health/){:target="_blank"}
 - [Loop 3 Apple Health Permissions](https://loopkit.github.io/loopdocs/loop-3/onboarding/#apple-health-permissions){:target="_blank"}
 
-!!! warning "Important hint for Loop 3"
+!!! warning "Important note for Loop 3"
 
-    Since Loop version 3 you have to explicitely enable using external carbs at buildtime, otherwise data transfer will not happen. To do so, you need to set [the build feature "OBSERVE_HEALTH_KIT_CARB_SAMPLES_FROM_OTHER_APPS_ENABLED"](https://loopkit.github.io/loopdocs/build/code_customization/#build-time-features){:target="_blank"}.
+    Since Loop version 3, reading data from Apple Health must be explicitly allowed when compiling the Loop app; otherwise, the data transfer will not work. To do this, you need to enable the [the build feature "OBSERVE_HEALTH_KIT_CARB_SAMPLES_FROM_OTHER_APPS_ENABLED"](https://loopkit.github.io/loopdocs/build/code_customization/#build-time-features){:target="_blank"}.
 
-Once EasyFPU has exported the data, open Loop and hit the bolus button. The carbs from EasyFPU are automatically accounted for and do not need to be entered manually.
+Once EasyFPU has exported the data, open Loop and request a bolus suggestion. The carbohydrates from EasyFPU will now be included, and no manual data entry is required.
 
-!!! warning "Important hints for Loopers"
+!!! warning "Important note for Loopers"
 
-    This feature might be useful for T1D patients using the Loop app to steer their insulin pump, as Loop can read the carbs exported from EasyFPU and consider those in the insulin therapy - if you allow Loop to read Apple Health data in the Apple Health settings. Do in this case not enter your meal a second time in Loop, as this will cause double entries and could lead to a low blood glucose.
+    This feature can be very useful for type 1 diabetics who manage their insulin therapy through Loop. Loop reads the carbohydrate data exported by EasyFPU, if you allow this in the Apple Health settings, and adjusts the insulin requirements accordingly. Do not enter the meal again in Loop, as this could result in duplicate entries and hypoglycemia.
 
-    However, if you export carbs by mistake without actually consuming the exported amount, this may lead to a low or even urgent low blood glucose.
+    However, if you accidentally export the carbohydrates of a meal twice, it could lead to hypoglycemia or even severe hypoglycemia.
 
-    Two safety features try to avoid this:
+    Two safety mechanisms are in place to prevent this:
 
-    - Before starting an export, EasyFPU will check when the last export happened. If this last export happened within the last x minutes, it will issue a warning and you will need to explicitely confirm the export a second time. The time period x can be configured in the Settings view.
-    - As second confirmation before the actual export, you will be asked to authenticate - depending on your iOS settings by FaceID, TouchID or Code.
+    - Before exporting data to Apple Health, EasyFPU checks the time of the last data export. If it occurred within a time span of x, a warning will be displayed, and you will need to explicitly confirm the export a second time. The time span x can be configured in the app settings. The default is 15 minutes.
+    - As a second confirmation before export, you will be asked to authenticate—depending on your iOS settings, via FaceID, TouchID, or passcode.
 
-## Manage own recipes
+## Screen: Cook & Bake
 
-As of version 2.0.0, it is possible to manage own recipes in EasyFPU. The following steps demonstrate this using the recipe of a marble cake.
+![The recipe list](assets/images/10RecipeList.png){style="width:100px", align=left}
 
-### Step 1: Add Ingredients
+Since version 2.0.0, it is possible to manage your own recipes in EasyFPU. All recipes are displayed in the recipe list.
 
-![The list of Ingredients](assets/images/06_IngredientList.png){style="width:100px", align=right }
+A recipe consists of one or more ingredients, which must first be [created](#screen-ingredients).
 
-For composing a recipe, all ingredients need to be entered first. The ingredients can be found on the tab right beside the Products list. It is possible to move a food item from one list to the other using the context menu (longpressing the item).
+To create a new recipe, tap the green plus button at the top of the screen.
 
-Adding new ingredients is identical to adding new products: Either manually or using the food database search or scanning a barcode. The only difference is that the ingredient's category is set to "Ingredient", not to "Product".
+### Step 1: Select the Ingredients of your Recipe
 
-### Step 2: Select the Ingredients of a Recipe
+![Select ingredient](assets/images/12SelectIngredient.png){style="width:100px", align=right}
 
-![The hovering window - wiped away](assets/images/07_ComposedProduct-min.png){style="width:100px", align=left }
-![The hovering window with the summary of the recipe](assets/images/07_ComposedProduct-half.png){style="width:100px", align=left }
+Just like adding dishes to meals, for a recipe, you first select all the ingredients by tapping on them.
 
-Just like selecting products for composing a meal, you need to select ingredients for composing a recipe. The difference is that the hovering window, which appears as soon as one ingredient has been selected, will display a summary of the recipe instead of the summary of a meal. You may wipe this hovering window away towards the bottom to have full access to the ingredients list.
+### Step 2: Set Name, Total Weight and Number of Portions
 
-If you enter a wrong amount, just type the ingredient a second time, which will remove it from the recipe. Then re-select it with the correct amount.
+![Enter name, total weight and number of portions](assets/images/14RecipeFinished.png){style="width:100px", align=left}
 
-### Step 3: Enter Name, Total Weight and Number of Portions
+For the next important step, the following information must be entered:
 
-![Entry of name, total weight and number of portions](assets/images/07_ComposedProduct-full.png){style="width:100px", align=right }
+- The name of the recipe, e.g., "Marble Cake with Chocolate Glaze"
+- The total weight of the finished recipe – this is important for the correct calculation of nutritional values per 100g
+- The number of servings that will be cut from the finished product (preferably evenly)
 
-For the next important step, open the hovering window completely by wiping it up from the bottom. Enter the following data:
+### Step 3: Save the Recipe
 
-- The name of the recipe, e.g. "Marble Cake"
-- The total weight of the composed product - this is important for the correct calculation of the nutritional values per 100g
-- If you have enabled the generation of typical amounts, enter the number of portions you will cut out of your composed meal
+To save the finished dish, tap the checkmark at the top of the screen. This will add the recipe to the list of dishes. If the total weight of the recipe differs from the sum of its ingredients, this must be confirmed.
 
-### Step 4: Save the Product
+### Step 4: Edit the Recipe
 
-![A non-matching total weight needs to be confirmed](assets/images/07_ComposedProduct-confirmweight.png){style="width:100px", align=left }
+To edit a recipe, swipe left in the recipe list and select the pencil icon.
 
-To save the product, just hit the "Save" button. In case the total weight differs from the sum of all ingredients, this needs to be explicitely confirmed.
+## Screen: Dishes
 
-### Step 5: Edit a Recipe
+![The list of dishes](assets/images/20DishesList.png){style="width:100px", align=right}
 
-![The context menu of a product](assets/images/08_Product-context.png){style="width:100px", align=right }
+On this screen, the dishes that can be used for meals are managed. The list is initially empty when the app is first opened, but after an update, the existing list of dishes is carried over.
 
-To edit a recipe, longpress it in the Products list and select "Edit" in the context menu. If you want to keep the original recipe, please duplicate the product before editing it, otherwise the original recipe will be overwritten.
+In this app, a "dish" refers to a single component of a meal that is "homogeneous" in itself. Multiple dishes can then be combined to create a meal. For example, the meal "Schnitzel with fries and ketchup" consists of three dishes: the schnitzel, the fries, and the ketchup.
 
-## The Main and the Context Menu
+The list of dishes is sorted alphabetically. It is recommended to give each dish a unique name and not use the same name twice.
 
-### The Main Menu
+By clicking the small star above the list of dishes, only the dishes marked as favorites will be displayed. Additionally, you can search for dishes using the search field (searching within the names).
 
-!!! note
+Swiping left allows you to edit, delete, or duplicate the dish.
 
-    Unlike shown on the screenshot, the Main Menu has moved from the left side of the screen to the tabbed menu on the bottom, like in most other iOS apps. It has a gear symbol and is named "Settings".
+Swiping right allows you to share it with other EasyFPU users or move it to the ingredients list.
 
-![The main menu](assets/images/11_Menu.png){style="width:100px", align=left }
+To create a new dish, tap the large green plus symbol at the top of the screen. There are three options for creating a new dish.
 
-- Settings: Opens the dialog to edit the absorption schemes and further settings
-- Import (format: JSON): Lets you import a food list - you can decide whether to append to or replace the existing food list
-- Export (format: JSON): Exports the database in human readable JSON format for exchange or backup
+### Option 1: Manual Entry
+
+![Add new dish / edit existing dish](assets/images/21AddFoodItemEmpty.png){style="width:100px", align=right}
+
+A dialog opens to enter the necessary data:
+
+- Name (required): The name of the dish
+- Favorite dish: Option to display the dish in the list of favorites
+- Calories per 100g (required): The calories of the dish per 100g in kcal
+- Carbohydrates per 100g (required): The carbohydrates of the dish per 100g in grams
+- Of which sugar per 100g (required): The amount of carbohydrates from sugar per 100g as a subset of the carbohydrates
+
+Additionally, you can optionally add as many typical amounts of the dish as needed, each with a comment. Confirm the input by tapping the small green plus symbol.
+
+The typical amounts will later appear when selecting the dish in the calculation dialog. Entering typical amounts is especially useful for known amounts (e.g., packaged food or "4 pieces" of Chicken McNuggets) and makes the app easier to use, especially for children.
+
+After saving, the newly created dish will appear in the list of dishes (sorted alphabetically).
+
+### Option 2: Search in Food Database
+
+![The search results](assets/images/23SearchResults.png){style="width:100px", align=left }
+![The details of a search / scan result](assets/images/24SearchResultDetails.png){style="width:100px", align=left}
+
+Since version 2.0.0, a dish can be searched in a food database. To do this, enter the search term in the name field and then tap the search icon.
+
+Currently, only one food database is integrated, namely [OpenFoodFacts](https://world.openfoodfacts.org/){:target=blank}. OpenFoodFacts is an open food database, meaning anyone can contribute. This means that incorrect nutritional values may also be listed. Therefore, please always verify that the nutritional values found in the database match the actual values. You can use the detail view, where you can also find product images that can be zoomed in on.
+
+### Option 3: Scan a Barcode
+
+To scan a barcode, tap the scan icon next to the search icon, then point your device’s camera at the product's barcode. If the product is found in the database, the detail view will appear, where you can decide whether to accept the product or not.
+
+If scanning is not possible, simply swipe the camera window downwards.
+
+## Screen: Ingredients
+
+![The list of ingredients](assets/images/30IngredientsList.png){style="width:100px", align=right }
+
+To create a recipe, you first need all of its ingredients in the ingredients list. The ingredients list is located in the "Ingredients" tab, next to the products. Ingredients can be moved by swiping right between the product and ingredients lists.
+
+Adding ingredients works the same way as [adding dishes](#screen-dishes) – through manual entry, searching in a food database, or scanning a barcode. The only difference is selecting the category "Ingredient" instead of "Product."
+
+## Screen: Settings
+
+![Settings](assets/images/40SettingsMenu.png){style="width:100px", align=left }
+
+- Therapy Settings: Opens the dialog for editing the absorption schemes
+- App Settings: Opens the dialog for various app settings
+- Import (Format: JSON): Imports the database from a JSON file – you can then choose whether to replace or append the existing food list
+- Export (Format: JSON): Exports the food list (including dishes, ingredients, and recipes) for backup or sharing with others
 - About: Information about the app
-- Disclaimer: Opens the disclaimer for usage of the app
-- Help on the Web: Link to this documentation
+- Disclaimer: Displays the [Disclaimer](index.en.md/#disclaimer)
+- Online Help: The link to this documentation
 
-Swipe left or hit the X to close the menu.
+### Therapy Settings
 
-### The Context Menu
+![Therapy Settings 1](assets/images/41TherapySettings1.png){style="width:100px", align=left}
+![Therapy Settings 2](assets/images/43TherapySettings3.png){style="width:100px", align=left}
 
-![The context menu of a product](assets/images/08_Product-context.png){style="width:100px", align=right }
+In the therapy settings, you can edit the absorption schemes for carbohydrates from sugar, regular carbohydrates, and extended carbohydrates.
 
-The context menu of each product or ingredient opens by long-pressing it. You have the following options:
+Each of these absorption schemes has three parameters:
 
-- Edit: Opens the dialog to edit the product or recipe
-- Duplicate: Duplicates the product or the ingredient - the same name is used, but "- copy" is appended
-- Share: Use this to share the product or the ingredient via AirDrop, iMessage, WhatsApp, Mail, etc. with other EasyFPU users
-- Move to ingredients / products: Moves the product to the ingredients list or vice versa
-- Delete: Deletes the product or ingredient
+- **Delay**: The time your body needs to digest the respective carbohydrates, meaning that after this time, these carbohydrates will affect your blood sugar.
+- **Absorption Time**: The duration during which these carbohydrates affect your blood sugar, after they have started (this parameter can only be entered for sugar and regular carbohydrates, while it is calculated for extended carbohydrates).
+- **Interval**: This parameter is only needed for exporting carbohydrates to Apple Health. The total amount of each carbohydrate type is evenly distributed over the absorption time for export. For example, with a 3-hour (180 minutes) absorption time and a 10-minute interval, a carbohydrate amount of 36g will be divided into 18 parts of 2g each: 36g / (180min / 10min).
 
-## The Absorption Scheme and further Settings
+#### Absorption Scheme for Carbs from Sugars
 
-![Edit the absorption schemes and other settings](assets/images/12_Settings.png){style="width:100px", align=left }
+You can choose whether carbohydrates from sugar should be reported separately from regular carbohydrates. If you do not use this option, carbohydrates from sugar will be treated as regular carbohydrates.
 
-The settings editor allows to set the values required for determining the absorption schemes for sugars, regular carbs and e-carbs.
+Carbohydrates from sugar are typically absorbed relatively quickly. The default setting is 2 hours with no delay (immediate effect).
 
-Each absorption scheme consists of three parameters:
+#### Absorption Schemme for Regular Carbs
 
-- Delay: The time required by your body to digest the respective carbs, i.e. after this time period they will impact your blood glucose.
-- Absorption time: The time how long these carbs will - once started - impact your blood glucose (this parameter can be entered for sugars and regular carbs only, for e-carbs it will be calculated).
-- Interval: This parameter is only required for exporting the carbs to Apple Health. The total amount of the respective carbs will be evenly distributed over the time period determined by the absorption time parameter, using this interval. Example: Given a 3h (=180min) absorption time and a 10min interval, an amount of 36g will be distributed in 18 chunks, 2g each: 36g / (180min / 10 min).
+If you have selected the separate treatment of carbohydrates from sugar, they will be subtracted from the regular carbohydrates.
 
-### Absorption Scheme for Sugars
+Regular carbohydrates are typically absorbed more slowly than those from sugar. The default setting is 3 hours with a 5-minute delay.
 
-You can choose whether or not to treat sugars separately from regular carbs. If you choose not to, sugars will be accounted for as regular carbs.
+#### Absorption Scheme for Extended Carbs
 
-Sugars are usually absorbed within a relatively short period of time. Default setting is 2 hours with a delay of 0.
+Extended carbohydrates are actually not carbohydrates, but fat-protein units (FPUs), though they have a similar effect on blood sugar. Since they come from fats and proteins, which must first be digested by the body, their effect begins later (the default setting is 90 minutes).
 
-### Absorption Scheme for Regular Carbs
+The absorption scheme determines the absorption time for a given number of FPUs. The default absorption scheme follows current nutritional science findings and is as follows:
 
-If you have chosen to treat sugars separately, they will be substracted from the regular carbs.
+- 1 FPU (= 10g extended carbohydrates): 3 hours absorption time
+- 2 FPU (= 20g extended carbohydrates): 4 hours absorption time
+- 3 FPU (= 30g extended carbohydrates): 5 hours absorption time
+- 4 FPU (= 40g extended carbohydrates): 6 hours absorption time
+- 6 FPU (= 60g extended carbohydrates) and more: 8 hours absorption time
 
-Regular carbs are usually absorbed slower than sugars. Default setting is 3 hours, starting with a delay of 5 minutes.
+This absorption scheme can be edited.
 
-### Absorption Scheme for Extended Carbs
+Since each body reacts differently to fat-protein units, it is important to determine your own carbohydrate-per-FPU factor and set it here. The default is 10g carbohydrates per FPU, but for children, I recommend much lower factors.
 
-Extended carbs are not really carbs, but rather Fat-Protein-Units (FPUs), but they impact blood glucose just as if they were. As they stem from fat and proteins, which first need to be digested by your body, they will impact your blood glucose rather late (default setting is after 90 minutes).
+The app's calculation logic works as follows:
 
-The duration of impact is determined by the following absorption scheme, which matches today‘s recommendations from nutrition science:
+Step 1: Calculate the total calories, e.g., for 72g of Chicken McNuggets (249 kcal per 100g): 72g * 249 kcal / 100g = 179 kcal
 
-- 1 FPU: 3 hours absorption time
-- 2 FPUs: 4 hours absorption time
-- 3 FPUs: 5 hours absorption time
-- 4 FPUs: 6 hours absorption time
-- 6 FPUs and more: 8 hours absorption time
+Step 2: Calculate the calories from carbohydrates (4 kcal per 1g of carbohydrates), e.g., for 72g of Chicken McNuggets (17g carbohydrates per 100g): 72g * 17g CH / 100g * 4 kcal/g CH = 49 kcal
 
-This absorption scheme may also be modified.
+Step 3: Subtract the calories from carbohydrates from the total calories. The remaining calories come from fats and proteins. In the example: 179 kcal - 49 kcal = 130 kcal
 
-By default, 1 FPU has a blood glucose impact comparable to 10g of carbs. This ratio can (and should!) be modified, as it is very individual. Especially for children it's recommended to start with a much lower carbs-per-FPU-ratio, e.g. 4 or 5 g/FPU.
+Step 4: Since 100 kcal corresponds to 1 FPU, in the example, 1.3 FPU results, which corresponds to 13.0g of extended carbohydrates when using a carbohydrate-per-FPU factor of 10.
 
-The calculation algorithm for the FPU and e-carbs is as follows:
+Step 5: The FPUs are rounded, in the example to 1 FPU, and the absorption time is looked up, in this case, 3 hours.
 
-Step 1: Calculation of the total calories, e.g. for 72g Chicken McNuggets (249 kcal per 100g): 72g * 249 kcal / 100g = 179 kcal
+Changes to the absorption scheme are only recommended for those with expertise in nutrition science. All absorption data can be reset to the default settings.
 
-Step 2: Calculation of the calories caused by carbs (4 kcal per 1g of carbs), e.g. for 72g Chicken McNuggets (17g carbs per 100g): 72g * 17gCarbs / 100g * 4 kcal/gCarbs = 49 kcal
+### App Settings
 
-Step 3: Substract the calories caused by carbs from the total calories, e.g.: 179 kcal - 49 kcal = 130 kcal
+![App Settings](assets/images/44AppSettings.png){style="width:100px", align=left}
 
-Step 4: As 100 kcal represent 1 FPU, this results in 1.3 FPUs, which could for example be 13 g e-carbs if the carbs-per-FPU-ratio was set to 10 g/FPU.
+To prevent carbohydrates from meals from being accidentally exported multiple times to Apple Health, potentially increasing the insulin dosage of your Loop system, EasyFPU will notify you if you attempt a re-export within a given time period after the last export. This time period can be set here. The default is 15 minutes.
 
-Step 5: The FPUs will be rounded, in our example to 1 FPU, and the absorption time will be looked up, in our example 3 hours.
-
-Editing the absorption schemes is only recommended for advanced users, who have experience in FPUs / absorption time. All absorption schemes can always be reset to the pre-defined values.
-
-### Alert Period between Apple Health Exports
-
-In order to avoid double exports by mistake (potentially increasing the insulin delivery of your Loop system), EasyFPU will warn you in case you export data within a given period of time after the last export. This time period can be set here. Default is 15 minutes.
+Additionally, you can select the country in which OpenFoodFacts should search.
 
 ## Sample Data
 
-You may download [this JSON file](assets/fpu_calculator_database.json) with some sample food items (food names and typical amounts are in German mainly). Import it via the main menu (Import database from JSON).
+[This JSON file](assets/EasyFPU_FoodList.json) can be downloaded and used as sample data. Import the file via the "JSON Import" menu option.
 
-However, I strongly recommend to add your own food items, as e.g. typical amounts vary from person to person.
+However, I strongly recommend creating your own dishes, as typical quantities can vary from person to person.
