@@ -12,6 +12,8 @@ struct FoodDatabaseEntry: Identifiable, Equatable {
     var id = UUID()
     var name: String
     var category: FoodItemCategory
+    var quantity: Double
+    var quantityUnit: FoodItemUnit
     var caloriesPer100g: EnergyType
     var carbsPer100g: Double
     var sugarsPer100g: Double
@@ -33,14 +35,14 @@ struct FoodDatabaseEntry: Identifiable, Equatable {
         }
         sourceId = code
         
-        guard var productName = openFoodFactsProduct.productName else {
-            debugPrint(NSLocalizedString("Entry has no name", comment: ""))
-            return nil
-        }
+        name = openFoodFactsProduct.productName
         if openFoodFactsProduct.brands != nil {
-            productName += " (\(openFoodFactsProduct.brands!))"
+            name += " (\(openFoodFactsProduct.brands!))"
         }
-        name = productName
+        
+        quantity = (try? openFoodFactsProduct.getQuantity()) ?? 0.0
+        
+        quantityUnit = openFoodFactsProduct.quantityUnit
         
         if let caloriesPer100gInKcal = try? openFoodFactsProduct.getNutrimentsDoubleValue(key: OpenFoodFactsProduct.NutrimentsKey.caloriesPer100gInKcal) {
             caloriesPer100g = .kcal(caloriesPer100gInKcal)

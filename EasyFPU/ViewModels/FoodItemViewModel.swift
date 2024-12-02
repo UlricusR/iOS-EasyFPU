@@ -18,6 +18,22 @@ enum FoodItemCategory: String {
     case ingredient = "Ingredient"
 }
 
+enum FoodItemUnit: String {
+    case gram = "g"
+    case milliliter = "ml"
+    
+    init?(rawValue: String) {
+        switch rawValue {
+        case FoodItemUnit.gram.rawValue:
+            self = .gram
+        case FoodItemUnit.milliliter.rawValue:
+            self = .milliliter
+        default:
+            return nil
+        }
+    }
+}
+
 class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, VariableAmountItem {
     var id: UUID
     @Published var name: String
@@ -275,6 +291,11 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         caloriesPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.caloriesPer100g.getEnergyInKcal()))!
         carbsPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.carbsPer100g))!
         sugarsPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.sugarsPer100g))!
+        
+        // Add the quantity as typical amount if available
+        if foodDatabaseEntry.quantity > 0 && foodDatabaseEntry.quantityUnit == FoodItemUnit.gram {
+            typicalAmounts.append(TypicalAmountViewModel(amount: Int(foodDatabaseEntry.quantity), comment: NSLocalizedString("As sold", comment: "")))
+        }
     }
     
     func getCalories() -> Double {
