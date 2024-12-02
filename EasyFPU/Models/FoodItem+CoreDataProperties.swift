@@ -24,6 +24,7 @@ extension FoodItem {
     @NSManaged public var caloriesPer100g: Double
     @NSManaged public var carbsPer100g: Double
     @NSManaged public var sugarsPer100g: Double
+    @NSManaged public var sourceID: String?
     @NSManaged public var composedFoodItem: ComposedFoodItem?
     @NSManaged public var typicalAmounts: NSSet?
     @NSManaged public var ingredients: NSSet?
