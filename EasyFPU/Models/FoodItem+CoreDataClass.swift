@@ -51,6 +51,7 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
         cdFoodItem.favorite = foodItemVM.favorite
         cdFoodItem.sourceID = foodItemVM.sourceID
+        cdFoodItem.sourceDB = foodItemVM.sourceDB?.rawValue
         
         // Save
         CoreDataStack.shared.save()
@@ -136,6 +137,7 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
         cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
         cdFoodItem.sourceID = foodItemVM.sourceID
+        cdFoodItem.sourceDB = foodItemVM.sourceDB?.rawValue
         
         // Get the related ingredients and update their values
         let relatedIngredients = cdFoodItem.ingredients?.allObjects as? [Ingredient] ?? []
@@ -186,6 +188,7 @@ public class FoodItem: NSManagedObject {
         cdFoodItem.favorite = existingFoodItem.favorite
         cdFoodItem.category = existingFoodItem.category
         cdFoodItem.sourceID = existingFoodItem.sourceID
+        cdFoodItem.sourceDB = existingFoodItem.sourceDB
         
         // Add typical amounts
         if let typicalAmounts = existingFoodItem.typicalAmounts {

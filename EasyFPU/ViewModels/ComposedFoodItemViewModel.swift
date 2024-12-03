@@ -158,7 +158,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
                 carbsPer100g: ingredient.carbsPer100g,
                 sugarsPer100g: ingredient.sugarsPer100g,
                 amount: ingredient.amount,
-                sourceID: nil
+                sourceID: nil,
+                sourceDB: nil
             ))
         }
     }

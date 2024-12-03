@@ -91,13 +91,14 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     private(set) var carbsPer100g: Double = 0.0
     private(set) var sugarsPer100g: Double = 0.0
     var sourceID: String?
+    var sourceDB: FoodDatabaseType?
     @Published var amount: Int = 0
     @Published var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
     
     enum CodingKeys: String, CodingKey {
         case foodItem
-        case id, name, category, favorite, amount, caloriesPer100g, carbsPer100g, sugarsPer100g, sourceID
+        case id, name, category, favorite, amount, caloriesPer100g, carbsPer100g, sugarsPer100g, sourceID, sourceDB
         case typicalAmounts
     }
     
@@ -113,7 +114,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     ///   - sugarsPer100g: The sugars per 100g of the food item.
     ///   - amount: The amount of the food item.
     ///   - sourceID: The ID of the food item in a source food database (normally the barcode ID)
-    init(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, sugarsPer100g: Double, amount: Int, sourceID: String?) {
+    ///   - sourceDB: The food database the sourceID relates to
+    init(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, sugarsPer100g: Double, amount: Int, sourceID: String?, sourceDB: FoodDatabaseType?) {
         self.id = id
         self.name = name
         self.category = category
@@ -123,6 +125,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.sugarsPer100g = sugarsPer100g
         self.amount = amount
         self.sourceID = sourceID
+        self.sourceDB = sourceDB
         
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
     }
@@ -139,6 +142,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.carbsPer100g = cdFoodItem.carbsPer100g
         self.sugarsPer100g = cdFoodItem.sugarsPer100g
         self.sourceID = cdFoodItem.sourceID
+        self.sourceDB = (cdFoodItem.sourceDB != nil) ? FoodDatabaseType(rawValue: cdFoodItem.sourceDB!) : nil
         self.cdFoodItem = cdFoodItem
         
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
@@ -163,7 +167,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     ///   - sugarsAsString: The string representation of a decimal number of the sugars per 100g of the food item.
     ///   - amountAsString: The string representation of a integer number of the amount of the food item.
     ///   - error: Stores potential errors when creating the food item, e.g., unsuccessful conversion of the string representations into numbers.
-    init?(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError, sourceID: String?) {
+    init?(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError, sourceID: String?, sourceDB: FoodDatabaseType?) {
         // Check for a correct name
         let foodName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         if foodName == "" {
@@ -242,7 +246,9 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         }
         self.amountAsString = amountAsString
         
+        // Food database entry
         self.sourceID = sourceID
+        self.sourceDB = sourceDB
     }
     
     required init(from decoder: Decoder) throws {
@@ -267,6 +273,9 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         carbsPer100g = try foodItem.decode(Double.self, forKey: .carbsPer100g)
         sugarsPer100g = try foodItem.decode(Double.self, forKey: .sugarsPer100g)
         sourceID = try? foodItem.decode(String.self, forKey: .sourceID)
+        if let sourceDBString = try? foodItem.decode(String.self, forKey: .sourceDB) {
+            sourceDB = FoodDatabaseType(rawValue: sourceDBString)
+        }
         typicalAmounts = try foodItem.decode([TypicalAmountViewModel].self, forKey: .typicalAmounts)
         
         guard
@@ -294,6 +303,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         name = foodDatabaseEntry.name
         category = foodDatabaseEntry.category
         sourceID = foodDatabaseEntry.sourceId
+        sourceDB = foodDatabaseEntry.source
         
         // When setting string representations, number will be set implicitely
         caloriesPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.caloriesPer100g.getEnergyInKcal()))!
@@ -444,6 +454,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
             self.carbsPer100gAsString = String(cdFoodItem.carbsPer100g)
             self.sugarsPer100gAsString = String(cdFoodItem.sugarsPer100g)
             self.sourceID = cdFoodItem.sourceID
+            self.sourceDB = (cdFoodItem.sourceDB != nil) ? FoodDatabaseType(rawValue: cdFoodItem.sourceDB!) : nil
             
             self.typicalAmounts.removeAll()
             if let cdTypicalAmounts = cdFoodItem.typicalAmounts {
@@ -485,7 +496,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         try foodItem.encode(caloriesPer100g, forKey: .caloriesPer100g)
         try foodItem.encode(carbsPer100g, forKey: .carbsPer100g)
         try foodItem.encode(sugarsPer100g, forKey: .sugarsPer100g)
-        try foodItem.encode(sourceID, forKey: .sourceID)
+        if sourceID != nil { try foodItem.encode(sourceID, forKey: .sourceID) }
+        if sourceDB != nil { try foodItem.encode(sourceDB?.rawValue, forKey: .sourceDB) }
         try foodItem.encode(typicalAmounts, forKey: .typicalAmounts)
     }
     

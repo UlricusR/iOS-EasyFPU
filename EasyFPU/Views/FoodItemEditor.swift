@@ -51,7 +51,10 @@ struct FoodItemEditor: View {
         ]
     ) var foodItems: FetchedResults<FoodItem>
     
-    var typicalAmounts: [TypicalAmountViewModel] { draftFoodItemVM.typicalAmounts.sorted() }
+    private var typicalAmounts: [TypicalAmountViewModel] { draftFoodItemVM.typicalAmounts.sorted() }
+    private var sourceDB: FoodDatabase {
+        (draftFoodItemVM.sourceDB != nil) ? FoodDatabaseType.getFoodDatabase(type: draftFoodItemVM.sourceDB!) : UserSettings.shared.foodDatabase
+    }
     
     @State private var oldName = ""
     @State private var oldCaloriesPer100gAsString = ""
@@ -256,10 +259,11 @@ struct FoodItemEditor: View {
                         // Link to Food Database Entry (if sourceID is available)
                         if let sourceID = draftFoodItemVM.sourceID {
                             Section(header: Text("Initial source")) {
-                                Text(NSLocalizedString("Link to entry in ", comment: "") + UserSettings.shared.foodDatabase.databaseType.rawValue)
+                                Text(NSLocalizedString("Link to entry in ", comment: "") + sourceDB.databaseType.rawValue)
+                                    .frame(maxWidth: .infinity)
                                     .foregroundStyle(.blue)
                                     .onTapGesture {
-                                        try? UIApplication.shared.open(UserSettings.shared.foodDatabase.getLink(for: sourceID))
+                                        try? UIApplication.shared.open(sourceDB.getLink(for: sourceID))
                                     }
                                     .accessibilityIdentifierLeaf("LinkToFoodDatabaseEntry")
                             }
@@ -275,6 +279,7 @@ struct FoodItemEditor: View {
                                     // Delete food item
                                     self.draftFoodItemVM.delete(includeAssociatedRecipe: false)
                                 }
+                                .frame(maxWidth: .infinity)
                                 .accessibilityIdentifierLeaf("DeleteButton")
                             }
                         }
@@ -397,7 +402,8 @@ struct FoodItemEditor: View {
             sugarsAsString: self.draftFoodItemVM.sugarsPer100gAsString,
             amountAsString: self.draftFoodItemVM.amountAsString,
             error: &error,
-            sourceID: self.draftFoodItemVM.sourceID
+            sourceID: self.draftFoodItemVM.sourceID,
+            sourceDB: self.draftFoodItemVM.sourceDB
         ) { // We have a valid food item
             self.updatedFoodItemVM = updatedFoodItemVM
             

@@ -193,7 +193,8 @@ struct FoodItemListView: View {
                         carbsPer100g: 0.0,
                         sugarsPer100g: 0.0,
                         amount: 0,
-                        sourceID: nil
+                        sourceID: nil,
+                        sourceDB: nil
                     ),
                 category: category
             )

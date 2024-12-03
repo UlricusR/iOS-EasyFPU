@@ -21,6 +21,7 @@
         <attribute name="favorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="sourceDB" optional="YES" attributeType="String"/>
         <attribute name="sourceID" optional="YES" attributeType="String"/>
         <attribute name="sugarsPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="composedFoodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ComposedFoodItem" inverseName="foodItem" inverseEntity="ComposedFoodItem"/>
