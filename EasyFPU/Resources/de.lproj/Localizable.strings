@@ -93,6 +93,8 @@
 "Typical amounts:" = "Typische Mengen:";
 "Add to typical amounts" = "Zu typischen Mengen hinzufügen";
 "Comment" = "Kommentar";
+"As sold" = "Wie verkauft";
+"Initial source" = "Ursprüngliche Quelle";
 "Enter amount consumed or select typical amount" = "Gegessene Menge eingeben oder typische Menge auswählen";
 "Enter amount used or select typical amount" = "Verwendete Menge eingeben oder typische Menge auswählen";
 "Enter amount consumed" = "Gegessene Menge eingeben";

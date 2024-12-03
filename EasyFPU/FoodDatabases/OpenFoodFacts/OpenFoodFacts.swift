@@ -61,7 +61,7 @@ struct OpenFoodFacts: FoodDatabase {
     }
     
     func prepare(_ id: String, category: FoodItemCategory, completion: @escaping (Result<FoodDatabaseEntry?, FoodDatabaseError>) -> Void) {
-        let urlString = "https://\(countrycode).openfoodfacts.org/api/v0/product/\(id).json?fields=\(productFields.joined(separator: ","))"
+        let urlString = "https://\(countrycode).openfoodfacts.org/api/v2/product/\(id).json?fields=\(productFields.joined(separator: ","))"
         let request = prepareRequest(urlString)
         
         let session = URLSession.shared
@@ -125,9 +125,11 @@ struct OpenFoodFactsSearchResult: Decodable {
 struct OpenFoodFactsProduct: Decodable, Hashable, Identifiable {
     var id = UUID()
     var code: String?
-    var productName: String?
+    var productName: String
     var brands: String?
     var genericName: String?
+    var quantity: ValueType
+    var quantityUnit: FoodItemUnit
     var nutriments: Nutriments?
     var selectedImages: OpenFoodFactsSelectedProductImages?
     
@@ -136,6 +138,8 @@ struct OpenFoodFactsProduct: Decodable, Hashable, Identifiable {
         case productName = "product_name"
         case brands = "brands"
         case genericName = "generic_name"
+        case quantity = "product_quantity"
+        case quantityUnit = "product_quantity_unit"
         case nutriments = "nutriments"
         case selectedImages = "selected_images"
     }
@@ -178,6 +182,31 @@ struct OpenFoodFactsProduct: Decodable, Hashable, Identifiable {
         case caloriesPer100gInKJ = "energy-kj_100g"
         case carbsPer100g = "carbohydrates_100g"
         case sugarsPer100g = "sugars_100g"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let product = try decoder.container(keyedBy: CodingKeys.self)
+        code = try? product.decode(String.self, forKey: .code)
+        productName = (try? product.decode(String.self, forKey: .productName)) ?? NSLocalizedString("- No name -", comment: "")
+        brands = try? product.decode(String.self, forKey: .brands)
+        genericName = try? product.decode(String.self, forKey: .genericName)
+        quantity = (try? product.decode(ValueType.self, forKey: .quantity)) ?? ValueType.number(0.0)
+        quantityUnit = (try? FoodItemUnit(rawValue: product.decode(String.self, forKey: .quantityUnit))) ?? .gram
+        
+        nutriments = try? product.decode(Nutriments.self, forKey: .nutriments)
+        selectedImages = try? product.decode(OpenFoodFactsSelectedProductImages.self, forKey: .selectedImages)
+    }
+    
+    func getQuantity() throws -> Double {
+        switch quantity {
+        case .number(let number):
+            return number
+        case .string(let string):
+            guard let doubleFromString = Double(string) else {
+                throw FoodDatabaseError.decodingError("Wrong data type for key quantity: Expected Double")
+            }
+            return doubleFromString
+        }
     }
     
     func getNutrimentsDoubleValue(key: NutrimentsKey) throws -> Double {

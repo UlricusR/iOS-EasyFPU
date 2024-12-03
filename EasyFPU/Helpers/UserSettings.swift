@@ -110,7 +110,7 @@ class UserSettings: ObservableObject {
         alertPeriodAfterExportInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.alertPeriodAfterExportInMinutes) ?? 15,
         foodDatabase: FoodDatabaseType.getFoodDatabase(type: UserSettings.getFoodDatabaseType()),
         searchWorldwide: UserSettings.getValue(for: UserDefaultsBoolKey.searchWorldwide) ?? false,
-        countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode)
+        countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode) ?? Locale.current.region?.identifier
     )
     
     private init(

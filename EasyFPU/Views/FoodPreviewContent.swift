@@ -57,6 +57,17 @@ struct FoodPreviewContent: View {
                 .accessibilityIdentifierLeaf("FoodImages")
             }
             
+            if selectedEntry.quantity > 0 {
+                HStack {
+                    Text("Quantity")
+                        .accessibilityIdentifierLeaf("QuantityLabel")
+                    Spacer()
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.quantity))!)
+                        .accessibilityIdentifierLeaf("QuantityValue")
+                    Text(selectedEntry.quantityUnit.rawValue)
+                        .accessibilityIdentifierLeaf("QuantityUnit")
+                }.padding([.leading, .trailing])
+            }
             HStack {
                 Text("Calories per 100g")
                     .accessibilityIdentifierLeaf("CaloriesLabel")
