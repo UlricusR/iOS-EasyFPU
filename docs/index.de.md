@@ -1,6 +1,7 @@
 # Was ist EasyFPE?
 
-![EasyFPE-App-Icon](assets/images/pizza_small.png){ align=left }
+[comment]: <> (![EasyFPU app icon](assets/images/pizza_small.png){ align=left })
+![EasyFPE-App-Icon](assets/images/EasyFPU_Latest_iOS_Version.mp4){ align=left, style="width:200px" }
 
 EasyFPE ist eine iOS-App - hauptsächlich für Typ 1-Diabetiker - zum einfachen Berechnen von Kohlenhydraten aus Zucker, regulären Kohlenhydraten und Fett-Protein-Einheiten (FPE) bzw. verzögerten Kohlenhydraten (auch bekannt als e-Carbs oder Fake Carbs) - synchronisiert zwischen allen Ihren iOS-Geräten via iCloud (optional).
 
