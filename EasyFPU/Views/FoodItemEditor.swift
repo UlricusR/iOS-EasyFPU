@@ -21,12 +21,14 @@ struct FoodItemEditor: View {
     }
     
     enum NotificationState {
-        case void, searching, noSearchResults
+        case void, searching
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.presentationMode) var presentation
-    var navigationBarTitle: String
+    @EnvironmentObject private var bannerService: BannerService
+    @Binding var navigationPath: NavigationPath
+    var navigationTitle: String
     @ObservedObject var draftFoodItemVM: FoodItemViewModel
     var category: FoodItemCategory
     @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
@@ -75,289 +77,287 @@ struct FoodItemEditor: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            NavigationStack {
-                VStack {
-                    Form {
-                        Section {
-                            HStack {
-                                // Name
-                                CustomTextField(titleKey: "Name", text: $draftFoodItemVM.name, keyboardType: .default)
-                                    .accessibilityIdentifierLeaf("NameValue")
-                                
-                                // Search and Scan buttons
-                                Button(action: {
-                                    if draftFoodItemVM.name.isEmpty {
-                                        self.errorMessage = NSLocalizedString("Search term must not be empty", comment: "")
-                                        self.showingAlert = true
-                                    } else {
-                                        if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
-                                            performSearch()
-                                        } else {
-                                            self.showingSearchAlert = true
-                                        }
-                                    }
-                                }) {
-                                    Image(systemName: "magnifyingglass")
-                                        .imageScale(.large)
-                                }
-                                .buttonStyle(BorderlessButtonStyle())
-                                .accessibilityIdentifierLeaf("SearchButton")
-                                .alert(
-                                    "Disclaimer",
-                                    isPresented: $showingSearchAlert
-                                ) {
-                                    Button("Accept and continue") {
-                                        var settingsError = ""
-                                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                                            errorMessage = settingsError
-                                            self.showingAlert = true
-                                        }
-
-                                        // Set dynamic variable
-                                        UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
-                                        
-                                        // Perform search
-                                        self.performSearch()
-                                    }
-                                    Button("Decline and cancel", role: .cancel) {}
-                                } message: {
-                                    Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk.")
-                                }
-                                
-                                Button(action: {
+            VStack {
+                Form {
+                    Section {
+                        HStack {
+                            // Name
+                            CustomTextField(titleKey: "Name", text: $draftFoodItemVM.name, keyboardType: .default)
+                                .accessibilityIdentifierLeaf("NameValue")
+                            
+                            // Search and Scan buttons
+                            Button(action: {
+                                if draftFoodItemVM.name.isEmpty {
+                                    self.errorMessage = NSLocalizedString("Search term must not be empty", comment: "")
+                                    self.showingAlert = true
+                                } else {
                                     if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
-                                        self.activeSheet = .scan
+                                        performSearch()
                                     } else {
-                                        self.showingScanAlert = true
+                                        self.showingSearchAlert = true
                                     }
-                                }) {
-                                    Image(systemName: "barcode.viewfinder")
-                                        .imageScale(.large)
                                 }
-                                .buttonStyle(BorderlessButtonStyle())
-                                .accessibilityIdentifierLeaf("ScanButton")
-                                .alert(
-                                    "Disclaimer",
-                                    isPresented: $showingScanAlert
-                                ) {
-                                    Button("Accept and continue") {
-                                        var settingsError = ""
-                                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                                            errorMessage = settingsError
-                                            self.showingAlert = true
-                                        }
+                            }) {
+                                Image(systemName: "magnifyingglass")
+                                    .imageScale(.large)
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                            .accessibilityIdentifierLeaf("SearchButton")
+                            .alert(
+                                "Disclaimer",
+                                isPresented: $showingSearchAlert
+                            ) {
+                                Button("Accept and continue") {
+                                    var settingsError = ""
+                                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
+                                        errorMessage = settingsError
+                                        self.showingAlert = true
+                                    }
 
-                                        // Set dynamic variable
-                                        UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
-                                        
-                                        // Perform scan
-                                        self.activeSheet = .scan
-                                    }
-                                    Button("Decline and cancel", role: .cancel) {}
-                                } message: {
-                                    Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk.")
-                                }
-                            }
-                            
-                            // Category
-                            Picker("Category", selection: $draftFoodItemVM.category) {
-                                Text("Product").tag(FoodItemCategory.product)
-                                Text("Ingredient").tag(FoodItemCategory.ingredient)
-                            }
-                            .accessibilityIdentifierLeaf("CategoryPicker")
-                            
-                            // Favorite
-                            Toggle("Favorite", isOn: $draftFoodItemVM.favorite)
-                                .accessibilityIdentifierLeaf("FavoriteToggle")
-                        }
-                        
-                        Section(header: Text("Nutritional values per 100g:")) {
-                            // Calories
-                            HStack {
-                                CustomTextField(titleKey: "Calories per 100g", text: $draftFoodItemVM.caloriesPer100gAsString, keyboardType: .decimalPad)
-                                    .accessibilityIdentifierLeaf("CaloriesValue")
-                                Text("kcal")
-                                    .accessibilityIdentifierLeaf("CaloriesUnit")
-                            }
-                            
-                            // Carbs
-                            HStack {
-                                CustomTextField(titleKey: "Carbs per 100g", text: $draftFoodItemVM.carbsPer100gAsString, keyboardType: .decimalPad)
-                                    .accessibilityIdentifierLeaf("CarbsValue")
-                                Text("g Carbs")
-                                    .accessibilityIdentifierLeaf("CarbsUnit")
-                            }
-                            
-                            // Sugars
-                            HStack {
-                                CustomTextField(titleKey: "Thereof Sugars per 100g", text: $draftFoodItemVM.sugarsPer100gAsString, keyboardType: .decimalPad)
-                                    .accessibilityIdentifierLeaf("SugarsValue")
-                                Text("g Sugars")
-                                    .accessibilityIdentifierLeaf("SugarsUnit")
-                            }
-                        }
-                        
-                        Section(header: Text("Typical amounts:")) {
-                            HStack {
-                                CustomTextField(titleKey: "Amount", text: $newTypicalAmount, keyboardType: .decimalPad)
-                                    .accessibilityIdentifierLeaf("EditTypicalAmountValue")
-                                Text("g")
-                                    .accessibilityIdentifierLeaf("AmountUnit")
-                                CustomTextField(titleKey: "Comment", text: $newTypicalAmountComment, keyboardType: .default)
-                                    .accessibilityIdentifierLeaf("EditTypicalAmountComment")
-                                Button(action: {
-                                    self.addTypicalAmount()
-                                }) {
-                                    Image(systemName: self.updateButton ? "checkmark.circle.fill" : "plus.circle").foregroundStyle(self.updateButton ? .blue : .green)
-                                }
-                                .accessibilityIdentifierLeaf("AddTypicalAmountButton")
-                            }
-                        }
-                        
-                        if self.typicalAmounts.count > 0 {
-                            Section(footer: Text("Tap to edit")) {
-                                ForEach(self.typicalAmounts) { typicalAmount in
-                                    HStack {
-                                        HStack {
-                                            Text(typicalAmount.amountAsString)
-                                                .accessibilityIdentifierLeaf("TypicalAmountValue")
-                                            Text("g")
-                                                .accessibilityIdentifierLeaf("TypicalAmountUnit")
-                                            Text(typicalAmount.comment)
-                                                .accessibilityIdentifierLeaf("TypicalAmountComment")
-                                        }
-                                        
-                                        
-                                        Spacer()
-                                        
-                                    }
-                                    .onTapGesture {
-                                        self.newTypicalAmount = typicalAmount.amountAsString
-                                        self.newTypicalAmountComment = typicalAmount.comment
-                                        self.newTypicalAmountId = typicalAmount.id
-                                        self.updateButton = true
-                                    }
-                                    .swipeActions(allowsFullSwipe: true) {
-                                        Button("Delete", systemImage: "trash", role: .destructive) {
-                                            // First clear edit fields if filled
-                                            if self.updateButton {
-                                                self.newTypicalAmount = ""
-                                                self.newTypicalAmountComment = ""
-                                                self.newTypicalAmountId = nil
-                                                self.updateButton.toggle()
-                                            }
-                                            
-                                            // Then delete typical amount
-                                            self.deleteTypicalAmount(typicalAmount)
-                                        }
-                                    }
-                                    .accessibilityIdentifierBranch("TAmount" + typicalAmount.amountAsString)
-                                }
-                            }
-                        }
-                        
-                        // Link to Food Database Entry (if sourceID is available)
-                        if let sourceID = draftFoodItemVM.sourceID {
-                            Section(header: Text("Initial source")) {
-                                Text(NSLocalizedString("Link to entry in ", comment: "") + sourceDB.databaseType.rawValue)
-                                    .frame(maxWidth: .infinity)
-                                    .foregroundStyle(.blue)
-                                    .onTapGesture {
-                                        try? UIApplication.shared.open(sourceDB.getLink(for: sourceID))
-                                    }
-                                    .accessibilityIdentifierLeaf("LinkToFoodDatabaseEntry")
-                            }
-                        }
-                        
-                        // Delete food item (only when editing an existing food item)
-                        if draftFoodItemVM.hasAssociatedFoodItem() {
-                            Section {
-                                Button("Delete food item", role: .destructive) {
-                                    // Close the sheet
-                                    presentation.wrappedValue.dismiss()
+                                    // Set dynamic variable
+                                    UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
                                     
-                                    // Delete food item
-                                    self.draftFoodItemVM.delete(includeAssociatedRecipe: false)
+                                    // Perform search
+                                    self.performSearch()
                                 }
-                                .frame(maxWidth: .infinity)
-                                .accessibilityIdentifierLeaf("DeleteButton")
+                                Button("Decline and cancel", role: .cancel) {}
+                            } message: {
+                                Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk.")
                             }
+                            
+                            Button(action: {
+                                if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
+                                    self.activeSheet = .scan
+                                } else {
+                                    self.showingScanAlert = true
+                                }
+                            }) {
+                                Image(systemName: "barcode.viewfinder")
+                                    .imageScale(.large)
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                            .accessibilityIdentifierLeaf("ScanButton")
+                            .alert(
+                                "Disclaimer",
+                                isPresented: $showingScanAlert
+                            ) {
+                                Button("Accept and continue") {
+                                    var settingsError = ""
+                                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
+                                        errorMessage = settingsError
+                                        self.showingAlert = true
+                                    }
+
+                                    // Set dynamic variable
+                                    UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
+                                    
+                                    // Perform scan
+                                    self.activeSheet = .scan
+                                }
+                                Button("Decline and cancel", role: .cancel) {}
+                            } message: {
+                                Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk.")
+                            }
+                        }
+                        
+                        // Category
+                        Picker("Category", selection: $draftFoodItemVM.category) {
+                            Text("Product").tag(FoodItemCategory.product)
+                            Text("Ingredient").tag(FoodItemCategory.ingredient)
+                        }
+                        .accessibilityIdentifierLeaf("CategoryPicker")
+                        
+                        // Favorite
+                        Toggle("Favorite", isOn: $draftFoodItemVM.favorite)
+                            .accessibilityIdentifierLeaf("FavoriteToggle")
+                    }
+                    
+                    Section(header: Text("Nutritional values per 100g:")) {
+                        // Calories
+                        HStack {
+                            CustomTextField(titleKey: "Calories per 100g", text: $draftFoodItemVM.caloriesPer100gAsString, keyboardType: .decimalPad)
+                                .accessibilityIdentifierLeaf("CaloriesValue")
+                            Text("kcal")
+                                .accessibilityIdentifierLeaf("CaloriesUnit")
+                        }
+                        
+                        // Carbs
+                        HStack {
+                            CustomTextField(titleKey: "Carbs per 100g", text: $draftFoodItemVM.carbsPer100gAsString, keyboardType: .decimalPad)
+                                .accessibilityIdentifierLeaf("CarbsValue")
+                            Text("g Carbs")
+                                .accessibilityIdentifierLeaf("CarbsUnit")
+                        }
+                        
+                        // Sugars
+                        HStack {
+                            CustomTextField(titleKey: "Thereof Sugars per 100g", text: $draftFoodItemVM.sugarsPer100gAsString, keyboardType: .decimalPad)
+                                .accessibilityIdentifierLeaf("SugarsValue")
+                            Text("g Sugars")
+                                .accessibilityIdentifierLeaf("SugarsUnit")
+                        }
+                    }
+                    
+                    Section(header: Text("Typical amounts:")) {
+                        HStack {
+                            CustomTextField(titleKey: "Amount", text: $newTypicalAmount, keyboardType: .decimalPad)
+                                .accessibilityIdentifierLeaf("EditTypicalAmountValue")
+                            Text("g")
+                                .accessibilityIdentifierLeaf("AmountUnit")
+                            CustomTextField(titleKey: "Comment", text: $newTypicalAmountComment, keyboardType: .default)
+                                .accessibilityIdentifierLeaf("EditTypicalAmountComment")
+                            Button(action: {
+                                self.addTypicalAmount()
+                            }) {
+                                Image(systemName: self.updateButton ? "checkmark.circle.fill" : "plus.circle").foregroundStyle(self.updateButton ? .blue : .green)
+                            }
+                            .accessibilityIdentifierLeaf("AddTypicalAmountButton")
+                        }
+                    }
+                    
+                    if self.typicalAmounts.count > 0 {
+                        Section(footer: Text("Tap to edit")) {
+                            ForEach(self.typicalAmounts) { typicalAmount in
+                                HStack {
+                                    HStack {
+                                        Text(typicalAmount.amountAsString)
+                                            .accessibilityIdentifierLeaf("TypicalAmountValue")
+                                        Text("g")
+                                            .accessibilityIdentifierLeaf("TypicalAmountUnit")
+                                        Text(typicalAmount.comment)
+                                            .accessibilityIdentifierLeaf("TypicalAmountComment")
+                                    }
+                                    
+                                    
+                                    Spacer()
+                                    
+                                }
+                                .onTapGesture {
+                                    self.newTypicalAmount = typicalAmount.amountAsString
+                                    self.newTypicalAmountComment = typicalAmount.comment
+                                    self.newTypicalAmountId = typicalAmount.id
+                                    self.updateButton = true
+                                }
+                                .swipeActions(allowsFullSwipe: true) {
+                                    Button("Delete", systemImage: "trash", role: .destructive) {
+                                        // First clear edit fields if filled
+                                        if self.updateButton {
+                                            self.newTypicalAmount = ""
+                                            self.newTypicalAmountComment = ""
+                                            self.newTypicalAmountId = nil
+                                            self.updateButton.toggle()
+                                        }
+                                        
+                                        // Then delete typical amount
+                                        self.deleteTypicalAmount(typicalAmount)
+                                    }
+                                }
+                                .accessibilityIdentifierBranch("TAmount" + typicalAmount.amountAsString)
+                            }
+                        }
+                    }
+                    
+                    // Link to Food Database Entry (if sourceID is available)
+                    if let sourceID = draftFoodItemVM.sourceID {
+                        Section(header: Text("Initial source")) {
+                            Text(NSLocalizedString("Link to entry in ", comment: "") + sourceDB.databaseType.rawValue)
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(.blue)
+                                .onTapGesture {
+                                    try? UIApplication.shared.open(sourceDB.getLink(for: sourceID))
+                                }
+                                .accessibilityIdentifierLeaf("LinkToFoodDatabaseEntry")
+                        }
+                    }
+                    
+                    // Delete food item (only when editing an existing food item)
+                    if draftFoodItemVM.hasAssociatedFoodItem() {
+                        Section {
+                            Button("Delete food item", role: .destructive) {
+                                // Close the sheet
+                                navigationPath.removeLast()
+                                
+                                // Delete food item
+                                self.draftFoodItemVM.delete(includeAssociatedRecipe: false)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .accessibilityIdentifierLeaf("DeleteButton")
                         }
                     }
                 }
-                .navigationBarTitle(navigationBarTitle)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            activeSheet = .help
-                        }) {
-                            Image(systemName: "questionmark.circle").imageScale(.large)
-                        }
-                        .accessibilityIdentifierLeaf("HelpButton")
+            }
+            .navigationTitle(navigationTitle)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        activeSheet = .help
+                    }) {
+                        Image(systemName: "questionmark.circle").imageScale(.large)
                     }
-                    
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            // First quit edit mode
-                            presentation.wrappedValue.dismiss()
-                            
-                            // Then undo the changes made to typical amounts
-                            for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
-                                self.draftFoodItemVM.typicalAmounts.append(typicalAmountToBeDeleted)
-                            }
-                            self.typicalAmountsToBeDeleted.removeAll()
-                        }) {
-                            Image(systemName: "xmark.circle")
-                                .imageScale(.large)
-                        }
-                        .accessibilityIdentifierLeaf("ClearButton")
+                    .accessibilityIdentifierLeaf("HelpButton")
+                }
+                
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        // First quit edit mode
+                        navigationPath.removeLast()
                         
-                        Button(action: {
-                            // Trim white spaces from name
-                            draftFoodItemVM.name = draftFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                        // Then undo the changes made to typical amounts
+                        for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
+                            self.draftFoodItemVM.typicalAmounts.append(typicalAmountToBeDeleted)
+                        }
+                        self.typicalAmountsToBeDeleted.removeAll()
+                    }) {
+                        Image(systemName: "xmark.circle")
+                            .imageScale(.large)
+                    }
+                    .accessibilityIdentifierLeaf("ClearButton")
+                    
+                    Button(action: {
+                        // Trim white spaces from name
+                        draftFoodItemVM.name = draftFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                        
+                        // Check if we have duplicate names (if this is a new food item)
+                        if !draftFoodItemVM.hasAssociatedFoodItem() && draftFoodItemVM.nameExists() {
+                            errorMessage = NSLocalizedString("A food item with this name already exists", comment: "")
+                            self.showingAlert = true
+                        } else {
+                            saveFoodItem()
+                        }
+                    }) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .imageScale(.large)
+                    }
+                    .accessibilityIdentifierLeaf("SaveButton")
+                    .alert(
+                        "Associated Ingredients",
+                        isPresented: self.$showingUpdateIngredientsAlert
+                    ) {
+                        Button("Update recipes") {
+                            // Update FoodItem
+                            if let updatedFoodItemVM {
+                                updatedFoodItemVM.update(typicalAmountsToBeDeleted)
+                                
+                                // Reset typical amounts to be deleted
+                                self.typicalAmountsToBeDeleted.removeAll()
+                            }
                             
-                            // Check if we have duplicate names (if this is a new food item)
-                            if !draftFoodItemVM.hasAssociatedFoodItem() && draftFoodItemVM.nameExists() {
-                                errorMessage = NSLocalizedString("A food item with this name already exists", comment: "")
-                                self.showingAlert = true
-                            } else {
-                                saveFoodItem()
-                            }
-                        }) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .imageScale(.large)
+                            // Quit edit mode
+                            navigationPath.removeLast()
                         }
-                        .accessibilityIdentifierLeaf("SaveButton")
-                        .alert(
-                            "Associated Ingredients",
-                            isPresented: self.$showingUpdateIngredientsAlert
-                        ) {
-                            Button("Update recipes") {
-                                // Update FoodItem
-                                if let updatedFoodItemVM {
-                                    updatedFoodItemVM.update(typicalAmountsToBeDeleted)
-                                    
-                                    // Reset typical amounts to be deleted
-                                    self.typicalAmountsToBeDeleted.removeAll()
-                                }
-                                
-                                // Quit edit mode
-                                presentation.wrappedValue.dismiss()
-                            }
-                            Button("Cancel", role: .cancel) {
-                                // Reset to original values
-                                draftFoodItemVM.reset()
-                                
-                                // Quit edit mode
-                                presentation.wrappedValue.dismiss()
-                            }
-                        } message: {
-                            Text(
-                                NSLocalizedString("This food item is used as ingredient in the following recipes:", comment: "") +
-                                "\n\n\(self.associatedRecipes.joined(separator: "\n"))\n\n" +
-                                NSLocalizedString("Updating the food item will also update the associated recipes.", comment: "")
-                            )
+                        Button("Cancel", role: .cancel) {
+                            // Reset to original values
+                            draftFoodItemVM.reset()
+                            
+                            // Quit edit mode
+                            navigationPath.removeLast()
                         }
+                    } message: {
+                        Text(
+                            NSLocalizedString("This food item is used as ingredient in the following recipes:", comment: "") +
+                            "\n\n\(self.associatedRecipes.joined(separator: "\n"))\n\n" +
+                            NSLocalizedString("Updating the food item will also update the associated recipes.", comment: "")
+                        )
                     }
                 }
             }
@@ -440,13 +440,13 @@ struct FoodItemEditor: View {
                     self.typicalAmountsToBeDeleted.removeAll()
                     
                     // Quit edit mode
-                    presentation.wrappedValue.dismiss()
+                    navigationPath.removeLast()
                 }
             } else { // We have a new food item
                 self.updatedFoodItemVM!.save()
                 
                 // Quit edit mode
-                presentation.wrappedValue.dismiss()
+                navigationPath.removeLast()
             }
         } else { // Invalid data, display alert
             // Evaluate error
@@ -538,7 +538,9 @@ struct FoodItemEditor: View {
                 switch result {
                 case .success(let networkFoodDatabaseEntry):
                     guard let foodDatabaseEntry = networkFoodDatabaseEntry else {
-                        DispatchQueue.main.async { self.notificationState = .noSearchResults }
+                        DispatchQueue.main.async {
+                            bannerService.setBanner(banner: .warning(message: NSLocalizedString("No food found", comment: ""), isPersistent: false))
+                        }
                         return
                     }
                     DispatchQueue.main.async {
@@ -567,7 +569,9 @@ struct FoodItemEditor: View {
             switch result {
             case .success(let networkSearchResults):
                 guard let searchResults = networkSearchResults, !searchResults.isEmpty else {
-                    DispatchQueue.main.async { self.notificationState = .noSearchResults }
+                    DispatchQueue.main.async {
+                        bannerService.setBanner(banner: .warning(message: NSLocalizedString("No food found", comment: ""), isPersistent: false))
+                    }
                     return
                 }
                 
@@ -590,13 +594,6 @@ struct FoodItemEditor: View {
         switch notificationState {
         case .searching:
             ActivityIndicatorDynamicText(staticText: NSLocalizedString("Searching", comment: ""))
-        case .noSearchResults:
-            Text("No food found")
-                .onAppear() {
-                    Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false) { timer in
-                        self.notificationState = .void
-                    }
-                }
         default:
             EmptyView()
         }

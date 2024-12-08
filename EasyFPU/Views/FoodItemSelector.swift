@@ -131,7 +131,7 @@ struct FoodItemSelector: View {
                     .accessibilityIdentifierLeaf("AddButton")
                 }
             }
-            .navigationBarTitle(self.draftFoodItem.name)
+            .navigationTitle(self.draftFoodItem.name)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {

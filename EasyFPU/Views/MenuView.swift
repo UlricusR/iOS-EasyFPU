@@ -101,7 +101,7 @@ struct MenuView: View {
                     .accessibilityIdentifierLeaf("HelpOnWebButton")
                 }
             }
-            .navigationBarTitle("Settings")
+            .navigationTitle("Settings")
         }
         .sheet(item: $activeSheet) {
             sheetContent($0)

@@ -9,8 +9,17 @@
 import SwiftUI
 
 struct FoodItemListView: View {
+    enum FoodListNavigationDestination: Hashable {
+        case AddFoodItem(category: FoodItemCategory)
+        case EditFoodItem(category: FoodItemCategory, foodItemVM: FoodItemViewModel)
+    }
+    
+    enum FoodItemListType {
+        case maintenance
+        case selection
+    }
+    
     enum SheetState: Identifiable {
-        case addFoodItem
         case productSelectionListHelp
         case productMaintenanceListHelp
         case ingredientSelectionListHelp
@@ -19,25 +28,42 @@ struct FoodItemListView: View {
         var id: SheetState { self }
     }
     
-    enum FoodItemListType {
-        case maintenance
-        case selection
-    }
-    
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.presentationMode) var presentation
     var category: FoodItemCategory
     var listType: FoodItemListType
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
-    var helpSheet: SheetState
     var foodItemListTitle: String
-    var emptyStateImage: Image
-    var emptyStateMessage: Text
-    var emptyStateButtonText: Text
+    var helpSheet: SheetState
+    @Binding var navigationPath: NavigationPath
+    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
     @State private var activeSheet: SheetState?
-    @State private var errorMessage: String = ""
+    
+    private var emptyStateImage: Image {
+        switch category {
+        case .product:
+            Image("nachos")
+        case .ingredient:
+            Image("eggs-color")
+        }
+    }
+    private var emptyStateMessage: Text {
+        switch category {
+        case .product:
+            Text("Oops! There are no dishes in your list yet. Start by adding some!")
+        case .ingredient:
+            Text("Oops! There are no ingredients in your list yet. Start by adding some!")
+        }
+    }
+    private var emptyStateButtonText: Text {
+        switch category {
+        case .product:
+            Text("Add products")
+        case .ingredient:
+            Text("Add ingredients")
+        }
+    }
     
     @FetchRequest(
         entity: FoodItem.entity(),
@@ -59,147 +85,111 @@ struct FoodItemListView: View {
     }
     
     var body: some View {
-        ZStack(alignment: .top) {
-            NavigationStack {
-                VStack {
-                    if foodItems.isEmpty {
-                        // List is empty, so show a nice picture and an action button
-                        emptyStateImage.padding()
-                        emptyStateMessage.padding()
-                        Button {
-                            // Add new food item
-                            activeSheet = .addFoodItem
-                        } label: {
-                            HStack {
-                                Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
-                                emptyStateButtonText
-                            }
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                    .fill(.yellow)
-                            )
+        VStack {
+            if foodItems.isEmpty {
+                // List is empty, so show a nice picture and an action button
+                emptyStateImage.padding()
+                emptyStateMessage.padding()
+                Button {
+                    // Add new food item
+                    navigationPath.append(FoodItemListView.FoodListNavigationDestination.AddFoodItem(category: category))
+                } label: {
+                    HStack {
+                        Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
+                        emptyStateButtonText
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .fill(.yellow)
+                    )
+                }
+                .accessibilityIdentifierLeaf("AddFoodItemButton")
+            } else {
+                List {
+                    ForEach(self.filteredFoodItems.sorted {
+                        if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
+                            return true
+                        } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
+                            return false
+                        } else {
+                            return $0.name < $1.name
                         }
-                        .accessibilityIdentifierLeaf("AddFoodItemButton")
-                    } else {
-                        List {
-                            ForEach(self.filteredFoodItems.sorted {
-                                if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
-                                    return true
-                                } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
-                                    return false
-                                } else {
-                                    return $0.name < $1.name
-                                }
-                            }) { foodItem in
-                                FoodItemView(composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
-                                    .environment(\.managedObjectContext, self.managedObjectContext)
-                                    .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
-                            }
-                        }
+                    }) { foodItem in
+                        FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
+                            .environment(\.managedObjectContext, self.managedObjectContext)
+                            .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                     }
                 }
-                .navigationBarTitle(foodItemListTitle)
-                .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarLeading) {
-                        Button(action: {
-                            withAnimation {
-                                self.activeSheet = helpSheet
-                            }
-                        }) {
-                            Image(systemName: "questionmark.circle")
+            }
+        }
+        .navigationTitle(foodItemListTitle)
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarLeading) {
+                Button(action: {
+                    withAnimation {
+                        self.activeSheet = helpSheet
+                    }
+                }) {
+                    Image(systemName: "questionmark.circle")
+                        .imageScale(.large)
+                }
+                .accessibilityIdentifierLeaf("HelpButton")
+                
+                Button(action: {
+                    // Add new food item
+                    navigationPath.append(FoodItemListView.FoodListNavigationDestination.AddFoodItem(category: category))
+                }) {
+                    Image(systemName: "plus.circle")
+                        .imageScale(.large)
+                        .foregroundStyle(.green)
+                }
+                .accessibilityIdentifierLeaf("AddFoodItemButton")
+                
+                if listType == .selection && !composedFoodItem.foodItemVMs.isEmpty {
+                    Button(action: {
+                        withAnimation(.default) {
+                            composedFoodItem.clearIngredients()
+                            
+                            // Close sheet
+                            navigationPath.removeLast()
+                        }
+                    }) {
+                        Image(systemName: "xmark.circle").foregroundStyle(.red)
                             .imageScale(.large)
-                        }
-                        .accessibilityIdentifierLeaf("HelpButton")
-                        
-                        Button(action: {
-                            // Add new food item
-                            activeSheet = .addFoodItem
-                        }) {
-                            Image(systemName: "plus.circle")
-                                .imageScale(.large)
-                                .foregroundStyle(.green)
-                        }
-                        .accessibilityIdentifierLeaf("AddFoodItemButton")
-                        
-                        if listType == .selection && !composedFoodItem.foodItemVMs.isEmpty {
-                            Button(action: {
-                                withAnimation(.default) {
-                                    composedFoodItem.clearIngredients()
-                                    
-                                    // Close sheet
-                                    presentation.wrappedValue.dismiss()
-                                }
-                            }) {
-                                Image(systemName: "xmark.circle").foregroundStyle(.red)
-                                    .imageScale(.large)
-                            }
-                            .accessibilityIdentifierLeaf("ClearButton")
-                        }
                     }
-                    
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            withAnimation {
-                                self.showFavoritesOnly.toggle()
-                            }
-                        }) {
-                            if self.showFavoritesOnly {
-                                Image(systemName: "star.fill")
-                                    .foregroundStyle(Color.yellow)
-                                    .imageScale(.large)
-                            } else {
-                                Image(systemName: "star")
-                                    .foregroundStyle(Color.blue)
-                                    .imageScale(.large)
-                            }
-                        }
-                        .accessibilityIdentifierLeaf("ClearButton")
-                        
-                        if listType == .selection {
-                            Button(action: {
-                                // Close sheet
-                                presentation.wrappedValue.dismiss()
-                            }) {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .imageScale(.large)
-                            }
-                            .disabled(composedFoodItem.foodItemVMs.isEmpty)
-                            .accessibilityIdentifierLeaf("SaveButton")
-                        }
-                    }
+                    .accessibilityIdentifierLeaf("ClearButton")
                 }
             }
-            .searchable(text: self.$searchString)
-            .sheet(item: $activeSheet) {
-                sheetContent($0)
+            
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button(action: {
+                    withAnimation {
+                        self.showFavoritesOnly.toggle()
+                    }
+                }) {
+                    if self.showFavoritesOnly {
+                        Image(systemName: "star.fill")
+                            .foregroundStyle(Color.yellow)
+                            .imageScale(.large)
+                    } else {
+                        Image(systemName: "star")
+                            .foregroundStyle(Color.blue)
+                            .imageScale(.large)
+                    }
+                }
+                .accessibilityIdentifierLeaf("ClearButton")
             }
+        }
+        .searchable(text: self.$searchString)
+        .sheet(item: $activeSheet) {
+            sheetContent($0)
         }
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: FoodItemListView.SheetState) -> some View {
+    private func sheetContent(_ state: SheetState) -> some View {
         switch state {
-        case .addFoodItem:
-            FoodItemEditor(
-                navigationBarTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
-                draftFoodItemVM: // Create new empty draftFoodItem
-                    FoodItemViewModel(
-                        id: UUID(),
-                        name: "",
-                        category: category,
-                        favorite: false,
-                        caloriesPer100g: 0.0,
-                        carbsPer100g: 0.0,
-                        sugarsPer100g: 0.0,
-                        amount: 0,
-                        sourceID: nil,
-                        sourceDB: nil
-                    ),
-                category: category
-            )
-            .environment(\.managedObjectContext, managedObjectContext)
-            .accessibilityIdentifierBranch("EditFoodItem")
         case .productMaintenanceListHelp:
             HelpView(helpScreen: .productMaintenanceList)
                 .accessibilityIdentifierBranch("HelpProductMaintenanceList")

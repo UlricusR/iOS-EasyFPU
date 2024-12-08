@@ -21,7 +21,7 @@ struct FoodPreview: View {
         if let product = product {
             NavigationStack {
                 FoodPreviewContent(selectedEntry: product)
-                .navigationBarTitle("Scanned Food")
+                .navigationTitle("Scanned Food")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {

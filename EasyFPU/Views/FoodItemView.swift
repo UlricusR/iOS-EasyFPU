@@ -18,12 +18,12 @@ struct FoodItemView: View {
     }
     
     enum AlertChoice {
-        case associatedIngredient
         case confirmDelete
-        case editRecipe
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
+    @EnvironmentObject private var bannerService: BannerService
+    @Binding var navigationPath: NavigationPath
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @ObservedObject var foodItemVM: FoodItemViewModel
     var category: FoodItemCategory
@@ -129,10 +129,9 @@ struct FoodItemView: View {
             Button("Edit", systemImage: "pencil") {
                 if foodItemVM.cdFoodItem?.composedFoodItem != nil {
                     // There's an associated recipe, so show message to open Recipe Editor
-                    activeAlert = .editRecipe
-                    showingAlert = true
+                    bannerService.setBanner(banner: .warning(message: NSLocalizedString("This food item is created from a recipe, please open it in the recipe editor", comment: ""), isPersistent: true))
                 } else {
-                    activeSheet = .editFoodItem
+                    navigationPath.append(FoodItemListView.FoodListNavigationDestination.EditFoodItem(category: category, foodItemVM: foodItemVM))
                 }
             }
             .tint(.blue)
@@ -149,9 +148,9 @@ struct FoodItemView: View {
             Button("Delete", systemImage: "trash") {
                 if foodItemVM.hasAssociatedFoodItem() {
                     // Check if FoodItem is related to an Ingredient
-                    if !foodItemVM.canBeDeleted() {
-                        self.activeAlert = .associatedIngredient
-                        self.showingAlert = true
+                    if let associatedRecipeNames = foodItemVM.getAssociatedRecipeNames() {
+                        // There are associated recipes
+                        bannerService.setBanner(banner: .warning(message: createWarningMessage(from: associatedRecipeNames), isPersistent: true))
                     } else if foodItemVM.hasAssociatedRecipe() {
                         self.isConfirming.toggle()
                     } else {
@@ -211,7 +210,8 @@ struct FoodItemView: View {
         case .editFoodItem:
             if self.foodItemVM.cdFoodItem != nil {
                 FoodItemEditor(
-                    navigationBarTitle: NSLocalizedString("Edit food item", comment: ""),
+                    navigationPath: $navigationPath,
+                    navigationTitle: NSLocalizedString("Edit food item", comment: ""),
                     draftFoodItemVM: self.foodItemVM,
                     category: category
                 )
@@ -236,38 +236,26 @@ struct FoodItemView: View {
     @ViewBuilder
     private func alertMessage(for alert: AlertChoice) -> some View {
         switch alert {
-        case .associatedIngredient:
-            Text("This food item is in use in a recipe, please remove it from the recipe before deleting.")
         case .confirmDelete:
             Text("Do you really want to delete this food item? This cannot be undone!")
-        case .editRecipe:
-            Text("This food item is created from a recipe, please open it in the recipe editor")
         }
     }
 
     @ViewBuilder
     private func alertAction(for alert: AlertChoice) -> some View {
         switch alert {
-        case .associatedIngredient:
-            Button("OK", role: .cancel) {}
         case .confirmDelete:
             Button("Do not delete", role: .cancel) {}
             Button("Delete", role: .destructive) {
                 deleteFoodItemOnly()
             }
-        case .editRecipe:
-            Button("OK", role: .cancel) {}
         }
     }
     
     private var alertTitle: LocalizedStringKey {
         switch activeAlert {
-        case .associatedIngredient:
-            LocalizedStringKey("Cannot delete food")
         case .confirmDelete:
             LocalizedStringKey("Delete food")
-        case .editRecipe:
-            LocalizedStringKey("Edit food")
         case nil:
             ""
         }
@@ -283,5 +271,9 @@ struct FoodItemView: View {
         withAnimation(.default) {
             foodItemVM.delete(includeAssociatedRecipe: true)
         }
+    }
+    
+    private func createWarningMessage(from associatedRecipeNames: [String]) -> String {
+        NSLocalizedString("This food item is in use in a recipe", comment: "") + associatedRecipeNames.joined(separator: ", ")
     }
 }

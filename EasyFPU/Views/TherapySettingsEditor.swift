@@ -32,7 +32,7 @@ struct TherapySettingsEditor: View {
                 
             }
             // Navigation bar
-            .navigationBarTitle(Text("Therapy Settings"))
+            .navigationTitle(Text("Therapy Settings"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {

@@ -25,7 +25,7 @@ struct FoodSearch: View {
                             .accessibilityIdentifierBranch(String(searchResult.name.prefix(10)))
                     }
                 }
-                .navigationBarTitle("Food Database Search")
+                .navigationTitle("Food Database Search")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {

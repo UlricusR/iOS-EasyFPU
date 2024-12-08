@@ -9,17 +9,10 @@
 import SwiftUI
 
 struct RecipeView: View {
-    enum SheetState: Identifiable {
-        case editRecipe
-        case exportRecipe
-        
-        var id: SheetState { self }
-    }
-    
     @Environment(\.managedObjectContext) var managedObjectContext
+    @EnvironmentObject private var bannerService: BannerService
+    @Binding var navigationPath: NavigationPath
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
-    @Binding var notificationState: RecipeListView.NotificationState?
-    @State private var activeSheet: SheetState?
     @State private var isConfirming = false
     @State private var alertIsPresented: Bool = false
     
@@ -39,10 +32,10 @@ struct RecipeView: View {
                     UserSettings.shared.composedProduct = ComposedFoodItemViewModel(from: composedFoodItemVM.cdComposedFoodItem!)
                     
                     // Switch to Ingredients tab
-                    activeSheet = .editRecipe
+                    navigationPath.append(RecipeListView.RecipeNavigationDestination.EditRecipe(recipe: composedFoodItemVM))
                 } else {
                     // No associated cdComposedFoodItem - this should not happen!
-                    notificationState = .errorMessage(NSLocalizedString("No associated cdComposedFoodItem", comment: ""))
+                    bannerService.setBanner(banner: .error(message: NSLocalizedString("No associated cdComposedFoodItem", comment: ""), isPersistent: true))
                 }
             }
             .tint(.blue)
@@ -72,13 +65,10 @@ struct RecipeView: View {
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             // Sharing the recipe
             Button("Share", systemImage: "square.and.arrow.up") {
-                activeSheet = .exportRecipe
+                navigationPath.append(RecipeListView.RecipeNavigationDestination.ExportRecipe(recipe: composedFoodItemVM))
             }
             .tint(.green)
             .accessibilityIdentifierLeaf("ShareButton")
-        }
-        .sheet(item: $activeSheet) {
-            sheetContent($0)
         }
         .alert(
             "Delete recipe",
@@ -108,27 +98,6 @@ struct RecipeView: View {
             }
         } message: {
             Text("There's an associated product, do you want to delete it as well?")
-        }
-    }
-    
-    @ViewBuilder
-    private func sheetContent(_ state: SheetState) -> some View {
-        switch state {
-        case .editRecipe:
-            if self.composedFoodItemVM.cdComposedFoodItem != nil {
-                FoodItemComposerView(
-                    composedFoodItemVM: self.composedFoodItemVM,
-                    notificationState: $notificationState
-                ).environment(\.managedObjectContext, managedObjectContext)
-            } else {
-                Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
-            }
-        case .exportRecipe:
-            if let path = composedFoodItemVM.exportToURL() {
-                ActivityView(activityItems: [path], applicationActivities: nil)
-            } else {
-                Text(NSLocalizedString("Could not generate data export", comment: ""))
-            }
         }
     }
     

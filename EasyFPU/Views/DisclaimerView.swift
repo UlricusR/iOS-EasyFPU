@@ -29,7 +29,7 @@ struct DisclaimerView: View {
                 Text("Declining will not let you continue to use the app.").padding()
                 Spacer()
             }
-            .navigationBarTitle(Text("Disclaimer"))
+            .navigationTitle(Text("Disclaimer"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Decline") {

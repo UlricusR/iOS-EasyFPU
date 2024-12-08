@@ -14,6 +14,7 @@ struct MainView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
+    @EnvironmentObject private var bannerService: BannerService
     @ObservedObject var userSettings = UserSettings.shared
     @FetchRequest(
         entity: AbsorptionBlock.entity(),
@@ -34,8 +35,13 @@ struct MainView: View {
             )
         } else {
             return AnyView(
-                TabView(selection: $selectedTab) {
-                    ComposedFoodItemEvaluationView(absorptionScheme: absorptionScheme, composedFoodItemVM: UserSettings.shared.composedMeal)
+                ZStack {
+                    TabView(selection: $selectedTab) {
+                        // The meal composer
+                        ComposedFoodItemEvaluationView(
+                            absorptionScheme: absorptionScheme,
+                            composedFoodItemVM: UserSettings.shared.composedMeal
+                        )
                         .tag(Tab.eat.rawValue)
                         .tabItem{
                             Image(systemName: "fork.knife")
@@ -43,8 +49,12 @@ struct MainView: View {
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                         .accessibilityIdentifierBranch("CalculateMeal")
-                    
-                    RecipeListView(composedFoodItem: UserSettings.shared.composedMeal, helpSheet: RecipeListView.SheetState.recipeListHelp)
+                        
+                        // The recipe list
+                        RecipeListView(
+                            composedFoodItem: UserSettings.shared.composedMeal,
+                            helpSheet: RecipeListView.SheetState.recipeListHelp
+                        )
                         .tag(Tab.cook.rawValue)
                         .tabItem{
                             Image(systemName: "frying.pan")
@@ -52,8 +62,15 @@ struct MainView: View {
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                         .accessibilityIdentifierBranch("CookAndBake")
-                    
-                    ProductMaintenanceListView()
+                        
+                        // The product maintenance list
+                        FoodMaintenanceListView(
+                            category: .product,
+                            listType: .maintenance,
+                            listTitle: NSLocalizedString("My Products", comment: ""),
+                            helpSheet: .productMaintenanceListHelp,
+                            composedFoodItem: UserSettings.shared.composedMeal
+                        )
                         .tag(Tab.products.rawValue)
                         .tabItem{
                             Image(systemName: "birthday.cake")
@@ -61,8 +78,15 @@ struct MainView: View {
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                         .accessibilityIdentifierBranch("MaintainProducts")
-                    
-                    IngredientMaintenanceListView()
+                        
+                        // The ingredient maintenance list
+                        FoodMaintenanceListView(
+                            category: .ingredient,
+                            listType: .maintenance,
+                            listTitle: NSLocalizedString("My Ingredients", comment: ""),
+                            helpSheet: .ingredientMaintenanceListHelp,
+                            composedFoodItem: UserSettings.shared.composedProduct
+                        )
                         .tag(Tab.ingredients.rawValue)
                         .tabItem{
                             Image(systemName: "carrot")
@@ -70,8 +94,11 @@ struct MainView: View {
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                         .accessibilityIdentifierBranch("MaintainIngredients")
-                    
-                    MenuView(draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme))
+                        
+                        // The settings
+                        MenuView(
+                            draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme)
+                        )
                         .tag(Tab.settings.rawValue)
                         .tabItem{
                             Image(systemName: "gear")
@@ -79,7 +106,13 @@ struct MainView: View {
                         }
                         .environment(\.managedObjectContext, managedObjectContext)
                         .accessibilityIdentifierBranch("Settings")
+                    }
+                    
+                    if let type = bannerService.bannerType {
+                        BannerView(banner: type)
+                    }
                 }
+                .environmentObject(bannerService)
                 .onAppear {
                     if self.absorptionScheme.absorptionBlocks.isEmpty {
                         // Absorption scheme hasn't been loaded yet

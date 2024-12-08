@@ -129,7 +129,7 @@ struct FoodPreviewContent: View {
                 NavigationStack {
                     GeometryReader { reader in
                         getImageView(url: selectedEntry.imageFront!.image, for: reader)
-                        .navigationBarTitle(selectedEntry.name)
+                        .navigationTitle(selectedEntry.name)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 Button(action: {
@@ -147,7 +147,7 @@ struct FoodPreviewContent: View {
                 NavigationStack {
                     GeometryReader { reader in
                         getImageView(url: selectedEntry.imageNutriments!.image, for: reader)
-                        .navigationBarTitle(selectedEntry.name)
+                        .navigationTitle(selectedEntry.name)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 Button(action: {
@@ -165,7 +165,7 @@ struct FoodPreviewContent: View {
                 NavigationStack {
                     GeometryReader { reader in
                         getImageView(url: selectedEntry.imageIngredients!.image, for: reader)
-                        .navigationBarTitle(selectedEntry.name)
+                        .navigationTitle(selectedEntry.name)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 Button(action: {
