@@ -9,14 +9,13 @@
 import SwiftUI
 
 struct AbsorptionBlockSettingsView: View {
-    @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
-    @Binding var absorptionBlocksToBeDeleted: [AbsorptionBlockViewModel]
+    @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
+    @Binding var errorMessage: String
+    @Binding var showingAlert: Bool
     @State private var newMaxFpu: String = ""
     @State private var newAbsorptionTime: String = ""
     @State private var newAbsorptionBlockId: UUID?
     @State private var updateButton: Bool = false
-    @Binding var errorMessage: String
-    @Binding var showingAlert: Bool
     
     var body: some View {
         Section(header: Text("Absorption Blocks")) {
@@ -24,7 +23,7 @@ struct AbsorptionBlockSettingsView: View {
             List {
                 Text("Tap to edit, swipe left to delete")
                     .font(.caption)
-                ForEach(draftAbsorptionScheme.absorptionBlocks, id: \.self) { absorptionBlock in
+                ForEach(absorptionScheme.absorptionBlocks, id: \.self) { absorptionBlock in
                     HStack {
                         Text(absorptionBlock.maxFpuAsString)
                             .accessibilityIdentifierLeaf("MaxFpuValue")
@@ -48,7 +47,9 @@ struct AbsorptionBlockSettingsView: View {
             
             // The reset button
             Button("Reset to default") {
-                self.resetAbsorptionSchemeToDefaults()
+                if !absorptionScheme.resetToDefaultAbsorptionBlocks(errorMessage: &errorMessage) {
+                    showingAlert = true
+                }
             }
             .accessibilityIdentifierLeaf("AbsorptionSchemeResetButton")
         }
@@ -68,7 +69,7 @@ struct AbsorptionBlockSettingsView: View {
                     if self.newAbsorptionBlockId == nil { // This is a new absorption block
                         if let newAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, errorMessage: &self.errorMessage) {
                             // Check validity of new absorption block
-                            if self.draftAbsorptionScheme.add(newAbsorptionBlock: newAbsorptionBlock, errorMessage: &self.errorMessage) {
+                            if self.absorptionScheme.add(newAbsorptionBlock: newAbsorptionBlock, errorMessage: &self.errorMessage) {
                                 // Reset text fields
                                 self.newMaxFpu = ""
                                 self.newAbsorptionTime = ""
@@ -80,27 +81,13 @@ struct AbsorptionBlockSettingsView: View {
                             self.showingAlert = true
                         }
                     } else { // This is an existing typical amount
-                        guard let index = self.draftAbsorptionScheme.absorptionBlocks.firstIndex(where: { $0.id == self.newAbsorptionBlockId }) else {
-                            self.errorMessage = NSLocalizedString("Fatal error: Could not identify absorption block", comment: "")
+                        if !absorptionScheme.replace(existingAbsorptionBlockID: self.newAbsorptionBlockId!, newMaxFpuAsString: self.newMaxFpu, newAbsorptionTimeAsString: self.newAbsorptionTime, errorMessage: &errorMessage) {
                             self.showingAlert = true
-                            return
-                        }
-                        let existingAbsorptionBlock = self.draftAbsorptionScheme.absorptionBlocks[index]
-                        self.draftAbsorptionScheme.absorptionBlocks.remove(at: index)
-                        if let updatedAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, errorMessage: &self.errorMessage) {
-                            if self.draftAbsorptionScheme.add(newAbsorptionBlock: updatedAbsorptionBlock, errorMessage: &self.errorMessage) {
-                                // Add old absorption block to the list of blocks to be deleted
-                                self.absorptionBlocksToBeDeleted.append(existingAbsorptionBlock)
-                                
-                                // Reset text fields
-                                self.newMaxFpu = ""
-                                self.newAbsorptionTime = ""
-                                self.updateButton = false
-                            } else {
-                                // Undo deletion of block and show alert
-                                self.draftAbsorptionScheme.absorptionBlocks.insert(existingAbsorptionBlock, at: index)
-                                self.showingAlert = true
-                            }
+                        } else {
+                            // Reset text fields
+                            self.newMaxFpu = ""
+                            self.newAbsorptionTime = ""
+                            self.updateButton = false
                         }
                     }
                 }) {
@@ -112,30 +99,17 @@ struct AbsorptionBlockSettingsView: View {
     }
     
     private func deleteAbsorptionBlock(at offsets: IndexSet) {
-        if draftAbsorptionScheme.absorptionBlocks.count > 1 {
+        if absorptionScheme.absorptionBlocks.count > 1 {
             offsets.forEach { index in
-                let absorptionBlockToBeDeleted = self.draftAbsorptionScheme.absorptionBlocks[index]
-                absorptionBlocksToBeDeleted.append(absorptionBlockToBeDeleted)
-                self.draftAbsorptionScheme.absorptionBlocks.remove(at: index)
+                if !absorptionScheme.removeAbsorptionBlock(at: index) {
+                    errorMessage = NSLocalizedString("Fatal error: Absorption block index out of range. This should not have happened, please inform the app developer.", comment: "")
+                    showingAlert = true
+                }
             }
         } else {
             // We need to have at least one block left
             errorMessage = NSLocalizedString("At least one absorption block required", comment: "")
             showingAlert = true
-        }
-    }
-    
-    private func resetAbsorptionSchemeToDefaults() {
-        // Reset absorption blocks
-        guard let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) else {
-            self.showingAlert = true
-            return
-        }
-        absorptionBlocksToBeDeleted = draftAbsorptionScheme.absorptionBlocks
-        draftAbsorptionScheme.absorptionBlocks.removeAll()
-        
-        for absorptionBlock in defaultAbsorptionBlocks {
-            let _ = draftAbsorptionScheme.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock), errorMessage: &errorMessage)
         }
     }
 }

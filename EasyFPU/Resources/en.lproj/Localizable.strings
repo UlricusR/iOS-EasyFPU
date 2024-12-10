@@ -221,6 +221,7 @@
 "Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fatal error: Cannot determine absorption block index, please inform the app developer";
 "Fatal error: Cannot convert numbers into string, please contact app developer" = "Fatal error: Cannot convert numbers into string, please contact app developer";
 "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer";
+"Fatal error: Absorption block index out of range. This should not have happened, please inform the app developer." = "Fatal error: Absorption block index out of range. This should not have happened, please inform the app developer.";
 "Reset to default" = "Reset to default";
 "Absorption Time Parameters for Sugars" = "Absorption Time Parameters for Sugars";
 "Absorption Time Parameters for Carbs" = "Absorption Time Parameters for Carbs";

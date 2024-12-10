@@ -22,7 +22,7 @@ struct MainView: View {
             NSSortDescriptor(keyPath: \AbsorptionBlock.absorptionTime, ascending: true)
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
-    @ObservedObject var absorptionScheme = AbsorptionScheme()
+    @ObservedObject var absorptionScheme = AbsorptionSchemeViewModel()
     @State private var selectedTab: Int = 0
     @State private var errorMessage = ""
     
@@ -97,7 +97,7 @@ struct MainView: View {
                         
                         // The settings
                         MenuView(
-                            draftAbsorptionScheme: AbsorptionSchemeViewModel(from: self.absorptionScheme)
+                            absorptionScheme: absorptionScheme
                         )
                         .tag(Tab.settings.rawValue)
                         .tabItem{
@@ -116,19 +116,8 @@ struct MainView: View {
                 .onAppear {
                     if self.absorptionScheme.absorptionBlocks.isEmpty {
                         // Absorption scheme hasn't been loaded yet
-                        if self.absorptionBlocks.isEmpty {
-                            // Absorption blocks are empty, so initialize with default absorption scheme
-                            // and store default blocks back to core data
-                            guard let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks(errorMessage: &self.errorMessage) else {
-                                debugPrint("Error loading default absorption blocks: \(self.errorMessage)")
-                                return
-                            }
-                            
-                            // Create absorption blocks from default
-                            AbsorptionScheme.create(from: defaultAbsorptionBlocks, for: self.absorptionScheme)
-                        } else {
-                            // Store absorption blocks loaded from core data
-                            self.absorptionScheme.absorptionBlocks = self.absorptionBlocks.sorted()
+                        if !self.absorptionScheme.initAbsorptionBlocks(with: absorptionBlocks, errorMessage: &errorMessage) {
+                            bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
                         }
                     }
                 }

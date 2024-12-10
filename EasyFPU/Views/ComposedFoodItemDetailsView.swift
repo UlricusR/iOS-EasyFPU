@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ComposedFoodItemDetailsView: View {
-    @ObservedObject var absorptionScheme: AbsorptionScheme
+    @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
     

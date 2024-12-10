@@ -10,9 +10,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct MenuView: View {
+    enum SettingsNavigationPath: Hashable {
+        case EditTherapySettings
+        case EditAppSettings
+    }
+    
     enum SheetState: Identifiable {
-        case editAbsorptionScheme
-        case editAppSettings
         case pickFileToImport
         case pickExportDirectory
         case about
@@ -21,7 +24,8 @@ struct MenuView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    var draftAbsorptionScheme: AbsorptionSchemeViewModel
+    var absorptionScheme: AbsorptionSchemeViewModel
+    @State private var navigationPath = NavigationPath()
     @State private var isConfirming = false
     @State private var importData: ImportData?
     @State private var activeSheet: SheetState?
@@ -29,18 +33,18 @@ struct MenuView: View {
     @State private var alertMessage = ""
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             Form {
                 Section(header: Text("Settings")) {
                     // Therapy Settings
                     Button("Therapy Settings") {
-                        activeSheet = .editAbsorptionScheme
+                        navigationPath.append(SettingsNavigationPath.EditTherapySettings)
                     }
                     .accessibilityIdentifierLeaf("TherapySettingsButton")
                     
                     // App Settings
                     Button("App Settings") {
-                        activeSheet = .editAppSettings
+                        navigationPath.append(SettingsNavigationPath.EditAppSettings)
                     }
                     .accessibilityIdentifierLeaf("AppSettingsButton")
                 }
@@ -102,6 +106,21 @@ struct MenuView: View {
                 }
             }
             .navigationTitle("Settings")
+            .navigationDestination(for: SettingsNavigationPath.self) { screen in
+                switch screen {
+                case .EditTherapySettings:
+                    TherapySettingsEditor(
+                        navigationPath: $navigationPath,
+                        absorptionScheme: self.absorptionScheme
+                    )
+                    .accessibilityIdentifierBranch("TherapySettingsEditor")
+                case .EditAppSettings:
+                    AppSettingsEditor(
+                        navigationPath: $navigationPath
+                    )
+                    .accessibilityIdentifierBranch("AppSettingsEditor")
+                }
+            }
         }
         .sheet(item: $activeSheet) {
             sheetContent($0)
@@ -112,12 +131,6 @@ struct MenuView: View {
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
-        case .editAbsorptionScheme:
-            TherapySettingsEditor(draftAbsorptionScheme: self.draftAbsorptionScheme)
-                .accessibilityIdentifierBranch("TherapySettingsEditor")
-        case .editAppSettings:
-            AppSettingsEditor()
-                .accessibilityIdentifierBranch("AppSettingsEditor")
         case .pickFileToImport:
             FilePickerView(callback: self.importJSON, documentTypes: [UTType.json])
                 .accessibilityIdentifierBranch("FilePickerForImport")
