@@ -9,57 +9,27 @@
 import SwiftUI
 
 struct FoodSearch: View {
-    @ObservedObject var foodDatabaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
-    var category: FoodItemCategory
-    @Environment(\.presentationMode) var presentation
-    @State var errorMessage = ""
-    @State var showingAlert = false
+    var searchResults: [FoodDatabaseEntry]
+    @Binding var navigationPath: NavigationPath
     
     var body: some View {
-        if let searchResults = foodDatabaseResults.searchResults {
-            NavigationStack {
-                List {
-                    ForEach(searchResults) { searchResult in
-                        FoodSearchResultPreview(product: searchResult, foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItem, category: self.category, parentPresentation: _presentation)
-                            .accessibilityIdentifierBranch(String(searchResult.name.prefix(10)))
-                    }
-                }
-                .navigationTitle("Food Database Search")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            // Just close
-                            presentation.wrappedValue.dismiss()
-                        }) {
-                            Image(systemName: "xmark.circle")
-                                .imageScale(.large)
-                        }
-                        .accessibilityIdentifierLeaf("CancelButton")
-                    }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            if foodDatabaseResults.selectedEntry != nil {
-                                foodDatabaseResults.selectedEntry!.category = category
-                                draftFoodItem.fill(with: foodDatabaseResults.selectedEntry!)
-                            }
-                            // Close sheet
-                            presentation.wrappedValue.dismiss()
-                        }) {
-                            Text("Select").disabled(foodDatabaseResults.selectedEntry == nil)
-                        }
-                        .accessibilityIdentifierLeaf("SelectButton")
-                    }
+        //if let searchResults = foodDatabaseResults.searchResults {
+            List(searchResults) { searchResult in
+                NavigationLink(value: FoodItemEditor.FoodItemEditorNavigationDestination.FoodSearchResultDetails(product: searchResult, backNavigationIfSelected: 2)) {
+                    FoodSearchResultPreview(
+                        product: searchResult,
+                        draftFoodItem: self.draftFoodItem,
+                        navigationPath: $navigationPath
+                    )
+                    .accessibilityIdentifierBranch(String(searchResult.name.prefix(10)))
                 }
             }
-            .onDisappear() {
-                foodDatabaseResults.searchResults = nil
-            }
-        } else {
+            .navigationTitle("Food Database Search")
+        /*} else {
             NotificationView {
                 ActivityIndicatorSpinner()
             }
-        }
+        }*/
     }
 }

@@ -8,8 +8,16 @@
 
 import Foundation
 
-class FoodDatabaseResults: ObservableObject {
+class FoodDatabaseResults: ObservableObject, Hashable {
     @Published var selectedEntry: FoodDatabaseEntry?
     @Published var searchResults: [FoodDatabaseEntry]?
     @Published var selectionWasConfirmed: Bool = false
+    
+    static func == (lhs: FoodDatabaseResults, rhs: FoodDatabaseResults) -> Bool {
+        ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
 }

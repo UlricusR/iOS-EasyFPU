@@ -167,6 +167,7 @@
 "Carbs: " = "Kohlenhydrate: ";
 "Calories: " = "Kalorien: ";
 "Amount: " = "Menge: ";
+"Quantity" = "Verkaufsmenge";
 "Data alert" = "Eingabefehler";
 "Name must not be empty" = "Name darf nicht leer sein";
 "Calories not a valid number or negative" = "Kalorien sind keine gültige Zahl oder negativ";
@@ -311,7 +312,7 @@
 "- No name -" = "- Kein Name -";
 "Error scanning food: " = "Fehler beim Scannen: ";
 "Loading food item..." = "Lade Lebensmittel...";
-"Scanned Food" = "Gescanntes Lebensmittel";
+"Scanned Food" = "Gefundenes Produkt";
 "No food found" = "Kein Lebensmittel gefunden";
 "Cannot decode JSON" = "Kann JSON nicht decodieren";
 "Unable to create image url from " = "Kann URL nicht bilden: ";

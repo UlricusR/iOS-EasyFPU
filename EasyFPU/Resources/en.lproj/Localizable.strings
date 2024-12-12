@@ -167,6 +167,7 @@
 "Carbs: " = "Carbs: ";
 "Calories: " = "Calories: ";
 "Amount: " = "Amount: ";
+"Quantity" = "Quantity as sold";
 "Data alert" = "Data alert";
 "Name must not be empty" = "Name must not be empty";
 "Calories not a valid number or negative" = "Calories not a valid number or negative";
@@ -311,7 +312,7 @@
 "- No name -" = "- No name -";
 "Error scanning food: " = "Error scanning food: ";
 "Loading food item..." = "Loading food item...";
-"Scanned Food" = "Scanned Food";
+"Scanned Food" = "Found Food";
 "No food found" = "No food found";
 "Cannot decode JSON" = "Cannot decode JSON";
 "Unable to create image url from " = "Unable to create image url from ";

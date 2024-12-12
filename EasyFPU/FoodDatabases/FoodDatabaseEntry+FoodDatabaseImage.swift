@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct FoodDatabaseEntry: Identifiable, Equatable {
+struct FoodDatabaseEntry: Identifiable, Equatable, Hashable {
     var id = UUID()
     var name: String
     var category: FoodItemCategory
@@ -144,6 +144,10 @@ struct FoodDatabaseEntry: Identifiable, Equatable {
                 }
             }
         }
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 

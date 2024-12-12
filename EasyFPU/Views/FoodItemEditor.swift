@@ -11,11 +11,14 @@ import Combine
 import CodeScanner
 
 struct FoodItemEditor: View {
+    enum FoodItemEditorNavigationDestination: Hashable {
+        case Search
+        case FoodSearchResultDetails(product: FoodDatabaseEntry, backNavigationIfSelected: Int)
+        case Scan
+    }
+    
     enum SheetState: Identifiable {
         case help
-        case search
-        case scan
-        case foodPreview
         
         var id: SheetState { self }
     }
@@ -24,18 +27,14 @@ struct FoodItemEditor: View {
         case void, searching
     }
     
-    @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.presentationMode) var presentation
     @EnvironmentObject private var bannerService: BannerService
     @Binding var navigationPath: NavigationPath
     var navigationTitle: String
     @ObservedObject var draftFoodItemVM: FoodItemViewModel
     var category: FoodItemCategory
-    @ObservedObject var foodDatabaseResults = FoodDatabaseResults()
-    @State private var scanResult: FoodDatabaseEntry?
+    @State private var searchResults = [FoodDatabaseEntry]()
     @State private var notificationState = NotificationState.void
     @State private var activeSheet: SheetState?
-    @State private var foodSelected = false // We don't need this variable here
     
     // Specific alerts
     @State private var showingScanAlert = false
@@ -45,13 +44,6 @@ struct FoodItemEditor: View {
     // The general alert
     @State private var showingAlert = false
     @State private var errorMessage: String = ""
-    
-    @FetchRequest(
-        entity: FoodItem.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \FoodItem.name, ascending: true)
-        ]
-    ) var foodItems: FetchedResults<FoodItem>
     
     private var typicalAmounts: [TypicalAmountViewModel] { draftFoodItemVM.typicalAmounts.sorted() }
     private var sourceDB: FoodDatabase {
@@ -127,7 +119,7 @@ struct FoodItemEditor: View {
                             
                             Button(action: {
                                 if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
-                                    self.activeSheet = .scan
+                                    navigationPath.append(FoodItemEditorNavigationDestination.Scan)
                                 } else {
                                     self.showingScanAlert = true
                                 }
@@ -152,7 +144,7 @@ struct FoodItemEditor: View {
                                     UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
                                     
                                     // Perform scan
-                                    self.activeSheet = .scan
+                                    navigationPath.append(FoodItemEditorNavigationDestination.Scan)
                                 }
                                 Button("Decline and cancel", role: .cancel) {}
                             } message: {
@@ -287,6 +279,31 @@ struct FoodItemEditor: View {
                 }
             }
             .navigationTitle(navigationTitle)
+            .navigationDestination(for: FoodItemEditorNavigationDestination.self) { screen in
+                switch screen {
+                case .Search:
+                    FoodSearch(
+                        draftFoodItem: self.draftFoodItemVM,
+                        searchResults: searchResults,
+                        navigationPath: $navigationPath
+                    )
+                    .accessibilityIdentifierBranch("SearchFood")
+                case let .FoodSearchResultDetails(
+                    product: selectedProduct,
+                    backNavigationIfSelected: backNavigationIfSelected
+                ):
+                    FoodPreview(
+                        product: selectedProduct,
+                        draftFoodItem: draftFoodItemVM,
+                        navigationPath: $navigationPath,
+                        backNavigationIfSelected: backNavigationIfSelected
+                    )
+                    .accessibilityIdentifierBranch("ProductDetails")
+                case .Scan:
+                    CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "4101530002123", completion: self.handleScan)
+                        .accessibilityIdentifierBranch("ScanBarCode")
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
@@ -545,8 +562,7 @@ struct FoodItemEditor: View {
                     }
                     DispatchQueue.main.async {
                         self.notificationState = .void
-                        self.scanResult = foodDatabaseEntry
-                        self.activeSheet = .foodPreview
+                        self.navigationPath.append(FoodItemEditorNavigationDestination.FoodSearchResultDetails(product: foodDatabaseEntry, backNavigationIfSelected: 1))
                     }
                     
                     
@@ -570,6 +586,7 @@ struct FoodItemEditor: View {
             case .success(let networkSearchResults):
                 guard let searchResults = networkSearchResults, !searchResults.isEmpty else {
                     DispatchQueue.main.async {
+                        self.notificationState = .void
                         bannerService.setBanner(banner: .warning(message: NSLocalizedString("No food found", comment: ""), isPersistent: false))
                     }
                     return
@@ -577,8 +594,8 @@ struct FoodItemEditor: View {
                 
                 DispatchQueue.main.async {
                     self.notificationState = .void
-                    self.foodDatabaseResults.searchResults = searchResults
-                    self.activeSheet = .search
+                    self.searchResults = searchResults
+                    self.navigationPath.append(FoodItemEditorNavigationDestination.Search)
                 }
             case .failure(let error):
                 DispatchQueue.main.async { self.notificationState = .void }
@@ -605,15 +622,6 @@ struct FoodItemEditor: View {
         case .help:
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpEditFoodItem")
-        case .search:
-            FoodSearch(foodDatabaseResults: foodDatabaseResults, draftFoodItem: self.draftFoodItemVM, category: category)
-                .accessibilityIdentifierBranch("SearchFood")
-        case .scan:
-            CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "4101530002123", completion: self.handleScan)
-                .accessibilityIdentifierBranch("ScanBarCode")
-        case .foodPreview:
-            FoodPreview(product: $scanResult, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItemVM, category: category, foodSelected: $foodSelected)
-                .accessibilityIdentifierBranch("PreviewFood")
         }
     }
 }

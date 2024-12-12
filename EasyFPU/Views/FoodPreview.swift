@@ -9,50 +9,30 @@
 import SwiftUI
 
 struct FoodPreview: View {
-    @Binding var product: FoodDatabaseEntry?
-    @ObservedObject var databaseResults: FoodDatabaseResults
+    var product: FoodDatabaseEntry
     @ObservedObject var draftFoodItem: FoodItemViewModel
-    var category: FoodItemCategory
-    @Binding var foodSelected: Bool
-    @Environment(\.presentationMode) var presentation
-    @State private var errorMessage = ""
+    @Binding var navigationPath: NavigationPath
+    var backNavigationIfSelected: Int = 1
     
     var body: some View {
-        if let product = product {
-            NavigationStack {
-                FoodPreviewContent(selectedEntry: product)
+        //if let product {
+            FoodPreviewContent(selectedEntry: product)
                 .navigationTitle("Scanned Food")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            // Just close sheet
-                            foodSelected = false
-                            presentation.wrappedValue.dismiss()
-                        }) {
-                            Image(systemName: "xmark.circle")
-                                .imageScale(.large)
-                        }
-                        .accessibilityIdentifierLeaf("CancelButton")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Select") {
+                        draftFoodItem.fill(with: product)
+                            
+                        // Close sheet
+                        navigationPath.removeLast(backNavigationIfSelected)
                     }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Select") {
-                            databaseResults.selectedEntry = product
-                            databaseResults.selectedEntry?.category = category
-                            draftFoodItem.fill(with: product)
-                                
-                            // Close sheet
-                            foodSelected = true
-                            presentation.wrappedValue.dismiss()
-                        }
-                        .accessibilityIdentifierLeaf("SelectButton")
-                    }
+                    .accessibilityIdentifierLeaf("SelectButton")
                 }
             }
-        } else {
+        /*} else {
             NotificationView {
                 ActivityIndicatorSpinner()
             }
-        }
+        }*/
     }
 }
