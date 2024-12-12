@@ -15,24 +15,18 @@ struct FoodPreview: View {
     var backNavigationIfSelected: Int = 1
     
     var body: some View {
-        //if let product {
-            FoodPreviewContent(selectedEntry: product)
-                .navigationTitle("Scanned Food")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Select") {
-                        draftFoodItem.fill(with: product)
-                            
-                        // Close sheet
-                        navigationPath.removeLast(backNavigationIfSelected)
-                    }
-                    .accessibilityIdentifierLeaf("SelectButton")
+        FoodPreviewContent(selectedEntry: product)
+            .navigationTitle("Scanned Food")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Select") {
+                    draftFoodItem.fill(with: product)
+                        
+                    // Close sheet
+                    navigationPath.removeLast(backNavigationIfSelected)
                 }
+                .accessibilityIdentifierLeaf("SelectButton")
             }
-        /*} else {
-            NotificationView {
-                ActivityIndicatorSpinner()
-            }
-        }*/
+        }
     }
 }
