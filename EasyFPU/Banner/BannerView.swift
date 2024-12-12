@@ -21,7 +21,7 @@ struct BannerView: View {
         }
         .onAppear {
             guard !banner.isPersistent else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
                 withAnimation {
                     bannerService.isAnimating = false
                     bannerService.bannerType = nil

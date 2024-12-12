@@ -11,6 +11,7 @@ import HealthKit
 import LocalAuthentication
 
 struct ComposedFoodItemExportView: View {
+    @EnvironmentObject private var bannerService: BannerService
     var composedFoodItem: ComposedFoodItemViewModel
     var absorptionScheme: AbsorptionSchemeViewModel
     @ObservedObject var userSettings = UserSettings.shared
@@ -136,8 +137,7 @@ struct ComposedFoodItemExportView: View {
     
     private func processHealthSample() {
         guard let absorptionTimeInHours = composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) else {
-            errorMessage = NSLocalizedString("Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks", comment: "")
-            showingAlert = true
+            bannerService.setBanner(banner: .error(message: NSLocalizedString("Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks", comment: ""), isPersistent: true))
             return
         }
         self.carbsRegimeCalculator.eCarbsAbsorptionTimeInMinutes = absorptionTimeInHours * 60
@@ -173,22 +173,22 @@ struct ComposedFoodItemExportView: View {
             if completion {
                 HealthDataHelper.saveHealthData(hkObjects) { (success, error) in
                     if !success {
-                        self.errorMessage = NSLocalizedString("Cannot save data to Health: ", comment: "")
-                        self.errorMessage += error != nil ? error!.localizedDescription : NSLocalizedString("Unspecified error", comment: "")
-                        self.showingAlert = true
+                        var errorMessage = NSLocalizedString("Cannot save data to Health: ", comment: "")
+                        errorMessage += error != nil ? error!.localizedDescription : NSLocalizedString("Unspecified error", comment: "")
+                        bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
                     } else {
                         self.setLatestExportDates()
-                        self.errorMessage = NSLocalizedString("Successfully exported data to Health", comment: "")
-                        self.showingAlert = true
+                        bannerService.setBanner(banner: .success(message: NSLocalizedString("Successfully exported data to Health", comment: ""), isPersistent: false))
                     }
                 }
             } else {
+                var errMessage = ""
                 if let errorMessage = HealthDataHelper.errorMessage {
-                    self.errorMessage = errorMessage
+                    errMessage = errorMessage
                 } else {
-                    self.errorMessage = NSLocalizedString("Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings.", comment: "")
+                    errMessage = NSLocalizedString("Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings.", comment: "")
                 }
-                self.showingAlert = true
+                bannerService.setBanner(banner: .error(message: errMessage, isPersistent: true))
             }
         }
     }
