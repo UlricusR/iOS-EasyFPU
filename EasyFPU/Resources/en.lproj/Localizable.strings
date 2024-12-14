@@ -330,6 +330,9 @@
 "Decline and cancel" = "Decline and cancel";
 "Generate Typical Amounts" = "Generate Typical Amounts";
 
+// Data import/export
+"Cannot find JSON content. Please contact the app developer." = "Cannot find JSON content. Please contact the app developer.";
+
 // Help screens
 "Menu bar" = "Menu bar";
 

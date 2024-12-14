@@ -330,6 +330,9 @@
 "Decline and cancel" = "Ablehnen und abbrechen";
 "Generate Typical Amounts" = "Typische Mengen erzeugen";
 
+// Data import/export
+"Cannot find JSON content. Please contact the app developer." = "Kann JSON-Inhelt nicht finden. Bitte benachtige das Entwicklerteam.";
+
 // Help screens
 "Menu bar" = "Menüleiste";
 

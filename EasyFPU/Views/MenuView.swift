@@ -16,18 +16,20 @@ struct MenuView: View {
     }
     
     enum SheetState: Identifiable {
-        case pickFileToImport
-        case pickExportDirectory
         case about
         
         var id: SheetState { self }
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
+    @EnvironmentObject private var bannerService: BannerService
     var absorptionScheme: AbsorptionSchemeViewModel
     @State private var navigationPath = NavigationPath()
+    @State private var importing = false
+    @State private var exporting = false
     @State private var isConfirming = false
     @State private var importData: ImportData?
+    @State private var exportData = ExportJSONDocument()
     @State private var activeSheet: SheetState?
     @State private var showingAlert = false
     @State private var alertMessage = ""
@@ -52,7 +54,18 @@ struct MenuView: View {
                 Section(header: Text("Import/Export")) {
                     // Import
                     Button("Import from JSON") {
-                        activeSheet = .pickFileToImport
+                        importing = true
+                    }
+                    .fileImporter(
+                        isPresented: $importing,
+                        allowedContentTypes: [UTType.json]
+                    ) { result in
+                        switch result {
+                        case .success(let file):
+                            importJSON(file)
+                        case .failure(let error):
+                            bannerService.setBanner(banner: .error(message: error.localizedDescription, isPersistent: true))
+                        }
                     }
                     .confirmationDialog(
                         "Import food list",
@@ -75,7 +88,26 @@ struct MenuView: View {
                     
                     // Export
                     Button("Export to JSON") {
-                        activeSheet = .pickExportDirectory
+                        var errorMessage = ""
+                        if let jsonDocument = ExportJSONDocument(errorMessage: &errorMessage) {
+                            self.exportData = jsonDocument
+                            exporting = true
+                        } else {
+                            bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
+                        }
+                    }
+                    .fileExporter(
+                        isPresented: $exporting,
+                        document: exportData,
+                        contentType: UTType.json,
+                        defaultFilename: createFileName()
+                    ) { result in
+                        switch result {
+                        case .success(let file):
+                            bannerService.setBanner(banner: .success(message: NSLocalizedString("Successfully exported food list to: ", comment: "") + file.lastPathComponent, isPersistent: false))
+                        case .failure(let error):
+                            bannerService.setBanner(banner: .error(message: error.localizedDescription, isPersistent: true))
+                        }
                     }
                     .accessibilityIdentifierLeaf("ExportToJSONButton")
                 }
@@ -131,12 +163,6 @@ struct MenuView: View {
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
-        case .pickFileToImport:
-            FilePickerView(callback: self.importJSON, documentTypes: [UTType.json])
-                .accessibilityIdentifierBranch("FilePickerForImport")
-        case .pickExportDirectory:
-            FilePickerView(callback: self.exportJSON, documentTypes: [UTType.folder])
-                .accessibilityIdentifierBranch("FilePickerForExport")
         case .about:
             AboutView()
                 .accessibilityIdentifierBranch("About")
@@ -160,27 +186,6 @@ struct MenuView: View {
         }
     }
     
-    private func exportJSON(_ url: URL) {
-        // Make sure we can access file
-        guard url.startAccessingSecurityScopedResource() else {
-            debugPrint("Failed to access \(url)")
-            alertMessage = NSLocalizedString("Failed to access ", comment: "") + url.absoluteString
-            showingAlert = true
-            return
-        }
-        defer { url.stopAccessingSecurityScopedResource() }
-        
-        // Write file
-        var fileName = ""
-        if DataHelper.exportFoodItems(url, fileName: &fileName) {
-            alertMessage = NSLocalizedString("Successfully exported food list to: ", comment: "") + fileName
-            showingAlert = true
-        } else {
-            alertMessage = NSLocalizedString("Failed to export food list to: ", comment: "") + fileName
-            showingAlert = true
-        }
-    }
-    
     private func importFoodItems(replaceExisting: Bool) {
         if let importData {
             if replaceExisting {
@@ -197,12 +202,17 @@ struct MenuView: View {
                 }
             }
          
-            alertMessage = NSLocalizedString("Successfully imported food list", comment: "")
-            showingAlert = true
+            bannerService.setBanner(banner: .success(message: NSLocalizedString("Successfully imported food list", comment: ""), isPersistent: false))
         } else {
             // This should never happen
-            alertMessage = NSLocalizedString("Failed to import food list", comment: "")
-            showingAlert = true
+            bannerService.setBanner(banner: .error(message: NSLocalizedString("Failed to import food list", comment: ""), isPersistent: true))
         }
+    }
+    
+    private func createFileName() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+        let timestamp = formatter.string(from: Date())
+        return "EasyFPU-export_\(timestamp)"
     }
 }
