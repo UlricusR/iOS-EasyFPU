@@ -8,6 +8,43 @@
 
 import SwiftUI
 
+enum SimpleAlertType {
+    case success(message: String)
+    case notice(message: String)
+    case warning(message: String)
+    case error(message: String)
+    
+    func title() -> String {
+        switch self {
+        case .success(_):
+            return "Success"
+        case .notice(_):
+            return "Notice"
+        case .warning(_):
+            return "Warning"
+        case .error(_):
+            return "Error"
+        }
+    }
+    
+    func button() -> some View {
+        Button("OK", role: .cancel) {}
+    }
+    
+    func message() -> some View {
+        switch self {
+        case let .success(message: message):
+            return Text(message)
+        case let .notice(message: message):
+            return Text(message)
+        case let .warning(message: message):
+            return Text(message)
+        case let .error(message: message):
+            return Text(message)
+        }
+    }
+}
+
 struct MainView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject private var bannerService: BannerService

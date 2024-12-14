@@ -16,11 +16,11 @@ struct FoodItemView: View {
     }
     
     enum AlertChoice {
+        case simpleAlert(type: SimpleAlertType)
         case confirmDelete
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @EnvironmentObject private var bannerService: BannerService
     @Binding var navigationPath: NavigationPath
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @ObservedObject var foodItemVM: FoodItemViewModel
@@ -127,7 +127,8 @@ struct FoodItemView: View {
             Button("Edit", systemImage: "pencil") {
                 if foodItemVM.cdFoodItem?.composedFoodItem != nil {
                     // There's an associated recipe, so show message to open Recipe Editor
-                    bannerService.setBanner(banner: .warning(message: NSLocalizedString("This food item is created from a recipe, please open it in the recipe editor", comment: ""), isPersistent: true))
+                    activeAlert = .simpleAlert(type: .notice(message: NSLocalizedString("This food item is created from a recipe, please open it in the recipe editor", comment: "")))
+                    showingAlert = true
                 } else {
                     navigationPath.append(FoodItemListView.FoodListNavigationDestination.EditFoodItem(category: category, foodItemVM: foodItemVM))
                 }
@@ -148,7 +149,8 @@ struct FoodItemView: View {
                     // Check if FoodItem is related to an Ingredient
                     if let associatedRecipeNames = foodItemVM.getAssociatedRecipeNames() {
                         // There are associated recipes
-                        bannerService.setBanner(banner: .warning(message: createWarningMessage(from: associatedRecipeNames), isPersistent: true))
+                        activeAlert = .simpleAlert(type: .notice(message: createWarningMessage(from: associatedRecipeNames)))
+                        showingAlert = true
                     } else if foodItemVM.hasAssociatedRecipe() {
                         self.isConfirming.toggle()
                     } else {
@@ -218,6 +220,8 @@ struct FoodItemView: View {
     @ViewBuilder
     private func alertMessage(for alert: AlertChoice) -> some View {
         switch alert {
+        case let .simpleAlert(type: type):
+            type.message()
         case .confirmDelete:
             Text("Do you really want to delete this food item? This cannot be undone!")
         }
@@ -226,6 +230,8 @@ struct FoodItemView: View {
     @ViewBuilder
     private func alertAction(for alert: AlertChoice) -> some View {
         switch alert {
+        case let .simpleAlert(type: type):
+            type.button()
         case .confirmDelete:
             Button("Do not delete", role: .cancel) {}
             Button("Delete", role: .destructive) {
@@ -236,6 +242,8 @@ struct FoodItemView: View {
     
     private var alertTitle: LocalizedStringKey {
         switch activeAlert {
+        case let .simpleAlert(type: type):
+            LocalizedStringKey(type.title())
         case .confirmDelete:
             LocalizedStringKey("Delete food")
         case nil:
