@@ -9,10 +9,6 @@
 import SwiftUI
 
 struct MainView: View {
-    enum Tab: Int {
-        case eat = 0, cook, products, ingredients, settings
-    }
-    
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject private var bannerService: BannerService
     @ObservedObject var userSettings = UserSettings.shared
@@ -23,7 +19,6 @@ struct MainView: View {
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     @ObservedObject var absorptionScheme = AbsorptionSchemeViewModel()
-    @State private var selectedTab: Int = 0
     @State private var errorMessage = ""
     
     var body: some View {
@@ -36,13 +31,12 @@ struct MainView: View {
         } else {
             return AnyView(
                 ZStack {
-                    TabView(selection: $selectedTab) {
+                    TabView {
                         // The meal composer
                         ComposedFoodItemEvaluationView(
                             absorptionScheme: absorptionScheme,
                             composedFoodItemVM: UserSettings.shared.composedMeal
                         )
-                        .tag(Tab.eat.rawValue)
                         .tabItem{
                             Image(systemName: "fork.knife")
                             Text("Eat")
@@ -55,7 +49,6 @@ struct MainView: View {
                             composedFoodItem: UserSettings.shared.composedMeal,
                             helpSheet: RecipeListView.SheetState.recipeListHelp
                         )
-                        .tag(Tab.cook.rawValue)
                         .tabItem{
                             Image(systemName: "frying.pan")
                             Text("Cook")
@@ -71,7 +64,6 @@ struct MainView: View {
                             helpSheet: .productMaintenanceListHelp,
                             composedFoodItem: UserSettings.shared.composedMeal
                         )
-                        .tag(Tab.products.rawValue)
                         .tabItem{
                             Image(systemName: "birthday.cake")
                             Text("Products")
@@ -87,7 +79,6 @@ struct MainView: View {
                             helpSheet: .ingredientMaintenanceListHelp,
                             composedFoodItem: UserSettings.shared.composedProduct
                         )
-                        .tag(Tab.ingredients.rawValue)
                         .tabItem{
                             Image(systemName: "carrot")
                             Text("Ingredients")
@@ -99,7 +90,6 @@ struct MainView: View {
                         MenuView(
                             absorptionScheme: absorptionScheme
                         )
-                        .tag(Tab.settings.rawValue)
                         .tabItem{
                             Image(systemName: "gear")
                             Text("Settings")
