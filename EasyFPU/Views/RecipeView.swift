@@ -9,10 +9,17 @@
 import SwiftUI
 
 struct RecipeView: View {
+    enum SheetState: Identifiable {
+        case exportRecipe
+        
+        var id: SheetState { self }
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject private var bannerService: BannerService
     @Binding var navigationPath: NavigationPath
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
+    @State private var activeSheet: SheetState?
     @State private var isConfirming = false
     @State private var alertIsPresented: Bool = false
     
@@ -65,10 +72,13 @@ struct RecipeView: View {
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             // Sharing the recipe
             Button("Share", systemImage: "square.and.arrow.up") {
-                navigationPath.append(RecipeListView.RecipeNavigationDestination.ExportRecipe(recipe: composedFoodItemVM))
+                activeSheet = .exportRecipe
             }
             .tint(.green)
             .accessibilityIdentifierLeaf("ShareButton")
+        }
+        .sheet(item: $activeSheet) {
+            sheetContent($0)
         }
         .alert(
             "Delete recipe",
@@ -98,6 +108,18 @@ struct RecipeView: View {
             }
         } message: {
             Text("There's an associated product, do you want to delete it as well?")
+        }
+    }
+    
+    @ViewBuilder
+    private func sheetContent(_ state: SheetState) -> some View {
+        switch state {
+        case .exportRecipe:
+            if let path = composedFoodItemVM.exportToURL() {
+                ActivityView(activityItems: [path], applicationActivities: nil)
+            } else {
+                Text(NSLocalizedString("Could not generate data export", comment: ""))
+            }
         }
     }
     

@@ -10,8 +10,6 @@ import SwiftUI
 
 struct FoodItemView: View {
     enum SheetState: Identifiable {
-        case editFoodItem
-        case selectFoodItem
         case exportFoodItem
         
         var id: SheetState { self }
@@ -119,7 +117,7 @@ struct FoodItemView: View {
                     if composedFoodItemVM.foodItemVMs.contains(foodItemVM) {
                         composedFoodItemVM.remove(foodItem: foodItemVM)
                     } else {
-                        activeSheet = .selectFoodItem
+                        navigationPath.append(FoodItemListView.FoodListNavigationDestination.SelectFoodItem(category: category, draftFoodItem: foodItemVM, composedFoodItem: composedFoodItemVM))
                     }
                 }
             }
@@ -207,22 +205,6 @@ struct FoodItemView: View {
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
-        case .editFoodItem:
-            if self.foodItemVM.cdFoodItem != nil {
-                FoodItemEditor(
-                    navigationPath: $navigationPath,
-                    navigationTitle: NSLocalizedString("Edit food item", comment: ""),
-                    draftFoodItemVM: self.foodItemVM,
-                    category: category
-                )
-                .environment(\.managedObjectContext, managedObjectContext)
-                .accessibilityIdentifierBranch("EditFoodItem")
-            } else {
-                Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
-            }
-        case .selectFoodItem:
-            FoodItemSelector(draftFoodItem: self.foodItemVM, composedFoodItem: composedFoodItemVM, category: self.category)
-                .accessibilityIdentifierBranch("SelectFoodItems")
         case .exportFoodItem:
             if let path = foodItemVM.exportToURL() {
                 ActivityView(activityItems: [path], applicationActivities: nil)

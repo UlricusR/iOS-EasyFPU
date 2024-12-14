@@ -38,7 +38,7 @@ struct FoodMaintenanceListView: View {
                         managedObjectContext: managedObjectContext,
                         navigationBarBackButtonHidden: true
                     )
-                    
+                    .accessibilityIdentifierBranch("AddFoodItem")
                 case let .EditFoodItem(category: category, foodItemVM: foodItemVM):
                     FoodMaintenanceListView.editFoodItem(
                         $navigationPath: $navigationPath,
@@ -47,6 +47,15 @@ struct FoodMaintenanceListView: View {
                         navigationBarBackButtonHidden: true,
                         foodItemVM: foodItemVM
                     )
+                    .accessibilityIdentifierBranch("EditFoodItem")
+                case let .SelectFoodItem(category: category, draftFoodItem: foodItemVM, composedFoodItem: composedFoodItemVM):
+                    FoodItemSelector(
+                        navigationPath: $navigationPath,
+                        draftFoodItem: foodItemVM,
+                        composedFoodItem: composedFoodItemVM,
+                        category: category
+                    )
+                    .accessibilityIdentifierBranch("SelectFoodItem")
                 }
             }
         }

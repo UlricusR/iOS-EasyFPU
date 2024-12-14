@@ -13,10 +13,10 @@ struct RecipeListView: View {
         case CreateRecipe
         case AddIngredients(recipe: ComposedFoodItemViewModel)
         case EditRecipe(recipe: ComposedFoodItemViewModel)
-        case ExportRecipe(recipe: ComposedFoodItemViewModel)
     }
     
     enum SheetState: Identifiable {
+        case exportRecipe
         case recipeListHelp
         
         var id: SheetState { self }
@@ -140,6 +140,7 @@ struct RecipeListView: View {
                         managedObjectContext: managedObjectContext,
                         navigationBarBackButtonHidden: true
                     )
+                    .accessibilityIdentifierBranch("AddFoodItem")
                 case let .EditFoodItem(category: category, foodItemVM: foodItemVM):
                     FoodMaintenanceListView.editFoodItem(
                         $navigationPath: $navigationPath,
@@ -148,6 +149,15 @@ struct RecipeListView: View {
                         navigationBarBackButtonHidden: true,
                         foodItemVM: foodItemVM
                     )
+                    .accessibilityIdentifierBranch("EditFoodItem")
+                case let .SelectFoodItem(category: category, draftFoodItem: foodItemVM, composedFoodItem: composedFoodItemVM):
+                    FoodItemSelector(
+                        navigationPath: $navigationPath,
+                        draftFoodItem: foodItemVM,
+                        composedFoodItem: composedFoodItemVM,
+                        category: category
+                    )
+                    .accessibilityIdentifierBranch("SelectFoodItem")
                 }
             }
             .navigationDestination(for: RecipeNavigationDestination.self) { screen in
@@ -180,12 +190,6 @@ struct RecipeListView: View {
                     } else {
                         Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
                     }
-                case let .ExportRecipe(recipe: recipe):
-                    if let path = recipe.exportToURL() {
-                        ActivityView(activityItems: [path], applicationActivities: nil)
-                    } else {
-                        Text(NSLocalizedString("Could not generate data export", comment: ""))
-                    }
                 }
             }
             .searchable(text: self.$searchString)
@@ -198,6 +202,12 @@ struct RecipeListView: View {
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
+        case .exportRecipe:
+            if let path = self.composedFoodItem.exportToURL() {
+                ActivityView(activityItems: [path], applicationActivities: nil)
+            } else {
+                Text(NSLocalizedString("Could not generate data export", comment: ""))
+            }
         case .recipeListHelp:
             HelpView(helpScreen: .recipeList)
                 .accessibilityIdentifierBranch("HelpRecipeList")

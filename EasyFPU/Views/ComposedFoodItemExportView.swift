@@ -18,7 +18,7 @@ struct ComposedFoodItemExportView: View {
     @ObservedObject var carbsRegimeCalculator = CarbsRegimeCalculator.default
     @State var showingSheet = false
     @State var showingAlert = false
-    @State var errorMessage = ""
+    @State var alertMessage = ""
     @State var showingExportWarning = false
     @State var alertMessages = [String]()
     private let helpScreen = HelpScreen.mealExport
@@ -37,7 +37,10 @@ struct ComposedFoodItemExportView: View {
                 }
                 .padding([.leading, .trailing])
                 .onChange(of: carbsRegimeCalculator.includeTotalMealSugars) {
-                    _ = UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealSugars, UserSettings.UserDefaultsBoolKey.exportTotalMealSugars), errorMessage: &self.errorMessage)
+                    var errorMessage = ""
+                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealSugars, UserSettings.UserDefaultsBoolKey.exportTotalMealSugars), errorMessage: &errorMessage) {
+                        bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
+                    }
                 }
                 .accessibilityIdentifierLeaf("ExportSugarsToggle")
             }
@@ -47,7 +50,10 @@ struct ComposedFoodItemExportView: View {
             }
             .padding([.leading, .trailing])
             .onChange(of: carbsRegimeCalculator.includeTotalMealCarbs) {
-                _ = UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage)
+                var errorMessage = ""
+                if !UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &errorMessage) {
+                    bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
+                }
             }
             .accessibilityIdentifierLeaf("ExportCarbsToggle")
             
@@ -56,7 +62,10 @@ struct ComposedFoodItemExportView: View {
             }
             .padding([.leading, .trailing])
             .onChange(of: carbsRegimeCalculator.includeECarbs) {
-                _ = UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage)
+                var errorMessage = ""
+                if !UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &errorMessage) {
+                    bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
+                }
             }
             .accessibilityIdentifierLeaf("ExportECarbsToggle")
             
@@ -65,7 +74,10 @@ struct ComposedFoodItemExportView: View {
             }
             .padding([.leading, .trailing, .top])
             .onChange(of: exportTotalMealCalories) {
-                _ = UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &self.errorMessage)
+                var errorMessage = ""
+                if !UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &errorMessage) {
+                    bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
+                }
             }
             .accessibilityIdentifierLeaf("ExportCaloriesToggle")
             
@@ -129,7 +141,7 @@ struct ComposedFoodItemExportView: View {
         .onAppear() {
             self.processHealthSample()
         }
-        .alert("Notice", isPresented: self.$showingAlert, actions: {}, message: { Text(self.errorMessage) })
+        .alert("Notice", isPresented: self.$showingAlert, actions: {}, message: { Text(self.alertMessage) })
         .sheet(isPresented: self.$showingSheet) {
             HelpView(helpScreen: self.helpScreen)
         }
@@ -178,7 +190,8 @@ struct ComposedFoodItemExportView: View {
                         bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
                     } else {
                         self.setLatestExportDates()
-                        bannerService.setBanner(banner: .success(message: NSLocalizedString("Successfully exported data to Health", comment: ""), isPersistent: false))
+                        self.alertMessage = NSLocalizedString("Successfully exported data to Health", comment: "")
+                        self.showingAlert = true
                     }
                 }
             } else {
@@ -188,7 +201,8 @@ struct ComposedFoodItemExportView: View {
                 } else {
                     errMessage = NSLocalizedString("Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings.", comment: "")
                 }
-                bannerService.setBanner(banner: .error(message: errMessage, isPersistent: true))
+                self.alertMessage = errMessage
+                self.showingAlert = true
             }
         }
     }
@@ -205,24 +219,25 @@ struct ComposedFoodItemExportView: View {
     }
     
     private func setLatestExportDates() {
+        var errorMessage = ""
         if exportTotalMealCalories {
             if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastCaloriesExport), errorMessage: &errorMessage) {
-                showingAlert = true
+                bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
             }
         }
         if carbsRegimeCalculator.includeTotalMealSugars {
             if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastSugarsExport), errorMessage: &errorMessage) {
-                showingAlert = true
+                bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
             }
         }
         if carbsRegimeCalculator.includeTotalMealCarbs {
             if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastCarbsExport), errorMessage: &errorMessage) {
-                showingAlert = true
+                bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
             }
         }
         if carbsRegimeCalculator.includeECarbs {
             if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastECarbsExport), errorMessage: &errorMessage) {
-                showingAlert = true
+                bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
             }
         }
     }
@@ -230,6 +245,7 @@ struct ComposedFoodItemExportView: View {
     private func authenticate() {
         let context = LAContext()
         var error: NSError?
+        var errorMessage = ""
         
         // Check whether biometric authentication is possible
         if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
@@ -245,18 +261,18 @@ struct ComposedFoodItemExportView: View {
                     } else {
                         // There was a problem
                         if authenticationError != nil {
-                            self.errorMessage = authenticationError!.localizedDescription
+                            errorMessage = authenticationError!.localizedDescription
                         } else {
-                            self.errorMessage = NSLocalizedString("Authentication error, nothing was exported", comment: "")
+                            errorMessage = NSLocalizedString("Authentication error, nothing was exported", comment: "")
                         }
-                        self.showingAlert = true
+                        bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
                     }
                 }
             }
         } else {
             // No authentication possible
-            self.errorMessage = NSLocalizedString("Authentication error, nothing was exported", comment: "")
-            self.showingAlert = true
+            errorMessage = NSLocalizedString("Authentication error, nothing was exported", comment: "")
+            bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
         }
     }
 }

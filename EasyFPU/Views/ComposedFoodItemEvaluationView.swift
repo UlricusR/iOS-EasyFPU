@@ -174,6 +174,14 @@ struct ComposedFoodItemEvaluationView: View {
                         navigationBarBackButtonHidden: true,
                         foodItemVM: foodItemVM
                     )
+                case let .SelectFoodItem(category: category, draftFoodItem: foodItemVM, composedFoodItem: composedFoodItemVM):
+                    FoodItemSelector(
+                        navigationPath: $navigationPath,
+                        draftFoodItem: foodItemVM,
+                        composedFoodItem: composedFoodItemVM,
+                        category: category
+                    )
+                    .accessibilityIdentifierBranch("SelectFoodItem")
                 }
             }
             .navigationDestination(for: MealNavigationDestination.self) { screen in

@@ -12,6 +12,7 @@ struct FoodItemListView: View {
     enum FoodListNavigationDestination: Hashable {
         case AddFoodItem(category: FoodItemCategory)
         case EditFoodItem(category: FoodItemCategory, foodItemVM: FoodItemViewModel)
+        case SelectFoodItem(category: FoodItemCategory, draftFoodItem: FoodItemViewModel, composedFoodItem: ComposedFoodItemViewModel)
     }
     
     enum FoodItemListType {
@@ -106,20 +107,18 @@ struct FoodItemListView: View {
                 }
                 .accessibilityIdentifierLeaf("AddFoodItemButton")
             } else {
-                List {
-                    ForEach(self.filteredFoodItems.sorted {
-                        if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
-                            return true
-                        } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
-                            return false
-                        } else {
-                            return $0.name < $1.name
-                        }
-                    }) { foodItem in
-                        FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
-                            .environment(\.managedObjectContext, self.managedObjectContext)
-                            .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                List(self.filteredFoodItems.sorted {
+                    if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
+                        return true
+                    } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
+                        return false
+                    } else {
+                        return $0.name < $1.name
                     }
+                }) { foodItem in
+                    FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
+                        .environment(\.managedObjectContext, self.managedObjectContext)
+                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                 }
             }
         }
