@@ -100,9 +100,6 @@
 		1BCC1BEF2519036F00920264 /* CarbsRegime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCC1BEE2519036F00920264 /* CarbsRegime.swift */; };
 		1BD0693C254D97DD00B0E15A /* VariableAmountItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD0693B254D97DD00B0E15A /* VariableAmountItem.swift */; };
 		1BDBE39C24FE384C00ED61F1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1BDBE39E24FE384C00ED61F1 /* InfoPlist.strings */; };
-		1BDDE3D92D046EE70007396F /* BannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDDE3D82D046EE70007396F /* BannerView.swift */; };
-		1BDDE3DB2D046F050007396F /* BannerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDDE3DA2D046F050007396F /* BannerService.swift */; };
-		1BDDE3DE2D046F1B0007396F /* BannerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDDE3DD2D046F1B0007396F /* BannerType.swift */; };
 		1BEE525524D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE525324D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift */; };
 		1BEE525624D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE525424D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift */; };
 		1BF1A15A251AA1F8001E561C /* ComposedFoodItemSugarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A159251AA1F8001E561C /* ComposedFoodItemSugarsView.swift */; };
@@ -228,9 +225,6 @@
 		1BD0693B254D97DD00B0E15A /* VariableAmountItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariableAmountItem.swift; sourceTree = "<group>"; };
 		1BDBE39D24FE384C00ED61F1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1BDBE39F24FE385F00ED61F1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1BDDE3D82D046EE70007396F /* BannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerView.swift; sourceTree = "<group>"; };
-		1BDDE3DA2D046F050007396F /* BannerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerService.swift; sourceTree = "<group>"; };
-		1BDDE3DD2D046F1B0007396F /* BannerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerType.swift; sourceTree = "<group>"; };
 		1BE506F12A840DE60087DD59 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		1BEE525324D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AbsorptionBlock+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BEE525424D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AbsorptionBlock+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -316,7 +310,6 @@
 				1B4329C02CBEB19F00C478C3 /* CoreDataStack.swift */,
 				1B004A2E24BA3035001E362A /* SceneDelegate.swift */,
 				1BA104202CE4B41900562BFD /* Views */,
-				1BDDE3D72D046EBB0007396F /* Banner */,
 				1B004A3524BA3038001E362A /* Assets.xcassets */,
 				1B004A3D24BA3038001E362A /* Info.plist */,
 				1BDBE39E24FE384C00ED61F1 /* InfoPlist.strings */,
@@ -497,16 +490,6 @@
 				1BA2F761259F8AA9004300A4 /* ActivityView.swift */,
 			);
 			path = UIHelpers;
-			sourceTree = "<group>";
-		};
-		1BDDE3D72D046EBB0007396F /* Banner */ = {
-			isa = PBXGroup;
-			children = (
-				1BDDE3D82D046EE70007396F /* BannerView.swift */,
-				1BDDE3DA2D046F050007396F /* BannerService.swift */,
-				1BDDE3DD2D046F1B0007396F /* BannerType.swift */,
-			);
-			path = Banner;
 			sourceTree = "<group>";
 		};
 		1BFDFA22250A1D9B00379EB3 /* HealthKit */ = {
@@ -695,7 +678,6 @@
 				1B0AB0DF254F760D00A7BFBD /* HelpFoodItemComposer.swift in Sources */,
 				1B6867E124FD0C6B0057EC6A /* HelpViewFoodItemSelector.swift in Sources */,
 				1B8A4A9224CABA5800542212 /* TypicalAmountViewModel.swift in Sources */,
-				1BDDE3DE2D046F1B0007396F /* BannerType.swift in Sources */,
 				1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */,
 				1B816B4F2CAB2FCF008670B5 /* RecipeListView.swift in Sources */,
 				1B004A2D24BA3035001E362A /* AppDelegate.swift in Sources */,
@@ -708,7 +690,6 @@
 				1B12690F2A8E699C0047B1F5 /* DataVersionFinder.swift in Sources */,
 				1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */,
 				1BB9BD9E2CDD4F750043B465 /* AppSettingsEditor.swift in Sources */,
-				1BDDE3D92D046EE70007396F /* BannerView.swift in Sources */,
 				1B816B532CAB345C008670B5 /* RecipeView.swift in Sources */,
 				1B68548824BC70ED005ABB8B /* FoodItemEditor.swift in Sources */,
 				1BF8A4C024C21A52008634DF /* FoodItem+CoreDataClass.swift in Sources */,
@@ -756,7 +737,6 @@
 				1BA1035C2CDBFF2D00776D15 /* AccessibilityIdentifierLeafModifier.swift in Sources */,
 				1B6867DF24FD00F40057EC6A /* HelpViewProductsList.swift in Sources */,
 				1B1CC90F24DC4F390014DD7D /* MenuView.swift in Sources */,
-				1BDDE3DB2D046F050007396F /* BannerService.swift in Sources */,
 				1BB9BDA02CDD54650043B465 /* AbsorptionParameterSettingsView.swift in Sources */,
 				1B4329C12CBEB1A500C478C3 /* CoreDataStack.swift in Sources */,
 				1B6B93752554008C00F0CC7D /* Ingredient+CoreDataProperties.swift in Sources */,

@@ -22,7 +22,6 @@ struct MenuView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @EnvironmentObject private var bannerService: BannerService
     var absorptionScheme: AbsorptionSchemeViewModel
     @State private var navigationPath = NavigationPath()
     @State private var importing = false
@@ -32,7 +31,7 @@ struct MenuView: View {
     @State private var exportData = ExportJSONDocument()
     @State private var activeSheet: SheetState?
     @State private var showingAlert = false
-    @State private var alertMessage = ""
+    @State private var activeAlert: SimpleAlertType?
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -64,7 +63,8 @@ struct MenuView: View {
                         case .success(let file):
                             importJSON(file)
                         case .failure(let error):
-                            bannerService.setBanner(banner: .error(message: error.localizedDescription, isPersistent: true))
+                            activeAlert = .error(message: error.localizedDescription)
+                            showingAlert = true
                         }
                     }
                     .confirmationDialog(
@@ -93,7 +93,8 @@ struct MenuView: View {
                             self.exportData = jsonDocument
                             exporting = true
                         } else {
-                            bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
+                            activeAlert = .error(message: errorMessage)
+                            showingAlert = true
                         }
                     }
                     .fileExporter(
@@ -104,9 +105,11 @@ struct MenuView: View {
                     ) { result in
                         switch result {
                         case .success(let file):
-                            bannerService.setBanner(banner: .success(message: NSLocalizedString("Successfully exported food list to: ", comment: "") + file.lastPathComponent, isPersistent: false))
+                            activeAlert = .success(message: NSLocalizedString("Successfully exported food list to: ", comment: "") + file.lastPathComponent)
+                            showingAlert = true
                         case .failure(let error):
-                            bannerService.setBanner(banner: .error(message: error.localizedDescription, isPersistent: true))
+                            activeAlert = .success(message: error.localizedDescription)
+                            showingAlert = true
                         }
                     }
                     .accessibilityIdentifierLeaf("ExportToJSONButton")
@@ -121,7 +124,9 @@ struct MenuView: View {
                     
                     // Disclaimer
                     Button("Disclaimer") {
-                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &alertMessage) {
+                        var errorMessage = ""
+                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &errorMessage) {
+                            activeAlert = .fatalError(message: errorMessage)
                             self.showingAlert = true
                         }
                         
@@ -157,7 +162,15 @@ struct MenuView: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert("Notice", isPresented: self.$showingAlert, actions: {}, message: { Text(self.alertMessage) })
+        .alert(
+            activeAlert?.title() ?? "Notice",
+            isPresented: $showingAlert,
+            presenting: activeAlert
+        ) { activeAlert in
+            activeAlert.button()
+        } message: { activeAlert in
+            activeAlert.message()
+        }
     }
     
     @ViewBuilder
@@ -170,6 +183,7 @@ struct MenuView: View {
     }
     
     private func importJSON(_ url: URL) {
+        var alertMessage = ""
         if let importData = DataHelper.importFoodItems(url, errorMessage: &alertMessage) {
             self.importData = importData
             
@@ -182,6 +196,7 @@ struct MenuView: View {
             }
         } else {
             // Some error happened
+            activeAlert = .error(message: alertMessage)
             showingAlert = true
         }
     }
@@ -201,11 +216,13 @@ struct MenuView: View {
                     _ = composedFoodItemVMToBeImported.save()
                 }
             }
-         
-            bannerService.setBanner(banner: .success(message: NSLocalizedString("Successfully imported food list", comment: ""), isPersistent: false))
+
+            activeAlert = .success(message: "Successfully imported food list")
+            showingAlert = true
         } else {
             // This should never happen
-            bannerService.setBanner(banner: .error(message: NSLocalizedString("Failed to import food list", comment: ""), isPersistent: true))
+            activeAlert = .fatalError(message: "Failed to import food list")
+            showingAlert = true
         }
     }
     
