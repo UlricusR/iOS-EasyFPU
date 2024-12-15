@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AbsorptionBlockSettingsView: View {
     @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
-    @Binding var errorMessage: String
+    @Binding var activeAlert: SimpleAlertType?
     @Binding var showingAlert: Bool
     @State private var newMaxFpu: String = ""
     @State private var newAbsorptionTime: String = ""
@@ -47,7 +47,9 @@ struct AbsorptionBlockSettingsView: View {
             
             // The reset button
             Button("Reset to default") {
+                var errorMessage = ""
                 if !absorptionScheme.resetToDefaultAbsorptionBlocks(errorMessage: &errorMessage) {
+                    activeAlert = .fatalError(message: errorMessage)
                     showingAlert = true
                 }
             }
@@ -67,21 +69,25 @@ struct AbsorptionBlockSettingsView: View {
                     .accessibilityIdentifierLeaf("AddAbsorptionTimeUnit")
                 Button(action: {
                     if self.newAbsorptionBlockId == nil { // This is a new absorption block
-                        if let newAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, errorMessage: &self.errorMessage) {
+                        var blockAlert: SimpleAlertType? = nil
+                        if let newAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, activeAlert: &blockAlert) {
                             // Check validity of new absorption block
-                            if self.absorptionScheme.add(newAbsorptionBlock: newAbsorptionBlock, errorMessage: &self.errorMessage) {
+                            if let schemeAlert = self.absorptionScheme.add(newAbsorptionBlock: newAbsorptionBlock) {
+                                activeAlert = schemeAlert
+                                self.showingAlert = true
+                            } else {
                                 // Reset text fields
                                 self.newMaxFpu = ""
                                 self.newAbsorptionTime = ""
                                 self.updateButton = false
-                            } else {
-                                self.showingAlert = true
                             }
                         } else {
+                            activeAlert = blockAlert
                             self.showingAlert = true
                         }
                     } else { // This is an existing typical amount
-                        if !absorptionScheme.replace(existingAbsorptionBlockID: self.newAbsorptionBlockId!, newMaxFpuAsString: self.newMaxFpu, newAbsorptionTimeAsString: self.newAbsorptionTime, errorMessage: &errorMessage) {
+                        if let schemeAlert = absorptionScheme.replace(existingAbsorptionBlockID: self.newAbsorptionBlockId!, newMaxFpuAsString: self.newMaxFpu, newAbsorptionTimeAsString: self.newAbsorptionTime) {
+                            activeAlert = schemeAlert
                             self.showingAlert = true
                         } else {
                             // Reset text fields
@@ -102,13 +108,13 @@ struct AbsorptionBlockSettingsView: View {
         if absorptionScheme.absorptionBlocks.count > 1 {
             offsets.forEach { index in
                 if !absorptionScheme.removeAbsorptionBlock(at: index) {
-                    errorMessage = NSLocalizedString("Absorption block index out of range.", comment: "") // Fatal error!
+                    activeAlert = .fatalError(message: "Absorption block index out of range.")
                     showingAlert = true
                 }
             }
         } else {
             // We need to have at least one block left
-            errorMessage = NSLocalizedString("At least one absorption block required", comment: "")
+            activeAlert = .notice(message: "At least one absorption block required")
             showingAlert = true
         }
     }

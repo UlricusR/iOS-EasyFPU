@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AbsorptionParameterSettingsView: View {
     @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
-    @Binding var errorMessage: String
+    @Binding var activeAlert: SimpleAlertType?
     @Binding var showingAlert: Bool
     
     var body: some View {
@@ -18,7 +18,9 @@ struct AbsorptionParameterSettingsView: View {
         Section(header: Text("Absorption Time Parameters for Sugars")) {
             Toggle("Treat sugars separately", isOn: $draftAbsorptionScheme.treatSugarsSeparately)
                 .onChange(of: draftAbsorptionScheme.treatSugarsSeparately) {
-                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &self.errorMessage) {
+                    var errorMessage = ""
+                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(self.draftAbsorptionScheme.treatSugarsSeparately, UserSettings.UserDefaultsBoolKey.treatSugarsSeparately), errorMessage: &errorMessage) {
+                        activeAlert = .fatalError(message: errorMessage)
                         showingAlert = true
                     } else {
                         UserSettings.shared.treatSugarsSeparately = self.draftAbsorptionScheme.treatSugarsSeparately
@@ -32,7 +34,9 @@ struct AbsorptionParameterSettingsView: View {
                         .accessibilityIdentifierLeaf("SugarsDelayLabel")
                     CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delaySugarsAsString, keyboardType: .numberPad)
                         .onChange(of: draftAbsorptionScheme.delaySugarsAsString) {
-                            if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delaySugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsDelay), errorMessage: &self.errorMessage) {
+                            var errorMessage = ""
+                            if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delaySugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsDelay), errorMessage: &errorMessage) {
+                                activeAlert = .fatalError(message: errorMessage)
                                 showingAlert = true
                             } else {
                                 UserSettings.shared.absorptionTimeSugarsDelayInMinutes = self.draftAbsorptionScheme.delaySugars
@@ -49,7 +53,9 @@ struct AbsorptionParameterSettingsView: View {
                         .accessibilityIdentifierLeaf("SugarsDurationLabel")
                     CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationSugarsAsString, keyboardType: .numberPad)
                         .onChange(of: draftAbsorptionScheme.durationSugarsAsString) {
-                            if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationSugars, UserSettings.UserDefaultsDoubleKey.absorptionTimeSugarsDuration), errorMessage: &self.errorMessage) {
+                            var errorMessage = ""
+                            if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationSugars, UserSettings.UserDefaultsDoubleKey.absorptionTimeSugarsDuration), errorMessage: &errorMessage) {
+                                activeAlert = .fatalError(message: errorMessage)
                                 showingAlert = true
                             } else {
                                 UserSettings.shared.absorptionTimeSugarsDurationInHours = self.draftAbsorptionScheme.durationSugars
@@ -66,7 +72,9 @@ struct AbsorptionParameterSettingsView: View {
                         .accessibilityIdentifierLeaf("SugarsIntervalLabel")
                     CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalSugarsAsString, keyboardType: .numberPad)
                         .onChange(of: draftAbsorptionScheme.intervalSugarsAsString) {
-                            if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalSugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsInterval), errorMessage: &self.errorMessage) {
+                            var errorMessage = ""
+                            if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalSugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsInterval), errorMessage: &errorMessage) {
+                                activeAlert = .fatalError(message: errorMessage)
                                 showingAlert = true
                             } else {
                                 UserSettings.shared.absorptionTimeSugarsIntervalInMinutes = self.draftAbsorptionScheme.intervalSugars
@@ -93,7 +101,9 @@ struct AbsorptionParameterSettingsView: View {
                     .accessibilityIdentifierLeaf("CarbsDelayLabel")
                 CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayCarbsAsString, keyboardType: .numberPad)
                     .onChange(of: draftAbsorptionScheme.delayCarbsAsString) {
-                        if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsDelay), errorMessage: &self.errorMessage) {
+                        var errorMessage = ""
+                        if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsDelay), errorMessage: &errorMessage) {
+                            activeAlert = .fatalError(message: errorMessage)
                             showingAlert = true
                         } else {
                             UserSettings.shared.absorptionTimeCarbsDelayInMinutes = self.draftAbsorptionScheme.delayCarbs
@@ -110,7 +120,9 @@ struct AbsorptionParameterSettingsView: View {
                     .accessibilityIdentifierLeaf("CarbsDurationLabel")
                 CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationCarbsAsString, keyboardType: .numberPad)
                     .onChange(of: draftAbsorptionScheme.durationCarbsAsString) {
-                        if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationCarbs, UserSettings.UserDefaultsDoubleKey.absorptionTimeCarbsDuration), errorMessage: &self.errorMessage) {
+                        var errorMessage = ""
+                        if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationCarbs, UserSettings.UserDefaultsDoubleKey.absorptionTimeCarbsDuration), errorMessage: &errorMessage) {
+                            activeAlert = .fatalError(message: errorMessage)
                             showingAlert = true
                         } else {
                             UserSettings.shared.absorptionTimeCarbsDurationInHours = self.draftAbsorptionScheme.durationCarbs
@@ -127,7 +139,9 @@ struct AbsorptionParameterSettingsView: View {
                     .accessibilityIdentifierLeaf("CarbsIntervalLabel")
                 CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalCarbsAsString, keyboardType: .numberPad)
                     .onChange(of: draftAbsorptionScheme.intervalCarbsAsString) {
-                        if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsInterval), errorMessage: &self.errorMessage) {
+                        var errorMessage = ""
+                        if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsInterval), errorMessage: &errorMessage) {
+                            activeAlert = .fatalError(message: errorMessage)
                             showingAlert = true
                         } else {
                             UserSettings.shared.absorptionTimeCarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalCarbs
@@ -153,7 +167,9 @@ struct AbsorptionParameterSettingsView: View {
                     .accessibilityIdentifierLeaf("ECarbsDelayLabel")
                 CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayECarbsAsString, keyboardType: .numberPad)
                     .onChange(of: draftAbsorptionScheme.delayECarbsAsString) {
-                        if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &self.errorMessage) {
+                        var errorMessage = ""
+                        if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &errorMessage) {
+                            activeAlert = .fatalError(message: errorMessage)
                             showingAlert = true
                         } else {
                             UserSettings.shared.absorptionTimeECarbsDelayInMinutes = self.draftAbsorptionScheme.delayECarbs
@@ -170,7 +186,9 @@ struct AbsorptionParameterSettingsView: View {
                     .accessibilityIdentifierLeaf("ECarbsFactorLabel")
                 CustomTextField(titleKey: "e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString, keyboardType: .numberPad)
                     .onChange(of: draftAbsorptionScheme.eCarbsFactorAsString) {
-                        if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &self.errorMessage) {
+                        var errorMessage = ""
+                        if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &errorMessage) {
+                            activeAlert = .fatalError(message: errorMessage)
                             showingAlert = true
                         } else {
                             UserSettings.shared.eCarbsFactor = self.draftAbsorptionScheme.eCarbsFactor
@@ -187,7 +205,9 @@ struct AbsorptionParameterSettingsView: View {
                     .accessibilityIdentifierLeaf("ECarbsIntervalLabel")
                 CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalECarbsAsString, keyboardType: .numberPad)
                     .onChange(of: draftAbsorptionScheme.intervalECarbsAsString) {
-                        if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &self.errorMessage) {
+                        var errorMessage = ""
+                        if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &errorMessage) {
+                            activeAlert = .fatalError(message: errorMessage)
                             showingAlert = true
                         } else {
                             UserSettings.shared.absorptionTimeECarbsIntervalInMinutes = self.draftAbsorptionScheme.intervalECarbs

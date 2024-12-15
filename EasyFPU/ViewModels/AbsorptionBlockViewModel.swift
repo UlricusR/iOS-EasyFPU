@@ -66,14 +66,14 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
         self.absorptionTimeAsString = String(absorptionBlock.absorptionTime)
     }
     
-    init?(maxFpuAsString: String, absorptionTimeAsString: String, errorMessage: inout String) {
+    init?(maxFpuAsString: String, absorptionTimeAsString: String, activeAlert: inout SimpleAlertType?) {
         // Check for valid max fpu
         let resultMaxFpu = DataHelper.checkForPositiveInt(valueAsString: maxFpuAsString, allowZero: false)
         switch resultMaxFpu {
         case .success(let maxFpu):
             self.maxFpu = maxFpu
         case .failure(let err):
-            errorMessage = err.evaluate()
+            activeAlert = .error(message: err.evaluate())
             return nil
         }
         self.maxFpuAsString = maxFpuAsString
@@ -84,7 +84,7 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
         case .success(let absorptionTime):
             self.absorptionTime = absorptionTime
         case .failure(let err):
-            errorMessage = err.evaluate()
+            activeAlert = .error(message: err.evaluate())
             return nil
         }
         self.absorptionTimeAsString = absorptionTimeAsString

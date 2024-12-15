@@ -10,8 +10,7 @@ import SwiftUI
 
 struct DisclaimerView: View {
     @Environment(\.presentationMode) var presentation
-    @State private var alertTitle = ""
-    @State private var alertMessage = ""
+    @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert = false
     
     var body: some View {
@@ -35,12 +34,10 @@ struct DisclaimerView: View {
                     Button("Decline") {
                         var settingsError = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
-                            self.alertTitle = NSLocalizedString("Notice", comment: "")
-                            self.alertMessage = settingsError
+                            activeAlert = .fatalError(message: settingsError)
                         } else {
                             // Display alert
-                            self.alertTitle = NSLocalizedString("Disclaimer", comment: "")
-                            self.alertMessage = NSLocalizedString("You need to accept the disclaimer to continue.", comment: "")
+                            activeAlert = .notice(message: "You need to accept the disclaimer to continue.")
                         }
                         self.showingAlert = true
                     }
@@ -51,8 +48,7 @@ struct DisclaimerView: View {
                     Button("Accept") {
                         var settingsError = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &settingsError) {
-                            self.alertTitle = NSLocalizedString("Notice", comment: "")
-                            self.alertMessage = settingsError
+                            activeAlert = .fatalError(message: settingsError)
                             self.showingAlert = true
                         }
                         
@@ -63,6 +59,14 @@ struct DisclaimerView: View {
                 }
             }
         }
-        .alert(self.alertTitle, isPresented: self.$showingAlert, actions: {}, message: { Text(self.alertMessage) })
+        .alert(
+            activeAlert?.title() ?? "Notice",
+            isPresented: $showingAlert,
+            presenting: activeAlert
+        ) { activeAlert in
+            activeAlert.button()
+        } message: { activeAlert in
+            activeAlert.message()
+        }
     }
 }

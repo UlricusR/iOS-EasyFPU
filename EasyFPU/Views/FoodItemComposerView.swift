@@ -21,7 +21,7 @@ struct FoodItemComposerView: View {
     private let helpScreen = HelpScreen.foodItemComposer
     @State private var activeSheet: SheetState?
     @State private var showingAlert: Bool = false
-    @State private var alertMessage: String = ""
+    @State private var activeAlert: SimpleAlertType?
     @State private var showingActionSheet: Bool = false
     @State private var actionSheetMessage: String?
     @State private var existingFoodItem: FoodItem?
@@ -165,7 +165,7 @@ struct FoodItemComposerView: View {
                         
                         // Check if this is a new ComposedFoodItem (no Core Data object attached yet) and, if yes, the name already exists
                         if !composedFoodItemVM.hasAssociatedComposedFoodItem() && composedFoodItemVM.nameExists() {
-                            alertMessage = NSLocalizedString("A food item with this name already exists", comment: "")
+                            activeAlert = .notice(message: "A food item with this name already exists")
                             showingAlert = true
                         } else {
                             if weightCheck(isLess: true) {
@@ -206,7 +206,15 @@ struct FoodItemComposerView: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert("Notice", isPresented: self.$showingAlert, actions: {}, message: { Text(self.alertMessage) })
+        .alert(
+            activeAlert?.title() ?? "Notice",
+            isPresented: $showingAlert,
+            presenting: activeAlert
+        ) { activeAlert in
+            activeAlert.button()
+        } message: { activeAlert in
+            activeAlert.message()
+        }
     }
     
     private func weightCheck(isLess: Bool) -> Bool {
@@ -224,14 +232,14 @@ struct FoodItemComposerView: View {
             // Store new ComposedFoodItem in CoreData
             if !composedFoodItemVM.save() {
                 // We're missing ingredients, the composedFoodItem could not be saved - this should not happen!
-                alertMessage = NSLocalizedString("Could not create the composed food item", comment: "")
+                activeAlert = .fatalError(message: "Could not create the composed food item")
                 showingAlert = true
             }
         } else { // We edit an existing ComposedFoodItem
             // Update Core Data ComposedFoodItem
             if !composedFoodItemVM.update() {
                 // No Core Data ComposedFoodItem found - this should never happen!
-                alertMessage = NSLocalizedString("Could not update the composed food item", comment: "")
+                activeAlert = .fatalError(message: "Could not update the composed food item")
                 showingAlert = true
             }
         }

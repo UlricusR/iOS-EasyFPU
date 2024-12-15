@@ -222,7 +222,7 @@
 "Absorption time is equals or less than the one of the block before" = "Absorptionszeit ist gleich oder kleiner als die des vorherigen Blocks";
 "Absorption time must be between previous and following block" = "Absorptionszeit muss zwischen vorherigem und nachfolgendem Block liegen";
 "At least one absorption block required" = "Mindestens ein Absorptionsblock benötigt";
-"Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fataler Fehler: Kann Absorptionsblock-Index nicht festlegen, bitte informiere das Entwicklungsteam";
+"Cannot determine absorption block index." = "Kann Absorptionsblock-Index nicht festlegen.";
 "Fatal error: Cannot convert numbers into string, please contact app developer" = "Fataler Fehler: Kann Zahlen nicht in String umwandeln, bitte informiere das Entwicklungsteam";
 "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fataler Fehler: Konnte das CoreData FoodItem nicht finden, bitte informiere das Entwicklungsteam";
 "Absorption block index out of range." = "Absorptionsblock-Index außerhalb des gültigen Bereichs.";
@@ -266,6 +266,7 @@
 "Failed to decode because it appears to be invalid JSON" = "Ungültige JSON-Datei";
 "Failed to decode - " = "Konnte nicht entschlüsseln - ";
 "Help on the Web" = "Hilfe im Web";
+"Could not identify absorption block" = "Konnte Absorptionsblock nicht identifizieren.";
 
 // Meal export
 "Cannot write data: HealthKit seem not to be available on your device." = "Kann keine Daten schreiben: HealthKit scheint auf Deinem Gerät nicht zur Verfügung zu stehen.";

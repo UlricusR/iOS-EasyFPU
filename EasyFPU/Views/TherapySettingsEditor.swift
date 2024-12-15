@@ -13,7 +13,7 @@ struct TherapySettingsEditor: View {
     @Binding var navigationPath: NavigationPath
     @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
     @ObservedObject var userSettings = UserSettings.shared
-    @State private var errorMessage: String = ""
+    @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert: Bool = false
     @State private var showingScreen = false
     private let helpScreen = HelpScreen.absorptionSchemeEditor
@@ -22,12 +22,12 @@ struct TherapySettingsEditor: View {
         Form {
             AbsorptionParameterSettingsView(
                 draftAbsorptionScheme: absorptionScheme,
-                errorMessage: $errorMessage,
+                activeAlert: $activeAlert,
                 showingAlert: $showingAlert
             )
             AbsorptionBlockSettingsView(
                 absorptionScheme: absorptionScheme,
-                errorMessage: $errorMessage,
+                activeAlert: $activeAlert,
                 showingAlert: $showingAlert
             )
             
@@ -45,10 +45,18 @@ struct TherapySettingsEditor: View {
                 .accessibilityIdentifierLeaf("HelpButton")
             }
         }
-        .alert("Data alert", isPresented: self.$showingAlert, actions: {}, message: { Text(self.errorMessage) })
         .sheet(isPresented: self.$showingScreen) {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpSettingsEditor")
+        }
+        .alert(
+            activeAlert?.title() ?? "Notice",
+            isPresented: $showingAlert,
+            presenting: activeAlert
+        ) { activeAlert in
+            activeAlert.button()
+        } message: { activeAlert in
+            activeAlert.message()
         }
     }
 }
