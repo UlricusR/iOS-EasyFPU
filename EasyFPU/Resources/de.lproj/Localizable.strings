@@ -40,6 +40,9 @@
 "Warning" = "Warnung";
 "Notice" = "Hinweis";
 "Success" = "Erfolg";
+"Fatal Error" = "Fataler Fehler";
+"This should not have happened, please inform the developer team." = "Das hätte nicht passieren dürfen. Bitte das Entwicklerteam informieren.";
+"Cannot store parameter: " = "Kann Parameter nicht speichern: ";
 
 // About
 "About" = "Über";
@@ -92,6 +95,7 @@
 "Typical amount" = "Typische Menge";
 "Typical amounts:" = "Typische Mengen:";
 "Add to typical amounts" = "Zu typischen Mengen hinzufügen";
+"Could not identify typical amount." = "Konnte typische Menge nicht identifizieren.";
 "Comment" = "Kommentar";
 "As sold" = "Wie verkauft";
 "Initial source" = "Ursprüngliche Quelle";
@@ -139,8 +143,8 @@
 "successfully saved as Recipe" = "erfolgreich als Rezept gespeichert, aber nicht als Speise";
 "successfully updated in Products" = "erfolgreich als Rezept und Speise aktualisiert";
 "successfully updated as Recipe" = "erfolgreich als Rezept (aber nicht als Speise) aktualisiert";
-"Could not create the composed food item" = "Hoppla! Das zusammengestellte Essen konnte wegen fehlender Zutaten nicht gespeichert werden. Das sollte nicht passieren. Bitte informiere das Entwicklungsteam.";
-"Could not update the composed food item" = "Hoppla! Das zusammengestellte Essen konnte nicht aktualisiert werden wegen eines fehlenden Rezepts. Das sollte nicht passieren. Bitte informiere das Entwicklungsteam.";
+"Could not create the composed food item" = "Hoppla! Das zusammengestellte Essen konnte wegen fehlender Zutaten nicht gespeichert werden.";
+"Could not update the composed food item" = "Hoppla! Das zusammengestellte Essen konnte nicht aktualisiert werden wegen eines fehlenden Rezepts.";
 "Associated Ingredients" = "Verknüpfte Rezepte";
 "This food item is used as ingredient in the following recipes:" = "Diese Zutat wird in folgenden Rezepten genutzt:";
 "Updating the food item will also update the associated recipes." = "Die Aktualisierung der Zutat verändert die Nährwerte dieser Rezepte.";
@@ -182,7 +186,6 @@
 "Thereof" = "Davon";
 "Search term must not be empty" = "Suchbegriff darf nicht leer sein";
 " - new" = " - neu";
-"This should not have happened - please inform the app developer" = "Hoppla! Das hätte nicht passieren dürfen - bitte informiere das Entwicklungsteam";
 "A food item with this name already exists" = "Ein Eintrag mit diesem Namen existiert bereits";
 
 // Recipe editor
@@ -222,7 +225,7 @@
 "Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fataler Fehler: Kann Absorptionsblock-Index nicht festlegen, bitte informiere das Entwicklungsteam";
 "Fatal error: Cannot convert numbers into string, please contact app developer" = "Fataler Fehler: Kann Zahlen nicht in String umwandeln, bitte informiere das Entwicklungsteam";
 "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fataler Fehler: Konnte das CoreData FoodItem nicht finden, bitte informiere das Entwicklungsteam";
-"Fatal error: Absorption block index out of range. This should not have happened, please inform the app developer." = "Fataler Fehler: Absorptionsblock-Index außerhalb des gültigen Bereichs. Dies hätte nicht passieren dürfen, bitte informiere das Entwicklungsteam.";
+"Absorption block index out of range." = "Absorptionsblock-Index außerhalb des gültigen Bereichs.";
 "Reset to default" = "Auf Voreinstellungen zurücksetzen";
 "Absorption Time Parameters for Sugars" = "Absorptionsparameter für Zucker-KH";
 "Absorption Time Parameters for Carbs" = "Absorptionsparameter für reguläre KH";
@@ -248,7 +251,7 @@
 "Failed to export food list to: " = "Konnte Essensliste nicht exportieren nach: ";
 "Failed to access " = "Zugriff nicht möglich auf ";
 "Successfully imported food list" = "Essensliste erfolgreich importiert";
-"Failed to import food list" = "Hoppla! Konnte die Essensliste nicht importieren. Dies hätte nicht passieren dürfen, bitte melde es dem Entwicklerteam.";
+"Failed to import food list" = "Hoppla! Konnte die Essensliste nicht importieren.";
 "Import food list" = "Es ist bereits Essen in der Datenbank.";
 "Please select" = "Soll das importierte Essen dieses ersetzen oder hinzugefügt werden?";
 "Replace" = "Ersetzen";
@@ -277,7 +280,7 @@
 "Total Meal Carbs" = "Kohlenhydrate Gesamtmahlzeit";
 "Total Meal Calories" = "Kalorien Gesamtmahlzeit";
 "Please select at least one entry to export" = "Bitte mindestens einen Eintrag zum Export auswählen";
-"Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fataler Fehler, kann Daten nicht exportieren, bitte das Entwicklungsteam informieren: Absorptionsschema hat keine Absorptionsblöcke";
+"Absorption Scheme has no Absorption Blocks" = "Absorptionsschema hat keine Absorptionsblöcke";
 "Preview of exported carbs in g" = "Vorschau der exportierten Kohlenhydrate in g";
 "Delay until meal" = "Mahlzeit beginnt in";
 "LastSugarsExport" = "Zucker";

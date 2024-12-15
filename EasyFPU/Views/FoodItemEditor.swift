@@ -27,7 +27,6 @@ struct FoodItemEditor: View {
         case void, searching
     }
     
-    @EnvironmentObject private var bannerService: BannerService
     @Binding var navigationPath: NavigationPath
     var navigationTitle: String
     @ObservedObject var draftFoodItemVM: FoodItemViewModel
@@ -40,6 +39,10 @@ struct FoodItemEditor: View {
     @State private var showingScanAlert = false
     @State private var showingSearchAlert = false
     @State private var showingUpdateIngredientsAlert = false
+    
+    // General alert
+    @State private var showingAlert = false
+    @State private var activeAlert: SimpleAlertType?
     
     private var typicalAmounts: [TypicalAmountViewModel] { draftFoodItemVM.typicalAmounts.sorted() }
     private var sourceDB: FoodDatabase {
@@ -76,7 +79,8 @@ struct FoodItemEditor: View {
                             // Search and Scan buttons
                             Button(action: {
                                 if draftFoodItemVM.name.isEmpty {
-                                    bannerService.setBanner(banner: .error(message: NSLocalizedString("Search term must not be empty", comment: ""), isPersistent: false))
+                                    activeAlert = .error(message: "Search term must not be empty")
+                                    showingAlert = true
                                 } else {
                                     if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
                                         performSearch()
@@ -97,7 +101,8 @@ struct FoodItemEditor: View {
                                 Button("Accept and continue") {
                                     var settingsError = ""
                                     if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                                        bannerService.setBanner(banner: .error(message: settingsError, isPersistent: true))
+                                        activeAlert = .fatalError(message: settingsError)
+                                        showingAlert = true
                                     }
 
                                     // Set dynamic variable
@@ -130,7 +135,8 @@ struct FoodItemEditor: View {
                                 Button("Accept and continue") {
                                     var settingsError = ""
                                     if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                                        bannerService.setBanner(banner: .error(message: settingsError, isPersistent: true))
+                                        activeAlert = .fatalError(message: settingsError)
+                                        showingAlert = true
                                     }
 
                                     // Set dynamic variable
@@ -329,7 +335,8 @@ struct FoodItemEditor: View {
                         
                         // Check if we have duplicate names (if this is a new food item)
                         if !draftFoodItemVM.hasAssociatedFoodItem() && draftFoodItemVM.nameExists() {
-                            bannerService.setBanner(banner: .warning(message: NSLocalizedString("A food item with this name already exists", comment: ""), isPersistent: false))
+                            activeAlert = .warning(message: "A food item with this name already exists")
+                            showingAlert = true
                         } else {
                             saveFoodItem()
                         }
@@ -372,6 +379,15 @@ struct FoodItemEditor: View {
             }
             .sheet(item: $activeSheet) {
                 sheetContent($0)
+            }
+            .alert(
+                activeAlert?.title() ?? "Notice",
+                isPresented: $showingAlert,
+                presenting: activeAlert
+            ) { activeAlert in
+                activeAlert.button()
+            } message: { activeAlert in
+                activeAlert.message()
             }
             .onAppear() {
                 self.oldName = self.draftFoodItemVM.name
@@ -489,14 +505,16 @@ struct FoodItemEditor: View {
             }
             
             // Display alert and stay in edit mode
-            bannerService.setBanner(banner: .error(message: errMessage, isPersistent: false))
+            activeAlert = .error(message: errMessage)
+            showingAlert = true
         }
     }
     
     private func deleteTypicalAmount(_ typicalAmountToBeDeleted: TypicalAmountViewModel) {
         typicalAmountsToBeDeleted.append(typicalAmountToBeDeleted)
         guard let originalIndex = self.draftFoodItemVM.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
-            bannerService.setBanner(banner: .error(message: NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment, isPersistent: true))
+            activeAlert = .fatalError(message: NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment)
+            showingAlert = true
             return
         }
         self.draftFoodItemVM.typicalAmounts.remove(at: originalIndex)
@@ -518,11 +536,13 @@ struct FoodItemEditor: View {
                 self.newTypicalAmountComment = ""
                 self.updateButton = false
             } else {
-                bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: false))
+                activeAlert = .error(message: errorMessage)
+                showingAlert = true
             }
         } else { // This is an existing typical amount
             guard let index = self.draftFoodItemVM.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
-                bannerService.setBanner(banner: .error(message: NSLocalizedString("Fatal error: Could not identify typical amount", comment: ""), isPersistent: true))
+                activeAlert = .fatalError(message: "Could not identify typical amount.")
+                showingAlert = true
                 return
             }
             self.draftFoodItemVM.typicalAmounts[index].amountAsString = self.newTypicalAmount
@@ -553,7 +573,7 @@ struct FoodItemEditor: View {
                 case .success(let networkFoodDatabaseEntry):
                     guard let foodDatabaseEntry = networkFoodDatabaseEntry else {
                         DispatchQueue.main.async {
-                            bannerService.setBanner(banner: .warning(message: NSLocalizedString("No food found", comment: ""), isPersistent: false))
+                            activeAlert = .warning(message: "No food found")
                         }
                         return
                     }
@@ -567,11 +587,13 @@ struct FoodItemEditor: View {
                     DispatchQueue.main.async { self.notificationState = .void }
                     let errorMessage = error.evaluate()
                     debugPrint(errorMessage)
-                    bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
+                    activeAlert = .error(message: errorMessage)
+                    showingAlert = true
                 }
             }
         case .failure(let error):
-            bannerService.setBanner(banner: .error(message: NSLocalizedString("Error scanning food: ", comment: "") + error.localizedDescription, isPersistent: true))
+            activeAlert = .error(message: NSLocalizedString("Error scanning food: ", comment: "") + error.localizedDescription)
+            showingAlert = true
         }
     }
     
@@ -583,7 +605,8 @@ struct FoodItemEditor: View {
                 guard let searchResults = networkSearchResults, !searchResults.isEmpty else {
                     DispatchQueue.main.async {
                         self.notificationState = .void
-                        bannerService.setBanner(banner: .warning(message: NSLocalizedString("No food found", comment: ""), isPersistent: false))
+                        activeAlert = .warning(message: "No food found")
+                        showingAlert = true
                     }
                     return
                 }
@@ -597,7 +620,8 @@ struct FoodItemEditor: View {
                 DispatchQueue.main.async { self.notificationState = .void }
                 let errorMessage = error.evaluate()
                 debugPrint(errorMessage)
-                bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
+                activeAlert = .warning(message: errorMessage)
+                showingAlert = true
             }
         }
     }

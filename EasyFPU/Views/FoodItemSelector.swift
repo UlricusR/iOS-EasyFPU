@@ -10,7 +10,6 @@ import SwiftUI
 
 struct FoodItemSelector: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @EnvironmentObject var bannerService: BannerService
     @Binding var navigationPath: NavigationPath
     @ObservedObject var draftFoodItem: FoodItemViewModel
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
@@ -18,6 +17,8 @@ struct FoodItemSelector: View {
     @State private var newTypicalAmountComment = ""
     @State private var addToTypicalAmounts = false
     @State private var showingSheet = false
+    @State private var showingAlert = false
+    @State private var activeAlert: SimpleAlertType?
     private let helpScreen = HelpScreen.foodItemSelector
     
     var body: some View {
@@ -110,7 +111,8 @@ struct FoodItemSelector: View {
                     navigationPath.removeLast()
                 case .failure(let err):
                     // Display alert and stay in edit mode
-                    bannerService.setBanner(banner: .error(message: err.evaluate(), isPersistent: true))
+                    activeAlert = .error(message: err.evaluate())
+                    showingAlert = true
                 }
             }
             .padding()
@@ -129,6 +131,15 @@ struct FoodItemSelector: View {
                 }
                 .accessibilityIdentifierLeaf("HelpButton")
             }
+        }
+        .alert(
+            activeAlert?.title() ?? "Notice",
+            isPresented: $showingAlert,
+            presenting: activeAlert
+        ) { activeAlert in
+            activeAlert.button()
+        } message: { activeAlert in
+            activeAlert.message()
         }
         .sheet(isPresented: self.$showingSheet) {
             HelpView(helpScreen: self.helpScreen)
@@ -150,7 +161,8 @@ struct FoodItemSelector: View {
             
             self.addToTypicalAmounts = false
         } else {
-            bannerService.setBanner(banner: .error(message: errorMessage, isPersistent: true))
+            activeAlert = .error(message: errorMessage)
+            showingAlert = true
         }
     }
 }

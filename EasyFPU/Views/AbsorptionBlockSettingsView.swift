@@ -102,7 +102,7 @@ struct AbsorptionBlockSettingsView: View {
         if absorptionScheme.absorptionBlocks.count > 1 {
             offsets.forEach { index in
                 if !absorptionScheme.removeAbsorptionBlock(at: index) {
-                    errorMessage = NSLocalizedString("Fatal error: Absorption block index out of range. This should not have happened, please inform the app developer.", comment: "")
+                    errorMessage = NSLocalizedString("Absorption block index out of range.", comment: "") // Fatal error!
                     showingAlert = true
                 }
             }

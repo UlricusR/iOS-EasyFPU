@@ -155,31 +155,31 @@ class UserSettings: ObservableObject {
         switch parameter {
         case .bool(let value, let key):
             if !UserDefaultsBoolKey.allCases.contains(key) {
-                errorMessage = NSLocalizedString("Fatal error, please inform app developer: Cannot store parameter: ", comment: "") + key.rawValue
+                errorMessage = NSLocalizedString("Cannot store parameter: ", comment: "") + key.rawValue
                 return false
             }
             UserSettings.keyStore.set(value, forKey: key.rawValue)
         case .double(let value, let key):
             if !UserDefaultsDoubleKey.allCases.contains(key) {
-                errorMessage = NSLocalizedString("Fatal error, please inform app developer: Cannot store parameter: ", comment: "") + key.rawValue
+                errorMessage = NSLocalizedString("Cannot store parameter: ", comment: "") + key.rawValue
                 return false
             }
             UserSettings.keyStore.set(value, forKey: key.rawValue)
         case .int(let value, let key):
             if !UserDefaultsIntKey.allCases.contains(key) {
-                errorMessage = NSLocalizedString("Fatal error, please inform app developer: Cannot store parameter: ", comment: "") + key.rawValue
+                errorMessage = NSLocalizedString("Cannot store parameter: ", comment: "") + key.rawValue
                 return false
             }
             UserSettings.keyStore.set(value, forKey: key.rawValue)
         case .date(let value, let key):
             if !UserDefaultsDateKey.allCases.contains(key) {
-                errorMessage = NSLocalizedString("Fatal error, please inform app developer: Cannot store parameter: ", comment: "") + key.rawValue
+                errorMessage = NSLocalizedString("Cannot store parameter: ", comment: "") + key.rawValue
                 return false
             }
             UserSettings.keyStore.set(value, forKey: key.rawValue)
         case .string(let value, let key):
             if !UserDefaultsStringKey.allCases.contains(key) {
-                errorMessage = NSLocalizedString("Fatal error, please inform app developer: Cannot store parameter: ", comment: "") + key.rawValue
+                errorMessage = NSLocalizedString("Cannot store parameter: ", comment: "") + key.rawValue
                 return false
             }
             UserSettings.keyStore.set(value, forKey: key.rawValue)

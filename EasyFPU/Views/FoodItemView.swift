@@ -127,7 +127,7 @@ struct FoodItemView: View {
             Button("Edit", systemImage: "pencil") {
                 if foodItemVM.cdFoodItem?.composedFoodItem != nil {
                     // There's an associated recipe, so show message to open Recipe Editor
-                    activeAlert = .simpleAlert(type: .notice(message: NSLocalizedString("This food item is created from a recipe, please open it in the recipe editor", comment: "")))
+                    activeAlert = .simpleAlert(type: .notice(message: "This food item is created from a recipe, please open it in the recipe editor"))
                     showingAlert = true
                 } else {
                     navigationPath.append(FoodItemListView.FoodListNavigationDestination.EditFoodItem(category: category, foodItemVM: foodItemVM))
