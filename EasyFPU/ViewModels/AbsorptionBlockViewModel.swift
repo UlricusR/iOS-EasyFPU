@@ -97,7 +97,8 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(maxFpu)
+        hasher.combine(absorptionTime)
     }
     
     static func < (lhs: AbsorptionBlockViewModel, rhs: AbsorptionBlockViewModel) -> Bool {
