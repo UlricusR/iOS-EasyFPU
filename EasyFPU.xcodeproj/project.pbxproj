@@ -421,8 +421,8 @@
 				1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */,
 				1BC75242254AF786001C4D27 /* ComposedFoodItemViewModel.swift */,
 				1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */,
-				1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */,
 				1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */,
+				1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";

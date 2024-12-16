@@ -579,7 +579,7 @@ struct FoodItemEditor: View {
                     }
                     DispatchQueue.main.async {
                         self.notificationState = .void
-                        self.navigationPath.append(FoodItemEditorNavigationDestination.FoodSearchResultDetails(product: foodDatabaseEntry, backNavigationIfSelected: 1))
+                        self.navigationPath.append(FoodItemEditorNavigationDestination.FoodSearchResultDetails(product: foodDatabaseEntry, backNavigationIfSelected: 2))
                     }
                     
                     
