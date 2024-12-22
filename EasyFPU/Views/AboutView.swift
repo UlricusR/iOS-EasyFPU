@@ -26,7 +26,7 @@ struct AboutView: View {
                 
                 Spacer()
             }
-            .navigationBarTitle(Text("About this app"))
+            .navigationTitle(Text("About this app"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {

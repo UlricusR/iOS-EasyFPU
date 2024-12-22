@@ -351,12 +351,20 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     }
     
     /**
-     FoodItem can only be deleted if it has no relationship to an Ingredient.
+     Returns the names of the recipes associated with this food item.
      
-     - Returns: true if no relationship to an Ingredient is found
+     - Returns: The names of the associated recipes, nil if none found.
      */
-    func canBeDeleted() -> Bool {
-        return !(cdFoodItem?.ingredients != nil && cdFoodItem!.ingredients!.count > 0)
+    func getAssociatedRecipeNames() -> [String]? {
+        if (cdFoodItem?.ingredients == nil) || (cdFoodItem!.ingredients!.count == 0) {
+            return nil
+        } else {
+            var associatedRecipeNames = [String]()
+            for case let ingredient as Ingredient in cdFoodItem!.ingredients! {
+                associatedRecipeNames.append(ingredient.composedFoodItem.name)
+            }
+            return associatedRecipeNames
+        }
     }
     
     /// Checks if an associated FoodItem exists.

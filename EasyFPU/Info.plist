@@ -20,6 +20,18 @@
 				<string>info.rueth.EasyFPU.FoodItem</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>EasyFPU Recipe File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>info.rueth.EasyFPU.ComposedFoodItem</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
@@ -111,6 +123,29 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>fooditem</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/easyfpu</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>EasyFPU Recipe</string>
+			<key>UTTypeIconFiles</key>
+			<array/>
+			<key>UTTypeIdentifier</key>
+			<string>info.rueth.EasyFPU.ComposedFoodItem</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>recipe</string>
 				</array>
 				<key>public.mime-type</key>
 				<array>

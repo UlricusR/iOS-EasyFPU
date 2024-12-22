@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, VariableAmountItem {
+class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, VariableAmountItem {
     var id: UUID
     @Published var name: String
     var category: FoodItemCategory
@@ -311,5 +311,13 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Identifiable, Variab
         try composedFoodItem.encode(amount, forKey: .amount)
         try composedFoodItem.encode(numberOfPortions, forKey: .numberOfPortions)
         try composedFoodItem.encode(foodItemVMs, forKey: .ingredients)
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: ComposedFoodItemViewModel, rhs: ComposedFoodItemViewModel) -> Bool {
+        lhs.id == rhs.id
     }
 }

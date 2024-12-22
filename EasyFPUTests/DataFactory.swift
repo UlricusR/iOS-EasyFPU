@@ -167,7 +167,9 @@ struct DataFactory {
             caloriesPer100g: caloriesPer100g!,
             carbsPer100g: carbsPer100g!,
             sugarsPer100g: sugarsPer100g!,
-            amount: amount!
+            amount: amount!,
+            sourceID: nil,
+            sourceDB: nil
         )
         return foodItemVM
     }
@@ -250,7 +252,9 @@ struct DataFactory {
             caloriesPer100g: caloriesPer100g,
             carbsPer100g: carbsPer100g,
             sugarsPer100g: sugarsPer100g,
-            amount: amount
+            amount: amount,
+            sourceID: nil,
+            sourceDB: nil
         )
         return foodItemVM
     }

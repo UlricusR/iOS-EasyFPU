@@ -54,7 +54,7 @@ struct HelpView: View {
                     return AnyView(HelpFoodItemComposer())
                 }
             }
-            .navigationBarTitle(NSLocalizedString(self.helpScreen.rawValue, comment: ""))
+            .navigationTitle(NSLocalizedString(self.helpScreen.rawValue, comment: ""))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {

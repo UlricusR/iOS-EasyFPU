@@ -10,18 +10,23 @@ import SwiftUI
 
 struct RecipeView: View {
     enum SheetState: Identifiable {
-        case editRecipe
         case exportRecipe
         
         var id: SheetState { self }
     }
     
+    enum AlertChoice {
+        case simpleAlert(type: SimpleAlertType)
+        case confirmDelete
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Binding var navigationPath: NavigationPath
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
-    @Binding var notificationState: RecipeListView.NotificationState?
     @State private var activeSheet: SheetState?
+    @State private var showingAlert = false
+    @State private var activeAlert: AlertChoice?
     @State private var isConfirming = false
-    @State private var alertIsPresented: Bool = false
     
     var body: some View {
         // Name, favorite
@@ -39,10 +44,11 @@ struct RecipeView: View {
                     UserSettings.shared.composedProduct = ComposedFoodItemViewModel(from: composedFoodItemVM.cdComposedFoodItem!)
                     
                     // Switch to Ingredients tab
-                    activeSheet = .editRecipe
+                    navigationPath.append(RecipeListView.RecipeNavigationDestination.EditRecipe(recipe: composedFoodItemVM))
                 } else {
                     // No associated cdComposedFoodItem - this should not happen!
-                    notificationState = .errorMessage(NSLocalizedString("No associated cdComposedFoodItem", comment: ""))
+                    activeAlert = .simpleAlert(type: .fatalError(message: "No associated cdComposedFoodItem"))
+                    showingAlert = true
                 }
             }
             .tint(.blue)
@@ -62,7 +68,8 @@ struct RecipeView: View {
                     if composedFoodItemVM.hasAssociatedFoodItem() {
                         isConfirming.toggle()
                     } else {
-                        alertIsPresented.toggle()
+                        activeAlert = .confirmDelete
+                        showingAlert = true
                     }
                 }
             }
@@ -80,18 +87,10 @@ struct RecipeView: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert(
-            "Delete recipe",
-            isPresented: $alertIsPresented
-        ) {
-            Button("Delete", role: .destructive) {
-                deleteRecipeOnly()
-            }
-            Button("Cancel", role: .cancel) {
-                alertIsPresented = false
-            }
+        .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
+            alertAction(for: $0)
         } message: {
-            Text("Do you really want to delete this recipe? This cannot be undone!")
+            alertMessage(for: $0)
         }
         .confirmationDialog(
             "Warning",
@@ -114,21 +113,46 @@ struct RecipeView: View {
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
-        case .editRecipe:
-            if self.composedFoodItemVM.cdComposedFoodItem != nil {
-                FoodItemComposerView(
-                    composedFoodItemVM: self.composedFoodItemVM,
-                    notificationState: $notificationState
-                ).environment(\.managedObjectContext, managedObjectContext)
-            } else {
-                Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
-            }
         case .exportRecipe:
             if let path = composedFoodItemVM.exportToURL() {
                 ActivityView(activityItems: [path], applicationActivities: nil)
             } else {
                 Text(NSLocalizedString("Could not generate data export", comment: ""))
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func alertMessage(for alert: AlertChoice) -> some View {
+        switch alert {
+        case let .simpleAlert(type: type):
+            type.message()
+        case .confirmDelete:
+            Text("Do you really want to delete this recipe? This cannot be undone!")
+        }
+    }
+
+    @ViewBuilder
+    private func alertAction(for alert: AlertChoice) -> some View {
+        switch alert {
+        case let .simpleAlert(type: type):
+            type.button()
+        case .confirmDelete:
+            Button("Do not delete", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                deleteRecipeOnly()
+            }
+        }
+    }
+    
+    private var alertTitle: LocalizedStringKey {
+        switch activeAlert {
+        case let .simpleAlert(type: type):
+            LocalizedStringKey(type.title())
+        case .confirmDelete:
+            LocalizedStringKey("Delete recipe")
+        case nil:
+            ""
         }
     }
     

@@ -2,15 +2,11 @@
 
 # A list of devices you want to take the screenshots from
 devices([
-    "iPhone 16",
-    "iPhone 16 Plus",
-    "iPhone 16 Pro",
-    "iPhone 16 Pro Max",
-    "iPhone SE (3rd generation)",
-    "iPad (10th generation)",
-    "iPad Air 11-inch (M2)",
-    "iPad Air 13-inch (M2)",
-    "iPad mini (A17 Pro)"
+    "iPhone 16 Pro",                # 6.3" - required for AppStore Connect
+    "iPhone 16 Pro Max",            # 6.9" - required for AppStore Connect
+    "iPhone SE (3rd generation)",   # 4.7" - required for AppStore Connect
+    "iPad Air 11-inch (M2)",        # 11.0" - required for AppStore Connect
+    "iPad Air 13-inch (M2)"         # 13.0" - required for AppStore Connect
 ])
 
 languages([

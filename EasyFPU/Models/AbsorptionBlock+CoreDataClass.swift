@@ -30,9 +30,19 @@ public class AbsorptionBlock: NSManagedObject {
         try? viewContext.save()
     }
     
-    static func create(from absorptionBlockFromJson: AbsorptionBlockFromJson) -> AbsorptionBlock {
+    static func create(absorptionTime: Int, maxFpu: Int) -> AbsorptionBlock {
         let cdAbsorptionBlock = AbsorptionBlock(context: CoreDataStack.viewContext)
         cdAbsorptionBlock.id = UUID()
+        cdAbsorptionBlock.absorptionTime = Int64(absorptionTime)
+        cdAbsorptionBlock.maxFpu = Int64(maxFpu)
+        
+        CoreDataStack.shared.save()
+        return cdAbsorptionBlock
+    }
+    
+    static func create(from absorptionBlockFromJson: AbsorptionBlockFromJson, id: UUID) -> AbsorptionBlock {
+        let cdAbsorptionBlock = AbsorptionBlock(context: CoreDataStack.viewContext)
+        cdAbsorptionBlock.id = id
         cdAbsorptionBlock.absorptionTime = Int64(absorptionBlockFromJson.absorptionTime)
         cdAbsorptionBlock.maxFpu = Int64(absorptionBlockFromJson.maxFpu)
         
@@ -40,19 +50,43 @@ public class AbsorptionBlock: NSManagedObject {
         return cdAbsorptionBlock
     }
     
-    static func create(from absorptionBlockFromJson: AbsorptionBlockViewModel) -> AbsorptionBlock {
+    static func create(from absorptionBlockVM: AbsorptionBlockViewModel) -> AbsorptionBlock {
         let cdAbsorptionBlock = AbsorptionBlock(context: CoreDataStack.viewContext)
         cdAbsorptionBlock.id = UUID()
-        cdAbsorptionBlock.absorptionTime = Int64(absorptionBlockFromJson.absorptionTime)
-        cdAbsorptionBlock.maxFpu = Int64(absorptionBlockFromJson.maxFpu)
+        cdAbsorptionBlock.absorptionTime = Int64(absorptionBlockVM.absorptionTime)
+        cdAbsorptionBlock.maxFpu = Int64(absorptionBlockVM.maxFpu)
         
         CoreDataStack.shared.save()
         return cdAbsorptionBlock
     }
     
-    static func remove(_ absorptionBlock: AbsorptionBlock, from absorptionScheme: AbsorptionScheme) {
-        absorptionScheme.removeFromAbsorptionBlocks(absorptionBlockToBeDeleted: absorptionBlock)
-        CoreDataStack.viewContext.delete(absorptionBlock)
+    static func updateAbsorptionTime(cdAbsorptionBlock: AbsorptionBlock, with absorptionTime: Int) {
+        cdAbsorptionBlock.absorptionTime = Int64(absorptionTime)
         CoreDataStack.shared.save()
+    }
+    
+    static func updateMaxFpu(cdAbsorptionBlock: AbsorptionBlock, with maxFpu: Int) {
+        cdAbsorptionBlock.maxFpu = Int64(maxFpu)
+        CoreDataStack.shared.save()
+    }
+    
+    static func remove(_ cdAbsorptionBlock: AbsorptionBlock) {
+        CoreDataStack.viewContext.delete(cdAbsorptionBlock)
+        CoreDataStack.shared.save()
+    }
+    
+    static func getAbsorptionBlockByID(id: UUID) -> AbsorptionBlock? {
+        let predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        let request: NSFetchRequest<AbsorptionBlock> = AbsorptionBlock.fetchRequest()
+        request.predicate = predicate
+        do {
+            let result = try CoreDataStack.viewContext.fetch(request)
+            if !result.isEmpty {
+                return result[0]
+            }
+        } catch {
+            debugPrint("Error fetching absorption block: \(error)")
+        }
+        return nil
     }
 }

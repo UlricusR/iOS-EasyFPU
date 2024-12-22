@@ -40,6 +40,9 @@
 "Warning" = "Warning";
 "Notice" = "Notice";
 "Success" = "Success";
+"Fatal Error" = "Fatal Error";
+"This should not have happened, please inform the developer team." = "This should not have happened, please inform the developer team.";
+"Cannot store parameter: " = "Cannot store parameter: ";
 
 // About
 "About" = "About";
@@ -92,6 +95,7 @@
 "Typical amount" = "Typical amount";
 "Typical amounts:" = "Typical amounts:";
 "Add to typical amounts" = "Add to typical amounts";
+"Could not identify typical amount." = "Could not identify typical amount.";
 "Comment" = "Comment";
 "As sold" = "As sold";
 "Initial source" = "Initial source";
@@ -112,7 +116,7 @@
 "Delete food" = "Delete food";
 "Do you really want to delete this food item? This cannot be undone!" = "Do you really want to delete this food item? This cannot be undone!";
 "Cannot delete food" = "Cannot delete food";
-"This food item is in use in a recipe, please remove it from the recipe before deleting." = "This food item is in use in a recipe, please remove it from the recipe before deleting.";
+"This food item is in use in a recipe" = "This food item is in use in the following recipes, please remove it before deleting: ";
 
 // Ingredients
 "Ingredients" = "Ingredients";
@@ -139,8 +143,8 @@
 "successfully saved as Recipe" = "successfully saved as Recipe, but not added to Dishes";
 "successfully updated in Products" = "successfully updated as Recipe and in Dishes";
 "successfully updated as Recipe" = "successfully updated as Recipe, but not in Dishes";
-"Could not create the composed food item" = "Oops! Could not create the composed food item due to missing ingredients. This should not happen. Please inform the App developer.";
-"Could not update the composed food item" = "Oops! Could not update the composed food item, as no Recipe was found. This should not happen. Please inform the App developer.";
+"Could not create the composed food item" = "Oops! Could not create the composed food item due to missing ingredients.";
+"Could not update the composed food item" = "Oops! Could not update the composed food item, as no Recipe was found.";
 "Associated Ingredients" = "Associated Recipes";
 "This food item is used as ingredient in the following recipes:" = "This ingredient is used in the following recipes:";
 "Updating the food item will also update the associated recipes." = "Updating the ingredient will change the nutritional values of these recipes.";
@@ -167,6 +171,7 @@
 "Carbs: " = "Carbs: ";
 "Calories: " = "Calories: ";
 "Amount: " = "Amount: ";
+"Quantity" = "Quantity as sold";
 "Data alert" = "Data alert";
 "Name must not be empty" = "Name must not be empty";
 "Calories not a valid number or negative" = "Calories not a valid number or negative";
@@ -181,7 +186,6 @@
 "Thereof" = "Thereof";
 "Search term must not be empty" = "Search term must not be empty";
 " - new" = " - new";
-"This should not have happened - please inform the app developer" = "Oops! This should not have happened - please inform the app developer";
 "A food item with this name already exists" = "An entry with this name already exists";
 
 // Recipe list and editor
@@ -218,9 +222,10 @@
 "Absorption time is equals or less than the one of the block before" = "Absorption time is equals or less than the one of the block before";
 "Absorption time must be between previous and following block" = "Absorption time must be between previous and following block";
 "At least one absorption block required" = "At least one absorption block required";
-"Fatal error: Cannot determine absorption block index, please inform the app developer" = "Fatal error: Cannot determine absorption block index, please inform the app developer";
+"Cannot determine absorption block index." = "Cannot determine absorption block index.";
 "Fatal error: Cannot convert numbers into string, please contact app developer" = "Fatal error: Cannot convert numbers into string, please contact app developer";
 "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer" = "Fatal error: Couldn't find CoreData FoodItem, please inform the app developer";
+"Absorption block index out of range." = "Absorption block index out of range.";
 "Reset to default" = "Reset to default";
 "Absorption Time Parameters for Sugars" = "Absorption Time Parameters for Sugars";
 "Absorption Time Parameters for Carbs" = "Absorption Time Parameters for Carbs";
@@ -246,7 +251,7 @@
 "Failed to access " = "Failed to access ";
 "Failed to export food list to: " = "Failed to export food list to: ";
 "Successfully imported food list" = "Successfully imported food list";
-"Failed to import food list" = "Oops! Failed to import food list. This should not have happened, please contact the developer.";
+"Failed to import food list" = "Oops! Failed to import food list.";
 "Import food list" = "There's already food in the database.";
 "Please select" = "Should the imported food replace it or be added to it?";
 "Replace" = "Replace";
@@ -261,6 +266,7 @@
 "Failed to decode because it appears to be invalid JSON" = "Failed to decode because it appears to be invalid JSON";
 "Failed to decode - " = "Failed to decode - ";
 "Help on the Web" = "Help on the Web";
+"Could not identify absorption block" = "Could not identify absorption block";
 
 // Meal export
 "Cannot write data: HealthKit seem not to be available on your device." = "Cannot write data: HealthKit seem not to be available on your device.";
@@ -275,7 +281,7 @@
 "Total Meal Carbs" = "Total Meal Carbs";
 "Total Meal Calories" = "Total Meal Calories";
 "Please select at least one entry to export" = "Please select at least one entry to export";
-"Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks" = "Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks";
+"Absorption Scheme has no Absorption Blocks" = "Absorption Scheme has no Absorption Blocks";
 "Preview of exported carbs in g" = "Preview of exported carbs in g";
 "Delay until meal" = "Meal starts in";
 "LastSugarsExport" = "sugars";
@@ -310,7 +316,7 @@
 "- No name -" = "- No name -";
 "Error scanning food: " = "Error scanning food: ";
 "Loading food item..." = "Loading food item...";
-"Scanned Food" = "Scanned Food";
+"Scanned Food" = "Found Food";
 "No food found" = "No food found";
 "Cannot decode JSON" = "Cannot decode JSON";
 "Unable to create image url from " = "Unable to create image url from ";
@@ -327,6 +333,9 @@
 "Accept and continue" = "Use at own risk";
 "Decline and cancel" = "Decline and cancel";
 "Generate Typical Amounts" = "Generate Typical Amounts";
+
+// Data import/export
+"Cannot find JSON content. Please contact the app developer." = "Cannot find JSON content. Please contact the app developer.";
 
 // Help screens
 "Menu bar" = "Menu bar";

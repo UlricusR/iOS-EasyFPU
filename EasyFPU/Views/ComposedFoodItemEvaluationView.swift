@@ -9,23 +9,28 @@
 import SwiftUI
 
 struct ComposedFoodItemEvaluationView: View {
+    enum MealNavigationDestination: Hashable {
+        case SelectProduct
+        case Details
+        case ExportToHealth
+    }
+    
     enum SheetState: Identifiable {
         case help
-        case exportToHealth
-        case addProduct
-        case details
         
         var id: SheetState { self }
     }
     
-    @ObservedObject var absorptionScheme: AbsorptionScheme
+    @Environment(\.managedObjectContext) var managedObjectContext
+    @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @ObservedObject var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
+    @State private var navigationPath = NavigationPath()
     @State var activeSheet: SheetState?
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             VStack {
                 if composedFoodItemVM.foodItemVMs.isEmpty {
                     // No products selected for the meal, so display empty state info and a call for action button
@@ -36,7 +41,7 @@ struct ComposedFoodItemEvaluationView: View {
                         .accessibilityIdentifierLeaf("EmpyStateText")
                     Button {
                         // Add new product to composed food item
-                        activeSheet = .addProduct
+                        navigationPath.append(MealNavigationDestination.SelectProduct)
                     } label: {
                         HStack {
                             Image(systemName: "plus.circle")
@@ -82,7 +87,7 @@ struct ComposedFoodItemEvaluationView: View {
                         Section(header: Text("Products")) {
                             // Button to add products
                             Button(action: {
-                                activeSheet = .addProduct
+                                navigationPath.append(MealNavigationDestination.SelectProduct)
                             }) {
                                 HStack {
                                     Image(systemName: "pencil.circle")
@@ -110,14 +115,14 @@ struct ComposedFoodItemEvaluationView: View {
                             
                             // The link to the details
                             Button("Meal Details", systemImage: "info.circle.fill") {
-                                activeSheet = .details
+                                navigationPath.append(MealNavigationDestination.Details)
                             }
                             .accessibilityIdentifierLeaf("MealDetailsButton")
                         }
                     }
                 }
             }
-            .navigationBarTitle(Text("Calculate meal"))
+            .navigationTitle(Text("Calculate meal"))
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Button(action: {
@@ -144,7 +149,7 @@ struct ComposedFoodItemEvaluationView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        activeSheet = .exportToHealth
+                        navigationPath.append(MealNavigationDestination.ExportToHealth)
                     }) {
                         HealthDataHelper.healthKitIsAvailable() ? AnyView(Image(systemName: "square.and.arrow.up").imageScale(.large)) : AnyView(EmptyView())
                     }
@@ -152,11 +157,64 @@ struct ComposedFoodItemEvaluationView: View {
                     .accessibilityIdentifierLeaf("ExportButton")
                 }
             }
+            .navigationDestination(for: FoodItemListView.FoodListNavigationDestination.self) { screen in
+                switch screen {
+                case let .AddFoodItem(category: category):
+                    FoodMaintenanceListView.addFoodItem(
+                        $navigationPath: $navigationPath,
+                        category: category,
+                        managedObjectContext: managedObjectContext,
+                        navigationBarBackButtonHidden: true
+                    )
+                case let .EditFoodItem(category: category, foodItemVM: foodItemVM):
+                    FoodMaintenanceListView.editFoodItem(
+                        $navigationPath: $navigationPath,
+                        category: category,
+                        managedObjectContext: managedObjectContext,
+                        navigationBarBackButtonHidden: true,
+                        foodItemVM: foodItemVM
+                    )
+                case let .SelectFoodItem(category: category, draftFoodItem: foodItemVM, composedFoodItem: composedFoodItemVM):
+                    FoodItemSelector(
+                        navigationPath: $navigationPath,
+                        draftFoodItem: foodItemVM,
+                        composedFoodItem: composedFoodItemVM,
+                        category: category
+                    )
+                    .accessibilityIdentifierBranch("SelectFoodItem")
+                }
+            }
+            .navigationDestination(for: MealNavigationDestination.self) { screen in
+                switch screen {
+                case .SelectProduct:
+                    FoodItemListView(
+                        category: .product,
+                        listType: .selection,
+                        foodItemListTitle: NSLocalizedString("My Products", comment: ""),
+                        helpSheet: .productSelectionListHelp,
+                        navigationPath: $navigationPath,
+                        composedFoodItem: composedFoodItemVM
+                    )
+                    .accessibilityIdentifierBranch("AddProductToMeal")
+                case .Details:
+                    ComposedFoodItemDetailsView(
+                        absorptionScheme: absorptionScheme,
+                        composedFoodItem: composedFoodItemVM,
+                        userSettings: userSettings
+                    )
+                    .accessibilityIdentifierBranch("MealDetails")
+                case .ExportToHealth:
+                    ComposedFoodItemExportView(
+                        composedFoodItem: composedFoodItemVM,
+                        absorptionScheme: absorptionScheme
+                    )
+                    .accessibilityIdentifierBranch("ExportMealToHealth")
+                }
+            }
+            .sheet(item: $activeSheet) {
+                sheetContent($0)
+            }
         }
-        .sheet(item: $activeSheet) {
-            sheetContent($0)
-        }
-
     }
     
     @ViewBuilder
@@ -165,15 +223,6 @@ struct ComposedFoodItemEvaluationView: View {
         case .help:
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpCalculateMeal")
-        case .exportToHealth:
-            ComposedFoodItemExportView(composedFoodItem: composedFoodItemVM, absorptionScheme: absorptionScheme)
-                .accessibilityIdentifierBranch("ExportMealToHealth")
-        case .addProduct:
-            ProductSelectionListView(composedFoodItemVM: composedFoodItemVM)
-                .accessibilityIdentifierBranch("AddProductToMeal")
-        case .details:
-            ComposedFoodItemDetailsView(absorptionScheme: absorptionScheme, composedFoodItem: composedFoodItemVM, userSettings: userSettings)
-                .accessibilityIdentifierBranch("MealDetails")
         }
     }
 }
