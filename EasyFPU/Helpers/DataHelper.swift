@@ -9,10 +9,12 @@
 import Foundation
 import UIKit
 import MobileCoreServices
+import SwiftUI
+import UniformTypeIdentifiers
 
 /// Publishes the main bundle internally - required to access the data model for unit testing
 internal enum DataModel {
-  internal static let bundle = Bundle.main
+    internal static let bundle = Bundle.main
 }
 
 enum InvalidNumberError: Error {
@@ -30,6 +32,63 @@ struct ImportData: Identifiable {
     var id = UUID()
     let foodItemVMsToBeImported: [FoodItemViewModel]
     let composedFoodItemVMsToBeImported: [ComposedFoodItemViewModel]?
+}
+
+struct ExportJSONDocument: FileDocument {
+    static var readableContentTypes: [UTType] {
+        [UTType.json]
+    }
+    
+    private var jsonContent: Data
+    
+    /// Creates an empty Data object for jsonContent, only required for the .fileExport modifier
+    init() {
+        jsonContent = Data()
+    }
+    
+    /// Creates a JSON Data object with all FoodItems and ComposedFoodItems
+    /// - Parameter errorMessage: The error message if initialization fails
+    init?(errorMessage: inout String) {
+        // Get Core Data FoodItems and load them into FoodItemViewModels
+        let cdFoodItems = FoodItem.fetchAll()
+        var foodItems = [FoodItemViewModel]()
+        for cdFoodItem in cdFoodItems {
+            foodItems.append(FoodItemViewModel(from: cdFoodItem))
+        }
+        
+        // Get Core Data ComposedFoodItems and load them into ComposedFoodItemViewModels
+        let cdComposedFoodItems = ComposedFoodItem.fetchAll()
+        var composedFoodItems = [ComposedFoodItemViewModel]()
+        for cdComposedFoodItem in cdComposedFoodItems {
+            composedFoodItems.append(ComposedFoodItemViewModel(from: cdComposedFoodItem))
+        }
+        
+        // Prepare the DataWrapper
+        let dataWrapper = DataWrapper(dataModelVersion: .version2, foodItemVMs: foodItems, composedFoodItemVMs: composedFoodItems)
+        
+        // Encode
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            jsonContent = try encoder.encode(dataWrapper)
+        } catch {
+            errorMessage = error.localizedDescription
+            return nil
+        }
+    }
+    
+    init(configuration: ReadConfiguration) throws {
+        if let data = configuration.file.regularFileContents {
+            jsonContent = data
+        } else {
+            // Create an empty Data object
+            jsonContent = Data()
+        }
+    }
+    
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        return FileWrapper(regularFileWithContents: jsonContent)
+    }
 }
 
 struct DataHelper {
@@ -133,42 +192,6 @@ struct DataHelper {
         } catch {
             errorMessage = NSLocalizedString("Failed to decode - ", comment: "") + error.localizedDescription
             return nil
-        }
-    }
-    
-    static func exportFoodItems(_ dir: URL, fileName: inout String) -> Bool {
-        // Get Core Data FoodItems and load them into FoodItemViewModels
-        let cdFoodItems = FoodItem.fetchAll()
-        var foodItems = [FoodItemViewModel]()
-        for cdFoodItem in cdFoodItems {
-            foodItems.append(FoodItemViewModel(from: cdFoodItem))
-        }
-        
-        // Get Core Data ComposedFoodItems and load them into ComposedFoodItemViewModels
-        let cdComposedFoodItems = ComposedFoodItem.fetchAll()
-        var composedFoodItems = [ComposedFoodItemViewModel]()
-        for cdComposedFoodItem in cdComposedFoodItems {
-            composedFoodItems.append(ComposedFoodItemViewModel(from: cdComposedFoodItem))
-        }
-        
-        // Prepare the DataWrapper
-        let dataWrapper = DataWrapper(dataModelVersion: .version2, foodItemVMs: foodItems, composedFoodItemVMs: composedFoodItems)
-        
-        // Encode
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
-        let timestamp = formatter.string(from: Date())
-        fileName = "EasyFPU-export_\(timestamp).json"
-        do {
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
-            let contents = try encoder.encode(dataWrapper)
-            let fileURL = dir.appendingPathComponent(fileName)
-            try contents.write(to: fileURL)
-            return true
-        } catch {
-            debugPrint(error)
-            return false
         }
     }
     

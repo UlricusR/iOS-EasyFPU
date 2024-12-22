@@ -29,6 +29,7 @@ struct BusinessLogicTests {
     private static let maxFPU: Int = 3
     private static let maxFPUAsString = "3"
     
+    // Are exactly double values from defaults
     private static let absorptionBlocks: [AbsorptionBlockFromJson] = [
         AbsorptionBlockFromJson(maxFpu: 2, absorptionTime: 6),
         AbsorptionBlockFromJson(maxFpu: 4, absorptionTime: 8),
@@ -50,7 +51,9 @@ struct BusinessLogicTests {
                 caloriesPer100g: BusinessLogicTests.caloriesPer100g,
                 carbsPer100g: BusinessLogicTests.carbsPer100g,
                 sugarsPer100g: BusinessLogicTests.sugarsPer100g,
-                amount: BusinessLogicTests.amount
+                amount: BusinessLogicTests.amount,
+                sourceID: nil,
+                sourceDB: nil
             )
             BusinessLogicTests.checkFoodItemValues(foodItemVM: foodItemVM)
         }
@@ -68,7 +71,9 @@ struct BusinessLogicTests {
                 carbsAsString: BusinessLogicTests.carbsPer100gAsString,
                 sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
                 amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError
+                error: &foodItemVMError,
+                sourceID: nil,
+                sourceDB: nil
             )
             #expect(foodItemVMError  == .none)
             try #require(foodItemVM != nil)
@@ -88,7 +93,9 @@ struct BusinessLogicTests {
                 carbsAsString: BusinessLogicTests.carbsPer100gAsString,
                 sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
                 amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError
+                error: &foodItemVMError,
+                sourceID: nil,
+                sourceDB: nil
             )
             #expect(foodItemVMError  == FoodItemViewModelError.name(NSLocalizedString("Name must not be empty", comment: "")))
             #expect(foodItemVM == nil)
@@ -116,7 +123,9 @@ struct BusinessLogicTests {
                 carbsAsString: BusinessLogicTests.carbsPer100gAsString,
                 sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
                 amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError
+                error: &foodItemVMError,
+                sourceID: nil,
+                sourceDB: nil
             )
             #expect(foodItemVMError == FoodItemViewModelError.calories(errorString))
             #expect(foodItemVM == nil)
@@ -144,7 +153,9 @@ struct BusinessLogicTests {
                 carbsAsString: inputString,
                 sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
                 amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError
+                error: &foodItemVMError,
+                sourceID: nil,
+                sourceDB: nil
             )
             #expect(foodItemVMError == FoodItemViewModelError.carbs(errorString))
             #expect(foodItemVM == nil)
@@ -172,7 +183,9 @@ struct BusinessLogicTests {
                 carbsAsString: BusinessLogicTests.carbsPer100gAsString,
                 sugarsAsString: inputString,
                 amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError
+                error: &foodItemVMError,
+                sourceID: nil,
+                sourceDB: nil
             )
             #expect(foodItemVMError == FoodItemViewModelError.sugars(errorString))
             #expect(foodItemVM == nil)
@@ -191,7 +204,9 @@ struct BusinessLogicTests {
                 carbsAsString: BusinessLogicTests.carbsPer100gAsString,
                 sugarsAsString: String(BusinessLogicTests.carbsPer100g + 1),
                 amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError
+                error: &foodItemVMError,
+                sourceID: nil,
+                sourceDB: nil
             )
             #expect(foodItemVMError == FoodItemViewModelError.tooMuchSugars(NSLocalizedString("Sugars exceed carbs", comment: "")))
             #expect(foodItemVM == nil)
@@ -210,7 +225,9 @@ struct BusinessLogicTests {
                 carbsAsString: NumberFormatter().string(from: BusinessLogicTests.caloriesPer100g / 4 as NSNumber)!,
                 sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
                 amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError
+                error: &foodItemVMError,
+                sourceID: nil,
+                sourceDB: nil
             )
             #expect(foodItemVMError == FoodItemViewModelError.none)
             #expect(foodItemVM != nil)
@@ -229,7 +246,9 @@ struct BusinessLogicTests {
                 carbsAsString: NumberFormatter().string(from: BusinessLogicTests.caloriesPer100g / 4 + 1 as NSNumber)!,
                 sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
                 amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError
+                error: &foodItemVMError,
+                sourceID: nil,
+                sourceDB: nil
             )
             #expect(foodItemVMError == FoodItemViewModelError.tooMuchCarbs(NSLocalizedString("Calories from carbs (4 kcal per gram) exceed total calories", comment: "")))
             #expect(foodItemVM == nil)
@@ -259,7 +278,9 @@ struct BusinessLogicTests {
                 carbsAsString: BusinessLogicTests.carbsPer100gAsString,
                 sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
                 amountAsString: inputString,
-                error: &foodItemVMError
+                error: &foodItemVMError,
+                sourceID: nil,
+                sourceDB: nil
             )
             #expect(foodItemVMError == FoodItemViewModelError.amount(errorString))
             #expect(foodItemVM == nil)
@@ -343,10 +364,10 @@ struct BusinessLogicTests {
             )
             let absorptionBlockVM1 = AbsorptionBlockViewModel(from: absorptionBlock)
             
-            var errorMessage = ""
-            let absorptionBlockVM2 = AbsorptionBlockViewModel(maxFpuAsString: BusinessLogicTests.maxFPUAsString, absorptionTimeAsString: BusinessLogicTests.absorptionTimeAsString, errorMessage: &errorMessage)
-            #expect(errorMessage.isEmpty)
-            try #require(absorptionBlockVM2 != nil)
+            var alert: SimpleAlertType? = nil
+            let absorptionBlockVM2 = AbsorptionBlockViewModel(maxFpuAsString: BusinessLogicTests.maxFPUAsString, absorptionTimeAsString: BusinessLogicTests.absorptionTimeAsString, activeAlert: &alert)
+            #expect(alert == nil)
+            #expect(absorptionBlockVM2 != nil)
             #expect(absorptionBlockVM1 == absorptionBlockVM2)
         }
         
@@ -363,9 +384,9 @@ struct BusinessLogicTests {
             ]
         ))
         func absorptionBlockInitializerWithWrongMaxFPU(inputString: String, errorString: String) async throws {
-            var errorMessage = ""
-            let absorptionBlockVM = AbsorptionBlockViewModel(maxFpuAsString: inputString, absorptionTimeAsString: BusinessLogicTests.absorptionTimeAsString, errorMessage: &errorMessage)
-            #expect(errorMessage == errorString)
+            var alert: SimpleAlertType? = nil
+            let absorptionBlockVM = AbsorptionBlockViewModel(maxFpuAsString: inputString, absorptionTimeAsString: BusinessLogicTests.absorptionTimeAsString, activeAlert: &alert)
+            #expect(alert?.messageAsString() == errorString)
             #expect(absorptionBlockVM == nil)
         }
         
@@ -382,83 +403,154 @@ struct BusinessLogicTests {
             ]
         ))
         func absorptionBlockInitializerWithWrongAbsorptionTime(inputString: String, errorString: String) async throws {
-            var errorMessage = ""
-            let absorptionBlockVM = AbsorptionBlockViewModel(maxFpuAsString: BusinessLogicTests.maxFPUAsString, absorptionTimeAsString: inputString, errorMessage: &errorMessage)
-            #expect(errorMessage == errorString)
+            var alert: SimpleAlertType? = nil
+            let absorptionBlockVM = AbsorptionBlockViewModel(maxFpuAsString: BusinessLogicTests.maxFPUAsString, absorptionTimeAsString: inputString, activeAlert: &alert)
+            #expect(alert?.messageAsString() == errorString)
             #expect(absorptionBlockVM == nil)
         }
         
         @Test("ID 4 - Absorption Scheme")
         func absorptionScheme() async throws {
-            // Create Core Data AbsorptionScheme
-            let absorptionScheme = AbsorptionScheme()
-            AbsorptionScheme.create(from: BusinessLogicTests.absorptionBlocks, for: absorptionScheme)
-            #expect(absorptionScheme.absorptionBlocks.count == 5)
-            
             // Create AbsorptionSchemeViewModel
-            let absorptionSchemeVM = AbsorptionSchemeViewModel(from: absorptionScheme)
+            let absorptionSchemeVM = AbsorptionSchemeViewModel()
+            for absorptionBlockJson in absorptionBlocks {
+                absorptionSchemeVM.absorptionBlocks.append(AbsorptionBlockViewModel(from: absorptionBlockJson))
+            }
+            #expect(absorptionSchemeVM.absorptionBlocks.count == 5)
+            for absorptionBlockVM in absorptionSchemeVM.absorptionBlocks {
+                let cdAbsorptionBlock = AbsorptionBlock.getAbsorptionBlockByID(id: absorptionBlockVM.id)
+                try #require(cdAbsorptionBlock != nil)
+                BusinessLogicTests.compareAbsorptionBlocks(cdAbsorptionBlock: cdAbsorptionBlock!, absorptionBlockVM: absorptionBlockVM)
+            }
             
             // Try to add absorption blocks with existing maxFPU
-            var errorMessage: String
+            var alert: SimpleAlertType? = nil
             for absorptionBlock in BusinessLogicTests.absorptionBlocks {
-                errorMessage = ""
-                #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock), errorMessage: &errorMessage))
-                #expect(errorMessage == NSLocalizedString("Maximum FPU value already exists", comment: ""))
+                alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock))
+                #expect(alert?.messageAsString() == NSLocalizedString("Maximum FPU value already exists", comment: ""))
             }
             
             // Try to add the first absorption block with an absorption time equal to the following (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "6", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time is equals or larger than the one of the following absorption block", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "6", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time is equals or larger than the one of the following absorption block", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 5)
             
             // Try to add the first absorption block with an absorption time more than the following (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "7", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time is equals or larger than the one of the following absorption block", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "7", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time is equals or larger than the one of the following absorption block", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 5)
             
             // Try to add the first absorption block with an absorption time less than the following (correct)
-            errorMessage = ""
-            #expect(absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "5", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "5", activeAlert: &alert)!)
+            #expect(alert == nil)
             #expect(absorptionSchemeVM.absorptionBlocks.count == 6)
             
             // Try to add the last absorption block with an absorption time equal to the previous (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "16", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time is equals or less than the one of the block before", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "16", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time is equals or less than the one of the block before", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 6)
             
             // Try to add the first absorption block with an absorption time less than the previous (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "15", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time is equals or less than the one of the block before", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "15", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time is equals or less than the one of the block before", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 6)
             
             // Try to add the last absorption block with an absorption time more than the previous (correct)
-            errorMessage = ""
-            #expect(absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "20", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "20", activeAlert: &alert)!)
+            #expect(alert == nil)
             #expect(absorptionSchemeVM.absorptionBlocks.count == 7)
             
             // Try to add the last absorption block with an absorption time equal to the previous (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "10", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time must be between previous and following block", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "10", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time must be between previous and following block", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 7)
             
             // Try to add the first absorption block with an absorption time less than the previous (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "12", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time must be between previous and following block", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "12", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time must be between previous and following block", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 7)
             
             // Try to add the last absorption block with an absorption time more than the previous (correct)
-            errorMessage = ""
-            #expect(absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "11", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "11", activeAlert: &alert)!)
+            #expect(alert == nil)
             #expect(absorptionSchemeVM.absorptionBlocks.count == 8)
+            
+            // Try resetting
+            var errorMessage = ""
+            #expect(absorptionSchemeVM.resetToDefaultAbsorptionBlocks(errorMessage: &errorMessage))
+            #expect(absorptionSchemeVM.absorptionBlocks.count == 5)
+            #expect(absorptionSchemeVM.absorptionBlocks[0].maxFpu == Int(absorptionBlocks[0].maxFpu / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[0].absorptionTime == Int(absorptionBlocks[0].absorptionTime / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[1].maxFpu == Int(absorptionBlocks[1].maxFpu / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[1].absorptionTime == Int(absorptionBlocks[1].absorptionTime / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[2].maxFpu == Int(absorptionBlocks[2].maxFpu / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[2].absorptionTime == Int(absorptionBlocks[2].absorptionTime / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[3].maxFpu == Int(absorptionBlocks[3].maxFpu / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[3].absorptionTime == Int(absorptionBlocks[3].absorptionTime / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[4].maxFpu == Int(absorptionBlocks[4].maxFpu / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[4].absorptionTime == Int(absorptionBlocks[4].absorptionTime / 2))
+            
+            // Try replacing blocks from back to front
+            alert = nil
+            alert = absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[4].id, newMaxFpuAsString: String(absorptionBlocks[4].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[4].absorptionTime))
+            #expect(alert == nil)
+            
+            alert = nil
+            alert = absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[3].id, newMaxFpuAsString: String(absorptionBlocks[3].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[3].absorptionTime))
+            #expect(alert == nil)
+            
+            alert = nil
+            alert = absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[2].id, newMaxFpuAsString: String(absorptionBlocks[2].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[2].absorptionTime))
+            #expect(alert == nil)
+            
+            alert = nil
+            alert = absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[1].id, newMaxFpuAsString: String(absorptionBlocks[1].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[1].absorptionTime))
+            #expect(alert == nil)
+            
+            alert = nil
+            alert = absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[0].id, newMaxFpuAsString: String(absorptionBlocks[0].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[0].absorptionTime))
+            #expect(alert == nil)
+            
+            // Try to replace first with last block
+            #expect(absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[0].id, newMaxFpuAsString: "14", newAbsorptionTimeAsString: "20") == nil)
+            #expect(absorptionSchemeVM.absorptionBlocks.count == 5)
+            #expect(absorptionSchemeVM.absorptionBlocks[0].maxFpu == absorptionBlocks[1].maxFpu)
+            #expect(absorptionSchemeVM.absorptionBlocks[0].absorptionTime == absorptionBlocks[1].absorptionTime)
+            #expect(absorptionSchemeVM.absorptionBlocks[1].maxFpu == absorptionBlocks[2].maxFpu)
+            #expect(absorptionSchemeVM.absorptionBlocks[1].absorptionTime == absorptionBlocks[2].absorptionTime)
+            #expect(absorptionSchemeVM.absorptionBlocks[2].maxFpu == absorptionBlocks[3].maxFpu)
+            #expect(absorptionSchemeVM.absorptionBlocks[2].absorptionTime == absorptionBlocks[3].absorptionTime)
+            #expect(absorptionSchemeVM.absorptionBlocks[3].maxFpu == absorptionBlocks[4].maxFpu)
+            #expect(absorptionSchemeVM.absorptionBlocks[3].absorptionTime == absorptionBlocks[4].absorptionTime)
+            #expect(absorptionSchemeVM.absorptionBlocks[4].maxFpu == 14)
+            #expect(absorptionSchemeVM.absorptionBlocks[4].absorptionTime == 20)
+            #expect(AbsorptionBlock.fetchAll().count == 5)
+            
+            // Remove one block outside index
+            #expect(!absorptionSchemeVM.removeAbsorptionBlock(at: 6))
+            #expect(AbsorptionBlock.fetchAll().count == 5)
+            
+            // Remove one block inside index
+            #expect(absorptionSchemeVM.resetToDefaultAbsorptionBlocks(errorMessage: &errorMessage))
+            #expect(absorptionSchemeVM.removeAbsorptionBlock(at: 3))
+            #expect(AbsorptionBlock.fetchAll().count == 4)
+            #expect(absorptionSchemeVM.absorptionBlocks[0].maxFpu == Int(absorptionBlocks[0].maxFpu / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[0].absorptionTime == Int(absorptionBlocks[0].absorptionTime / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[1].maxFpu == Int(absorptionBlocks[1].maxFpu / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[1].absorptionTime == Int(absorptionBlocks[1].absorptionTime / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[2].maxFpu == Int(absorptionBlocks[2].maxFpu / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[2].absorptionTime == Int(absorptionBlocks[2].absorptionTime / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[3].maxFpu == Int(absorptionBlocks[4].maxFpu / 2))
+            #expect(absorptionSchemeVM.absorptionBlocks[3].absorptionTime == Int(absorptionBlocks[4].absorptionTime / 2))
         }
     }
     
@@ -507,6 +599,11 @@ struct BusinessLogicTests {
         #expect(typicalAmountVM.amount == BusinessLogicTests.amount)
         #expect(typicalAmountVM.comment == BusinessLogicTests.comment)
         #expect(typicalAmountVM.amountAsString == String(BusinessLogicTests.amount))
+    }
+    
+    private static func compareAbsorptionBlocks(cdAbsorptionBlock: AbsorptionBlock, absorptionBlockVM: AbsorptionBlockViewModel) {
+        #expect(cdAbsorptionBlock.maxFpu == absorptionBlockVM.maxFpu)
+        #expect(cdAbsorptionBlock.absorptionTime == absorptionBlockVM.absorptionTime)
     }
         
     private static func roundToFiveDecimals(_ value: Double) -> Double {

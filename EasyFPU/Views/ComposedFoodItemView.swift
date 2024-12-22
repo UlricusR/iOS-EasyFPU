@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ComposedFoodItemView: View {
     var foodItem: FoodItemViewModel
-    @ObservedObject var absorptionScheme: AbsorptionScheme
+    @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
     var fontSizeName: Font?
     var fontSizeDetails: Font?
     var foregroundStyleName: Color

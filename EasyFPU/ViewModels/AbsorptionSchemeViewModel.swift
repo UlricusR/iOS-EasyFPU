@@ -6,11 +6,10 @@
 //  Copyright © 2020 Ulrich Rüth. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
 class AbsorptionSchemeViewModel: ObservableObject {
-    @Published var absorptionBlocks: [AbsorptionBlockViewModel]
-    var cdAbsorptionScheme: AbsorptionScheme
+    @Published var absorptionBlocks = [AbsorptionBlockViewModel]()
     
     // Absorption block parameters for sugars
     private(set) var delaySugars: Int = AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault
@@ -151,16 +150,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
     static let eCarbsFactorDefault: Double = 10 // g e-carbs per FPU
     static let treatSugarsSeparatelyDefault: Bool = true
     
-    init(from cdAbsorptionScheme: AbsorptionScheme) {
-        self.cdAbsorptionScheme = cdAbsorptionScheme
-        self.absorptionBlocks = [AbsorptionBlockViewModel]()
-        for absorptionBlock in cdAbsorptionScheme.absorptionBlocks {
-            let newAbsorptionBlockViewModel = AbsorptionBlockViewModel(from: absorptionBlock)
-            if !self.absorptionBlocks.contains(newAbsorptionBlockViewModel) {
-                self.absorptionBlocks.append(AbsorptionBlockViewModel(from: absorptionBlock))
-            }
-        }
-        
+    init() {
         // Sugars
         let delaySugars = UserSettings.shared.absorptionTimeSugarsDelayInMinutes
         self.delaySugars = delaySugars
@@ -203,19 +193,52 @@ class AbsorptionSchemeViewModel: ObservableObject {
         self.treatSugarsSeparately = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault
     }
     
-    func add(newAbsorptionBlock: AbsorptionBlockViewModel, errorMessage: inout String) -> Bool {
-        // Check no. 1: If the list only has one element, then everything is fine, as the new block is the first one
+    /// Initializes the absorption scheme with absorption blocks - this function should be called immeditely after the class has been initialized.
+    /// - Parameter cdAbsorptionBlocks: The Core Data absorption blocks to be added.
+    func initAbsorptionBlocks(with cdAbsorptionBlocks: FetchedResults<AbsorptionBlock>, errorMessage: inout String) -> Bool {
+        // Load absorption blocks
+        if cdAbsorptionBlocks.isEmpty {
+            // Absorption blocks are empty, so initialize with default absorption scheme
+            if !loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) { return false }
+        } else {
+            // Add absorption blocks loaded from core data
+            for absorptionBlock in cdAbsorptionBlocks {
+                absorptionBlocks.append(AbsorptionBlockViewModel(from: absorptionBlock))
+            }
+        }
+        
+        // Sort absorption blocks
+        absorptionBlocks = absorptionBlocks.sorted()
+        
+        return true
+    }
+    
+    /// Tries to add a new absorption block to the absorption scheme. Several checks ensure that the absorption block fits:
+    /// (1) If there are no absorption blocks, the new block is simply added.
+    /// (2) There must not be any existing blocks with identical maxFPU value.
+    /// (3) Absorption time of the previous absorption block needs to be lower, of the next one higher.
+    /// If any of these checks is not passed, the function deletes this block from Core Data and returns false.
+    /// - Parameters:
+    ///   - newAbsorptionBlock: The absorption block to be added, which is already stored in CoreData.
+    ///   - errorMessage: The error message in case of no success.
+    /// - Returns: False if any of the checks is not passed, true if the block was added.
+    func add(newAbsorptionBlock: AbsorptionBlockViewModel) -> SimpleAlertType? {
+        // Check no. 1: If the list is empty, then everything is fine, as the new block is the first one
         if absorptionBlocks.count == 0 {
             absorptionBlocks.append(newAbsorptionBlock)
-            return true
+            return nil
         }
 
         // Check no. 2: There are existing blocks, so we must check to not have identical maxFPU values
         for absorptionBlock in absorptionBlocks {
             if absorptionBlock.maxFpu == newAbsorptionBlock.maxFpu {
                 // Duplicate maxFPU values not allowed
-                errorMessage = NSLocalizedString("Maximum FPU value already exists", comment: "")
-                return false
+                let alert = SimpleAlertType.error(message: "Maximum FPU value already exists")
+                
+                // Remove newAbsorptionBlock from Core Data
+                AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock)
+                
+                return alert
             }
         }
 
@@ -226,8 +249,12 @@ class AbsorptionSchemeViewModel: ObservableObject {
         // Check no. 3: The absorption block before the new one must have a lower, the one after a higher absorption time
         guard let newBlockIndex = absorptionBlocks.firstIndex(of: newAbsorptionBlock) else {
             // This should never happen
-            errorMessage = NSLocalizedString("Fatal error: Cannot determine absorption block index, please inform the app developer", comment: "")
-            return false
+            let alert = SimpleAlertType.fatalError(message: "Cannot determine absorption block index.")
+            
+            // Remove newAbsorptionBlock from Core Data
+            AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock)
+            
+            return alert
         }
 
         // Case 3a: It's the first element, so just check the block after -
@@ -236,10 +263,15 @@ class AbsorptionSchemeViewModel: ObservableObject {
             if newAbsorptionBlock.absorptionTime >= absorptionBlocks[1].absorptionTime {
                 // Error: The new block's absorption time is equals or larger than of the one after
                 absorptionBlocks.remove(at: newBlockIndex)
-                errorMessage = NSLocalizedString("Absorption time is equals or larger than the one of the following absorption block", comment: "")
-                return false
+                let alert = SimpleAlertType.error(message: "Absorption time is equals or larger than the one of the following absorption block")
+                
+                // Remove newAbsorptionBlock from Core Data
+                AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock)
+                
+                return alert
             } else {
-                return true
+                // No error, so return nil
+                return nil
             }
         }
 
@@ -248,10 +280,15 @@ class AbsorptionSchemeViewModel: ObservableObject {
             if newAbsorptionBlock.absorptionTime <= absorptionBlocks[absorptionBlocks.count - 2].absorptionTime {
                 // Error: The new block's absorption time is equals or less than of the one before
                 absorptionBlocks.remove(at: newBlockIndex)
-                errorMessage = NSLocalizedString("Absorption time is equals or less than the one of the block before", comment: "")
-                return false
+                let alert = SimpleAlertType.error(message: "Absorption time is equals or less than the one of the block before")
+                
+                // Remove newAbsorptionBlock from Core Data
+                AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock)
+                
+                return alert
             } else {
-                return true
+                // No error, so return nil
+                return nil
             }
         }
 
@@ -259,10 +296,146 @@ class AbsorptionSchemeViewModel: ObservableObject {
         if !(newAbsorptionBlock.absorptionTime > absorptionBlocks[newBlockIndex - 1].absorptionTime &&
               newAbsorptionBlock.absorptionTime < absorptionBlocks[newBlockIndex + 1].absorptionTime) {
             absorptionBlocks.remove(at: newBlockIndex)
-            errorMessage = NSLocalizedString("Absorption time must be between previous and following block", comment: "")
+            let alert = SimpleAlertType.error(message: "Absorption time must be between previous and following block")
+            
+            // Remove newAbsorptionBlock from Core Data
+            AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock)
+            
+            return alert
+        } else {
+            // No error, so return nil
+            return nil
+        }
+    }
+    
+    /// Tries to replace an absorption block with another one. If not successful, the existing absorption block is kept.
+    /// - Parameters:
+    ///   - existingAbsorptionBlockID: The ID of the existing absorption block to be replaced.
+    ///   - newMaxFpuAsString: The maxFPU of the new absorption block.
+    ///   - newAbsorptionTimeAsString: The absorptionTime of the new absorption block.
+    ///   - errorMessage: Stores the error message if something goes wrong.
+    /// - Returns: True in case of a successful replacement, otherwise false (along with the errorMessage).
+    func replace(existingAbsorptionBlockID: UUID, newMaxFpuAsString: String, newAbsorptionTimeAsString: String) -> SimpleAlertType? {
+        // Find the absorption block to be replaced and store it for later potential undoing
+        guard let index = self.absorptionBlocks.firstIndex(where: { $0.id == existingAbsorptionBlockID }) else {
+            return .fatalError(message: "Could not identify absorption block")
+        }
+        let existingAbsorptionBlock = self.absorptionBlocks[index]
+        
+        // Remove the existing absorption block
+        self.absorptionBlocks.remove(at: index)
+        
+        // Try to create the new absorption block
+        var blockAlert: SimpleAlertType? = nil
+        if let newAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: newMaxFpuAsString, absorptionTimeAsString: newAbsorptionTimeAsString, activeAlert: &blockAlert) {
+            // The absorption block was successfully created (also in Core Data), now add it to the absorption scheme
+            if let schemeAlert = self.add(newAbsorptionBlock: newAbsorptionBlock) {
+                // Addition was unsuccessful, so undo deletion of block by adding it at the old position
+                self.absorptionBlocks.insert(existingAbsorptionBlock, at: index)
+                return schemeAlert
+            } else {
+                // Addition was successful, so delete old absorption block in Core Data, as we don't need it any longer
+                AbsorptionBlock.remove(existingAbsorptionBlock.cdAbsorptionBlock)
+                
+                // Return nil, as job is successfully done
+                return nil
+            }
+        } else {
+            // The absorption block was not created successfully, so return false
+            return blockAlert
+        }
+    }
+    
+    /// Removes the absorptionBlock at the given index from the scheme and deletes it in Core Data.
+    /// - Parameter absorptionBlockIndex: The index of the absorptionBlock to be removed.
+    /// - Returns: False if the absorptionBlockIndex is out of range, true otherwise.
+    func removeAbsorptionBlock(at absorptionBlockIndex: Int) -> Bool {
+        if absorptionBlockIndex < absorptionBlocks.count {
+            // Delete Core Data absorption block
+            AbsorptionBlock.remove(absorptionBlocks[absorptionBlockIndex].cdAbsorptionBlock)
+            
+            // Remove VM from scheme
+            absorptionBlocks.remove(at: absorptionBlockIndex)
+            
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    /// Removes all existing absorption blocks and loads the default absorption blocks
+    /// - Parameter errorMessage: Stores potential error messages.
+    /// - Returns: False if the defaults could not be loaded, otherwise true.
+    func resetToDefaultAbsorptionBlocks(errorMessage: inout String) -> Bool {
+        // Delete Core Data
+        AbsorptionBlock.deleteAll()
+        
+        // Empty list
+        absorptionBlocks.removeAll()
+        
+        if !loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) {
             return false
         } else {
+            // Sort absorption blocks
+            absorptionBlocks = absorptionBlocks.sorted()
+            
             return true
         }
+    }
+    
+    /// Returns the absorption time for the given FPUs.
+    /// - Parameter fpus: The FPUs to be used for querying the absorption time.
+    /// - Returns: Nil if the absorption scheme has no absorption blocks (should not happen), otherwise the absorption time related to the given FPUs.
+    func getAbsorptionTime(fpus: Double) -> Int? {
+        if absorptionBlocks.count == 0 {
+            // This is to make sure we have no index error and app crash - default will be loaded later
+            return nil
+        }
+        // Round up the fpus - it's more secure to get a longer insulin interval
+        let roundedFPUs = Int(fpus.rounded(.up))
+        
+        // Find associated absorption time
+        for absorptionBlock in absorptionBlocks {
+            if roundedFPUs <= absorptionBlock.maxFpu {
+                return Int(absorptionBlock.absorptionTime)
+            }
+        }
+        
+        // Seems to be beyond the last block, so return time of the last block
+        return Int(absorptionBlocks[absorptionBlocks.count - 1].absorptionTime)
+    }
+    
+    /// Returns the maximum absorption time of all absorption blocks (i.e., the absorption time of the last block).
+    /// - Returns: Nil if the absorption scheme has no absorption blocks (should not happen), otherwise the maximum absorption time.
+    func getMaximumAbsorptionTime() -> Int? {
+        if absorptionBlocks.count > 0 {
+            return Int(absorptionBlocks[absorptionBlocks.count - 1].absorptionTime)
+        } else {
+            return nil
+        }
+    }
+    
+    /// Returns the maximum FPUs of the absorption scheme (i.e., the maxFPU value of the last block).
+    /// - Returns: Nil if the absorption scheme has no absorption blocks (should not happen), otherwise the maximum of the maxFPU values.
+    func getMaximumFPUs() -> Int? {
+        if absorptionBlocks.count > 0 {
+            return Int(absorptionBlocks[absorptionBlocks.count - 1].maxFpu)
+        } else {
+            return nil
+        }
+    }
+    
+    private func loadDefaultAbsorptionBlocks(errorMessage: inout String) -> Bool {
+        // Absorption blocks are empty, so initialize with default absorption scheme
+        guard let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) else {
+            return false
+        }
+        
+        // Create absorption blocks from default absorption block, which will store it back to Core Data
+        for absorptionBlock in defaultAbsorptionBlocks {
+            absorptionBlocks.append(AbsorptionBlockViewModel(from: absorptionBlock))
+        }
+        
+        return true
     }
 }

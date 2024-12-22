@@ -10,37 +10,42 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct MenuView: View {
+    enum SettingsNavigationPath: Hashable {
+        case EditTherapySettings
+        case EditAppSettings
+    }
+    
     enum SheetState: Identifiable {
-        case editAbsorptionScheme
-        case editAppSettings
-        case pickFileToImport
-        case pickExportDirectory
         case about
         
         var id: SheetState { self }
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    var draftAbsorptionScheme: AbsorptionSchemeViewModel
+    var absorptionScheme: AbsorptionSchemeViewModel
+    @State private var navigationPath = NavigationPath()
+    @State private var importing = false
+    @State private var exporting = false
     @State private var isConfirming = false
     @State private var importData: ImportData?
+    @State private var exportData = ExportJSONDocument()
     @State private var activeSheet: SheetState?
     @State private var showingAlert = false
-    @State private var alertMessage = ""
+    @State private var activeAlert: SimpleAlertType?
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             Form {
                 Section(header: Text("Settings")) {
                     // Therapy Settings
                     Button("Therapy Settings") {
-                        activeSheet = .editAbsorptionScheme
+                        navigationPath.append(SettingsNavigationPath.EditTherapySettings)
                     }
                     .accessibilityIdentifierLeaf("TherapySettingsButton")
                     
                     // App Settings
                     Button("App Settings") {
-                        activeSheet = .editAppSettings
+                        navigationPath.append(SettingsNavigationPath.EditAppSettings)
                     }
                     .accessibilityIdentifierLeaf("AppSettingsButton")
                 }
@@ -48,7 +53,19 @@ struct MenuView: View {
                 Section(header: Text("Import/Export")) {
                     // Import
                     Button("Import from JSON") {
-                        activeSheet = .pickFileToImport
+                        importing = true
+                    }
+                    .fileImporter(
+                        isPresented: $importing,
+                        allowedContentTypes: [UTType.json]
+                    ) { result in
+                        switch result {
+                        case .success(let file):
+                            importJSON(file)
+                        case .failure(let error):
+                            activeAlert = .error(message: error.localizedDescription)
+                            showingAlert = true
+                        }
                     }
                     .confirmationDialog(
                         "Import food list",
@@ -71,7 +88,29 @@ struct MenuView: View {
                     
                     // Export
                     Button("Export to JSON") {
-                        activeSheet = .pickExportDirectory
+                        var errorMessage = ""
+                        if let jsonDocument = ExportJSONDocument(errorMessage: &errorMessage) {
+                            self.exportData = jsonDocument
+                            exporting = true
+                        } else {
+                            activeAlert = .error(message: errorMessage)
+                            showingAlert = true
+                        }
+                    }
+                    .fileExporter(
+                        isPresented: $exporting,
+                        document: exportData,
+                        contentType: UTType.json,
+                        defaultFilename: createFileName()
+                    ) { result in
+                        switch result {
+                        case .success(let file):
+                            activeAlert = .success(message: NSLocalizedString("Successfully exported food list to: ", comment: "") + file.lastPathComponent)
+                            showingAlert = true
+                        case .failure(let error):
+                            activeAlert = .success(message: error.localizedDescription)
+                            showingAlert = true
+                        }
                     }
                     .accessibilityIdentifierLeaf("ExportToJSONButton")
                 }
@@ -85,7 +124,9 @@ struct MenuView: View {
                     
                     // Disclaimer
                     Button("Disclaimer") {
-                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &alertMessage) {
+                        var errorMessage = ""
+                        if !UserSettings.set(UserSettings.UserDefaultsType.bool(false, UserSettings.UserDefaultsBoolKey.disclaimerAccepted), errorMessage: &errorMessage) {
+                            activeAlert = .fatalError(message: errorMessage)
                             self.showingAlert = true
                         }
                         
@@ -101,29 +142,40 @@ struct MenuView: View {
                     .accessibilityIdentifierLeaf("HelpOnWebButton")
                 }
             }
-            .navigationBarTitle("Settings")
+            .navigationTitle("Settings")
+            .navigationDestination(for: SettingsNavigationPath.self) { screen in
+                switch screen {
+                case .EditTherapySettings:
+                    TherapySettingsEditor(
+                        navigationPath: $navigationPath,
+                        absorptionScheme: self.absorptionScheme
+                    )
+                    .accessibilityIdentifierBranch("TherapySettingsEditor")
+                case .EditAppSettings:
+                    AppSettingsEditor(
+                        navigationPath: $navigationPath
+                    )
+                    .accessibilityIdentifierBranch("AppSettingsEditor")
+                }
+            }
         }
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert("Notice", isPresented: self.$showingAlert, actions: {}, message: { Text(self.alertMessage) })
+        .alert(
+            activeAlert?.title() ?? "Notice",
+            isPresented: $showingAlert,
+            presenting: activeAlert
+        ) { activeAlert in
+            activeAlert.button()
+        } message: { activeAlert in
+            activeAlert.message()
+        }
     }
     
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
-        case .editAbsorptionScheme:
-            TherapySettingsEditor(draftAbsorptionScheme: self.draftAbsorptionScheme)
-                .accessibilityIdentifierBranch("TherapySettingsEditor")
-        case .editAppSettings:
-            AppSettingsEditor()
-                .accessibilityIdentifierBranch("AppSettingsEditor")
-        case .pickFileToImport:
-            FilePickerView(callback: self.importJSON, documentTypes: [UTType.json])
-                .accessibilityIdentifierBranch("FilePickerForImport")
-        case .pickExportDirectory:
-            FilePickerView(callback: self.exportJSON, documentTypes: [UTType.folder])
-                .accessibilityIdentifierBranch("FilePickerForExport")
         case .about:
             AboutView()
                 .accessibilityIdentifierBranch("About")
@@ -131,6 +183,7 @@ struct MenuView: View {
     }
     
     private func importJSON(_ url: URL) {
+        var alertMessage = ""
         if let importData = DataHelper.importFoodItems(url, errorMessage: &alertMessage) {
             self.importData = importData
             
@@ -143,27 +196,7 @@ struct MenuView: View {
             }
         } else {
             // Some error happened
-            showingAlert = true
-        }
-    }
-    
-    private func exportJSON(_ url: URL) {
-        // Make sure we can access file
-        guard url.startAccessingSecurityScopedResource() else {
-            debugPrint("Failed to access \(url)")
-            alertMessage = NSLocalizedString("Failed to access ", comment: "") + url.absoluteString
-            showingAlert = true
-            return
-        }
-        defer { url.stopAccessingSecurityScopedResource() }
-        
-        // Write file
-        var fileName = ""
-        if DataHelper.exportFoodItems(url, fileName: &fileName) {
-            alertMessage = NSLocalizedString("Successfully exported food list to: ", comment: "") + fileName
-            showingAlert = true
-        } else {
-            alertMessage = NSLocalizedString("Failed to export food list to: ", comment: "") + fileName
+            activeAlert = .error(message: alertMessage)
             showingAlert = true
         }
     }
@@ -183,13 +216,20 @@ struct MenuView: View {
                     _ = composedFoodItemVMToBeImported.save()
                 }
             }
-         
-            alertMessage = NSLocalizedString("Successfully imported food list", comment: "")
+
+            activeAlert = .success(message: "Successfully imported food list")
             showingAlert = true
         } else {
             // This should never happen
-            alertMessage = NSLocalizedString("Failed to import food list", comment: "")
+            activeAlert = .fatalError(message: "Failed to import food list")
             showingAlert = true
         }
+    }
+    
+    private func createFileName() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+        let timestamp = formatter.string(from: Date())
+        return "EasyFPU-export_\(timestamp)"
     }
 }

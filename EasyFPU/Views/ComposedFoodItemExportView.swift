@@ -11,14 +11,13 @@ import HealthKit
 import LocalAuthentication
 
 struct ComposedFoodItemExportView: View {
-    @Environment(\.presentationMode) var presentation
     var composedFoodItem: ComposedFoodItemViewModel
-    var absorptionScheme: AbsorptionScheme
+    var absorptionScheme: AbsorptionSchemeViewModel
     @ObservedObject var userSettings = UserSettings.shared
     @ObservedObject var carbsRegimeCalculator = CarbsRegimeCalculator.default
     @State var showingSheet = false
     @State var showingAlert = false
-    @State var errorMessage = ""
+    @State var activeAlert: SimpleAlertType?
     @State var showingExportWarning = false
     @State var alertMessages = [String]()
     private let helpScreen = HelpScreen.mealExport
@@ -26,122 +25,134 @@ struct ComposedFoodItemExportView: View {
     @State var exportTotalMealCalories = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCalories) ?? false
     
     var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading) {
-                Text("Please choose the data to export:")
-                    .padding()
-                    .font(.headline)
-                
-                if userSettings.treatSugarsSeparately {
-                    Toggle(isOn: $carbsRegimeCalculator.includeTotalMealSugars) {
-                        Text("Sugars")
+        VStack(alignment: .leading) {
+            Text("Please choose the data to export:")
+                .padding()
+                .font(.headline)
+            
+            if userSettings.treatSugarsSeparately {
+                Toggle(isOn: $carbsRegimeCalculator.includeTotalMealSugars) {
+                    Text("Sugars")
+                }
+                .padding([.leading, .trailing])
+                .onChange(of: carbsRegimeCalculator.includeTotalMealSugars) {
+                    var errorMessage = ""
+                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealSugars, UserSettings.UserDefaultsBoolKey.exportTotalMealSugars), errorMessage: &errorMessage) {
+                        activeAlert = .fatalError(message: errorMessage)
+                        showingAlert = true
                     }
-                    .padding([.leading, .trailing])
-                    .accessibilityIdentifierLeaf("ExportSugarsToggle")
                 }
-                
-                Toggle(isOn: $carbsRegimeCalculator.includeTotalMealCarbs) {
-                    Text("Regular Carbs")
-                }
-                .padding([.leading, .trailing])
-                .accessibilityIdentifierLeaf("ExportCarbsToggle")
-                
-                Toggle(isOn: $carbsRegimeCalculator.includeECarbs) {
-                    Text("Extended Carbs")
-                }
-                .padding([.leading, .trailing])
-                .accessibilityIdentifierLeaf("ExportECarbsToggle")
-                
-                Toggle(isOn: $exportTotalMealCalories) {
-                    Text("Total Meal Calories")
-                }
-                .padding([.leading, .trailing, .top])
-                .accessibilityIdentifierLeaf("ExportCaloriesToggle")
-                
-                HStack {
-                    Stepper("Delay until meal", onIncrement: {
-                        userSettings.mealDelayInMinutes = min(30, userSettings.mealDelayInMinutes + 5)
-                        carbsRegimeCalculator.recalculate()
-                    }, onDecrement: {
-                        userSettings.mealDelayInMinutes = max(0, userSettings.mealDelayInMinutes - 5)
-                        carbsRegimeCalculator.recalculate()
-                    })
-                    .accessibilityIdentifierLeaf("MealDelayStepper")
-                    
-                    Text("\(userSettings.mealDelayInMinutes)")
-                        .accessibilityIdentifierLeaf("MealDelayValue")
-                    Text("min")
-                        .accessibilityIdentifierLeaf("MealDelayUnit")
-                }.padding()
-                
-                // The carbs preview
-                if !carbsRegimeCalculator.hkObjects.isEmpty {
-                    Text("Preview of exported carbs in g").padding([.top, .leading, .trailing])
-                    HealthExportCarbsPreviewChart(carbsRegime: self.carbsRegimeCalculator.carbsRegime)
-                }
+                .accessibilityIdentifierLeaf("ExportSugarsToggle")
             }
             
-            VStack(alignment: .center) {
-                Button("Export", systemImage: "square.and.arrow.up") {
-                    self.prepareHealthSampleExport()
-                }
-                .padding()
-                .buttonStyle(.borderedProminent)
-                .accessibilityIdentifierLeaf("ExportToHealthButton")
-                .confirmationDialog(
-                    "Notice",
-                    isPresented: $showingExportWarning
-                ) {
-                    Button("Export anyway") {
-                        alertMessages.removeAll()
-                        authenticate()
-                    }
-                    Button("Cancel", role: .cancel) {
-                        alertMessages.removeAll()
-                    }
-                } message: {
-                    Text(getExportWarningText())
+            Toggle(isOn: $carbsRegimeCalculator.includeTotalMealCarbs) {
+                Text("Regular Carbs")
+            }
+            .padding([.leading, .trailing])
+            .onChange(of: carbsRegimeCalculator.includeTotalMealCarbs) {
+                var errorMessage = ""
+                if !UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &errorMessage) {
+                    activeAlert = .fatalError(message: errorMessage)
+                    showingAlert = true
                 }
             }
-            .navigationBarTitle("Export to Health", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        self.showingSheet = true
-                    }) {
-                        Image(systemName: "questionmark.circle")
-                            .imageScale(.large)
-                    }
-                    .accessibilityIdentifierLeaf("HelpButton")
+            .accessibilityIdentifierLeaf("ExportCarbsToggle")
+            
+            Toggle(isOn: $carbsRegimeCalculator.includeECarbs) {
+                Text("Extended Carbs")
+            }
+            .padding([.leading, .trailing])
+            .onChange(of: carbsRegimeCalculator.includeECarbs) {
+                var errorMessage = ""
+                if !UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &errorMessage) {
+                    activeAlert = .fatalError(message: errorMessage)
+                    showingAlert = true
                 }
+            }
+            .accessibilityIdentifierLeaf("ExportECarbsToggle")
+            
+            Toggle(isOn: $exportTotalMealCalories) {
+                Text("Total Meal Calories")
+            }
+            .padding([.leading, .trailing, .top])
+            .onChange(of: exportTotalMealCalories) {
+                var errorMessage = ""
+                if !UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &errorMessage) {
+                    activeAlert = .fatalError(message: errorMessage)
+                    showingAlert = true
+                }
+            }
+            .accessibilityIdentifierLeaf("ExportCaloriesToggle")
+            
+            HStack {
+                Stepper("Delay until meal", onIncrement: {
+                    userSettings.mealDelayInMinutes = min(30, userSettings.mealDelayInMinutes + 5)
+                    carbsRegimeCalculator.recalculate()
+                }, onDecrement: {
+                    userSettings.mealDelayInMinutes = max(0, userSettings.mealDelayInMinutes - 5)
+                    carbsRegimeCalculator.recalculate()
+                })
+                .accessibilityIdentifierLeaf("MealDelayStepper")
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        // Store UserDefaults
-                        if !(
-                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealSugars, UserSettings.UserDefaultsBoolKey.exportTotalMealSugars), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeECarbs, UserSettings.UserDefaultsBoolKey.exportECarbs), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.carbsRegimeCalculator.includeTotalMealCarbs, UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs), errorMessage: &self.errorMessage) &&
-                            UserSettings.set(UserSettings.UserDefaultsType.bool(self.exportTotalMealCalories, UserSettings.UserDefaultsBoolKey.exportTotalMealCalories), errorMessage: &self.errorMessage)
-                        ){
-                            // Something went terribly wrong - inform user
-                            self.showingAlert = true
-                        } else {
-                            // Close sheet
-                            presentation.wrappedValue.dismiss()
-                        }
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .imageScale(.large)
-                    }
-                    .accessibilityIdentifierLeaf("CloseButton")
+                Text("\(userSettings.mealDelayInMinutes)")
+                    .accessibilityIdentifierLeaf("MealDelayValue")
+                Text("min")
+                    .accessibilityIdentifierLeaf("MealDelayUnit")
+            }.padding()
+            
+            // The carbs preview
+            if !carbsRegimeCalculator.hkObjects.isEmpty {
+                Text("Preview of exported carbs in g").padding([.top, .leading, .trailing])
+                HealthExportCarbsPreviewChart(carbsRegime: self.carbsRegimeCalculator.carbsRegime)
+            }
+        }
+        
+        VStack(alignment: .center) {
+            Button("Export", systemImage: "square.and.arrow.up") {
+                self.prepareHealthSampleExport()
+            }
+            .padding()
+            .buttonStyle(.borderedProminent)
+            .accessibilityIdentifierLeaf("ExportToHealthButton")
+            .confirmationDialog(
+                "Notice",
+                isPresented: $showingExportWarning
+            ) {
+                Button("Export anyway") {
+                    alertMessages.removeAll()
+                    authenticate()
                 }
+                Button("Cancel", role: .cancel) {
+                    alertMessages.removeAll()
+                }
+            } message: {
+                Text(getExportWarningText())
+            }
+        }
+        .navigationTitle("Export to Health").navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    self.showingSheet = true
+                }) {
+                    Image(systemName: "questionmark.circle")
+                        .imageScale(.large)
+                }
+                .accessibilityIdentifierLeaf("HelpButton")
             }
         }
         .onAppear() {
             self.processHealthSample()
         }
-        .alert("Notice", isPresented: self.$showingAlert, actions: {}, message: { Text(self.errorMessage) })
+        .alert(
+            activeAlert?.title() ?? "Notice",
+            isPresented: $showingAlert,
+            presenting: activeAlert
+        ) { activeAlert in
+            activeAlert.button()
+        } message: { activeAlert in
+            activeAlert.message()
+        }
         .sheet(isPresented: self.$showingSheet) {
             HelpView(helpScreen: self.helpScreen)
         }
@@ -149,7 +160,7 @@ struct ComposedFoodItemExportView: View {
     
     private func processHealthSample() {
         guard let absorptionTimeInHours = composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) else {
-            errorMessage = NSLocalizedString("Fatal error, cannot export data, please contact the app developer: Absorption Scheme has no Absorption Blocks", comment: "")
+            activeAlert = .fatalError(message: "Absorption Scheme has no Absorption Blocks")
             showingAlert = true
             return
         }
@@ -186,21 +197,24 @@ struct ComposedFoodItemExportView: View {
             if completion {
                 HealthDataHelper.saveHealthData(hkObjects) { (success, error) in
                     if !success {
-                        self.errorMessage = NSLocalizedString("Cannot save data to Health: ", comment: "")
-                        self.errorMessage += error != nil ? error!.localizedDescription : NSLocalizedString("Unspecified error", comment: "")
-                        self.showingAlert = true
+                        var errorMessage = NSLocalizedString("Cannot save data to Health: ", comment: "")
+                        errorMessage += error != nil ? error!.localizedDescription : NSLocalizedString("Unspecified error", comment: "")
+                        activeAlert = .error(message: errorMessage)
+                        showingAlert = true
                     } else {
                         self.setLatestExportDates()
-                        self.errorMessage = NSLocalizedString("Successfully exported data to Health", comment: "")
-                        self.showingAlert = true
+                        activeAlert = .success(message: "Successfully exported data to Health")
+                        showingAlert = true
                     }
                 }
             } else {
+                var errMessage = ""
                 if let errorMessage = HealthDataHelper.errorMessage {
-                    self.errorMessage = errorMessage
+                    errMessage = errorMessage
                 } else {
-                    self.errorMessage = NSLocalizedString("Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings.", comment: "")
+                    errMessage = NSLocalizedString("Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings.", comment: "")
                 }
+                activeAlert = .error(message: errMessage)
                 self.showingAlert = true
             }
         }
@@ -218,23 +232,28 @@ struct ComposedFoodItemExportView: View {
     }
     
     private func setLatestExportDates() {
+        var errorMessage = ""
         if exportTotalMealCalories {
             if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastCaloriesExport), errorMessage: &errorMessage) {
+                activeAlert = .fatalError(message: errorMessage)
                 showingAlert = true
             }
         }
         if carbsRegimeCalculator.includeTotalMealSugars {
             if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastSugarsExport), errorMessage: &errorMessage) {
+                activeAlert = .fatalError(message: errorMessage)
                 showingAlert = true
             }
         }
         if carbsRegimeCalculator.includeTotalMealCarbs {
             if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastCarbsExport), errorMessage: &errorMessage) {
+                activeAlert = .fatalError(message: errorMessage)
                 showingAlert = true
             }
         }
         if carbsRegimeCalculator.includeECarbs {
             if !UserSettings.set(UserSettings.UserDefaultsType.date(carbsRegimeCalculator.now, UserSettings.UserDefaultsDateKey.lastECarbsExport), errorMessage: &errorMessage) {
+                activeAlert = .fatalError(message: errorMessage)
                 showingAlert = true
             }
         }
@@ -243,6 +262,7 @@ struct ComposedFoodItemExportView: View {
     private func authenticate() {
         let context = LAContext()
         var error: NSError?
+        var errorMessage = ""
         
         // Check whether biometric authentication is possible
         if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
@@ -258,18 +278,19 @@ struct ComposedFoodItemExportView: View {
                     } else {
                         // There was a problem
                         if authenticationError != nil {
-                            self.errorMessage = authenticationError!.localizedDescription
+                            errorMessage = authenticationError!.localizedDescription
                         } else {
-                            self.errorMessage = NSLocalizedString("Authentication error, nothing was exported", comment: "")
+                            errorMessage = NSLocalizedString("Authentication error, nothing was exported", comment: "")
                         }
-                        self.showingAlert = true
+                        activeAlert = .error(message: errorMessage)
+                        showingAlert = true
                     }
                 }
             }
         } else {
             // No authentication possible
-            self.errorMessage = NSLocalizedString("Authentication error, nothing was exported", comment: "")
-            self.showingAlert = true
+            activeAlert = .error(message: "Authentication error, nothing was exported")
+            showingAlert = true
         }
     }
 }

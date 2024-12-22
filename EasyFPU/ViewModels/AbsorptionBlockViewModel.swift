@@ -9,29 +9,35 @@
 import Foundation
 
 class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifiable {
-    var id: UUID? {
-        // We reuse the id of the CoreData AbsorptionBlock
-        cdAbsorptionBlock?.id
-    }
+    var id: UUID
     
+    /// The string representation of maxFpu. If modified, it will automatically set the respective Int variable and also update the Core Data entry.
     @Published var maxFpuAsString: String {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
             switch result {
             case .success(let maxFpu):
                 self.maxFpu = maxFpu
+                
+                // Update Core Data AbsorptionBlock
+                AbsorptionBlock.updateMaxFpu(cdAbsorptionBlock: cdAbsorptionBlock, with: maxFpu)
             case .failure(let err):
                 debugPrint(err.evaluate())
                 return
             }
         }
     }
+    
+    /// The string representation of absorptionTime. If modified, it will automatically set the respective Int variable and also update the Core Data entry.
     var absorptionTimeAsString: String {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
             switch result {
             case .success(let absorptionTime):
                 self.absorptionTime = absorptionTime
+                
+                // Update Core Data AbsorptionBlock
+                AbsorptionBlock.updateAbsorptionTime(cdAbsorptionBlock: cdAbsorptionBlock, with: absorptionTime)
             case .failure(let err):
                 debugPrint(err.evaluate())
                 return
@@ -40,9 +46,10 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
     }
     private(set) var maxFpu: Int
     private(set) var absorptionTime: Int
-    var cdAbsorptionBlock: AbsorptionBlock?
+    var cdAbsorptionBlock: AbsorptionBlock
     
     init(from absorptionBlock: AbsorptionBlock) {
+        self.id = absorptionBlock.id ?? UUID()
         self.cdAbsorptionBlock = absorptionBlock
         self.maxFpu = Int(absorptionBlock.maxFpu)
         self.maxFpuAsString = String(absorptionBlock.maxFpu)
@@ -51,20 +58,22 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
     }
     
     init(from absorptionBlock: AbsorptionBlockFromJson) {
+        self.id = UUID()
+        self.cdAbsorptionBlock = AbsorptionBlock.create(from: absorptionBlock, id: self.id)
         self.maxFpu = absorptionBlock.maxFpu
         self.maxFpuAsString = String(absorptionBlock.maxFpu)
         self.absorptionTime = absorptionBlock.absorptionTime
         self.absorptionTimeAsString = String(absorptionBlock.absorptionTime)
     }
     
-    init?(maxFpuAsString: String, absorptionTimeAsString: String, errorMessage: inout String) {
+    init?(maxFpuAsString: String, absorptionTimeAsString: String, activeAlert: inout SimpleAlertType?) {
         // Check for valid max fpu
         let resultMaxFpu = DataHelper.checkForPositiveInt(valueAsString: maxFpuAsString, allowZero: false)
         switch resultMaxFpu {
         case .success(let maxFpu):
             self.maxFpu = maxFpu
         case .failure(let err):
-            errorMessage = err.evaluate()
+            activeAlert = .error(message: err.evaluate())
             return nil
         }
         self.maxFpuAsString = maxFpuAsString
@@ -75,45 +84,21 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
         case .success(let absorptionTime):
             self.absorptionTime = absorptionTime
         case .failure(let err):
-            errorMessage = err.evaluate()
+            activeAlert = .error(message: err.evaluate())
             return nil
         }
         self.absorptionTimeAsString = absorptionTimeAsString
-    }
-    
-    func hasAssociatedAbsorptionBlock() -> Bool {
-        cdAbsorptionBlock != nil
-    }
-    
-    /// Creates a new Core Data AbsorptionBlock from the passed AbsorptionBlockViewModel
-    /// and adds it to the AbsorptionScheme associated with the AbsorptionSchemeViewModel.
-    /// - Parameter absorptionScheme: The AbsorptionSchemeViewModel, the Core Data AbsorptionScheme of which the AbsorptionBlock should be added.
-    func save(to absorptionScheme: AbsorptionSchemeViewModel) {
-        let newCdAbsorptionBlock = AbsorptionBlock.create(from: self)
-        absorptionScheme.cdAbsorptionScheme.addToAbsorptionBlocks(newAbsorptionBlock: newCdAbsorptionBlock)
-    }
-    
-    /// Removes the Core Data AbsorptionBlock from the AbsorptionScheme related to the passed AbsorptionSchemeViewModel.
-    /// - Parameter absorptionScheme: The AbsorptionSchemeViewModel the AbsorptionScheme is related to.
-    /// - Returns: False if the AbsorptionBlockViewModel has no Core Data AbsorptionBlock (should not happen), otherwise true.
-    func remove(from absorptionScheme: AbsorptionSchemeViewModel) -> Bool {
-        guard let cdAbsorptionBlock else { return false }
-        AbsorptionBlock.remove(cdAbsorptionBlock, from: absorptionScheme.cdAbsorptionScheme)
-        return true
-    }
-    
-    func updateCdAbsorptionBlock() -> Bool {
-        if cdAbsorptionBlock == nil {
-            return false
-        } else {
-            cdAbsorptionBlock!.maxFpu = Int64(maxFpu)
-            cdAbsorptionBlock!.absorptionTime = Int64(absorptionTime)
-            return true
-        }
+        
+        // Create ID
+        self.id = UUID()
+        
+        // Create Core Data absorption block
+        self.cdAbsorptionBlock = AbsorptionBlock.create(absorptionTime: absorptionTime, maxFpu: maxFpu)
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(maxFpu)
+        hasher.combine(absorptionTime)
     }
     
     static func < (lhs: AbsorptionBlockViewModel, rhs: AbsorptionBlockViewModel) -> Bool {

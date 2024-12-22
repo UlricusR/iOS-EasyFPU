@@ -11,24 +11,11 @@ import URLImage
 
 struct FoodSearchResultPreview: View {
     var product: FoodDatabaseEntry
-    @ObservedObject var foodDatabaseResults: FoodDatabaseResults
     @ObservedObject var draftFoodItem: FoodItemViewModel
-    var category: FoodItemCategory
-    @State private var selectedEntry: FoodDatabaseEntry?
-    @State private var foodSelected = false
-    @State private var showDetails: Bool = false
-    @Environment(\.presentationMode) var parentPresentation
+    @Binding var navigationPath: NavigationPath
     
     var body: some View {
         HStack {
-            Button(action: {
-                self.foodDatabaseResults.selectedEntry = product
-            }) {
-                Image(systemName: self.foodDatabaseResults.selectedEntry == product ? "checkmark.circle.fill" : "circle").foregroundStyle(.green)
-            }
-            .buttonStyle(BorderlessButtonStyle())
-            .accessibilityIdentifierLeaf("FoodSearchSelectButton")
-            
             if let imageObject = product.imageFront {
                 URLImage(imageObject.thumb) { image in
                     image
@@ -39,35 +26,18 @@ struct FoodSearchResultPreview: View {
                 .accessibilityIdentifierLeaf("ProductImage")
             }
             
-            Text(product.name).font(.headline)
-                .onTapGesture {
-                    self.foodDatabaseResults.selectedEntry = product
-                }
+            Text(product.name)
+                .font(.headline)
                 .accessibilityIdentifierLeaf("ProductName")
-            
-            Button(action: {
-                withAnimation {
-                    self.showDetails.toggle()
-                }
-            }) {
-                Image(systemName: "info.circle")
-                    .imageScale(.large)
-            }
-            .buttonStyle(BorderlessButtonStyle())
-            .accessibilityIdentifierLeaf("ProductDetailsButton")
-            
         }
-        .sheet(isPresented: $showDetails) {
-            FoodPreview(product: $selectedEntry, databaseResults: foodDatabaseResults, draftFoodItem: draftFoodItem, category: category, foodSelected: $foodSelected)
-            .onDisappear() {
-                if foodSelected {
-                    parentPresentation.wrappedValue.dismiss()
-                }
+        .swipeActions(allowsFullSwipe: true) {
+            // Selecting the product
+            Button("Select", systemImage: "checkmark.circle") {
+                draftFoodItem.fill(with: product)
+                navigationPath.removeLast()
             }
-            .accessibilityIdentifierBranch("ProductDetails")
-        }
-        .onAppear() {
-            self.selectedEntry = self.product
+            .tint(.green)
+            .accessibilityIdentifierLeaf("SelectButton")
         }
     }
 }

@@ -126,17 +126,15 @@ struct FoodPreviewContent: View {
         switch state {
         case .front:
             if selectedEntry.imageFront != nil {
-                NavigationStack {
-                    GeometryReader { reader in
-                        getImageView(url: selectedEntry.imageFront!.image, for: reader)
-                        .navigationBarTitle(selectedEntry.name)
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button(action: {
-                                    self.activeSheet = nil
-                                }) {
-                                    Text("Done")
-                                }
+                GeometryReader { reader in
+                    getImageView(url: selectedEntry.imageFront!.image, for: reader)
+                    .navigationTitle(selectedEntry.name)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                self.activeSheet = nil
+                            }) {
+                                Text("Done")
                             }
                         }
                     }
@@ -144,17 +142,15 @@ struct FoodPreviewContent: View {
             }
         case .nutriments:
             if selectedEntry.imageNutriments != nil {
-                NavigationStack {
-                    GeometryReader { reader in
-                        getImageView(url: selectedEntry.imageNutriments!.image, for: reader)
-                        .navigationBarTitle(selectedEntry.name)
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button(action: {
-                                    self.activeSheet = nil
-                                }) {
-                                    Text("Done")
-                                }
+                GeometryReader { reader in
+                    getImageView(url: selectedEntry.imageNutriments!.image, for: reader)
+                    .navigationTitle(selectedEntry.name)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                self.activeSheet = nil
+                            }) {
+                                Text("Done")
                             }
                         }
                     }
@@ -162,17 +158,15 @@ struct FoodPreviewContent: View {
             }
         case .ingredients:
             if selectedEntry.imageIngredients != nil {
-                NavigationStack {
-                    GeometryReader { reader in
-                        getImageView(url: selectedEntry.imageIngredients!.image, for: reader)
-                        .navigationBarTitle(selectedEntry.name)
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button(action: {
-                                    self.activeSheet = nil
-                                }) {
-                                    Text("Done")
-                                }
+                GeometryReader { reader in
+                    getImageView(url: selectedEntry.imageIngredients!.image, for: reader)
+                    .navigationTitle(selectedEntry.name)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                self.activeSheet = nil
+                            }) {
+                                Text("Done")
                             }
                         }
                     }
