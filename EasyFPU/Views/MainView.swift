@@ -35,17 +35,21 @@ enum SimpleAlertType {
     }
     
     func message() -> some View {
+        Text(verbatim: messageAsString())
+    }
+    
+    func messageAsString() -> String {
         switch self {
         case let .success(message: message):
-            return Text(NSLocalizedString(message, comment: ""))
+            return NSLocalizedString(message, comment: "")
         case let .notice(message: message):
-            return Text(NSLocalizedString(message, comment: ""))
+            return NSLocalizedString(message, comment: "")
         case let .warning(message: message):
-            return Text(NSLocalizedString(message, comment: ""))
+            return NSLocalizedString(message, comment: "")
         case let .error(message: message):
-            return Text(NSLocalizedString(message, comment: ""))
+            return NSLocalizedString(message, comment: "")
         case let .fatalError(message: message):
-            return Text("\(NSLocalizedString(message, comment: "")) - \(NSLocalizedString("This should not have happened, please inform the developer team.", comment: ""))")
+            return "\(NSLocalizedString(message, comment: "")) - \(NSLocalizedString("This should not have happened, please inform the developer team.", comment: ""))"
         }
     }
 }

@@ -364,10 +364,10 @@ struct BusinessLogicTests {
             )
             let absorptionBlockVM1 = AbsorptionBlockViewModel(from: absorptionBlock)
             
-            var errorMessage = ""
-            let absorptionBlockVM2 = AbsorptionBlockViewModel(maxFpuAsString: BusinessLogicTests.maxFPUAsString, absorptionTimeAsString: BusinessLogicTests.absorptionTimeAsString, errorMessage: &errorMessage)
-            #expect(errorMessage.isEmpty)
-            try #require(absorptionBlockVM2 != nil)
+            var alert: SimpleAlertType? = nil
+            let absorptionBlockVM2 = AbsorptionBlockViewModel(maxFpuAsString: BusinessLogicTests.maxFPUAsString, absorptionTimeAsString: BusinessLogicTests.absorptionTimeAsString, activeAlert: &alert)
+            #expect(alert == nil)
+            #expect(absorptionBlockVM2 != nil)
             #expect(absorptionBlockVM1 == absorptionBlockVM2)
         }
         
@@ -384,9 +384,9 @@ struct BusinessLogicTests {
             ]
         ))
         func absorptionBlockInitializerWithWrongMaxFPU(inputString: String, errorString: String) async throws {
-            var errorMessage = ""
-            let absorptionBlockVM = AbsorptionBlockViewModel(maxFpuAsString: inputString, absorptionTimeAsString: BusinessLogicTests.absorptionTimeAsString, errorMessage: &errorMessage)
-            #expect(errorMessage == errorString)
+            var alert: SimpleAlertType? = nil
+            let absorptionBlockVM = AbsorptionBlockViewModel(maxFpuAsString: inputString, absorptionTimeAsString: BusinessLogicTests.absorptionTimeAsString, activeAlert: &alert)
+            #expect(alert?.messageAsString() == errorString)
             #expect(absorptionBlockVM == nil)
         }
         
@@ -403,9 +403,9 @@ struct BusinessLogicTests {
             ]
         ))
         func absorptionBlockInitializerWithWrongAbsorptionTime(inputString: String, errorString: String) async throws {
-            var errorMessage = ""
-            let absorptionBlockVM = AbsorptionBlockViewModel(maxFpuAsString: BusinessLogicTests.maxFPUAsString, absorptionTimeAsString: inputString, errorMessage: &errorMessage)
-            #expect(errorMessage == errorString)
+            var alert: SimpleAlertType? = nil
+            let absorptionBlockVM = AbsorptionBlockViewModel(maxFpuAsString: BusinessLogicTests.maxFPUAsString, absorptionTimeAsString: inputString, activeAlert: &alert)
+            #expect(alert?.messageAsString() == errorString)
             #expect(absorptionBlockVM == nil)
         }
         
@@ -424,69 +424,68 @@ struct BusinessLogicTests {
             }
             
             // Try to add absorption blocks with existing maxFPU
-            var errorMessage: String
+            var alert: SimpleAlertType? = nil
             for absorptionBlock in BusinessLogicTests.absorptionBlocks {
-                errorMessage = ""
-                #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock), errorMessage: &errorMessage))
-                #expect(errorMessage == NSLocalizedString("Maximum FPU value already exists", comment: ""))
+                alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(from: absorptionBlock))
+                #expect(alert?.messageAsString() == NSLocalizedString("Maximum FPU value already exists", comment: ""))
             }
             
             // Try to add the first absorption block with an absorption time equal to the following (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "6", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time is equals or larger than the one of the following absorption block", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "6", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time is equals or larger than the one of the following absorption block", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 5)
             
             // Try to add the first absorption block with an absorption time more than the following (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "7", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time is equals or larger than the one of the following absorption block", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "7", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time is equals or larger than the one of the following absorption block", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 5)
             
             // Try to add the first absorption block with an absorption time less than the following (correct)
-            errorMessage = ""
-            #expect(absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "5", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "5", activeAlert: &alert)!)
+            #expect(alert == nil)
             #expect(absorptionSchemeVM.absorptionBlocks.count == 6)
             
             // Try to add the last absorption block with an absorption time equal to the previous (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "16", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time is equals or less than the one of the block before", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "16", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time is equals or less than the one of the block before", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 6)
             
             // Try to add the first absorption block with an absorption time less than the previous (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "15", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time is equals or less than the one of the block before", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "15", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time is equals or less than the one of the block before", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 6)
             
             // Try to add the last absorption block with an absorption time more than the previous (correct)
-            errorMessage = ""
-            #expect(absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "20", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "16", absorptionTimeAsString: "20", activeAlert: &alert)!)
+            #expect(alert == nil)
             #expect(absorptionSchemeVM.absorptionBlocks.count == 7)
             
             // Try to add the last absorption block with an absorption time equal to the previous (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "10", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time must be between previous and following block", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "10", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time must be between previous and following block", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 7)
             
             // Try to add the first absorption block with an absorption time less than the previous (wrong)
-            errorMessage = ""
-            #expect(!absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "12", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage == NSLocalizedString("Absorption time must be between previous and following block", comment: ""))
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "12", activeAlert: &alert)!)
+            #expect(alert?.messageAsString() == NSLocalizedString("Absorption time must be between previous and following block", comment: ""))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 7)
             
             // Try to add the last absorption block with an absorption time more than the previous (correct)
-            errorMessage = ""
-            #expect(absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "11", errorMessage: &errorMessage)!, errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
+            alert = nil
+            alert = absorptionSchemeVM.add(newAbsorptionBlock: AbsorptionBlockViewModel(maxFpuAsString: "7", absorptionTimeAsString: "11", activeAlert: &alert)!)
+            #expect(alert == nil)
             #expect(absorptionSchemeVM.absorptionBlocks.count == 8)
             
             // Try resetting
-            errorMessage = ""
+            var errorMessage = ""
             #expect(absorptionSchemeVM.resetToDefaultAbsorptionBlocks(errorMessage: &errorMessage))
             #expect(absorptionSchemeVM.absorptionBlocks.count == 5)
             #expect(absorptionSchemeVM.absorptionBlocks[0].maxFpu == Int(absorptionBlocks[0].maxFpu / 2))
@@ -501,21 +500,28 @@ struct BusinessLogicTests {
             #expect(absorptionSchemeVM.absorptionBlocks[4].absorptionTime == Int(absorptionBlocks[4].absorptionTime / 2))
             
             // Try replacing blocks from back to front
-            errorMessage = ""
-            #expect(absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[4].id, newMaxFpuAsString: String(absorptionBlocks[4].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[4].absorptionTime), errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
-            #expect(absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[3].id, newMaxFpuAsString: String(absorptionBlocks[3].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[3].absorptionTime), errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
-            #expect(absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[2].id, newMaxFpuAsString: String(absorptionBlocks[2].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[2].absorptionTime), errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
-            #expect(absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[1].id, newMaxFpuAsString: String(absorptionBlocks[1].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[1].absorptionTime), errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
-            #expect(absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[0].id, newMaxFpuAsString: String(absorptionBlocks[0].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[0].absorptionTime), errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
+            alert = nil
+            alert = absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[4].id, newMaxFpuAsString: String(absorptionBlocks[4].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[4].absorptionTime))
+            #expect(alert == nil)
+            
+            alert = nil
+            alert = absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[3].id, newMaxFpuAsString: String(absorptionBlocks[3].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[3].absorptionTime))
+            #expect(alert == nil)
+            
+            alert = nil
+            alert = absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[2].id, newMaxFpuAsString: String(absorptionBlocks[2].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[2].absorptionTime))
+            #expect(alert == nil)
+            
+            alert = nil
+            alert = absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[1].id, newMaxFpuAsString: String(absorptionBlocks[1].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[1].absorptionTime))
+            #expect(alert == nil)
+            
+            alert = nil
+            alert = absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[0].id, newMaxFpuAsString: String(absorptionBlocks[0].maxFpu), newAbsorptionTimeAsString: String(absorptionBlocks[0].absorptionTime))
+            #expect(alert == nil)
             
             // Try to replace first with last block
-            #expect(absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[0].id, newMaxFpuAsString: "14", newAbsorptionTimeAsString: "20", errorMessage: &errorMessage))
-            #expect(errorMessage.isEmpty)
+            #expect(absorptionSchemeVM.replace(existingAbsorptionBlockID: absorptionSchemeVM.absorptionBlocks[0].id, newMaxFpuAsString: "14", newAbsorptionTimeAsString: "20") == nil)
             #expect(absorptionSchemeVM.absorptionBlocks.count == 5)
             #expect(absorptionSchemeVM.absorptionBlocks[0].maxFpu == absorptionBlocks[1].maxFpu)
             #expect(absorptionSchemeVM.absorptionBlocks[0].absorptionTime == absorptionBlocks[1].absorptionTime)
