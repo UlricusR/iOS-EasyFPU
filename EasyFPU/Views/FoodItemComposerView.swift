@@ -27,31 +27,31 @@ struct FoodItemComposerView: View {
     @State private var existingFoodItem: FoodItem?
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                if composedFoodItemVM.foodItemVMs.isEmpty {
-                    // No ingredients selected for the recipe, so display info and a call for action button
-                    Image("eggs-color").padding()
-                    Text("Your yummy recipe will appear here once you add some ingredients.").padding()
-                    Button {
-                        // Add new product to composed food item
-                        navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItemVM))
-                    } label: {
-                        HStack {
-                            Image(systemName: "plus.circle")
-                                .imageScale(.large)
-                                .foregroundStyle(.green)
-                                .bold()
-                            Text("Add ingredients")
-                        }
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .fill(.yellow)
-                        )
+        VStack {
+            if composedFoodItemVM.foodItemVMs.isEmpty {
+                // No ingredients selected for the recipe, so display info and a call for action button
+                Image("eggs-color").padding()
+                Text("Your yummy recipe will appear here once you add some ingredients.").padding()
+                Button {
+                    // Add new product to composed food item
+                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItemVM))
+                } label: {
+                    HStack {
+                        Image(systemName: "plus.circle")
+                            .imageScale(.large)
+                            .foregroundStyle(.green)
+                            .bold()
+                        Text("Add ingredients")
                     }
-                    .accessibilityIdentifierLeaf("AddIngredientsButton")
-                } else {
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .fill(.yellow)
+                    )
+                }
+                .accessibilityIdentifierLeaf("AddIngredientsButton")
+            } else {
+                GeometryReader { geometry in
                     Form {
                         Section(header: Text("Final product")) {
                             HStack {
@@ -138,69 +138,69 @@ struct FoodItemComposerView: View {
                     }
                 }
             }
-            .navigationTitle(Text("Final product"))
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        activeSheet = .help
-                    }) {
-                        Image(systemName: "questionmark.circle")
-                            .imageScale(.large)
-                    }
-                    .accessibilityIdentifierLeaf("HelpButton")
+        }
+        .navigationTitle(Text("Final product"))
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    activeSheet = .help
+                }) {
+                    Image(systemName: "questionmark.circle")
+                        .imageScale(.large)
                 }
+                .accessibilityIdentifierLeaf("HelpButton")
+            }
+            
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button(action: {
+                    navigationPath.removeLast()
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .imageScale(.large)
+                }
+                .accessibilityIdentifierLeaf("ClearButton")
                 
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        navigationPath.removeLast()
-                    }) {
-                        Image(systemName: "xmark.circle")
-                            .imageScale(.large)
-                    }
-                    .accessibilityIdentifierLeaf("ClearButton")
+                Button(action: {
+                    // Trim white spaces from name
+                    composedFoodItemVM.name = composedFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
                     
-                    Button(action: {
-                        // Trim white spaces from name
-                        composedFoodItemVM.name = composedFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
-                        
-                        // Check if this is a new ComposedFoodItem (no Core Data object attached yet) and, if yes, the name already exists
-                        if !composedFoodItemVM.hasAssociatedComposedFoodItem() && composedFoodItemVM.nameExists() {
-                            activeAlert = .notice(message: "A food item with this name already exists")
-                            showingAlert = true
+                    // Check if this is a new ComposedFoodItem (no Core Data object attached yet) and, if yes, the name already exists
+                    if !composedFoodItemVM.hasAssociatedComposedFoodItem() && composedFoodItemVM.nameExists() {
+                        activeAlert = .notice(message: "A food item with this name already exists")
+                        showingAlert = true
+                    } else {
+                        if weightCheck(isLess: true) {
+                            actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                            showingActionSheet = true
+                        } else if weightCheck(isLess: false) {
+                            actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
+                            showingActionSheet = true
                         } else {
-                            if weightCheck(isLess: true) {
-                                actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
-                                showingActionSheet = true
-                            } else if weightCheck(isLess: false) {
-                                actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
-                                showingActionSheet = true
-                            } else {
-                                saveComposedFoodItem()
-                            }
-                        }
-                    }) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .imageScale(.large)
-                    }
-                    .disabled(composedFoodItemVM.foodItemVMs.count == 0)
-                    .confirmationDialog(
-                        "Notice",
-                        isPresented: $showingActionSheet,
-                        presenting: actionSheetMessage
-                    ) { message in
-                        Button("Save anyway") {
                             saveComposedFoodItem()
-                            actionSheetMessage = nil
-                            navigationPath.removeLast()
                         }
-                        Button("Cancel", role: .cancel) {
-                            actionSheetMessage = nil
-                        }
-                    } message: { message in
-                        Text(message)
                     }
-                    .accessibilityIdentifierLeaf("SaveButton")
+                }) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .imageScale(.large)
                 }
+                .disabled(composedFoodItemVM.foodItemVMs.count == 0)
+                .confirmationDialog(
+                    "Notice",
+                    isPresented: $showingActionSheet,
+                    presenting: actionSheetMessage
+                ) { message in
+                    Button("Save anyway") {
+                        saveComposedFoodItem()
+                        actionSheetMessage = nil
+                        navigationPath.removeLast()
+                    }
+                    Button("Cancel", role: .cancel) {
+                        actionSheetMessage = nil
+                    }
+                } message: { message in
+                    Text(message)
+                }
+                .accessibilityIdentifierLeaf("SaveButton")
             }
         }
         .sheet(item: $activeSheet) {
