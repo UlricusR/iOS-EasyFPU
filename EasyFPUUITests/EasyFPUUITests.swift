@@ -147,7 +147,7 @@ final class EasyFPUUITests: XCTestCase {
         snapshot("30IngredientsList")
         
         let collectionViewsQuery = app.collectionViews
-        collectionViewsQuery/*@START_MENU_TOKEN@*/.staticTexts["MainView.MaintainIngredients.Backhefe (.CarbsUnit"]/*[[".cells.staticTexts[\"MainView.MaintainIngredients.Backhefe (.CarbsUnit\"]",".staticTexts[\"MainView.MaintainIngredients.Backhefe (.CarbsUnit\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.swipeLeft()
+        collectionViewsQuery.staticTexts["MainView.MaintainIngredients.Backhefe (.FoodItemNameLabel"].swipeLeft()
         
         snapshot("31FoodListSwipeLeft")
         
