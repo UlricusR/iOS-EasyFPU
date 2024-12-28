@@ -18,7 +18,7 @@ struct CustomTextField: View {
     var keyboardType: UIKeyboardType
     
     var body: some View {
-        AnyView(TextField(titleKey, text: $text)
+        AnyView(TextField(LocalizedStringKey(titleKey), text: $text)
         .keyboardType(keyboardType))
         .onReceive(Just(text)) { newValue in
             let filtered = newValue.filter {
