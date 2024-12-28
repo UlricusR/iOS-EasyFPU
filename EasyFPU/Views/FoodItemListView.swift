@@ -108,10 +108,14 @@ struct FoodItemListView: View {
                 .accessibilityIdentifierLeaf("AddFoodItemButton")
             } else {
                 List(self.filteredFoodItems.sorted {
-                    if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
-                        return true
-                    } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
-                        return false
+                    if listType == .selection {
+                        if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
+                            return true
+                        } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
+                            return false
+                        } else {
+                            return $0.name < $1.name
+                        }
                     } else {
                         return $0.name < $1.name
                     }
