@@ -57,13 +57,14 @@ struct FoodItemSelector: View {
                             if self.addToTypicalAmounts {
                                 // User wants to add amount to typical amounts, so comment is required
                                 HStack {
-                                    CustomTextField(titleKey: "Comment", text: self.$newTypicalAmountComment, keyboardType: .default)
+                                    TextField("Comment", text: self.$newTypicalAmountComment)
+                                        .accessibilityIdentifierLeaf("TypicalAmountComment")
                                     Button(action: {
                                         self.addTypicalAmount()
                                     }) {
                                         Image(systemName: "checkmark.circle.fill")
                                     }
-                                    .accessibilityIdentifierLeaf("EditTypicalAmountComment")
+                                    .accessibilityIdentifierLeaf("EditTypicalAmountButton")
                                 }
                             } else {
                                 // Give user possibility to add the entered amount to typical amounts

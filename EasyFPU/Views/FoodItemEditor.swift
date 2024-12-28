@@ -73,7 +73,7 @@ struct FoodItemEditor: View {
                     Section {
                         HStack {
                             // Name
-                            CustomTextField(titleKey: "Name", text: $draftFoodItemVM.name, keyboardType: .default)
+                            TextField("Name", text: $draftFoodItemVM.name)
                                 .accessibilityIdentifierLeaf("NameValue")
                             
                             // Search and Scan buttons
@@ -191,11 +191,11 @@ struct FoodItemEditor: View {
                     
                     Section(header: Text("Typical amounts:")) {
                         HStack {
-                            CustomTextField(titleKey: "Amount", text: $newTypicalAmount, keyboardType: .decimalPad)
+                            CustomTextField(titleKey: "Amount", text: $newTypicalAmount, keyboardType: .numberPad)
                                 .accessibilityIdentifierLeaf("EditTypicalAmountValue")
                             Text("g")
                                 .accessibilityIdentifierLeaf("AmountUnit")
-                            CustomTextField(titleKey: "Comment", text: $newTypicalAmountComment, keyboardType: .default)
+                            TextField("Comment", text: $newTypicalAmountComment)
                                 .accessibilityIdentifierLeaf("EditTypicalAmountComment")
                             Button(action: {
                                 self.addTypicalAmount()

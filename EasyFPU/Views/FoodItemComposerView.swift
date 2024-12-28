@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct FoodItemComposerView: View {
     enum SheetState: Identifiable {
@@ -64,7 +65,14 @@ struct FoodItemComposerView: View {
                             HStack {
                                 Text("Weight")
                                     .accessibilityIdentifierLeaf("WeightLabel")
-                                CustomTextField(titleKey: "Weight", text: self.$composedFoodItemVM.amountAsString, keyboardType: .numberPad)
+                                TextField("Weight", text: self.$composedFoodItemVM.amountAsString)
+                                    .keyboardType(.numberPad)
+                                    .onReceive(Just(composedFoodItemVM.amountAsString)) { newValue in
+                                        let filtered = newValue.filter { "0123456789".contains($0) }
+                                        if filtered != newValue {
+                                            self.composedFoodItemVM.amountAsString = filtered
+                                        }
+                                    }
                                     .multilineTextAlignment(.trailing)
                                     .accessibilityIdentifierLeaf("WeightValue")
                                 Text("g")
