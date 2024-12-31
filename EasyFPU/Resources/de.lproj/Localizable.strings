@@ -18,6 +18,7 @@
 
 // General buttons
 "Done" = "Fertig";
+"Finished" = "Fertig";
 "Cancel" = "Abbrechen";
 "Add" = "Hinzufügen";
 "Update" = "Aktualisieren";

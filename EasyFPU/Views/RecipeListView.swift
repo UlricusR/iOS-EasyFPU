@@ -179,6 +179,7 @@ struct RecipeListView: View {
                         composedFoodItem: recipe
                     )
                     .accessibilityIdentifierBranch("SelectIngredients")
+                    .navigationBarBackButtonHidden()
                 case let .EditRecipe(recipe: recipe):
                     if recipe.cdComposedFoodItem != nil {
                         FoodItemComposerView(

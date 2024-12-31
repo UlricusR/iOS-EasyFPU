@@ -107,22 +107,54 @@ struct FoodItemListView: View {
                 }
                 .accessibilityIdentifierLeaf("AddFoodItemButton")
             } else {
-                List(self.filteredFoodItems.sorted {
-                    if listType == .selection {
-                        if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
-                            return true
-                        } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
-                            return false
+                ZStack {
+                    // The food list
+                    List(self.filteredFoodItems.sorted {
+                        if listType == .selection {
+                            if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
+                                return true
+                            } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
+                                return false
+                            } else {
+                                return $0.name < $1.name
+                            }
                         } else {
                             return $0.name < $1.name
                         }
-                    } else {
-                        return $0.name < $1.name
+                    }) { foodItem in
+                        FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
+                            .environment(\.managedObjectContext, self.managedObjectContext)
+                            .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                     }
-                }) { foodItem in
-                    FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
-                        .environment(\.managedObjectContext, self.managedObjectContext)
-                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? 70 : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
+                    
+                    // The overlaying finished button in case we have a selection type list
+                    if listType == .selection {
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                Button {
+                                    // Return to previous view
+                                    navigationPath.removeLast()
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "checkmark.circle.fill").imageScale(.large).foregroundStyle(.green)
+                                        Text("Finished")
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                            .fill(.yellow)
+                                    )
+                                }
+                                .accessibilityIdentifierLeaf("FinishedButton")
+                                Spacer()
+                            }
+                            .padding()
+                        }
+                    }
                 }
             }
         }

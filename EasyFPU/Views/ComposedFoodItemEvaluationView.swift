@@ -196,6 +196,7 @@ struct ComposedFoodItemEvaluationView: View {
                         composedFoodItem: composedFoodItemVM
                     )
                     .accessibilityIdentifierBranch("AddProductToMeal")
+                    .navigationBarBackButtonHidden()
                 case .Details:
                     ComposedFoodItemDetailsView(
                         absorptionScheme: absorptionScheme,

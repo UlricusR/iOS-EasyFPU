@@ -22,8 +22,8 @@ struct FoodItemSelector: View {
     private let helpScreen = HelpScreen.foodItemSelector
     
     var body: some View {
-        
-        VStack {
+        ZStack {
+            // The form with the food item details
             GeometryReader { geometry in
                 Form {
                     Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text(category == .product ? "Enter amount consumed" : "Enter amount used") : Text(category == .product ? "Enter amount consumed or select typical amount" : "Enter amount used or select typical amount")) {
@@ -96,30 +96,50 @@ struct FoodItemSelector: View {
                     }
                 }
             }
+            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 70, trailing: 0)) // Required to avoid the content to be hidden by the Add button
             
-            Button("Add") {
-                // First check for unsaved typical amount
-                if self.addToTypicalAmounts {
-                    self.addTypicalAmount()
-                }
-                
-                let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
-                switch amountResult {
-                case .success(_):
-                    composedFoodItem.add(foodItem: draftFoodItem)
-                    
-                    // Quit edit mode
-                    navigationPath.removeLast()
-                case .failure(let err):
-                    // Display alert and stay in edit mode
-                    activeAlert = .error(message: err.evaluate())
-                    showingAlert = true
+            // The overlaying add button
+            if draftFoodItem.amount > 0 {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button {
+                            // First check for unsaved typical amount
+                            if self.addToTypicalAmounts {
+                                self.addTypicalAmount()
+                            }
+                            
+                            let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
+                            switch amountResult {
+                            case .success(_):
+                                composedFoodItem.add(foodItem: draftFoodItem)
+                                
+                                // Quit edit mode
+                                navigationPath.removeLast()
+                            case .failure(let err):
+                                // Display alert and stay in edit mode
+                                activeAlert = .error(message: err.evaluate())
+                                showingAlert = true
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: "plus.circle.fill").imageScale(.large).foregroundStyle(.green)
+                                Text("Add")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    .fill(.yellow)
+                            )
+                        }
+                        .accessibilityIdentifierLeaf("AddButton")
+                        Spacer()
+                    }
+                    .padding()
                 }
             }
-            .padding()
-            .buttonStyle(.borderedProminent)
-            .disabled(draftFoodItem.amount <= 0)
-            .accessibilityIdentifierLeaf("AddButton")
         }
         .navigationTitle(self.draftFoodItem.name)
         .toolbar {
