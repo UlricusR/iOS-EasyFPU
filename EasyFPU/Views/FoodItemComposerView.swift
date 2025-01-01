@@ -16,16 +16,22 @@ struct FoodItemComposerView: View {
         var id: SheetState { self }
     }
     
+    enum AlertChoice {
+        case simpleAlert(type: SimpleAlertType)
+        case confirmDelete
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @Binding var navigationPath: NavigationPath
     private let helpScreen = HelpScreen.foodItemComposer
     @State private var activeSheet: SheetState?
     @State private var showingAlert: Bool = false
-    @State private var activeAlert: SimpleAlertType?
+    @State private var activeAlert: AlertChoice?
     @State private var showingActionSheet: Bool = false
     @State private var actionSheetMessage: String?
     @State private var existingFoodItem: FoodItem?
+    @State private var isConfirming = false
     
     var body: some View {
         VStack {
@@ -44,12 +50,10 @@ struct FoodItemComposerView: View {
                             .bold()
                         Text("Add ingredients")
                     }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(.yellow)
-                    )
+                    .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(ActionButton())
+                .padding()
                 .accessibilityIdentifierLeaf("AddIngredientsButton")
             } else {
                 ZStack {
@@ -108,16 +112,6 @@ struct FoodItemComposerView: View {
                             }
                             
                             Section(header: Text("Ingredients")) {
-                                Button(action: {
-                                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItemVM))
-                                }) {
-                                    HStack {
-                                        Image(systemName: "pencil.circle")
-                                            .imageScale(.large)
-                                        Text("Edit ingredients")
-                                    }
-                                }
-                                .accessibilityIdentifierLeaf("EditIngredientsButton")
                                 List {
                                     ForEach(composedFoodItemVM.foodItemVMs) { foodItem in
                                         HStack {
@@ -130,26 +124,56 @@ struct FoodItemComposerView: View {
                                         }
                                         .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                                     }
+                                    .onDelete(perform: removeFoodItems)
+                                }
+                            }
+                            
+                            // Delete recipe (only when editing an existing one)
+                            if composedFoodItemVM.hasAssociatedComposedFoodItem() {
+                                Section {
+                                    Button("Delete recipe", role: .destructive) {
+                                        // Check for associated product
+                                        if composedFoodItemVM.hasAssociatedFoodItem() {
+                                            isConfirming.toggle()
+                                        } else {
+                                            activeAlert = .confirmDelete
+                                            showingAlert = true
+                                        }
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .accessibilityIdentifierLeaf("DeleteButton")
                                 }
                             }
                         }
                     }
-                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 70, trailing: 0)) // Required to avoid the content to be hidden by the Save button
+                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the Edit and Save buttons
                     
                     // The overlaying Save button
                     if composedFoodItemVM.foodItemVMs.count > 0 {
                         VStack {
                             Spacer()
                             HStack {
-                                Spacer()
+                                // The Edit button
+                                Button {
+                                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItemVM))
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
+                                        Text("Add more")
+                                    }
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                }
+                                .buttonStyle(ActionButton())
+                                .accessibilityIdentifierLeaf("EditButton")
                                 
+                                // The Save button
                                 Button {
                                     // Trim white spaces from name
                                     composedFoodItemVM.name = composedFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
                                     
                                     // Check if this is a new ComposedFoodItem (no Core Data object attached yet) and, if yes, the name already exists
                                     if !composedFoodItemVM.hasAssociatedComposedFoodItem() && composedFoodItemVM.nameExists() {
-                                        activeAlert = .notice(message: "A food item with this name already exists")
+                                        activeAlert = .simpleAlert(type: .notice(message: "A food item with this name already exists"))
                                         showingAlert = true
                                     } else {
                                         if weightCheck(isLess: true) {
@@ -167,13 +191,9 @@ struct FoodItemComposerView: View {
                                         Image(systemName: "checkmark.circle.fill").imageScale(.large).foregroundStyle(.green)
                                         Text("Save")
                                     }
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                            .fill(.yellow)
-                                    )
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 }
+                                .buttonStyle(ActionButton())
                                 .accessibilityIdentifierLeaf("SaveButton")
                                 .confirmationDialog(
                                     "Notice",
@@ -191,10 +211,9 @@ struct FoodItemComposerView: View {
                                 } message: { message in
                                     Text(message)
                                 }
-                                
-                                Spacer()
                             }
                             .padding()
+                            .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
@@ -215,14 +234,26 @@ struct FoodItemComposerView: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert(
-            activeAlert?.title() ?? "Notice",
-            isPresented: $showingAlert,
-            presenting: activeAlert
-        ) { activeAlert in
-            activeAlert.button()
-        } message: { activeAlert in
-            activeAlert.message()
+        .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
+            alertAction(for: $0)
+        } message: {
+            alertMessage(for: $0)
+        }
+        .confirmationDialog(
+            "Warning",
+            isPresented: $isConfirming
+        ) {
+            Button("Delete both") {
+                deleteRecipeAndFoodItem()
+            }
+            Button("Keep product") {
+                deleteRecipeOnly()
+            }
+            Button("Cancel", role: .cancel) {
+                isConfirming.toggle()
+            }
+        } message: {
+            Text("There's an associated product, do you want to delete it as well?")
         }
     }
     
@@ -241,14 +272,14 @@ struct FoodItemComposerView: View {
             // Store new ComposedFoodItem in CoreData
             if !composedFoodItemVM.save() {
                 // We're missing ingredients, the composedFoodItem could not be saved - this should not happen!
-                activeAlert = .fatalError(message: "Could not create the composed food item")
+                activeAlert = .simpleAlert(type: .fatalError(message: "Could not create the composed food item"))
                 showingAlert = true
             }
         } else { // We edit an existing ComposedFoodItem
             // Update Core Data ComposedFoodItem
             if !composedFoodItemVM.update() {
                 // No Core Data ComposedFoodItem found - this should never happen!
-                activeAlert = .fatalError(message: "Could not update the composed food item")
+                activeAlert = .simpleAlert(type: .fatalError(message: "Could not update the composed food item"))
                 showingAlert = true
             }
         }
@@ -258,6 +289,74 @@ struct FoodItemComposerView: View {
         navigationPath.removeLast()
     }
     
+    func removeFoodItems(at offsets: IndexSet) {
+        if composedFoodItemVM.foodItemVMs.count == 1 {
+            // We need to have at least one ingredient left
+            activeAlert = .simpleAlert(type: .notice(message: "At least one ingredient required"))
+            showingAlert = true
+            return
+        }
+        
+        withAnimation {
+            var foodItemsToRemove = [FoodItemViewModel]()
+            for offset in offsets {
+                foodItemsToRemove.append(composedFoodItemVM.foodItemVMs[offset])
+            }
+            
+            for foodItem in foodItemsToRemove {
+                composedFoodItemVM.remove(foodItem: foodItem)
+            }
+        }
+    }
+    
+    private func deleteRecipeOnly() {
+        withAnimation(.default) {
+            composedFoodItemVM.delete(includeAssociatedFoodItem: false)
+            navigationPath.removeLast()
+        }
+    }
+    
+    private func deleteRecipeAndFoodItem() {
+        withAnimation(.default) {
+            composedFoodItemVM.delete(includeAssociatedFoodItem: true)
+            navigationPath.removeLast()
+        }
+    }
+    
+    @ViewBuilder
+    private func alertMessage(for alert: AlertChoice) -> some View {
+        switch alert {
+        case let .simpleAlert(type: type):
+            type.message()
+        case .confirmDelete:
+            Text("Do you really want to delete this recipe? This cannot be undone!")
+        }
+    }
+
+    @ViewBuilder
+    private func alertAction(for alert: AlertChoice) -> some View {
+        switch alert {
+        case let .simpleAlert(type: type):
+            type.button()
+        case .confirmDelete:
+            Button("Do not delete", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                deleteRecipeOnly()
+            }
+        }
+    }
+    
+    private var alertTitle: LocalizedStringKey {
+        switch activeAlert {
+        case let .simpleAlert(type: type):
+            LocalizedStringKey(type.title())
+        case .confirmDelete:
+            LocalizedStringKey("Delete recipe")
+        case nil:
+            ""
+        }
+    }
+    
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
@@ -265,5 +364,15 @@ struct FoodItemComposerView: View {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpComposeMeal")
         }
+    }
+}
+
+struct FoodItemComposerView_Previews: PreviewProvider {
+    @State private static var navigationPath = NavigationPath()
+    static var previews: some View {
+        FoodItemComposerView(
+            composedFoodItemVM: ComposedFoodItemViewModel.sampleData(),
+            navigationPath: $navigationPath
+        )
     }
 }

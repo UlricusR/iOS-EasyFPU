@@ -107,7 +107,7 @@ struct ComposedFoodItemExportView: View {
                     }
                 }
             }
-            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 70, trailing: 0)) // Required to avoid the content to be hidden by the Export button
+            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the Export button
             
             // The export button
             VStack {
@@ -123,12 +123,8 @@ struct ComposedFoodItemExportView: View {
                             Text("Export to Health")
                         }
                         .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .fill(.yellow)
-                        )
                     }
+                    .buttonStyle(ActionButton())
                     .accessibilityIdentifierLeaf("ExportToHealthButton")
                     .confirmationDialog(
                         "Notice",

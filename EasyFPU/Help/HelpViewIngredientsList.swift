@@ -16,6 +16,8 @@ struct HelpViewIngredientsList: View {
             
             Text("As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount.").padding()
             
+            Text("Once done adding all ingredients, hit the yellow Finished button to return to your recipe overview. You can always come back to edit or add ingredients.").padding()
+            
             HStack {
                 Image(systemName: "plus.circle").foregroundStyle(.green)
                 Text("Adds new ingredients to the list. This is not selecting it, this needs to be done separately.")
@@ -29,11 +31,6 @@ struct HelpViewIngredientsList: View {
             HStack {
                 Image(systemName: "xmark.circle").foregroundStyle(.red)
                 Text("Indicates that the ingredient has been selected and is included in your recipe. Tapping it again will remove it from your recipe.")
-            }.padding()
-			
-			HStack {
-				Image(systemName: "xmark.circle").foregroundStyle(.red).imageScale(.large)
-				Text("The red X at the top of the screen lets you remove all selected ingredients at once.")
             }.padding()
         }
     }

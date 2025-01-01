@@ -103,4 +103,12 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, I
     static func < (lhs: TypicalAmountViewModel, rhs: TypicalAmountViewModel) -> Bool {
         lhs.amount < rhs.amount
     }
+    
+    static func sampleData() -> [TypicalAmountViewModel] {
+        [
+            TypicalAmountViewModel(amount: 100, comment: "Sample comment"),
+            TypicalAmountViewModel(amount: 200, comment: "Another sample comment"),
+            TypicalAmountViewModel(amount: 300, comment: "Yet another sample comment")
+        ]
+    }
 }

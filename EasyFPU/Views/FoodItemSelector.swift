@@ -83,49 +83,45 @@ struct FoodItemSelector: View {
                     }
                 }
             }
-            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 70, trailing: 0)) // Required to avoid the content to be hidden by the Add button
+            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the Add button
             
             // The overlaying add button
-            if draftFoodItem.amount > 0 {
-                VStack {
+            VStack {
+                Spacer()
+                HStack {
                     Spacer()
-                    HStack {
-                        Spacer()
-                        Button {
-                            // First check for unsaved typical amount
-                            if self.addToTypicalAmounts {
-                                self.addTypicalAmount()
-                            }
-                            
-                            let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
-                            switch amountResult {
-                            case .success(_):
-                                composedFoodItem.add(foodItem: draftFoodItem)
-                                
-                                // Quit edit mode
-                                navigationPath.removeLast()
-                            case .failure(let err):
-                                // Display alert and stay in edit mode
-                                activeAlert = .error(message: err.evaluate())
-                                showingAlert = true
-                            }
-                        } label: {
-                            HStack {
-                                Image(systemName: "plus.circle.fill").imageScale(.large).foregroundStyle(.green)
-                                Text("Add")
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                    .fill(.yellow)
-                            )
+                    Button {
+                        // First check for unsaved typical amount
+                        if self.addToTypicalAmounts {
+                            self.addTypicalAmount()
                         }
-                        .accessibilityIdentifierLeaf("AddButton")
-                        Spacer()
+                        
+                        let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
+                        switch amountResult {
+                        case .success(_):
+                            composedFoodItem.add(foodItem: draftFoodItem)
+                            
+                            // Quit edit mode
+                            navigationPath.removeLast()
+                        case .failure(let err):
+                            // Display alert and stay in edit mode
+                            activeAlert = .error(message: err.evaluate())
+                            showingAlert = true
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus.circle.fill").imageScale(.large).foregroundStyle(.green)
+                            Text("Add")
+                        }
+                        .frame(maxWidth: .infinity)
                     }
-                    .padding()
+                    .buttonStyle(ActionButton())
+                    .disabled(draftFoodItem.amount <= 0)
+                    .accessibilityIdentifierLeaf("AddButton")
+                    
+                    Spacer()
                 }
+                .padding()
             }
         }
         .navigationTitle(self.draftFoodItem.name)

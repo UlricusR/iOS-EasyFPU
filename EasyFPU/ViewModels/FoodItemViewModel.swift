@@ -527,4 +527,19 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+    
+    static func sampleData() -> FoodItemViewModel {
+        FoodItemViewModel(
+            id: UUID(),
+            name: "Sample Food Item",
+            category: .product,
+            favorite: false,
+            caloriesPer100g: 100.0,
+            carbsPer100g: 10.0,
+            sugarsPer100g: 5.0,
+            amount: 100,
+            sourceID: nil,
+            sourceDB: nil
+        )
+    }
 }

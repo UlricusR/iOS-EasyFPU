@@ -324,4 +324,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     static func == (lhs: ComposedFoodItemViewModel, rhs: ComposedFoodItemViewModel) -> Bool {
         lhs.id == rhs.id
     }
+    
+    static func sampleData() -> ComposedFoodItemViewModel {
+        ComposedFoodItemViewModel(id: UUID(), name: "Sample Composed Food Item", category: .product, favorite: false)
+    }
 }

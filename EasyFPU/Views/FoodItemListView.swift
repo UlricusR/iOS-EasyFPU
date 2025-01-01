@@ -99,12 +99,10 @@ struct FoodItemListView: View {
                         Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
                         emptyStateButtonText
                     }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(.yellow)
-                    )
+                    .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(ActionButton())
+                .padding()
                 .accessibilityIdentifierLeaf("AddFoodItemButton")
             } else {
                 ZStack {
@@ -126,7 +124,7 @@ struct FoodItemListView: View {
                             .environment(\.managedObjectContext, self.managedObjectContext)
                             .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                     }
-                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? 70 : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
+                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
                     
                     // The overlaying finished button in case we have a selection type list
                     if listType == .selection {
@@ -143,12 +141,8 @@ struct FoodItemListView: View {
                                         Text("Finished")
                                     }
                                     .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                            .fill(.yellow)
-                                    )
                                 }
+                                .buttonStyle(ActionButton())
                                 .accessibilityIdentifierLeaf("FinishedButton")
                                 Spacer()
                             }
@@ -180,21 +174,6 @@ struct FoodItemListView: View {
                         .foregroundStyle(.green)
                 }
                 .accessibilityIdentifierLeaf("AddFoodItemButton")
-                
-                if listType == .selection && !composedFoodItem.foodItemVMs.isEmpty {
-                    Button(action: {
-                        withAnimation(.default) {
-                            composedFoodItem.clearIngredients()
-                            
-                            // Close sheet
-                            navigationPath.removeLast()
-                        }
-                    }) {
-                        Image(systemName: "xmark.circle").foregroundStyle(.red)
-                            .imageScale(.large)
-                    }
-                    .accessibilityIdentifierLeaf("ClearButton")
-                }
             }
             
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -213,7 +192,7 @@ struct FoodItemListView: View {
                             .imageScale(.large)
                     }
                 }
-                .accessibilityIdentifierLeaf("ClearButton")
+                .accessibilityIdentifierLeaf("FavoriteButton")
             }
         }
         .searchable(text: self.$searchString)
@@ -238,5 +217,19 @@ struct FoodItemListView: View {
             HelpView(helpScreen: .ingredientSelectionList)
                 .accessibilityIdentifierBranch("HelpIngredientSelectionList")
         }
+    }
+}
+
+struct FoodItemListView_Previews: PreviewProvider {
+    @State private static var navigationPath = NavigationPath()
+    static var previews: some View {
+        FoodItemListView(
+            category: .product,
+            listType: .selection,
+            foodItemListTitle: "My Products",
+            helpSheet: .productSelectionListHelp,
+            navigationPath: $navigationPath,
+            composedFoodItem: ComposedFoodItemViewModel.sampleData()
+        )
     }
 }

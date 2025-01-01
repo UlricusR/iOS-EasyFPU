@@ -50,12 +50,10 @@ struct ComposedFoodItemEvaluationView: View {
                                 .bold()
                             Text("Add products to your meal")
                         }
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .fill(.yellow)
-                        )
+                        .frame(maxWidth: .infinity)
                     }
+                    .buttonStyle(ActionButton())
+                    .padding()
                     .accessibilityIdentifierLeaf("AddProductsButton")
                 } else {
                     ZStack {
@@ -99,6 +97,7 @@ struct ComposedFoodItemEvaluationView: View {
                                         }
                                         .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                                     }
+                                    .onDelete(perform: removeFoodItems)
                                 }
                                 .accessibilityIdentifierBranch("IncludedProduct")
                                 
@@ -109,28 +108,23 @@ struct ComposedFoodItemEvaluationView: View {
                                 .accessibilityIdentifierLeaf("MealDetailsButton")
                             }
                         }
-                        .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 70, trailing: 0)) // Required to avoid the content to be hidden by the Edit and Export buttons
+                        .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the Edit and Export buttons
                         
                         // The overlaying edit and export buttons
                         VStack {
                             Spacer()
                             HStack {
-                                Spacer()
-                                
                                 // The edit button
                                 Button {
                                     navigationPath.append(MealNavigationDestination.SelectProduct)
                                 } label: {
                                     HStack {
-                                        Image(systemName: "pencil.circle.fill").imageScale(.large).foregroundStyle(.green)
-                                        Text("Edit")
+                                        Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
+                                        Text("Add more")
                                     }
-                                    .padding()
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                            .fill(.yellow)
-                                    )
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 }
+                                .buttonStyle(ActionButton())
                                 .accessibilityIdentifierLeaf("EditButton")
                                 
                                 // The export button
@@ -142,17 +136,14 @@ struct ComposedFoodItemEvaluationView: View {
                                             Image(systemName: "square.and.arrow.up").imageScale(.large).foregroundStyle(.green)
                                             Text("Export")
                                         }
-                                        .padding()
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                                .fill(.yellow)
-                                        )
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     }
+                                    .buttonStyle(ActionButton())
                                     .accessibilityIdentifierLeaf("ExportButton")
                                 }
-                                
-                                Spacer()
                             }
+                            .padding()
+                            .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
@@ -243,6 +234,19 @@ struct ComposedFoodItemEvaluationView: View {
         }
     }
     
+    func removeFoodItems(at offsets: IndexSet) {
+        withAnimation {
+            var foodItemsToRemove = [FoodItemViewModel]()
+            for offset in offsets {
+                foodItemsToRemove.append(composedFoodItemVM.foodItemVMs[offset])
+            }
+            
+            for foodItem in foodItemsToRemove {
+                composedFoodItemVM.remove(foodItem: foodItem)
+            }
+        }
+    }
+    
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
@@ -250,5 +254,14 @@ struct ComposedFoodItemEvaluationView: View {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpCalculateMeal")
         }
+    }
+}
+
+struct ComposedFoodItemEvaluationView_Previews: PreviewProvider {
+    static var previews: some View {
+        ComposedFoodItemEvaluationView(
+            absorptionScheme: AbsorptionSchemeViewModel.sampleData(),
+            composedFoodItemVM: ComposedFoodItemViewModel.sampleData()
+        )
     }
 }

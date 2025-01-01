@@ -61,6 +61,7 @@
 "Add products to your meal" = "Add dishes to your meal";
 "Add products" = "Add dishes";
 "Edit products" = "Edit dishes";
+"Add more" = "Add more";
 
 // Dishes List
 "Products" = "Dishes";
@@ -199,6 +200,7 @@
 "Have you added ingredients to 'My Ingredients'?" = "Have you added ingredients to 'My Ingredients'?";
 "Add ingredients" = "Add ingredients";
 "Edit ingredients" = "Edit ingredients";
+"At least one ingredient required" = "At least one ingredient required";
 "No associated cdComposedFoodItem" = "No associated cdComposedFoodItem - should not happen - please contact the app developer";
 "There's an associated product, do you want to delete it as well?" = "There's an associated dish, do you want to delete it as well?";
 "Delete both" = "Delete recipe and dish";
@@ -305,6 +307,8 @@
 
 // Food Database
 "Food Database" = "Food Database";
+"Food Details" = "Product Details";
+"Images" = "Images";
 "Database" = "Database";
 "No product found" = "No product found";
 "No products found" = "No products found";
@@ -313,7 +317,7 @@
 "Entry has no code" = "Entry has no code";
 "Entry has no calories per 100g" = "Entry has no calories per 100g";
 "Entry has no carbs per 100g" = "Entry has no carbs per 100g";
-"Food Database Search" = "Food Database Search";
+"Food Database Search" = "Database Search";
 "Select" = "Select";
 "No search results (yet)" = "No search results (yet)";
 "Nothing selected" = "Nothing selected";
@@ -357,6 +361,7 @@
 "Product Selection List" = "Choose Dishes";
 "The dishes list contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes." = "The list of dishes contains all dishes available to compose a meal. Here you select which dishes to include in your meal. If the list is empty, you need to first add dishes.";
 "As soon as your dishes list contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount." = "As soon as your list of dishes contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount.";
+"Once done adding all dishes, hit the yellow Finished button to return to your meal overview. You can always come back to edit or add dishes." = "Once done adding all dishes, hit the yellow Finished button to return to your meal overview. You can always come back to edit or add dishes.";
 "Indicates that the dish is available for being added to your meal." = "Indicates that the dish is available for being added to your meal by tapping it.";
 "Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal." = "Indicates that the dish has been selected and is included in your meal. Tapping it again will remove it from your meal.";
 "Adds new dishes to the list. This is not selecting it, this needs to be done separately." = "Add a new dish to the list. This is not selecting it, this needs to be done separately.";
@@ -367,6 +372,7 @@
 "Ingredient Selection List" = "Choose Ingredients";
 "The ingredients list contains all ingredients available to compose a recipe. Here you select which ingredients to include in your recipe. If the list is empty, you need to first add ingredients." = "The ingredients list contains all ingredients available to compose a recipe. Here you select which ingredients to include in your recipe. If the list is empty, you need to first add ingredients.";
 "As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount." = "As soon as your ingredients list contains one or more ingredients, you can go ahead and create a recipe. To do so, tap once on the respective ingredient. This will open the screen to select the amount.";
+"Once done adding all ingredients, hit the yellow Finished button to return to your recipe overview. You can always come back to edit or add ingredients." = "Once done adding all ingredients, hit the yellow Finished button to return to your recipe overview. You can always come back to edit or add ingredients.";
 "Adds new ingredients to the list. This is not selecting it, this needs to be done separately." = "Adds new ingredients to the list. This is not selecting it, this needs to be done separately.";
 "Indicates that the ingredient is available for being added to your recipe." = "Indicates that the ingredient is available for being added to your recipe by tapping it.";
 "Indicates that the ingredient has been selected and is included in your recipe. Tapping it again will remove it from your recipe." = "Indicates that the ingredient has been selected and is included in your recipe. Tapping it again will remove it from your recipe.";
@@ -374,10 +380,11 @@
 
 // Select Food Item help
 "Select Food Item" = "Enter amount";
-"You may enter the consumed amount in three different ways." = "You may enter the consumed amount in three different ways.";
+"You may enter the consumed amount in three different ways." = "You may enter the consumed or required amount in three different ways.";
 "1. You directly enter it in the text field." = "1. You directly enter it in the text field.";
 "2. You use the green number fields to add to the amount already displayed in the text field." = "2. You use the green number fields to add to the amount already displayed in the text field.";
 "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value." = "3. In case you have stored typical values for the food item, you tap on one of those typical amounts. This will overwrite any existing value.";
+"Once you have entered the amount, hit the yellow Add button to add the dish to your meal." = "Once you have entered the amount, hit the yellow Add button to add the dish to your meal or ingredient to your recipe.";
 "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment." = "You may also add a new typical amount by clicking 'Add to typical amounts'. This will take over the currently active amount from the text field and ask you for a comment.";
 "Saves the typical amount." = "Saves the typical amount.";
 "Use the food item editor to maintain existing typical amounts." = "Use the food item editor to maintain existing typical amounts.";
@@ -403,8 +410,8 @@
 "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog." = "Regular carbs are absorbed slower than sugars. You may as well modify the parameters in the Absorption Scheme settings dialog.";
 "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late." = "Extended carbs, aka. e-Carbs or Fake Carbs, do not stem from carbs, but from fat and proteins. That's why their absorption can take very long and starts late.";
 "Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero." = "Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero.";
-"Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet." = "Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet.";
-"Lets you add and edit the dishes included in the meal." = "Lets you add and edit the dishes included in the meal.";
+"Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet." = "Hit the Export button to start the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet.";
+"Lets you add and edit the dishes included in the meal." = "To edit or add dishes to your meal, hit the Add More button.";
 "Opens a view with all the details of the meal and its dishes." = "Opens a view with all the details of the meal and its dishes.";
 
 // Recipe list help
@@ -438,8 +445,8 @@
 "- The total weight of the final product" = "- The total weight of the finished dish";
 "- Whether or not the recipe is a favorite" = "- Whether or not the recipe is a favorite";
 "- The number of portions" = "- The number of portions";
-"Lets you add and edit the ingredients included in the dish." = "Lets you add and edit the ingredients included in the recipe.";
-"Saves your recipe to the recipe list and creates a new dish in the list of dishes." = "Saves your recipe to the recipe list and creates a new dish in the list of dishes.";
+"Lets you add and edit the ingredients included in the dish." = "Hitting the Add more button lets you add and edit the ingredients included in the recipe.";
+"Saves your recipe to the recipe list and creates a new dish in the list of dishes." = "Hitting the Save button saves your recipe to the recipe list and creates a new dish in the list of dishes.";
 
 // Health export help
 "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles." = "You may export nutritional data to Apple Health in this view. Choose the data to be exported using the toggles.";

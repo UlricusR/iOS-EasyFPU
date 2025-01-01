@@ -277,44 +277,14 @@ struct FoodItemEditor: View {
                     }
                 }
             }
-            .navigationTitle(navigationTitle)
-            .navigationDestination(for: FoodItemEditorNavigationDestination.self) { screen in
-                switch screen {
-                case .Search:
-                    FoodSearch(
-                        draftFoodItem: self.draftFoodItemVM,
-                        searchResults: searchResults,
-                        navigationPath: $navigationPath
-                    )
-                    .accessibilityIdentifierBranch("SearchFood")
-                case let .FoodSearchResultDetails(
-                    product: selectedProduct,
-                    backNavigationIfSelected: backNavigationIfSelected
-                ):
-                    FoodPreview(
-                        product: selectedProduct,
-                        draftFoodItem: draftFoodItemVM,
-                        navigationPath: $navigationPath,
-                        backNavigationIfSelected: backNavigationIfSelected
-                    )
-                    .accessibilityIdentifierBranch("ProductDetails")
-                case .Scan:
-                    CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "4101530002123", completion: self.handleScan)
-                        .accessibilityIdentifierBranch("ScanBarCode")
-                }
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        activeSheet = .help
-                    }) {
-                        Image(systemName: "questionmark.circle").imageScale(.large)
-                    }
-                    .accessibilityIdentifierLeaf("HelpButton")
-                }
-                
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button(action: {
+            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the cancel and save buttons
+            
+            // The overlaying cancel and save button
+            VStack {
+                Spacer()
+                HStack {
+                    // The cancel button
+                    Button(role: .cancel) {
                         // First quit edit mode
                         navigationPath.removeLast()
                         
@@ -323,13 +293,18 @@ struct FoodItemEditor: View {
                             self.draftFoodItemVM.typicalAmounts.append(typicalAmountToBeDeleted)
                         }
                         self.typicalAmountsToBeDeleted.removeAll()
-                    }) {
-                        Image(systemName: "xmark.circle")
-                            .imageScale(.large)
+                    } label: {
+                        HStack {
+                            Image(systemName: "xmark.circle.fill").imageScale(.large)
+                            Text("Cancel")
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
-                    .accessibilityIdentifierLeaf("ClearButton")
+                    .buttonStyle(CancelButton())
+                    .accessibilityIdentifierLeaf("CancelButton")
                     
-                    Button(action: {
+                    // The save button
+                    Button {
                         // Trim white spaces from name
                         draftFoodItemVM.name = draftFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
                         
@@ -340,10 +315,15 @@ struct FoodItemEditor: View {
                         } else {
                             saveFoodItem()
                         }
-                    }) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .imageScale(.large)
+                    } label: {
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill").imageScale(.large).foregroundStyle(.green)
+                            Text("Save")
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
+                    .disabled(draftFoodItemVM.name.isEmpty)
+                    .buttonStyle(ActionButton())
                     .accessibilityIdentifierLeaf("SaveButton")
                     .alert(
                         "Associated Ingredients",
@@ -376,25 +356,8 @@ struct FoodItemEditor: View {
                         )
                     }
                 }
-            }
-            .sheet(item: $activeSheet) {
-                sheetContent($0)
-            }
-            .alert(
-                activeAlert?.title() ?? "Notice",
-                isPresented: $showingAlert,
-                presenting: activeAlert
-            ) { activeAlert in
-                activeAlert.button()
-            } message: { activeAlert in
-                activeAlert.message()
-            }
-            .onAppear() {
-                self.oldName = self.draftFoodItemVM.name
-                self.oldCaloriesPer100gAsString = self.draftFoodItemVM.caloriesPer100gAsString
-                self.oldCarbsPer100gAsString = self.draftFoodItemVM.carbsPer100gAsString
-                self.oldSugarsPer100gAsString = self.draftFoodItemVM.sugarsPer100gAsString
-                self.oldAmountAsString = self.draftFoodItemVM.amountAsString
+                .padding()
+                .fixedSize(horizontal: false, vertical: true)
             }
             
             // Notification
@@ -403,6 +366,61 @@ struct FoodItemEditor: View {
                     notificationViewContent()
                 }
             }
+        }
+        .navigationTitle(navigationTitle)
+        .navigationDestination(for: FoodItemEditorNavigationDestination.self) { screen in
+            switch screen {
+            case .Search:
+                FoodSearch(
+                    draftFoodItem: self.draftFoodItemVM,
+                    searchResults: searchResults,
+                    navigationPath: $navigationPath
+                )
+                .accessibilityIdentifierBranch("SearchFood")
+            case let .FoodSearchResultDetails(
+                product: selectedProduct,
+                backNavigationIfSelected: backNavigationIfSelected
+            ):
+                FoodPreview(
+                    product: selectedProduct,
+                    draftFoodItem: draftFoodItemVM,
+                    navigationPath: $navigationPath,
+                    backNavigationIfSelected: backNavigationIfSelected
+                )
+                .accessibilityIdentifierBranch("ProductDetails")
+            case .Scan:
+                CodeScannerView(codeTypes: [.ean8, .ean13], simulatedData: "4101530002123", completion: self.handleScan)
+                    .accessibilityIdentifierBranch("ScanBarCode")
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    activeSheet = .help
+                }) {
+                    Image(systemName: "questionmark.circle").imageScale(.large)
+                }
+                .accessibilityIdentifierLeaf("HelpButton")
+            }
+        }
+        .sheet(item: $activeSheet) {
+            sheetContent($0)
+        }
+        .alert(
+            activeAlert?.title() ?? "Notice",
+            isPresented: $showingAlert,
+            presenting: activeAlert
+        ) { activeAlert in
+            activeAlert.button()
+        } message: { activeAlert in
+            activeAlert.message()
+        }
+        .onAppear() {
+            self.oldName = self.draftFoodItemVM.name
+            self.oldCaloriesPer100gAsString = self.draftFoodItemVM.caloriesPer100gAsString
+            self.oldCarbsPer100gAsString = self.draftFoodItemVM.carbsPer100gAsString
+            self.oldSugarsPer100gAsString = self.draftFoodItemVM.sugarsPer100gAsString
+            self.oldAmountAsString = self.draftFoodItemVM.amountAsString
         }
     }
     
@@ -643,5 +661,17 @@ struct FoodItemEditor: View {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpEditFoodItem")
         }
+    }
+}
+
+struct FoodItemEditor_Previews: PreviewProvider {
+    @State private static var navigationPath = NavigationPath()
+    static var previews: some View {
+        FoodItemEditor(
+            navigationPath: $navigationPath,
+            navigationTitle: "Sample Food Item",
+            draftFoodItemVM: FoodItemViewModel.sampleData(),
+            category: .product
+        )
     }
 }

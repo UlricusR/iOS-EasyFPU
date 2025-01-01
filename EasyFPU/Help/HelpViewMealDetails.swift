@@ -15,6 +15,10 @@ struct HelpViewMealDetails: View {
             
             Text("With the + and - buttons, you can set the time interval until your meal will start, which is normally used for setting the time between injecting insulin and starting your meal.").padding()
             
+            Text("Lets you add and edit the dishes included in the meal.").padding()
+            
+            Text("Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet.").padding()
+            
             Group {
                 HStack {
                     Image(systemName: "cube.fill").foregroundStyle(Color(ComposedFoodItemSugarsView.color))
@@ -36,21 +40,9 @@ struct HelpViewMealDetails: View {
 					Text("Clears your meal, i.e. removes all food items and resets the time period the meal will start in to zero.")
                 }.padding()
                 
-                HStack {
-                    Image(systemName: "pencil.circle").foregroundStyle(.blue)
-                    Text("Lets you add and edit the dishes included in the meal.")
-                }.padding()
-                
 				HStack {
 					Image(systemName: "info.circle.fill").foregroundStyle(.blue)
 					Text("Opens a view with all the details of the meal and its dishes.")
-                }.padding()
-                
-                Text("Menu bar").font(.headline).padding()
-                
-                HStack {
-                    Image(systemName: "square.and.arrow.up").foregroundStyle(.blue)
-                    Text("Starts the process of exporting the meal to Apple Health (for use in Loop). You will be able to review the details, so no actual export happens yet.")
                 }.padding()
             }
         }
