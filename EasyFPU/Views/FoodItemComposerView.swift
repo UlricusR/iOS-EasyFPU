@@ -82,20 +82,7 @@ struct FoodItemComposerView: View {
                                 }
                                 
                                 // Buttons to ease input
-                                HStack {
-                                    Spacer()
-                                    NumberButton(number: 100, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
-                                        .accessibilityIdentifierLeaf("Add100Button")
-                                    NumberButton(number: 50, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
-                                        .accessibilityIdentifierLeaf("Add50Button")
-                                    NumberButton(number: 10, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
-                                        .accessibilityIdentifierLeaf("Add10Button")
-                                    NumberButton(number: 5, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
-                                        .accessibilityIdentifierLeaf("Add5Button")
-                                    NumberButton(number: 1, variableAmountItem: self.composedFoodItemVM, width: geometry.size.width / 7)
-                                        .accessibilityIdentifierLeaf("Add1Button")
-                                    Spacer()
-                                }
+                                AmountEntryButtons(variableAmountItem: composedFoodItemVM, geometry: geometry)
                                 
                                 // Favorite
                                 Toggle("Favorite", isOn: $composedFoodItemVM.favorite)

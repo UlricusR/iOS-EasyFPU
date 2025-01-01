@@ -54,3 +54,25 @@ struct NumberButton<T: VariableAmountItem>: View {
         .cornerRadius(20)
     }
 }
+
+struct AmountEntryButtons<T: VariableAmountItem>: View {
+    var variableAmountItem: T
+    var geometry: GeometryProxy
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            NumberButton(number: 100, variableAmountItem: variableAmountItem, width: geometry.size.width / 7)
+                .accessibilityIdentifierLeaf("Add100Button")
+            NumberButton(number: 50, variableAmountItem: variableAmountItem, width: geometry.size.width / 7)
+                .accessibilityIdentifierLeaf("Add50Button")
+            NumberButton(number: 10, variableAmountItem: variableAmountItem, width: geometry.size.width / 7)
+                .accessibilityIdentifierLeaf("Add10Button")
+            NumberButton(number: 5, variableAmountItem: variableAmountItem, width: geometry.size.width / 7)
+                .accessibilityIdentifierLeaf("Add5Button")
+            NumberButton(number: 1, variableAmountItem: variableAmountItem, width: geometry.size.width / 7)
+                .accessibilityIdentifierLeaf("Add1Button")
+            Spacer()
+        }
+    }
+}
