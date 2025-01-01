@@ -275,15 +275,15 @@
 "Unspecified error" = "Unspezifischer Fehler";
 "Cannot save data to Health: Please authorize EasyFPU to write to Health in your Settings." = "Kann keine Daten in Health schreiben: Bitte gib EasyFPE in den Einstellungen die Berechtigung, in Health zu schreiben.";
 "Successfully exported data to Health" = "Daten wurden erfolgreich nach Health exportiert";
-"Export to Health" = "Health-Export";
-"Export" = "Nach Apple Health exportieren";
+"Export to Health" = "Apple Health-Export";
+"Export" = "Exportieren";
 "Error requesting authorization to write to Health: " = "Fehler beim Anfordern der Berechtigung, in Health zu schreiben: ";
 "Please choose the data to export:" = "Bitte wähle die zu exportierenden Daten:";
 "Total Meal Carbs" = "Kohlenhydrate Gesamtmahlzeit";
 "Total Meal Calories" = "Kalorien Gesamtmahlzeit";
 "Please select at least one entry to export" = "Bitte mindestens einen Eintrag zum Export auswählen";
 "Absorption Scheme has no Absorption Blocks" = "Absorptionsschema hat keine Absorptionsblöcke";
-"Preview of exported carbs in g" = "Vorschau der exportierten Kohlenhydrate in g";
+"Preview of exported carbs in g" = "Vorschau der exportierten Kohlenhydrate";
 "Delay until meal" = "Mahlzeit beginnt in";
 "LastSugarsExport" = "Zucker";
 "LastCarbsExport" = "reguläre Kohlenhydrate";
@@ -299,6 +299,9 @@
 "eCarbs_short" = "Verlängerte";
 "Carbs in g" = "Kohlenhydrate in g";
 "No data selected" = "No data selected";
+"Choose exported data" = "Exportierte Daten";
+"Set meal delay" = "Startzeitpunkt der Mahlzeit";
+"Data export preview" = "Datenexport-Vorschau";
 
 // Food Database
 "Food Database" = "Lebensmitteldatenbank";
