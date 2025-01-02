@@ -111,7 +111,7 @@ struct FoodItemComposerView: View {
                                 }
                             }
                             
-                            Section(header: Text("Ingredients")) {
+                            Section(header: Text("Ingredients"), footer: Text("Swipe to remove")) {
                                 List {
                                     ForEach(composedFoodItemVM.foodItemVMs) { foodItem in
                                         HStack {

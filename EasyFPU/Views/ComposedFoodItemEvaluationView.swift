@@ -83,7 +83,7 @@ struct ComposedFoodItemEvaluationView: View {
                                     .accessibilityIdentifierBranch("ECarbsDetails")
                             }
                             
-                            Section(header: Text("Products")) {
+                            Section(header: Text("Products"), footer: Text("Swipe to remove")) {
                                 // The included products
                                 List {
                                     ForEach(composedFoodItemVM.foodItemVMs) { foodItem in
