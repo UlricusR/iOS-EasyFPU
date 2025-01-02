@@ -23,6 +23,11 @@ struct FoodItemEditor: View {
         var id: SheetState { self }
     }
     
+    enum AlertChoice {
+        case simpleAlert(type: SimpleAlertType)
+        case searchWorldwide
+    }
+    
     enum NotificationState {
         case void, searching
     }
@@ -42,7 +47,7 @@ struct FoodItemEditor: View {
     
     // General alert
     @State private var showingAlert = false
-    @State private var activeAlert: SimpleAlertType?
+    @State private var activeAlert: AlertChoice?
     
     private var typicalAmounts: [TypicalAmountViewModel] { draftFoodItemVM.typicalAmounts.sorted() }
     private var sourceDB: FoodDatabase {
@@ -80,7 +85,7 @@ struct FoodItemEditor: View {
                             // Search and Scan buttons
                             Button(action: {
                                 if draftFoodItemVM.name.isEmpty {
-                                    activeAlert = .error(message: "Search term must not be empty")
+                                    activeAlert = .simpleAlert(type: .error(message: "Search term must not be empty"))
                                     showingAlert = true
                                 } else {
                                     if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
@@ -102,7 +107,7 @@ struct FoodItemEditor: View {
                                 Button("Accept and continue") {
                                     var settingsError = ""
                                     if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                                        activeAlert = .fatalError(message: settingsError)
+                                        activeAlert = .simpleAlert(type: .fatalError(message: settingsError))
                                         showingAlert = true
                                     }
 
@@ -136,7 +141,7 @@ struct FoodItemEditor: View {
                                 Button("Accept and continue") {
                                     var settingsError = ""
                                     if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                                        activeAlert = .fatalError(message: settingsError)
+                                        activeAlert = .simpleAlert(type: .fatalError(message: settingsError))
                                         showingAlert = true
                                     }
 
@@ -332,7 +337,7 @@ struct FoodItemEditor: View {
                             
                             // Check if we have duplicate names (if this is a new food item)
                             if !draftFoodItemVM.hasAssociatedFoodItem() && draftFoodItemVM.nameExists() {
-                                activeAlert = .warning(message: "A food item with this name already exists")
+                                activeAlert = .simpleAlert(type: .warning(message: "A food item with this name already exists"))
                                 showingAlert = true
                             } else {
                                 saveFoodItem()
@@ -433,14 +438,10 @@ struct FoodItemEditor: View {
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
-        .alert(
-            activeAlert?.title() ?? "Notice",
-            isPresented: $showingAlert,
-            presenting: activeAlert
-        ) { activeAlert in
-            activeAlert.button()
-        } message: { activeAlert in
-            activeAlert.message()
+        .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
+            alertAction(for: $0)
+        } message: {
+            alertMessage(for: $0)
         }
         .onAppear() {
             self.oldName = self.draftFoodItemVM.name
@@ -547,7 +548,7 @@ struct FoodItemEditor: View {
             }
             
             // Display alert and stay in edit mode
-            activeAlert = .error(message: errMessage)
+            activeAlert = .simpleAlert(type: .error(message: errMessage))
             showingAlert = true
         }
     }
@@ -569,7 +570,7 @@ struct FoodItemEditor: View {
     private func deleteTypicalAmount(_ typicalAmountToBeDeleted: TypicalAmountViewModel) {
         typicalAmountsToBeDeleted.append(typicalAmountToBeDeleted)
         guard let originalIndex = self.draftFoodItemVM.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
-            activeAlert = .fatalError(message: NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment)
+            activeAlert = .simpleAlert(type: .fatalError(message: NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment))
             showingAlert = true
             return
         }
@@ -599,12 +600,12 @@ struct FoodItemEditor: View {
                 // Reset text fields
                 deselectTypicalAmount()
             } else {
-                activeAlert = .error(message: errorMessage)
+                activeAlert = .simpleAlert(type: .error(message: errorMessage))
                 showingAlert = true
             }
         } else { // This is an existing typical amount
             guard let index = self.draftFoodItemVM.typicalAmounts.firstIndex(where: { $0.id == self.newTypicalAmountId! }) else {
-                activeAlert = .fatalError(message: "Could not identify typical amount.")
+                activeAlert = .simpleAlert(type: .fatalError(message: "Could not identify typical amount."))
                 showingAlert = true
                 return
             }
@@ -633,7 +634,7 @@ struct FoodItemEditor: View {
                 case .success(let networkFoodDatabaseEntry):
                     guard let foodDatabaseEntry = networkFoodDatabaseEntry else {
                         DispatchQueue.main.async {
-                            activeAlert = .warning(message: "No food found")
+                            activeAlert = .simpleAlert(type: .warning(message: "No food found"))
                         }
                         return
                     }
@@ -647,17 +648,17 @@ struct FoodItemEditor: View {
                     DispatchQueue.main.async { self.notificationState = .void }
                     let errorMessage = error.evaluate()
                     debugPrint(errorMessage)
-                    activeAlert = .error(message: errorMessage)
+                    activeAlert = .simpleAlert(type: .error(message: errorMessage))
                     showingAlert = true
                 }
             }
         case .failure(let error):
-            activeAlert = .error(message: NSLocalizedString("Error scanning food: ", comment: "") + error.localizedDescription)
+            activeAlert = .simpleAlert(type: .error(message: NSLocalizedString("Error scanning food: ", comment: "") + error.localizedDescription))
             showingAlert = true
         }
     }
     
-    private func performSearch() {
+    private func performSearch(isSecondSearch: Bool = false) {
         notificationState = .searching
         UserSettings.shared.foodDatabase.search(for: draftFoodItemVM.name, category: category) { result in
             switch result {
@@ -665,8 +666,14 @@ struct FoodItemEditor: View {
                 guard let searchResults = networkSearchResults, !searchResults.isEmpty else {
                     DispatchQueue.main.async {
                         self.notificationState = .void
-                        activeAlert = .warning(message: "No food found")
-                        showingAlert = true
+                        if UserSettings.shared.searchWorldwide || isSecondSearch {
+                            // The worldwide search has returned no results
+                            activeAlert = .simpleAlert(type: .warning(message: "No food found"))
+                            showingAlert = true
+                        } else {
+                            activeAlert = .searchWorldwide
+                            showingAlert = true
+                        }
                     }
                     return
                 }
@@ -680,9 +687,53 @@ struct FoodItemEditor: View {
                 DispatchQueue.main.async { self.notificationState = .void }
                 let errorMessage = error.evaluate()
                 debugPrint(errorMessage)
-                activeAlert = .warning(message: errorMessage)
+                activeAlert = .simpleAlert(type: .warning(message: errorMessage))
                 showingAlert = true
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func alertMessage(for alert: AlertChoice) -> some View {
+        switch alert {
+        case let .simpleAlert(type: type):
+            type.message()
+        case .searchWorldwide:
+            Text(
+                UserSettings.shared.countryCode != nil ? "\(NSLocalizedString("No food found in", comment: "")) \(UserSettings.shared.countryCode!)." : "No food found"
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func alertAction(for alert: AlertChoice) -> some View {
+        switch alert {
+        case let .simpleAlert(type: type):
+            type.button()
+        case .searchWorldwide:
+            Button("Cancel", role: .cancel) {}
+            Button("Search worldwide") {
+                // Try once more with worldwide search
+                // Set search to worldwide, but don't save it
+                UserSettings.shared.searchWorldwide = true
+                
+                // Perform search again
+                performSearch(isSecondSearch: true)
+                
+                // Set search back to initial value
+                UserSettings.shared.searchWorldwide = false
+            }
+        }
+    }
+    
+    private var alertTitle: LocalizedStringKey {
+        switch activeAlert {
+        case let .simpleAlert(type: type):
+            LocalizedStringKey(type.title())
+        case .searchWorldwide:
+            LocalizedStringKey("Warning")
+        case nil:
+            ""
         }
     }
     
