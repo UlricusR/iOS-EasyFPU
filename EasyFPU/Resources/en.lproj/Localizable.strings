@@ -33,7 +33,7 @@
 "Delete" = "Delete";
 "Do not delete" = "Do not delete";
 "Copy" = "Copy";
-"Tap to edit" = "Tap to edit";
+"Tap to edit" = "Tap to edit, swipe to delete";
 " - Copy" = " - Copy";
 "Swipe to remove" = "Swipe to remove";
 
@@ -393,15 +393,11 @@
 // Food Item Editor help
 "Edit Food Item" = "Edit Food Item";
 "This dialog allows you to edit a food item." = "This dialog allows you to edit a food item.";
-"All fields are mandatory, but you may leave away typical amounts." = "All fields are mandatory, but you may leave away typical amounts.";
 "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal.";
-"To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button.";
-"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the blue Checkmark button.";
-"Swipe left to remove a typical amount." = "Swipe left to remove a typical amount.";
 "A good source for nutritional values (calories and carbs per 100g) is:" = "A good source for nutritional values (calories and carbs per 100g) is:";
 "Link-text-to-nutritional-values" = "Nutrition value";
 "Link-URL-to-nutritional-values" = "https://www.nutritionvalue.org/";
-"Delete the food item by tapping the link on the bottom of the view." = "Delete the food item by tapping the link on the bottom of the view.";
+"Typical amounts can be helpful to pre-define amounts of food items, which are usually consumed or required in recipes. They ease selection, as they are displayed when selecting a food item for a meal or recipe." = "Typical amounts can be helpful to pre-define amounts of food items, which are usually consumed or required in recipes. They ease selection, as they are displayed when selecting a food item for a meal or recipe.";
 
 // Meal Details help
 "Meal Details" = "Meal Details";

@@ -60,7 +60,7 @@ struct FoodItemEditor: View {
     @State private var newTypicalAmountId: UUID?
     @State private var typicalAmountsToBeDeleted = [TypicalAmountViewModel]()
     @State private var typicalAmountsToBeAdded = [TypicalAmountViewModel]()
-    @State private var updateButton = false
+    @State private var typicalAmountEdited = false
     @State private var notificationStatus = FoodItemEditor.NotificationState.void
     @State private var associatedRecipes: [String] = []
     @State private var updatedFoodItemVM: FoodItemViewModel?
@@ -190,25 +190,37 @@ struct FoodItemEditor: View {
                         }
                     }
                     
-                    Section(header: Text("Typical amounts:")) {
-                        HStack {
-                            CustomTextField(titleKey: "Amount", text: $newTypicalAmount, keyboardType: .numberPad)
-                                .accessibilityIdentifierLeaf("EditTypicalAmountValue")
-                            Text("g")
-                                .accessibilityIdentifierLeaf("AmountUnit")
-                            TextField("Comment", text: $newTypicalAmountComment)
-                                .accessibilityIdentifierLeaf("EditTypicalAmountComment")
-                            Button(action: {
-                                self.addTypicalAmount()
-                            }) {
-                                Image(systemName: self.updateButton ? "checkmark.circle.fill" : "plus.circle").foregroundStyle(self.updateButton ? .blue : .green)
+                    Section(header: Text("Typical amounts:"), footer: Text("Tap to edit")) {
+                        List {
+                            if typicalAmountEdited {
+                                HStack {
+                                    CustomTextField(titleKey: "Amount", text: $newTypicalAmount, keyboardType: .numberPad)
+                                        .accessibilityIdentifierLeaf("EditTypicalAmountValue")
+                                    Text("g")
+                                        .accessibilityIdentifierLeaf("AmountUnit")
+                                    TextField("Comment", text: $newTypicalAmountComment)
+                                        .accessibilityIdentifierLeaf("EditTypicalAmountComment")
+                                    Button {
+                                        withAnimation {
+                                            self.addTypicalAmount()
+                                        }
+                                    } label: {
+                                        Image(systemName: "checkmark.circle.fill")
+                                    }
+                                    .accessibilityIdentifierLeaf("EditTypicalAmountButton")
+                                }
+                            } else {
+                                HStack {
+                                    Button("Add", systemImage: "plus.circle") {
+                                        withAnimation {
+                                            self.typicalAmountEdited = true
+                                        }
+                                    }
+                                    .accessibilityIdentifierLeaf("AddTypicalAmountButton")
+                                }
                             }
-                            .accessibilityIdentifierLeaf("AddTypicalAmountButton")
-                        }
-                    }
-                    
-                    if self.typicalAmounts.count > 0 {
-                        Section(footer: Text("Tap to edit")) {
+                            
+                            // The existing typical amounts list
                             ForEach(self.typicalAmounts) { typicalAmount in
                                 HStack {
                                     HStack {
@@ -220,24 +232,24 @@ struct FoodItemEditor: View {
                                             .accessibilityIdentifierLeaf("TypicalAmountComment")
                                     }
                                     
-                                    
                                     Spacer()
-                                    
                                 }
+                                .foregroundStyle(newTypicalAmountId != nil && newTypicalAmountId! == typicalAmount.id ? .secondary : .primary)
                                 .onTapGesture {
-                                    self.newTypicalAmount = typicalAmount.amountAsString
-                                    self.newTypicalAmountComment = typicalAmount.comment
-                                    self.newTypicalAmountId = typicalAmount.id
-                                    self.updateButton = true
+                                    withAnimation {
+                                        // Select if not selected, unselect if selected
+                                        if newTypicalAmountId != nil && newTypicalAmountId! == typicalAmount.id { // Is selected
+                                            deselectTypicalAmount()
+                                        } else { // Is not selected
+                                            selectTypicalAmount(typicalAmount)
+                                        }
+                                    }
                                 }
                                 .swipeActions(allowsFullSwipe: true) {
                                     Button("Delete", systemImage: "trash", role: .destructive) {
                                         // First clear edit fields if filled
-                                        if self.updateButton {
-                                            self.newTypicalAmount = ""
-                                            self.newTypicalAmountComment = ""
-                                            self.newTypicalAmountId = nil
-                                            self.updateButton.toggle()
+                                        if self.typicalAmountEdited {
+                                            deselectTypicalAmount()
                                         }
                                         
                                         // Then delete typical amount
@@ -281,96 +293,98 @@ struct FoodItemEditor: View {
             .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the cancel and save buttons
             
             // The overlaying cancel and save button
-            VStack {
-                Spacer()
-                HStack {
-                    // The cancel button
-                    Button(role: .cancel) {
-                        // First quit edit mode
-                        navigationPath.removeLast()
-                        
-                        // Undo the deleted typical amounts
-                        for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
-                            self.draftFoodItemVM.typicalAmounts.append(typicalAmountToBeDeleted)
-                        }
-                        self.typicalAmountsToBeDeleted.removeAll()
-                        
-                        // Undo the added typical amounts
-                        for typicalAmountToBeAdded in self.typicalAmountsToBeAdded {
-                            if let index = self.draftFoodItemVM.typicalAmounts.firstIndex(of: typicalAmountToBeAdded) {
-                                self.draftFoodItemVM.typicalAmounts.remove(at: index)
+            if !typicalAmountEdited { // We hide the buttons when typical amounts are edited to avoid confusion
+                VStack {
+                    Spacer()
+                    HStack {
+                        // The cancel button
+                        Button(role: .cancel) {
+                            // First quit edit mode
+                            navigationPath.removeLast()
+                            
+                            // Undo the deleted typical amounts
+                            for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
+                                self.draftFoodItemVM.typicalAmounts.append(typicalAmountToBeDeleted)
                             }
+                            self.typicalAmountsToBeDeleted.removeAll()
+                            
+                            // Undo the added typical amounts
+                            for typicalAmountToBeAdded in self.typicalAmountsToBeAdded {
+                                if let index = self.draftFoodItemVM.typicalAmounts.firstIndex(of: typicalAmountToBeAdded) {
+                                    self.draftFoodItemVM.typicalAmounts.remove(at: index)
+                                }
+                            }
+                            self.typicalAmountsToBeAdded.removeAll()
+                        } label: {
+                            HStack {
+                                Image(systemName: "xmark.circle.fill").imageScale(.large)
+                                Text("Cancel")
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
-                        self.typicalAmountsToBeAdded.removeAll()
-                    } label: {
-                        HStack {
-                            Image(systemName: "xmark.circle.fill").imageScale(.large)
-                            Text("Cancel")
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
-                    .buttonStyle(CancelButton())
-                    .accessibilityIdentifierLeaf("CancelButton")
-                    
-                    // The save button
-                    Button {
-                        // Trim white spaces from name
-                        draftFoodItemVM.name = draftFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                        .buttonStyle(CancelButton())
+                        .accessibilityIdentifierLeaf("CancelButton")
                         
-                        // Check if we have duplicate names (if this is a new food item)
-                        if !draftFoodItemVM.hasAssociatedFoodItem() && draftFoodItemVM.nameExists() {
-                            activeAlert = .warning(message: "A food item with this name already exists")
-                            showingAlert = true
-                        } else {
-                            saveFoodItem()
+                        // The save button
+                        Button {
+                            // Trim white spaces from name
+                            draftFoodItemVM.name = draftFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                            
+                            // Check if we have duplicate names (if this is a new food item)
+                            if !draftFoodItemVM.hasAssociatedFoodItem() && draftFoodItemVM.nameExists() {
+                                activeAlert = .warning(message: "A food item with this name already exists")
+                                showingAlert = true
+                            } else {
+                                saveFoodItem()
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: "checkmark.circle.fill").imageScale(.large).foregroundStyle(.green)
+                                Text("Save")
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
-                    } label: {
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill").imageScale(.large).foregroundStyle(.green)
-                            Text("Save")
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
-                    .disabled(draftFoodItemVM.name.isEmpty)
-                    .buttonStyle(ActionButton())
-                    .accessibilityIdentifierLeaf("SaveButton")
-                    .alert(
-                        "Associated Ingredients",
-                        isPresented: self.$showingUpdateIngredientsAlert
-                    ) {
-                        Button("Update recipes") {
-                            // Update FoodItem
-                            if let updatedFoodItemVM {
-                                updatedFoodItemVM.update(
-                                    typicalAmountsToBeDeleted: typicalAmountsToBeDeleted,
-                                    typicalAmountsToBeAdded: typicalAmountsToBeAdded
-                                )
+                        .disabled(draftFoodItemVM.name.isEmpty)
+                        .buttonStyle(ActionButton())
+                        .accessibilityIdentifierLeaf("SaveButton")
+                        .alert(
+                            "Associated Ingredients",
+                            isPresented: self.$showingUpdateIngredientsAlert
+                        ) {
+                            Button("Update recipes") {
+                                // Update FoodItem
+                                if let updatedFoodItemVM {
+                                    updatedFoodItemVM.update(
+                                        typicalAmountsToBeDeleted: typicalAmountsToBeDeleted,
+                                        typicalAmountsToBeAdded: typicalAmountsToBeAdded
+                                    )
+                                    
+                                    // Reset typical amount temporary arrays
+                                    self.typicalAmountsToBeDeleted.removeAll()
+                                    self.typicalAmountsToBeAdded.removeAll()
+                                }
                                 
-                                // Reset typical amount temporary arrays
-                                self.typicalAmountsToBeDeleted.removeAll()
-                                self.typicalAmountsToBeAdded.removeAll()
+                                // Quit edit mode
+                                navigationPath.removeLast()
                             }
-                            
-                            // Quit edit mode
-                            navigationPath.removeLast()
+                            Button("Cancel", role: .cancel) {
+                                // Reset to original values
+                                draftFoodItemVM.reset()
+                                
+                                // Quit edit mode
+                                navigationPath.removeLast()
+                            }
+                        } message: {
+                            Text(
+                                NSLocalizedString("This food item is used as ingredient in the following recipes:", comment: "") +
+                                "\n\n\(self.associatedRecipes.joined(separator: "\n"))\n\n" +
+                                NSLocalizedString("Updating the food item will also update the associated recipes.", comment: "")
+                            )
                         }
-                        Button("Cancel", role: .cancel) {
-                            // Reset to original values
-                            draftFoodItemVM.reset()
-                            
-                            // Quit edit mode
-                            navigationPath.removeLast()
-                        }
-                    } message: {
-                        Text(
-                            NSLocalizedString("This food item is used as ingredient in the following recipes:", comment: "") +
-                            "\n\n\(self.associatedRecipes.joined(separator: "\n"))\n\n" +
-                            NSLocalizedString("Updating the food item will also update the associated recipes.", comment: "")
-                        )
                     }
+                    .padding()
+                    .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding()
-                .fixedSize(horizontal: false, vertical: true)
             }
             
             // Notification
@@ -538,6 +552,20 @@ struct FoodItemEditor: View {
         }
     }
     
+    private func selectTypicalAmount(_ typicalAmount: TypicalAmountViewModel) {
+        self.newTypicalAmount = typicalAmount.amountAsString
+        self.newTypicalAmountComment = typicalAmount.comment
+        self.newTypicalAmountId = typicalAmount.id
+        self.typicalAmountEdited = true
+    }
+    
+    private func deselectTypicalAmount() {
+        self.newTypicalAmount = ""
+        self.newTypicalAmountComment = ""
+        self.newTypicalAmountId = nil
+        self.typicalAmountEdited = false
+    }
+    
     private func deleteTypicalAmount(_ typicalAmountToBeDeleted: TypicalAmountViewModel) {
         typicalAmountsToBeDeleted.append(typicalAmountToBeDeleted)
         guard let originalIndex = self.draftFoodItemVM.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
@@ -549,6 +577,12 @@ struct FoodItemEditor: View {
     }
     
     private func addTypicalAmount() {
+        // If no amount is entered at all, we just leave the edit mode
+        if self.newTypicalAmount.isEmpty {
+            deselectTypicalAmount()
+            return
+        }
+        
         var errorMessage = ""
         if newTypicalAmountId == nil { // This is a new typical amount
             if let newTypicalAmount = TypicalAmountViewModel(
@@ -563,9 +597,7 @@ struct FoodItemEditor: View {
                 self.draftFoodItemVM.typicalAmounts.append(newTypicalAmount)
                 
                 // Reset text fields
-                self.newTypicalAmount = ""
-                self.newTypicalAmountComment = ""
-                self.updateButton = false
+                deselectTypicalAmount()
             } else {
                 activeAlert = .error(message: errorMessage)
                 showingAlert = true
@@ -580,10 +612,7 @@ struct FoodItemEditor: View {
             self.draftFoodItemVM.typicalAmounts[index].comment = self.newTypicalAmountComment
             
             // Reset text fields and typical amount id
-            self.newTypicalAmount = ""
-            self.newTypicalAmountComment = ""
-            self.updateButton = false
-            self.newTypicalAmountId = nil
+            deselectTypicalAmount()
             
             // Broadcast changed object
             self.draftFoodItemVM.objectWillChange.send()

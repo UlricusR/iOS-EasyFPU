@@ -33,7 +33,7 @@
 "Delete" = "Löschen";
 "Do not delete" = "Nicht löschen";
 "Copy" = "Kopie";
-"Tap to edit" = "Zum Bearbeiten antippen";
+"Tap to edit" = "Zum Bearbeiten antippen, zum Löschen wischen";
 " - Copy" = " - Kopie";
 "Swipe to remove" = "Zum Entfernen wischen";
 
@@ -393,15 +393,11 @@
 // Food Item Editor help
 "Edit Food Item" = "Essen bearbeiten";
 "This dialog allows you to edit a food item." = "In diesem Dialog kannst Du ein Essen bearbeiten.";
-"All fields are mandatory, but you may leave away typical amounts." = "Alle Eingabefelder sind verpflichtend, aber Du musst keine typischen Mengen hinzufügen.";
 "Be aware that 1 gram of carbs accounts for approximately 4 kcal, so the number carbs entered here multiplied by four may not exceed the total amount of energy in kcal." = "Bitte beachte, dass 1 Gramm Kohlenhydrate ca. 4 kcal Energiegehalt hat, d.h. die hier eingegebene Menge Kohlenhydrate multipliziert mit vier darf die Gesamt-Energiemenge in kcal nicht überschreiten.";
-"To add a new typical amount, enter the amount and a comment in the respective fields and confirm by pressing the green Plus button." = "Um eine neue typische Menge hinzuzufügen, gib die Menge und einen passenden Kommentar in die entsprechenden Felder ein und bestätige die Eingabe mit dem grünen Plus-Knopf.";
-"To edit an existing typical amount, tap on it, modify the values as desired, and confirm by pressing the yellow Checkmark button." = "Um eine existierende typische Menge zu bearbeiten, tippe diese an, ändere dann die Werte und bestätige die Änderung durch Antippen des blauen Hakens.";
-"Swipe left to remove a typical amount." = "Wische die typische Menge nach links, um sie zu löschen.";
 "A good source for nutritional values (calories and carbs per 100g) is:" = "Eine gute Quelle für Nährwerte (Kalorien und Kohlenhydrate pro 100g) ist:";
 "Link-text-to-nutritional-values" = "FDDB.info";
 "Link-URL-to-nutritional-values" = "https://fddb.info/";
-"Delete the food item by tapping the link on the bottom of the view." = "Lösche das Essen, indem Du den Link am unteren Rand der Ansicht antippst.";
+"Typical amounts can be helpful to pre-define amounts of food items, which are usually consumed or required in recipes. They ease selection, as they are displayed when selecting a food item for a meal or recipe." = "Typische Mengen können hilfreich sein, um Mengen von Lebensmitteln vorzugeben, die normalerweise gegessen oder in Rezepten benötigt werden. Sie erleichtern die Auswahl, da sie angezeigt werden, wenn ein Lebensmittel für eine Mahlzeit oder ein Rezept ausgewählt wird.";
 
 // Meal Details help
 "Meal Details" = "Details";

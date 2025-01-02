@@ -538,7 +538,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     }
     
     static func sampleData() -> FoodItemViewModel {
-        FoodItemViewModel(
+        let foodItemVM = FoodItemViewModel(
             id: UUID(),
             name: "Sample Food Item",
             category: .product,
@@ -550,5 +550,10 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
             sourceID: nil,
             sourceDB: nil
         )
+        
+        foodItemVM.typicalAmounts.append(TypicalAmountViewModel(amount: 100, comment: "As sold"))
+        foodItemVM.typicalAmounts.append(TypicalAmountViewModel(amount: 25, comment: "As served"))
+        
+        return foodItemVM
     }
 }
