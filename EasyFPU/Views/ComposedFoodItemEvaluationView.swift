@@ -50,74 +50,100 @@ struct ComposedFoodItemEvaluationView: View {
                                 .bold()
                             Text("Add products to your meal")
                         }
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .fill(.yellow)
-                        )
+                        .frame(maxWidth: .infinity)
                     }
+                    .buttonStyle(ActionButton())
+                    .padding()
                     .accessibilityIdentifierLeaf("AddProductsButton")
                 } else {
-                    Form {
-                        // Summarize the meal
-                        Section {
-                            // The meal delay stepper
-                            HStack {
-                                Stepper("Delay until meal", value: $userSettings.mealDelayInMinutes, in: 0...30, step: 5)
-                                    .accessibilityIdentifierLeaf("MealDelayStepper")
-                                Text("\(userSettings.mealDelayInMinutes)")
-                                    .accessibilityIdentifierLeaf("MealDelayValue")
-                                Text("min")
-                                    .accessibilityIdentifierLeaf("MealDelayUnit")
-                            }
-                        }
-                        
-                        Section(header: Text("Carbs")) {
-                            // The carbs views
-                            if userSettings.treatSugarsSeparately {
-                                ComposedFoodItemSugarsView(composedFoodItem: self.composedFoodItemVM)
-                                    .accessibilityIdentifierBranch("SugarDetails")
-                            }
-                            ComposedFoodItemCarbsView(composedFoodItem: self.composedFoodItemVM)
-                                .accessibilityIdentifierBranch("CarbsDetails")
-                            ComposedFoodItemECarbsView(composedFoodItem: self.composedFoodItemVM, absorptionScheme: self.absorptionScheme)
-                                .accessibilityIdentifierBranch("ECarbsDetails")
-                        }
-                        
-                        Section(header: Text("Products")) {
-                            // Button to add products
-                            Button(action: {
-                                navigationPath.append(MealNavigationDestination.SelectProduct)
-                            }) {
+                    ZStack {
+                        Form {
+                            // Summarize the meal
+                            Section {
+                                // The meal delay stepper
                                 HStack {
-                                    Image(systemName: "pencil.circle")
-                                        .imageScale(.large)
-                                    Text("Edit products")
+                                    Stepper("Delay until meal", value: $userSettings.mealDelayInMinutes, in: 0...30, step: 5)
+                                        .accessibilityIdentifierLeaf("MealDelayStepper")
+                                    Text("\(userSettings.mealDelayInMinutes)")
+                                        .accessibilityIdentifierLeaf("MealDelayValue")
+                                    Text("min")
+                                        .accessibilityIdentifierLeaf("MealDelayUnit")
                                 }
                             }
-                            .accessibilityIdentifierLeaf("EditProductsButton")
                             
-                            // The included products
-                            List {
-                                ForEach(composedFoodItemVM.foodItemVMs) { foodItem in
-                                    HStack {
-                                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
-                                            .accessibilityIdentifierLeaf("AmountValue")
-                                        Text("g")
-                                            .accessibilityIdentifierLeaf("AmountUnit")
-                                        Text(foodItem.name)
-                                            .accessibilityIdentifierLeaf("Name")
+                            Section(header: Text("Carbs")) {
+                                // The carbs views
+                                if userSettings.treatSugarsSeparately {
+                                    ComposedFoodItemSugarsView(composedFoodItem: self.composedFoodItemVM)
+                                        .accessibilityIdentifierBranch("SugarDetails")
+                                }
+                                ComposedFoodItemCarbsView(composedFoodItem: self.composedFoodItemVM)
+                                    .accessibilityIdentifierBranch("CarbsDetails")
+                                ComposedFoodItemECarbsView(composedFoodItem: self.composedFoodItemVM, absorptionScheme: self.absorptionScheme)
+                                    .accessibilityIdentifierBranch("ECarbsDetails")
+                            }
+                            
+                            Section(header: Text("Products"), footer: Text("Swipe to remove")) {
+                                // The included products
+                                List {
+                                    ForEach(composedFoodItemVM.foodItemVMs) { foodItem in
+                                        HStack {
+                                            Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
+                                                .accessibilityIdentifierLeaf("AmountValue")
+                                            Text("g")
+                                                .accessibilityIdentifierLeaf("AmountUnit")
+                                            Text(foodItem.name)
+                                                .accessibilityIdentifierLeaf("Name")
+                                        }
+                                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                                     }
-                                    .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                                    .onDelete(perform: removeFoodItems)
+                                }
+                                .accessibilityIdentifierBranch("IncludedProduct")
+                                
+                                // The link to the details
+                                Button("Meal Details", systemImage: "info.circle.fill") {
+                                    navigationPath.append(MealNavigationDestination.Details)
+                                }
+                                .accessibilityIdentifierLeaf("MealDetailsButton")
+                            }
+                        }
+                        .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the Edit and Export buttons
+                        
+                        // The overlaying edit and export buttons
+                        VStack {
+                            Spacer()
+                            HStack {
+                                // The edit button
+                                Button {
+                                    navigationPath.append(MealNavigationDestination.SelectProduct)
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
+                                        Text("Add more")
+                                    }
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                }
+                                .buttonStyle(ActionButton())
+                                .accessibilityIdentifierLeaf("EditButton")
+                                
+                                // The export button
+                                if HealthDataHelper.healthKitIsAvailable() {
+                                    Button {
+                                        navigationPath.append(MealNavigationDestination.ExportToHealth)
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: "square.and.arrow.up").imageScale(.large).foregroundStyle(.green)
+                                            Text("Export")
+                                        }
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    }
+                                    .buttonStyle(ActionButton())
+                                    .accessibilityIdentifierLeaf("ExportButton")
                                 }
                             }
-                            .accessibilityIdentifierBranch("IncludedProduct")
-                            
-                            // The link to the details
-                            Button("Meal Details", systemImage: "info.circle.fill") {
-                                navigationPath.append(MealNavigationDestination.Details)
-                            }
-                            .accessibilityIdentifierLeaf("MealDetailsButton")
+                            .padding()
+                            .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
@@ -145,16 +171,6 @@ struct ComposedFoodItemEvaluationView: View {
                         }
                         .accessibilityIdentifierLeaf("ClearButton")
                     }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        navigationPath.append(MealNavigationDestination.ExportToHealth)
-                    }) {
-                        HealthDataHelper.healthKitIsAvailable() ? AnyView(Image(systemName: "square.and.arrow.up").imageScale(.large)) : AnyView(EmptyView())
-                    }
-                    .disabled(composedFoodItemVM.foodItemVMs.isEmpty)
-                    .accessibilityIdentifierLeaf("ExportButton")
                 }
             }
             .navigationDestination(for: FoodItemListView.FoodListNavigationDestination.self) { screen in
@@ -196,6 +212,7 @@ struct ComposedFoodItemEvaluationView: View {
                         composedFoodItem: composedFoodItemVM
                     )
                     .accessibilityIdentifierBranch("AddProductToMeal")
+                    .navigationBarBackButtonHidden()
                 case .Details:
                     ComposedFoodItemDetailsView(
                         absorptionScheme: absorptionScheme,
@@ -217,6 +234,19 @@ struct ComposedFoodItemEvaluationView: View {
         }
     }
     
+    func removeFoodItems(at offsets: IndexSet) {
+        withAnimation {
+            var foodItemsToRemove = [FoodItemViewModel]()
+            for offset in offsets {
+                foodItemsToRemove.append(composedFoodItemVM.foodItemVMs[offset])
+            }
+            
+            for foodItem in foodItemsToRemove {
+                composedFoodItemVM.remove(foodItem: foodItem)
+            }
+        }
+    }
+    
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
@@ -224,5 +254,14 @@ struct ComposedFoodItemEvaluationView: View {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpCalculateMeal")
         }
+    }
+}
+
+struct ComposedFoodItemEvaluationView_Previews: PreviewProvider {
+    static var previews: some View {
+        ComposedFoodItemEvaluationView(
+            absorptionScheme: AbsorptionSchemeViewModel.sampleData(),
+            composedFoodItemVM: ComposedFoodItemViewModel.sampleData()
+        )
     }
 }

@@ -438,4 +438,15 @@ class AbsorptionSchemeViewModel: ObservableObject {
         
         return true
     }
+    
+    static func sampleData() -> AbsorptionSchemeViewModel {
+        let absorptionScheme = AbsorptionSchemeViewModel()
+        var alert: SimpleAlertType?
+        absorptionScheme.absorptionBlocks.append(AbsorptionBlockViewModel(maxFpuAsString: "1", absorptionTimeAsString: "3", activeAlert: &alert)!)
+        absorptionScheme.absorptionBlocks.append(AbsorptionBlockViewModel(maxFpuAsString: "2", absorptionTimeAsString: "4", activeAlert: &alert)!)
+        absorptionScheme.absorptionBlocks.append(AbsorptionBlockViewModel(maxFpuAsString: "3", absorptionTimeAsString: "5", activeAlert: &alert)!)
+        absorptionScheme.absorptionBlocks.append(AbsorptionBlockViewModel(maxFpuAsString: "4", absorptionTimeAsString: "6", activeAlert: &alert)!)
+        absorptionScheme.absorptionBlocks.append(AbsorptionBlockViewModel(maxFpuAsString: "6", absorptionTimeAsString: "8", activeAlert: &alert)!)
+        return absorptionScheme
+    }
 }

@@ -27,85 +27,95 @@ struct FoodPreviewContent: View {
     @State var previousDragged: CGSize = CGSize.zero
     
     var body: some View {
-        VStack {
-            // The food name
-            Text(selectedEntry.name)
-                .font(.headline)
-                .padding()
-                .accessibilityIdentifierLeaf("FoodName")
-            
-            ScrollView(.horizontal) {
+        List {
+            Section(header: Text("Food Details")) {
                 HStack {
-                    getThumbView(image: selectedEntry.imageFront)
-                        .padding()
-                        .onTapGesture {
-                            self.activeSheet = .front
-                        }
-                    
-                    getThumbView(image: selectedEntry.imageNutriments)
-                        .padding()
-                        .onTapGesture {
-                            self.activeSheet = .nutriments
-                        }
-                    
-                    getThumbView(image: selectedEntry.imageIngredients)
-                        .padding()
-                        .onTapGesture {
-                            self.activeSheet = .ingredients
-                        }
-                }
-                .accessibilityIdentifierLeaf("FoodImages")
-            }
-            
-            if selectedEntry.quantity > 0 {
-                HStack {
-                    Text("Quantity")
-                        .accessibilityIdentifierLeaf("QuantityLabel")
+                    Text("Name")
+                        .accessibilityIdentifierLeaf("NameLabel")
                     Spacer()
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.quantity))!)
-                        .accessibilityIdentifierLeaf("QuantityValue")
-                    Text(selectedEntry.quantityUnit.rawValue)
-                        .accessibilityIdentifierLeaf("QuantityUnit")
-                }.padding([.leading, .trailing])
+                    Text(selectedEntry.name)
+                        .accessibilityIdentifierLeaf("NameValue")
+                        .fontWeight(.bold)
+                }
+                
+                if selectedEntry.quantity > 0 {
+                    HStack {
+                        Text("Quantity")
+                            .accessibilityIdentifierLeaf("QuantityLabel")
+                        Spacer()
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.quantity))!)
+                            .accessibilityIdentifierLeaf("QuantityValue")
+                        Text(selectedEntry.quantityUnit.rawValue)
+                            .accessibilityIdentifierLeaf("QuantityUnit")
+                    }
+                }
+                
+                HStack {
+                    Text("Calories per 100g")
+                        .accessibilityIdentifierLeaf("CaloriesLabel")
+                    Spacer()
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.caloriesPer100g.getEnergyInKcal()))!)
+                        .accessibilityIdentifierLeaf("CaloriesValue")
+                    Text("kcal")
+                        .accessibilityIdentifierLeaf("CaloriesUnit")
+                }
+                
+                HStack {
+                    Text("Carbs per 100g")
+                        .accessibilityIdentifierLeaf("CarbsLabel")
+                    Spacer()
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.carbsPer100g))!)
+                        .accessibilityIdentifierLeaf("CarbsValue")
+                    Text("g")
+                        .accessibilityIdentifierLeaf("CarbsUnit")
+                }
+                
+                HStack {
+                    Text("Thereof Sugars per 100g")
+                        .accessibilityIdentifierLeaf("SugarsLabel")
+                    Spacer()
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.sugarsPer100g))!)
+                        .accessibilityIdentifierLeaf("SugarsValue")
+                    Text("g")
+                        .accessibilityIdentifierLeaf("SugarsUnit")
+                }
             }
-            HStack {
-                Text("Calories per 100g")
-                    .accessibilityIdentifierLeaf("CaloriesLabel")
-                Spacer()
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.caloriesPer100g.getEnergyInKcal()))!)
-                    .accessibilityIdentifierLeaf("CaloriesValue")
-                Text("kcal")
-                    .accessibilityIdentifierLeaf("CaloriesUnit")
-            }.padding([.leading, .trailing])
-            HStack {
-                Text("Carbs per 100g")
-                    .accessibilityIdentifierLeaf("CarbsLabel")
-                Spacer()
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.carbsPer100g))!)
-                    .accessibilityIdentifierLeaf("CarbsValue")
-                Text("g")
-                    .accessibilityIdentifierLeaf("CarbsUnit")
-            }.padding([.leading, .trailing])
-            HStack {
-                Text("Thereof Sugars per 100g")
-                    .accessibilityIdentifierLeaf("SugarsLabel")
-                Spacer()
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: selectedEntry.sugarsPer100g))!)
-                    .accessibilityIdentifierLeaf("SugarsValue")
-                Text("g")
-                    .accessibilityIdentifierLeaf("SugarsUnit")
-            }.padding([.leading, .trailing])
+            
+            if selectedEntry.imageFront != nil || selectedEntry.imageNutriments != nil || selectedEntry.imageIngredients != nil {
+                Section(header: Text("Images")) {
+                    ScrollView(.horizontal) {
+                        HStack {
+                            getThumbView(image: selectedEntry.imageFront)
+                                .padding()
+                                .onTapGesture {
+                                    self.activeSheet = .front
+                                }
+                            
+                            getThumbView(image: selectedEntry.imageNutriments)
+                                .padding()
+                                .onTapGesture {
+                                    self.activeSheet = .nutriments
+                                }
+                            
+                            getThumbView(image: selectedEntry.imageIngredients)
+                                .padding()
+                                .onTapGesture {
+                                    self.activeSheet = .ingredients
+                                }
+                        }
+                        .accessibilityIdentifierLeaf("FoodImages")
+                    }
+                }
+            }
             
             HStack {
                 Text(NSLocalizedString("Link to entry in ", comment: "") + UserSettings.shared.foodDatabase.databaseType.rawValue)
-                    .padding().foregroundStyle(.blue)
+                    .foregroundStyle(.blue)
                     .onTapGesture {
                         try? UIApplication.shared.open(UserSettings.shared.foodDatabase.getLink(for: selectedEntry.sourceId))
                     }
                     .accessibilityIdentifierLeaf("LinkToFoodDatabaseEntry")
             }
-            
-            Spacer()
         }
         .sheet(item: $activeSheet) {
             sheetContent($0)

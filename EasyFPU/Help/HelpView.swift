@@ -55,16 +55,6 @@ struct HelpView: View {
                 }
             }
             .navigationTitle(NSLocalizedString(self.helpScreen.rawValue, comment: ""))
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        presentation.wrappedValue.dismiss()
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                    }
-                    .accessibilityIdentifierLeaf("CloseButton")
-                }
-            }
         }
     }
 }

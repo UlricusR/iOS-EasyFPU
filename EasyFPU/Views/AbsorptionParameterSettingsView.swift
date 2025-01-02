@@ -51,7 +51,7 @@ struct AbsorptionParameterSettingsView: View {
                 HStack {
                     Text("Duration")
                         .accessibilityIdentifierLeaf("SugarsDurationLabel")
-                    CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationSugarsAsString, keyboardType: .numberPad)
+                    CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationSugarsAsString, keyboardType: .decimalPad)
                         .onChange(of: draftAbsorptionScheme.durationSugarsAsString) {
                             var errorMessage = ""
                             if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationSugars, UserSettings.UserDefaultsDoubleKey.absorptionTimeSugarsDuration), errorMessage: &errorMessage) {
@@ -118,7 +118,7 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Duration")
                     .accessibilityIdentifierLeaf("CarbsDurationLabel")
-                CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationCarbsAsString, keyboardType: .numberPad)
+                CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationCarbsAsString, keyboardType: .decimalPad)
                     .onChange(of: draftAbsorptionScheme.durationCarbsAsString) {
                         var errorMessage = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationCarbs, UserSettings.UserDefaultsDoubleKey.absorptionTimeCarbsDuration), errorMessage: &errorMessage) {
@@ -184,7 +184,7 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("e-Carbs Factor")
                     .accessibilityIdentifierLeaf("ECarbsFactorLabel")
-                CustomTextField(titleKey: "e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString, keyboardType: .numberPad)
+                CustomTextField(titleKey: "e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString, keyboardType: .decimalPad)
                     .onChange(of: draftAbsorptionScheme.eCarbsFactorAsString) {
                         var errorMessage = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &errorMessage) {

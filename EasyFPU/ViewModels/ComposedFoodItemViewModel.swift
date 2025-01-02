@@ -214,6 +214,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         CoreDataStack.shared.save()
     }
     
+    /// Adds a FoodItem to the ComposedFoodItem, if it doesn't exist yet.
+    /// - Parameter foodItem: The food item to be added.
     func add(foodItem: FoodItemViewModel) {
         if !foodItemVMs.contains(foodItem) {
             foodItemVMs.append(foodItem)
@@ -221,6 +223,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         }
     }
     
+    /// Removes a FoodItem from the ComposedFoodItem, if it exists.
+    /// - Parameter foodItem: The food item to be removed.
     func remove(foodItem: FoodItemViewModel) {
         if let index = foodItemVMs.firstIndex(of: foodItem) {
             // Substract amount of FoodItem removed
@@ -319,5 +323,9 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     
     static func == (lhs: ComposedFoodItemViewModel, rhs: ComposedFoodItemViewModel) -> Bool {
         lhs.id == rhs.id
+    }
+    
+    static func sampleData() -> ComposedFoodItemViewModel {
+        ComposedFoodItemViewModel(id: UUID(), name: "Sample Composed Food Item", category: .product, favorite: false)
     }
 }

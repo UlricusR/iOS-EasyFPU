@@ -9,10 +9,8 @@
 import SwiftUI
 
 struct AboutView: View {
-    @Environment(\.presentationMode) var presentation
-    
     var body: some View {
-        NavigationStack {
+        ScrollView {
             VStack(alignment: .leading) {
                 Text("Calculates carbs, extended carbs (aka. eCarbs or Fake Carbs) and the matching absorption time for individual food or a whole meal.").padding()
                 Text("It's free and open-source, so I'll never ask you for money.").padding()
@@ -23,21 +21,8 @@ struct AboutView: View {
                     }
                     .accessibilityIdentifierLeaf("LinkToDocumentationButton")
                 Text("Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String) Build \(Bundle.main.infoDictionary!["CFBundleVersion"] as! String)").padding()
-                
-                Spacer()
-            }
-            .navigationTitle(Text("About this app"))
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        presentation.wrappedValue.dismiss()
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .imageScale(.large)
-                    }
-                    .accessibilityIdentifierLeaf("CloseButton")
-                }
             }
         }
+        .navigationTitle(Text("About this app"))
     }
 }
