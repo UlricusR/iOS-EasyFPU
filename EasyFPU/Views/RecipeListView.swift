@@ -66,12 +66,10 @@ struct RecipeListView: View {
                                 .bold()
                             Text("Start cooking or baking")
                         }
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .fill(.yellow)
-                        )
+                        .frame(maxWidth: .infinity)
                     }
+                    .buttonStyle(ActionButton())
+                    .padding()
                     .accessibilityIdentifierLeaf("StartCookingButton")
                 } else {
                     List {
@@ -179,6 +177,7 @@ struct RecipeListView: View {
                         composedFoodItem: recipe
                     )
                     .accessibilityIdentifierBranch("SelectIngredients")
+                    .navigationBarBackButtonHidden()
                 case let .EditRecipe(recipe: recipe):
                     if recipe.cdComposedFoodItem != nil {
                         FoodItemComposerView(
@@ -212,5 +211,15 @@ struct RecipeListView: View {
             HelpView(helpScreen: .recipeList)
                 .accessibilityIdentifierBranch("HelpRecipeList")
         }
+    }
+}
+
+struct RecipeListView_Previews: PreviewProvider {
+    @State private static var navigationPath = NavigationPath()
+    static var previews: some View {
+        RecipeListView(
+            composedFoodItem: ComposedFoodItemViewModel.sampleData(),
+            helpSheet: .recipeListHelp
+        )
     }
 }

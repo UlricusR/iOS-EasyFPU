@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B0040582D254B7700D2FAF2 /* CustomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0040572D254B7400D2FAF2 /* CustomButtons.swift */; };
 		1B004A2D24BA3035001E362A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B004A2C24BA3035001E362A /* AppDelegate.swift */; };
 		1B004A2F24BA3035001E362A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B004A2E24BA3035001E362A /* SceneDelegate.swift */; };
 		1B004A3224BA3035001E362A /* EasyFPU.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1B004A3024BA3035001E362A /* EasyFPU.xcdatamodeld */; };
@@ -129,6 +130,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1B0040572D254B7400D2FAF2 /* CustomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtons.swift; sourceTree = "<group>"; };
 		1B004A2924BA3035001E362A /* EasyFPU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasyFPU.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B004A2C24BA3035001E362A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1B004A2E24BA3035001E362A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -483,6 +485,7 @@
 				1BA1035D2CDBFF6A00776D15 /* ParentAccessibilityBranchKey.swift */,
 				1BA103592CDBFF2D00776D15 /* AccessibilityIdentifierBranchModifier.swift */,
 				1BA1035A2CDBFF2D00776D15 /* AccessibilityIdentifierLeafModifier.swift */,
+				1B0040572D254B7400D2FAF2 /* CustomButtons.swift */,
 				1BBFA9A22523B2FE00FB78D3 /* CustomViews.swift */,
 				1B0868B1254F0D3E005953CC /* NotificationView.swift */,
 				1BA97D8F29ABB5A5006D6754 /* ActivityIndicatorSpinner.swift */,
@@ -673,6 +676,7 @@
 				1BEE525624D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift in Sources */,
 				1B377A6824FAA935005AC5C6 /* AboutView.swift in Sources */,
 				1B51B3332540BCB800064EB1 /* FoodPreview.swift in Sources */,
+				1B0040582D254B7700D2FAF2 /* CustomButtons.swift in Sources */,
 				1BB631DA24FBDA9400B75EF3 /* HelpView.swift in Sources */,
 				1B90D2DE24F7BAB40059BFFA /* ComposedFoodItemView.swift in Sources */,
 				1B0AB0DF254F760D00A7BFBD /* HelpFoodItemComposer.swift in Sources */,

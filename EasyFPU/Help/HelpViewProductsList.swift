@@ -16,6 +16,8 @@ struct HelpViewProductsList: View {
             
             Text("As soon as your dishes list contains one or more dishes, you can go ahead and create a meal. To do so, tap once on the respective dish. This will open the screen to select the amount.").padding()
             
+            Text("Once done adding all dishes, hit the yellow Finished button to return to your meal overview. You can always come back to edit or add dishes.").padding()
+            
             HStack {
                 Image(systemName: "plus.circle").foregroundStyle(.gray)
                 Text("Indicates that the dish is available for being added to your meal.")

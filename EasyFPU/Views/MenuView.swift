@@ -13,12 +13,7 @@ struct MenuView: View {
     enum SettingsNavigationPath: Hashable {
         case EditTherapySettings
         case EditAppSettings
-    }
-    
-    enum SheetState: Identifiable {
-        case about
-        
-        var id: SheetState { self }
+        case About
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -29,7 +24,6 @@ struct MenuView: View {
     @State private var isConfirming = false
     @State private var importData: ImportData?
     @State private var exportData = ExportJSONDocument()
-    @State private var activeSheet: SheetState?
     @State private var showingAlert = false
     @State private var activeAlert: SimpleAlertType?
     
@@ -118,7 +112,7 @@ struct MenuView: View {
                 Section(header: Text("Info")) {
                     // About
                     Button("About") {
-                        activeSheet = .about
+                        navigationPath.append(SettingsNavigationPath.About)
                     }
                     .accessibilityIdentifierLeaf("AboutButton")
                     
@@ -156,11 +150,11 @@ struct MenuView: View {
                         navigationPath: $navigationPath
                     )
                     .accessibilityIdentifierBranch("AppSettingsEditor")
+                case .About:
+                    AboutView()
+                        .accessibilityIdentifierBranch("About")
                 }
             }
-        }
-        .sheet(item: $activeSheet) {
-            sheetContent($0)
         }
         .alert(
             activeAlert?.title() ?? "Notice",
@@ -170,15 +164,6 @@ struct MenuView: View {
             activeAlert.button()
         } message: { activeAlert in
             activeAlert.message()
-        }
-    }
-    
-    @ViewBuilder
-    private func sheetContent(_ state: SheetState) -> some View {
-        switch state {
-        case .about:
-            AboutView()
-                .accessibilityIdentifierBranch("About")
         }
     }
     

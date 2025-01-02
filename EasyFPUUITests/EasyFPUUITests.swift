@@ -49,7 +49,7 @@ final class EasyFPUUITests: XCTestCase {
         collectionViewsQuery.staticTexts["MainView.CalculateMeal.SelectFoodItem.TAmount30.TypicalAmountComment"].tap()
         app.buttons["MainView.CalculateMeal.SelectFoodItem.AddButton"].tap()
         
-        app.navigationBars.buttons.element(boundBy: 0).tap() // The back button
+        app.buttons["MainView.CalculateMeal.AddProductToMeal.FinishedButton"].tap()
         snapshot("04CalculateMealOverview")
         
         collectionViewsQuery.children(matching: .cell).element(boundBy: 3).children(matching: .other).element(boundBy: 1).children(matching: .other).element.swipeUp()
@@ -94,7 +94,7 @@ final class EasyFPUUITests: XCTestCase {
         
         snapshot("13IngredientsSelected")
         
-        app.navigationBars.buttons.element(boundBy: 0).tap() // The back button
+        app.buttons["MainView.CookAndBake.SelectIngredients.FinishedButton"].tap()
         let mainviewCookandbakeEditrecipeNumberofportionsstepperIncrementButton = collectionViewsQuery.steppers["MainView.CookAndBake.CreateRecipe.NumberOfPortionsStepper"].buttons["MainView.CookAndBake.CreateRecipe.NumberOfPortionsStepper-Increment"]
         mainviewCookandbakeEditrecipeNumberofportionsstepperIncrementButton.tap()
         mainviewCookandbakeEditrecipeNumberofportionsstepperIncrementButton.tap()
@@ -126,7 +126,7 @@ final class EasyFPUUITests: XCTestCase {
         snapshot("22AddFoodItemWithName")
         
         collectionViewsQuery.buttons["MainView.MaintainProducts.AddFoodItem.AddFoodItem.SearchButton"].tap()
-        sleep(10)
+        sleep(20)
         
         snapshot("23SearchResults")
         
@@ -152,6 +152,7 @@ final class EasyFPUUITests: XCTestCase {
         snapshot("31FoodListSwipeLeft")
         
         collectionViewsQuery.buttons["MainView.MaintainIngredients.Backhefe (.EditButton"].tap()
+        collectionViewsQuery.buttons["MainView.MaintainIngredients.EditFoodItem.EditFoodItem.AddTypicalAmountButton"].tap()
         collectionViewsQuery.textFields["MainView.MaintainIngredients.EditFoodItem.EditFoodItem.EditTypicalAmountValue"].tap()
         collectionViewsQuery.textFields["MainView.MaintainIngredients.EditFoodItem.EditFoodItem.EditTypicalAmountValue"].typeText("42")
         
@@ -161,7 +162,7 @@ final class EasyFPUUITests: XCTestCase {
         
         snapshot("32TypicalAmountEntered")
         
-        collectionViewsQuery.buttons["MainView.MaintainIngredients.EditFoodItem.EditFoodItem.AddTypicalAmountButton"].tap()
+        collectionViewsQuery.buttons["MainView.MaintainIngredients.EditFoodItem.EditFoodItem.EditTypicalAmountButton"].tap()
         
         snapshot("33TypicalAmountAdded")
         

@@ -59,11 +59,11 @@ struct AbsorptionBlockSettingsView: View {
         // The absorption block add/edit form
         Section(header: self.updateButton ? Text("Edit absorption block:") : Text("New absorption block:")) {
             HStack {
-                CustomTextField(titleKey: "Max. FPUs", text: $newMaxFpu, keyboardType: .decimalPad)
+                CustomTextField(titleKey: "Max. FPUs", text: $newMaxFpu, keyboardType: .numberPad)
                     .accessibilityIdentifierLeaf("AddFPUValue")
                 Text("FPU -")
                     .accessibilityIdentifierLeaf("AddFPUUnit")
-                CustomTextField(titleKey: "Absorption time", text: $newAbsorptionTime, keyboardType: .decimalPad)
+                CustomTextField(titleKey: "Absorption time", text: $newAbsorptionTime, keyboardType: .numberPad)
                     .accessibilityIdentifierLeaf("AddAbsorptionTimeValue")
                 Text("h")
                     .accessibilityIdentifierLeaf("AddAbsorptionTimeUnit")

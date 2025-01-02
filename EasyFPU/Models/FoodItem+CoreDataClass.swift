@@ -129,7 +129,12 @@ public class FoodItem: NSManagedObject {
         - foodItemVM: The source FoodItemViewModel.
         - typicalAmountsToBeDeleted: The TypicalAmounts to be deleted from the FoodItem.
      */
-    static func update(_ cdFoodItem: FoodItem, with foodItemVM: FoodItemViewModel, _ typicalAmountsToBeDeleted: [TypicalAmountViewModel]) {
+    static func update(
+        _ cdFoodItem: FoodItem,
+        with foodItemVM: FoodItemViewModel,
+        typicalAmountsToBeDeleted: [TypicalAmountViewModel],
+        typicalAmountsToBeAdded: [TypicalAmountViewModel]
+    ) {
         cdFoodItem.name = foodItemVM.name
         cdFoodItem.category = foodItemVM.category.rawValue
         cdFoodItem.favorite = foodItemVM.favorite
@@ -145,7 +150,7 @@ public class FoodItem: NSManagedObject {
             _ = Ingredient.update(ingredient, with: cdFoodItem)
         }
         
-        // Remove deleted typical amounts
+        // Remove deleted typical amounts from view model and Core Data
         for typicalAmountToBeDeleted in typicalAmountsToBeDeleted {
             // First remove from FoodItemVM
             foodItemVM.typicalAmounts.removeAll(where: { $0.id == typicalAmountToBeDeleted.id })
@@ -158,10 +163,17 @@ public class FoodItem: NSManagedObject {
             }
         }
         
-        // Update typical amounts
+        // Update typical amounts in Core Data
         for typicalAmountVM in foodItemVM.typicalAmounts {
             let cdTypicalAmount = TypicalAmount.update(with: typicalAmountVM)
             cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
+        }
+        
+        // Add new typical amounts in view model and Core Data
+        for typicalAmountToBeAdded in typicalAmountsToBeAdded {
+            let newCDTypicalAmount = TypicalAmount.create(from: typicalAmountToBeAdded)
+            foodItemVM.typicalAmounts.append(typicalAmountToBeAdded)
+            cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
         }
         
         CoreDataStack.shared.save()

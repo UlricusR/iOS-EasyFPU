@@ -22,8 +22,8 @@ struct FoodItemSelector: View {
     private let helpScreen = HelpScreen.foodItemSelector
     
     var body: some View {
-        
-        VStack {
+        ZStack {
+            // The form with the food item details
             GeometryReader { geometry in
                 Form {
                     Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text(category == .product ? "Enter amount consumed" : "Enter amount used") : Text(category == .product ? "Enter amount consumed or select typical amount" : "Enter amount used or select typical amount")) {
@@ -37,33 +37,21 @@ struct FoodItemSelector: View {
                         }
                         
                         // Buttons to ease input
-                        HStack {
-                            Spacer()
-                            NumberButton(number: 100, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
-                                .accessibilityIdentifierLeaf("Add100Button")
-                            NumberButton(number: 50, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
-                                .accessibilityIdentifierLeaf("Add50Button")
-                            NumberButton(number: 10, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
-                                .accessibilityIdentifierLeaf("Add10Button")
-                            NumberButton(number: 5, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
-                                .accessibilityIdentifierLeaf("Add5Button")
-                            NumberButton(number: 1, variableAmountItem: self.draftFoodItem, width: geometry.size.width / 7)
-                                .accessibilityIdentifierLeaf("Add1Button")
-                            Spacer()
-                        }
+                        AmountEntryButtons(variableAmountItem: draftFoodItem, geometry: geometry)
                         
                         // Add to typical amounts (only if not connected to a ComposedFoodItem)
                         if draftFoodItem.cdFoodItem?.composedFoodItem == nil {
                             if self.addToTypicalAmounts {
                                 // User wants to add amount to typical amounts, so comment is required
                                 HStack {
-                                    CustomTextField(titleKey: "Comment", text: self.$newTypicalAmountComment, keyboardType: .default)
+                                    TextField("Comment", text: self.$newTypicalAmountComment)
+                                        .accessibilityIdentifierLeaf("TypicalAmountComment")
                                     Button(action: {
                                         self.addTypicalAmount()
                                     }) {
                                         Image(systemName: "checkmark.circle.fill")
                                     }
-                                    .accessibilityIdentifierLeaf("EditTypicalAmountComment")
+                                    .accessibilityIdentifierLeaf("EditTypicalAmountButton")
                                 }
                             } else {
                                 // Give user possibility to add the entered amount to typical amounts
@@ -95,30 +83,46 @@ struct FoodItemSelector: View {
                     }
                 }
             }
+            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the Add button
             
-            Button("Add") {
-                // First check for unsaved typical amount
-                if self.addToTypicalAmounts {
-                    self.addTypicalAmount()
-                }
-                
-                let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
-                switch amountResult {
-                case .success(_):
-                    composedFoodItem.add(foodItem: draftFoodItem)
+            // The overlaying add button
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button {
+                        // First check for unsaved typical amount
+                        if self.addToTypicalAmounts {
+                            self.addTypicalAmount()
+                        }
+                        
+                        let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
+                        switch amountResult {
+                        case .success(_):
+                            composedFoodItem.add(foodItem: draftFoodItem)
+                            
+                            // Quit edit mode
+                            navigationPath.removeLast()
+                        case .failure(let err):
+                            // Display alert and stay in edit mode
+                            activeAlert = .error(message: err.evaluate())
+                            showingAlert = true
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus.circle.fill").imageScale(.large).foregroundStyle(.green)
+                            Text("Add")
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(ActionButton())
+                    .disabled(draftFoodItem.amount <= 0)
+                    .accessibilityIdentifierLeaf("AddButton")
                     
-                    // Quit edit mode
-                    navigationPath.removeLast()
-                case .failure(let err):
-                    // Display alert and stay in edit mode
-                    activeAlert = .error(message: err.evaluate())
-                    showingAlert = true
+                    Spacer()
                 }
+                .padding()
             }
-            .padding()
-            .buttonStyle(.borderedProminent)
-            .disabled(draftFoodItem.amount <= 0)
-            .accessibilityIdentifierLeaf("AddButton")
         }
         .navigationTitle(self.draftFoodItem.name)
         .toolbar {

@@ -156,7 +156,7 @@ struct CoreDataTests {
             foodItemVM.sugarsPer100gAsString = String(foodItemVM.sugarsPer100g / 2)
             
             // Update the cdFoodItem
-            FoodItem.update(cdFoodItem, with: foodItemVM, [])
+            FoodItem.update(cdFoodItem, with: foodItemVM, typicalAmountsToBeDeleted: [], typicalAmountsToBeAdded: [])
             
             // Check results in DB and get the FoodItem
             let cdFoodItemAfterUpdate = FoodItem.getFoodItemByID(id: foodItemID)
@@ -172,7 +172,7 @@ struct CoreDataTests {
             try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
         }
         
-        @Test("ID: 8 - Update FoodItem - no associated Ingredients - TypicalAmounts to be deleted")
+        @Test("ID: 8.1 - Update FoodItem - no associated Ingredients - TypicalAmounts to be deleted")
         func updateFoodItemNoAssociatedIngredientsTypicalAmountsToBeDeleted() throws {
             // Create new FoodItem with TypicalAmounts in DB
             let foodItemVM = try DataFactory.shared.createFoodItemVM()
@@ -200,7 +200,7 @@ struct CoreDataTests {
             let typicalAmountsToBeDeleted = [sortedTypicalAmounts[1], sortedTypicalAmounts[3]]
             
             // Update the cdFoodItem and pass the TypicalAmounts to be deleted
-            FoodItem.update(cdFoodItem, with: newFoodItemVM, typicalAmountsToBeDeleted)
+            FoodItem.update(cdFoodItem, with: newFoodItemVM, typicalAmountsToBeDeleted: typicalAmountsToBeDeleted, typicalAmountsToBeAdded: [])
             
             // Check results in DB and get the FoodItem
             let cdFoodItemAfterUpdate = FoodItem.getFoodItemByID(id: foodItemVM.id)
@@ -226,6 +226,74 @@ struct CoreDataTests {
             try #require(initialTypicalAmountsArray.count == 4)
             CoreDataTests.assessTypicalAmountValues(typicalAmountVM: initialTypicalAmountsArray[0], typicalAmount: remainingTypicalAmountsArray[0] as! TypicalAmount)
             CoreDataTests.assessTypicalAmountValues(typicalAmountVM: initialTypicalAmountsArray[2], typicalAmount: remainingTypicalAmountsArray[1] as! TypicalAmount)
+            
+            // Delete FoodItem and (cascading) TypicalAmounts
+            try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
+        }
+        
+        @Test("ID: 8.2 - Update FoodItem - no associated Ingredients - TypicalAmounts to be added")
+        func updateFoodItemNoAssociatedIngredientsTypicalAmountsToBeAdded() throws {
+            // Create new FoodItem with TypicalAmounts in DB
+            let foodItemVM = try DataFactory.shared.createFoodItemVM()
+            let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: true)
+            
+            // Check TypicalAmount results in DB
+            try #require(cdFoodItem.typicalAmounts != nil, "There should be TypicalAmounts associated with the FoodItem.")
+            #expect(cdFoodItem.typicalAmounts!.count == 4, "There should be 4 TypicalAmounts associated with the FoodItem.")
+            
+            // Create the FoodItemViewModel from the Core Data FoodItem (including the TypicalAmounts)
+            let newFoodItemVM = FoodItemViewModel(from: cdFoodItem)
+            
+            // Check that we have 4 TypicalAmounts
+            try #require(newFoodItemVM.typicalAmounts.count == 4)
+            
+            // Modify the foodItemVM
+            let nameAppendix = " - Updated"
+            newFoodItemVM.name += nameAppendix
+            newFoodItemVM.caloriesPer100gAsString = String(newFoodItemVM.caloriesPer100g / 2)
+            newFoodItemVM.carbsPer100gAsString = String(newFoodItemVM.carbsPer100g / 2)
+            newFoodItemVM.sugarsPer100gAsString = String(newFoodItemVM.sugarsPer100g / 2)
+            
+            // Create an array of 2 new typical amounts
+            let newTypicalAmount1 = TypicalAmountViewModel(amount: 99, comment: "Ninetynine")
+            let newTypicalAmount2 = TypicalAmountViewModel(amount: 101, comment: "One-O-One")
+            let typicalAmountsToBeAdded = [
+                newTypicalAmount1,
+                newTypicalAmount2
+            ]
+            
+            // Update the cdFoodItem and pass the TypicalAmounts to be deleted
+            FoodItem.update(cdFoodItem, with: newFoodItemVM, typicalAmountsToBeDeleted: [], typicalAmountsToBeAdded: typicalAmountsToBeAdded)
+            
+            // Check results in DB and get the FoodItem
+            let cdFoodItemAfterUpdate = FoodItem.getFoodItemByID(id: foodItemVM.id)
+            try #require(cdFoodItemAfterUpdate != nil, "The updated FoodItem should be found in the DB by the same ID as before.")
+            
+            // Both FoodItems should be identical objects
+            #expect(cdFoodItem == cdFoodItemAfterUpdate!)
+            
+            // Check TypicalAmount results in DB
+            let remainingTypicalAmounts = cdFoodItem.typicalAmounts
+            try #require(remainingTypicalAmounts != nil, "There should be TypicalAmounts associated with the FoodItem.")
+            #expect(remainingTypicalAmounts!.count == 6, "There should be 6 TypicalAmounts associated with the FoodItem.")
+            
+            // Compare values
+            assessFoodItemValues(foodItemVM: newFoodItemVM, foodItem: cdFoodItem)
+            
+            // Check that the values are those of the initial TypicalAmount 0 and 2
+            let remainingTypicalAmountsArray = remainingTypicalAmounts!.sorted {
+                ($0 as! TypicalAmount).amount < ($1 as! TypicalAmount).amount
+            }
+            try #require(remainingTypicalAmountsArray.count == 6)
+            let initialTypicalAmountsArray = try DataFactory.shared.getTypicalAmounts()
+            try #require(initialTypicalAmountsArray.count == 4)
+            CoreDataTests.assessTypicalAmountValues(typicalAmountVM: newTypicalAmount1, typicalAmount: remainingTypicalAmountsArray[0] as! TypicalAmount)
+            CoreDataTests.assessTypicalAmountValues(typicalAmountVM: initialTypicalAmountsArray[0], typicalAmount: remainingTypicalAmountsArray[1] as! TypicalAmount)
+            CoreDataTests.assessTypicalAmountValues(typicalAmountVM: newTypicalAmount2, typicalAmount: remainingTypicalAmountsArray[2] as! TypicalAmount)
+            CoreDataTests.assessTypicalAmountValues(typicalAmountVM: initialTypicalAmountsArray[1], typicalAmount: remainingTypicalAmountsArray[3] as! TypicalAmount)
+            CoreDataTests.assessTypicalAmountValues(typicalAmountVM: initialTypicalAmountsArray[2], typicalAmount: remainingTypicalAmountsArray[4] as! TypicalAmount)
+            CoreDataTests.assessTypicalAmountValues(typicalAmountVM: initialTypicalAmountsArray[3], typicalAmount: remainingTypicalAmountsArray[5] as! TypicalAmount)
+            
             
             // Delete FoodItem and (cascading) TypicalAmounts
             try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)

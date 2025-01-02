@@ -99,26 +99,56 @@ struct FoodItemListView: View {
                         Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
                         emptyStateButtonText
                     }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(.yellow)
-                    )
+                    .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(ActionButton())
+                .padding()
                 .accessibilityIdentifierLeaf("AddFoodItemButton")
             } else {
-                List(self.filteredFoodItems.sorted {
-                    if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
-                        return true
-                    } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
-                        return false
-                    } else {
-                        return $0.name < $1.name
+                ZStack {
+                    // The food list
+                    List(self.filteredFoodItems.sorted {
+                        if listType == .selection {
+                            if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
+                                return true
+                            } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
+                                return false
+                            } else {
+                                return $0.name < $1.name
+                            }
+                        } else {
+                            return $0.name < $1.name
+                        }
+                    }) { foodItem in
+                        FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
+                            .environment(\.managedObjectContext, self.managedObjectContext)
+                            .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                     }
-                }) { foodItem in
-                    FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
-                        .environment(\.managedObjectContext, self.managedObjectContext)
-                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
+                    
+                    // The overlaying finished button in case we have a selection type list
+                    if listType == .selection {
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                Button {
+                                    // Return to previous view
+                                    navigationPath.removeLast()
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "checkmark.circle.fill").imageScale(.large).foregroundStyle(.green)
+                                        Text("Finished")
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                }
+                                .buttonStyle(ActionButton())
+                                .accessibilityIdentifierLeaf("FinishedButton")
+                                Spacer()
+                            }
+                            .padding()
+                        }
+                    }
                 }
             }
         }
@@ -144,21 +174,6 @@ struct FoodItemListView: View {
                         .foregroundStyle(.green)
                 }
                 .accessibilityIdentifierLeaf("AddFoodItemButton")
-                
-                if listType == .selection && !composedFoodItem.foodItemVMs.isEmpty {
-                    Button(action: {
-                        withAnimation(.default) {
-                            composedFoodItem.clearIngredients()
-                            
-                            // Close sheet
-                            navigationPath.removeLast()
-                        }
-                    }) {
-                        Image(systemName: "xmark.circle").foregroundStyle(.red)
-                            .imageScale(.large)
-                    }
-                    .accessibilityIdentifierLeaf("ClearButton")
-                }
             }
             
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -177,7 +192,7 @@ struct FoodItemListView: View {
                             .imageScale(.large)
                     }
                 }
-                .accessibilityIdentifierLeaf("ClearButton")
+                .accessibilityIdentifierLeaf("FavoriteButton")
             }
         }
         .searchable(text: self.$searchString)
@@ -202,5 +217,19 @@ struct FoodItemListView: View {
             HelpView(helpScreen: .ingredientSelectionList)
                 .accessibilityIdentifierBranch("HelpIngredientSelectionList")
         }
+    }
+}
+
+struct FoodItemListView_Previews: PreviewProvider {
+    @State private static var navigationPath = NavigationPath()
+    static var previews: some View {
+        FoodItemListView(
+            category: .product,
+            listType: .selection,
+            foodItemListTitle: "My Products",
+            helpSheet: .productSelectionListHelp,
+            navigationPath: $navigationPath,
+            composedFoodItem: ComposedFoodItemViewModel.sampleData()
+        )
     }
 }

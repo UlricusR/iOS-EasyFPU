@@ -417,9 +417,18 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     
     /// Updates the related Core Data FoodItem with the values of this FoodItemViewModel.
     /// - Parameter typicalAmountsToBeDeleted: The typical amounts which need to be deleted during update.
-    func update(_ typicalAmountsToBeDeleted: [TypicalAmountViewModel]) {
+    /// - Parameter typicalAmountsToBeAdded: The typical amounts which need to be added during update.
+    func update(
+        typicalAmountsToBeDeleted: [TypicalAmountViewModel],
+        typicalAmountsToBeAdded: [TypicalAmountViewModel]
+    ) {
         guard let cdFoodItem else { return }
-        FoodItem.update(cdFoodItem, with: self, typicalAmountsToBeDeleted)
+        FoodItem.update(
+            cdFoodItem,
+            with: self,
+            typicalAmountsToBeDeleted: typicalAmountsToBeDeleted,
+            typicalAmountsToBeAdded: typicalAmountsToBeAdded
+        )
     }
     
     /**
@@ -526,5 +535,25 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+    
+    static func sampleData() -> FoodItemViewModel {
+        let foodItemVM = FoodItemViewModel(
+            id: UUID(),
+            name: "Sample Food Item",
+            category: .product,
+            favorite: false,
+            caloriesPer100g: 100.0,
+            carbsPer100g: 10.0,
+            sugarsPer100g: 5.0,
+            amount: 100,
+            sourceID: nil,
+            sourceDB: nil
+        )
+        
+        foodItemVM.typicalAmounts.append(TypicalAmountViewModel(amount: 100, comment: "As sold"))
+        foodItemVM.typicalAmounts.append(TypicalAmountViewModel(amount: 25, comment: "As served"))
+        
+        return foodItemVM
     }
 }
