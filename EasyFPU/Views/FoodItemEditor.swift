@@ -59,6 +59,7 @@ struct FoodItemEditor: View {
     @State private var newTypicalAmountComment = ""
     @State private var newTypicalAmountId: UUID?
     @State private var typicalAmountsToBeDeleted = [TypicalAmountViewModel]()
+    @State private var typicalAmountsToBeAdded = [TypicalAmountViewModel]()
     @State private var updateButton = false
     @State private var notificationStatus = FoodItemEditor.NotificationState.void
     @State private var associatedRecipes: [String] = []
@@ -288,11 +289,19 @@ struct FoodItemEditor: View {
                         // First quit edit mode
                         navigationPath.removeLast()
                         
-                        // Then undo the changes made to typical amounts
+                        // Undo the deleted typical amounts
                         for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
                             self.draftFoodItemVM.typicalAmounts.append(typicalAmountToBeDeleted)
                         }
                         self.typicalAmountsToBeDeleted.removeAll()
+                        
+                        // Undo the added typical amounts
+                        for typicalAmountToBeAdded in self.typicalAmountsToBeAdded {
+                            if let index = self.draftFoodItemVM.typicalAmounts.firstIndex(of: typicalAmountToBeAdded) {
+                                self.draftFoodItemVM.typicalAmounts.remove(at: index)
+                            }
+                        }
+                        self.typicalAmountsToBeAdded.removeAll()
                     } label: {
                         HStack {
                             Image(systemName: "xmark.circle.fill").imageScale(.large)
@@ -332,10 +341,14 @@ struct FoodItemEditor: View {
                         Button("Update recipes") {
                             // Update FoodItem
                             if let updatedFoodItemVM {
-                                updatedFoodItemVM.update(typicalAmountsToBeDeleted)
+                                updatedFoodItemVM.update(
+                                    typicalAmountsToBeDeleted: typicalAmountsToBeDeleted,
+                                    typicalAmountsToBeAdded: typicalAmountsToBeAdded
+                                )
                                 
-                                // Reset typical amounts to be deleted
+                                // Reset typical amount temporary arrays
                                 self.typicalAmountsToBeDeleted.removeAll()
+                                self.typicalAmountsToBeAdded.removeAll()
                             }
                             
                             // Quit edit mode
@@ -468,18 +481,15 @@ struct FoodItemEditor: View {
                 } else {
                     // No associated recipe
                     
-                    // Remove the typicalAmountsToBeDeleted from the view model
-                    for typicalAmountToBeDeleted in typicalAmountsToBeDeleted {
-                        if let index = self.updatedFoodItemVM!.typicalAmounts.firstIndex(of: typicalAmountToBeDeleted) {
-                            self.updatedFoodItemVM!.typicalAmounts.remove(at: index)
-                        }
-                    }
-                    
                     // Update FoodItem
-                    self.updatedFoodItemVM!.update(typicalAmountsToBeDeleted)
+                    self.updatedFoodItemVM!.update(
+                        typicalAmountsToBeDeleted: typicalAmountsToBeDeleted,
+                        typicalAmountsToBeAdded: typicalAmountsToBeAdded
+                    )
                     
-                    // Reset typical amounts to be deleted
+                    // Reset typical amount temporary arrays
                     self.typicalAmountsToBeDeleted.removeAll()
+                    self.typicalAmountsToBeAdded.removeAll()
                     
                     // Quit edit mode
                     navigationPath.removeLast()
@@ -546,6 +556,9 @@ struct FoodItemEditor: View {
                 comment: self.newTypicalAmountComment,
                 errorMessage: &errorMessage
             ) {
+                // Temporarily store typical amount in case of cancel (then it needs to be removed again)
+                self.typicalAmountsToBeAdded.append(newTypicalAmount)
+                
                 // Add new typical amount to typical amounts of food item
                 self.draftFoodItemVM.typicalAmounts.append(newTypicalAmount)
                 

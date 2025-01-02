@@ -417,9 +417,18 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     
     /// Updates the related Core Data FoodItem with the values of this FoodItemViewModel.
     /// - Parameter typicalAmountsToBeDeleted: The typical amounts which need to be deleted during update.
-    func update(_ typicalAmountsToBeDeleted: [TypicalAmountViewModel]) {
+    /// - Parameter typicalAmountsToBeAdded: The typical amounts which need to be added during update.
+    func update(
+        typicalAmountsToBeDeleted: [TypicalAmountViewModel],
+        typicalAmountsToBeAdded: [TypicalAmountViewModel]
+    ) {
         guard let cdFoodItem else { return }
-        FoodItem.update(cdFoodItem, with: self, typicalAmountsToBeDeleted)
+        FoodItem.update(
+            cdFoodItem,
+            with: self,
+            typicalAmountsToBeDeleted: typicalAmountsToBeDeleted,
+            typicalAmountsToBeAdded: typicalAmountsToBeAdded
+        )
     }
     
     /**
