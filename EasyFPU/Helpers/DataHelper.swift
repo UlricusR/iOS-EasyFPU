@@ -30,64 +30,21 @@ enum InvalidNumberError: Error {
 
 struct ImportData: Identifiable {
     var id = UUID()
-    let foodItemVMsToBeImported: [FoodItemViewModel]
+    let foodItemVMsToBeImported: [FoodItemViewModel]?
     let composedFoodItemVMsToBeImported: [ComposedFoodItemViewModel]?
-}
-
-struct ExportJSONDocument: FileDocument {
-    static var readableContentTypes: [UTType] {
-        [UTType.json]
-    }
     
-    private var jsonContent: Data
-    
-    /// Creates an empty Data object for jsonContent, only required for the .fileExport modifier
-    init() {
-        jsonContent = Data()
-    }
-    
-    /// Creates a JSON Data object with all FoodItems and ComposedFoodItems
-    /// - Parameter errorMessage: The error message if initialization fails
-    init?(errorMessage: inout String) {
-        // Get Core Data FoodItems and load them into FoodItemViewModels
-        let cdFoodItems = FoodItem.fetchAll()
-        var foodItems = [FoodItemViewModel]()
-        for cdFoodItem in cdFoodItems {
-            foodItems.append(FoodItemViewModel(from: cdFoodItem))
+    func save() {
+        if let foodItemVMs = foodItemVMsToBeImported {
+            for foodItemVM in foodItemVMs {
+                foodItemVM.save()
+            }
         }
         
-        // Get Core Data ComposedFoodItems and load them into ComposedFoodItemViewModels
-        let cdComposedFoodItems = ComposedFoodItem.fetchAll()
-        var composedFoodItems = [ComposedFoodItemViewModel]()
-        for cdComposedFoodItem in cdComposedFoodItems {
-            composedFoodItems.append(ComposedFoodItemViewModel(from: cdComposedFoodItem))
+        if let composedFoodItemVMs = composedFoodItemVMsToBeImported {
+            for composedFoodItemVM in composedFoodItemVMs {
+                _ = composedFoodItemVM.save()
+            }
         }
-        
-        // Prepare the DataWrapper
-        let dataWrapper = DataWrapper(dataModelVersion: .version2, foodItemVMs: foodItems, composedFoodItemVMs: composedFoodItems)
-        
-        // Encode
-        do {
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
-            jsonContent = try encoder.encode(dataWrapper)
-        } catch {
-            errorMessage = error.localizedDescription
-            return nil
-        }
-    }
-    
-    init(configuration: ReadConfiguration) throws {
-        if let data = configuration.file.regularFileContents {
-            jsonContent = data
-        } else {
-            // Create an empty Data object
-            jsonContent = Data()
-        }
-    }
-    
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        return FileWrapper(regularFileWithContents: jsonContent)
     }
 }
 
@@ -124,7 +81,27 @@ struct DataHelper {
     
     // MARK: - Importing and exporting food items as JSON
     
-    static func importFoodItems(
+    /// Stores all FoodItems and ComposedFoodItems in an array.
+    /// - Returns: A two-dimensional array with FoodItemViewModels and ComposedFoodItemViewModels (in that order).
+    static func getAllFoodData() -> [[Any]] {
+        // Get Core Data FoodItems and load them into FoodItemViewModels
+        let cdFoodItems = FoodItem.fetchAll()
+        var foodItems = [FoodItemViewModel]()
+        for cdFoodItem in cdFoodItems {
+            foodItems.append(FoodItemViewModel(from: cdFoodItem))
+        }
+        
+        // Get Core Data ComposedFoodItems and load them into ComposedFoodItemViewModels
+        let cdComposedFoodItems = ComposedFoodItem.fetchAll()
+        var composedFoodItems = [ComposedFoodItemViewModel]()
+        for cdComposedFoodItem in cdComposedFoodItems {
+            composedFoodItems.append(ComposedFoodItemViewModel(from: cdComposedFoodItem))
+        }
+        
+        return [foodItems, composedFoodItems]
+    }
+    
+    static func importFoodData(
         _ file: URL,
         errorMessage: inout String
     ) -> ImportData? {
@@ -148,6 +125,11 @@ struct DataHelper {
             return nil
         }
         
+        // Decode JSON
+        return decodeFoodData(jsonData: jsonData, errorMessage: &errorMessage)
+    }
+    
+    static func decodeFoodData(jsonData: Data, errorMessage: inout String) -> ImportData? {
         // Decode JSON
         let decoder = JSONDecoder()
         

@@ -1,3 +1,14 @@
+//
+//  FoodDataDocument.swift
+//  EasyFPU
+//
+//  Created by Ulrich Rüth on 05/01/2025.
+//  Copyright © 2025 Ulrich Rüth. All rights reserved.
+//
+
+import SwiftUI
+import UniformTypeIdentifiers
+
 extension UTType {
     static var foodDataType: UTType = .init(exportedAs: "info.rueth.EasyFPU.fooddata", conformingTo: .json)
 }
@@ -44,4 +55,3 @@ struct FoodDataDocument: FileDocument {
         return FileWrapper(regularFileWithContents: jsonContent)
     }
 }
-

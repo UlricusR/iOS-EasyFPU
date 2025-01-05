@@ -10,26 +10,14 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeName</key>
-			<string>EasyFPU FoodItem File</string>
+			<string>EasyFPU Food Data</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>info.rueth.EasyFPU.FoodItem</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>EasyFPU Recipe File</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>info.rueth.EasyFPU.ComposedFoodItem</string>
+				<string>info.rueth.EasyFPU.fooddata</string>
 			</array>
 		</dict>
 	</array>
@@ -112,45 +100,22 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.data</string>
+				<string>public.json</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>EasyFPU Food Item</string>
-			<key>UTTypeIdentifier</key>
-			<string>info.rueth.EasyFPU.FoodItem</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>fooditem</string>
-				</array>
-				<key>public.mime-type</key>
-				<array>
-					<string>application/easyfpu</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>EasyFPU Recipe</string>
+			<string>EasyFPU Food Data</string>
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
-			<string>info.rueth.EasyFPU.ComposedFoodItem</string>
+			<string>info.rueth.EasyFPU.fooddata</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>recipe</string>
+					<string>fooddata</string>
 				</array>
 				<key>public.mime-type</key>
-				<array>
-					<string>application/easyfpu</string>
-				</array>
+				<array/>
 			</dict>
 		</dict>
 	</array>

@@ -120,6 +120,7 @@
 "Do you really want to delete this food item? This cannot be undone!" = "Do you really want to delete this food item? This cannot be undone!";
 "Cannot delete food" = "Cannot delete food";
 "This food item is in use in a recipe" = "This food item is in use in the following recipes, please remove it before deleting: ";
+"Successfully exported food item to: " = "Successfully exported food item to: ";
 
 // Ingredients
 "Ingredients" = "Ingredients";
@@ -198,6 +199,7 @@
 "Oops! No recipe yet! Then let's go!" = "Oops! No recipe yet! Then let's go!";
 "Start cooking or baking" = "Start cooking or baking";
 "Your yummy recipe will appear here once you add some ingredients." = "Your yummy recipe will appear here once you add some ingredients.";
+"Successfully exported recipe to: " = "Successfully exported recipe to: ";
 "Have you added ingredients to 'My Ingredients'?" = "Have you added ingredients to 'My Ingredients'?";
 "Add ingredients" = "Add ingredients";
 "Edit ingredients" = "Edit ingredients";
@@ -251,7 +253,7 @@
 "Settings" = "Settings";
 "Import from JSON" = "Import (format: JSON)";
 "Export to JSON" = "Export (format: JSON)";
-"Successfully exported food list to: " = "Successfully exported food list to: ";
+"Successfully exported food list to: " = "Successfully exported all food data to: ";
 "Failed to access " = "Failed to access ";
 "Failed to export food list to: " = "Failed to export food list to: ";
 "Successfully imported food list" = "Successfully imported food list";

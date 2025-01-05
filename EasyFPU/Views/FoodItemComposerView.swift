@@ -230,6 +230,11 @@ struct FoodItemComposerView: View {
                 }
                 .accessibilityIdentifierLeaf("HelpButton")
             }
+            
+            // The share button
+            ToolbarItem(placement: .navigationBarTrailing) {
+                ShareLink(item: DataWrapper(dataModelVersion: .version2, foodItemVMs: [], composedFoodItemVMs: [composedFoodItemVM]), preview: .init("Share"))
+            }
         }
         .sheet(item: $activeSheet) {
             sheetContent($0)

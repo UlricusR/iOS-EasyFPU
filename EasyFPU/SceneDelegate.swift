@@ -38,23 +38,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
+    /// This function is called when the user tries to open a file with the extension .fooddata.
+    /// - Parameters:
+    ///   - scene: The scene that is about to open the file.
+    ///   - URLContexts: The URLs of the files that are about to be opened.
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         guard let url = URLContexts.first?.url else {
+            debugPrint("Fatal error: No URL found")
             return
         }
         
         // Verify the URL’s extension is fooditem, since EasyFPU only supports files with that extension
-        guard url.pathExtension == "fooditem" else { return }
+        guard url.pathExtension == "fooddata" else {
+            debugPrint("Error: File must have extension fooddata")
+            return
+        }
         
         // Import Food Item
         do {
+            var errorMessage = ""
+            
+            // Make sure we can access file
+            guard url.startAccessingSecurityScopedResource() else {
+                debugPrint("Failed to access \(url)")
+                return
+            }
+            defer { url.stopAccessingSecurityScopedResource() }
+            
             let jsonData = try Data(contentsOf: url)
-            let decoder = JSONDecoder()
-            let foodItemToBeImported = try decoder.decode(FoodItemViewModel.self, from: jsonData)
-            foodItemToBeImported.save()
-            try FileManager.default.removeItem(at: url)
+            if let importData = DataHelper.decodeFoodData(jsonData: jsonData, errorMessage: &errorMessage) {
+                importData.save()
+            } else {
+                debugPrint(errorMessage)
+            }
+            //try FileManager.default.removeItem(at: url)
         } catch {
-            debugPrint(error.localizedDescription)
+            debugPrint(error)
             return
         }
     }

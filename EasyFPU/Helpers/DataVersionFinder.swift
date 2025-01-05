@@ -11,6 +11,8 @@ import Foundation
 enum DataModelVersion: String {
     case version1 = "EasyFPU"
     case version2 = "EasyFPU 2"
+    
+    static let latest = DataModelVersion.version2
 }
 
 class DataVersionFinder: Decodable {

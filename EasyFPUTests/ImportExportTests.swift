@@ -29,7 +29,7 @@ class ImportExportTests {
         var errorMessage = ""
         
         // Import
-        let importData = DataHelper.importFoodItems(fileUrl!, errorMessage: &errorMessage)
+        let importData = DataHelper.importFoodData(fileUrl!, errorMessage: &errorMessage)
         try #require(importData != nil, "Import data should not be nil")
         #expect(errorMessage.isEmpty, "There should be no error message")
         

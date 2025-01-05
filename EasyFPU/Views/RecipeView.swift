@@ -7,14 +7,9 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct RecipeView: View {
-    enum SheetState: Identifiable {
-        case exportRecipe
-        
-        var id: SheetState { self }
-    }
-    
     enum AlertChoice {
         case simpleAlert(type: SimpleAlertType)
         case confirmDelete
@@ -23,7 +18,6 @@ struct RecipeView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Binding var navigationPath: NavigationPath
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
-    @State private var activeSheet: SheetState?
     @State private var showingAlert = false
     @State private var activeAlert: AlertChoice?
     @State private var isConfirming = false
@@ -78,14 +72,16 @@ struct RecipeView: View {
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             // Sharing the recipe
-            Button("Share", systemImage: "square.and.arrow.up") {
-                activeSheet = .exportRecipe
-            }
+            ShareLink(
+                item: DataWrapper(
+                    dataModelVersion: .version2,
+                    foodItemVMs: [],
+                    composedFoodItemVMs: [composedFoodItemVM]
+                ),
+                preview: .init("Share")
+            )
             .tint(.green)
             .accessibilityIdentifierLeaf("ShareButton")
-        }
-        .sheet(item: $activeSheet) {
-            sheetContent($0)
         }
         .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
             alertAction(for: $0)
@@ -107,18 +103,6 @@ struct RecipeView: View {
             }
         } message: {
             Text("There's an associated product, do you want to delete it as well?")
-        }
-    }
-    
-    @ViewBuilder
-    private func sheetContent(_ state: SheetState) -> some View {
-        switch state {
-        case .exportRecipe:
-            if let path = composedFoodItemVM.exportToURL() {
-                ActivityView(activityItems: [path], applicationActivities: nil)
-            } else {
-                Text(NSLocalizedString("Could not generate data export", comment: ""))
-            }
         }
     }
     

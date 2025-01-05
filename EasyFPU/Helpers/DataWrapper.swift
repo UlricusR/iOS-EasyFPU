@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreTransferable
 
 class DataWrapper: Codable {
     var dataModelVersion: DataModelVersion
@@ -17,6 +18,12 @@ class DataWrapper: Codable {
         case dataModelVersion
         case foodItems
         case recipes
+    }
+    
+    init() {
+        dataModelVersion = DataModelVersion.latest
+        foodItemVMs = []
+        composedFoodItemVMs = []
     }
     
     init(dataModelVersion: DataModelVersion, foodItemVMs: [FoodItemViewModel], composedFoodItemVMs: [ComposedFoodItemViewModel]) {
@@ -43,3 +50,31 @@ class DataWrapper: Codable {
         try container.encode(composedFoodItemVMs, forKey: .recipes)
     }
 }
+
+extension DataWrapper: Transferable {
+    static var transferRepresentation: some TransferRepresentation {
+        CodableRepresentation(contentType: .foodDataType)
+        
+        DataRepresentation(importedContentType: .foodDataType) { data in
+            let wrappedData = try JSONDecoder().decode(DataWrapper.self, from: data)
+            return wrappedData
+        }
+        
+        DataRepresentation(exportedContentType: .foodDataType) { wrappedData in
+            let data = try JSONEncoder().encode(wrappedData)
+            return data
+        }
+        
+        FileRepresentation(contentType: .foodDataType) { wrappedData in
+            let docsURL = URL.temporaryDirectory.appendingPathComponent("\(UUID().uuidString)", conformingTo: .foodDataType)
+            let data = try JSONEncoder().encode(wrappedData)
+            try data.write(to: docsURL)
+            return SentTransferredFile(docsURL)
+        } importing: { received in
+            let data = try Data(contentsOf: received.file)
+            let wrappedData = try JSONDecoder().decode(DataWrapper.self, from: data)
+            return wrappedData
+        }
+    }
+}
+

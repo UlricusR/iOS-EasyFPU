@@ -7,14 +7,9 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct FoodItemView: View {
-    enum SheetState: Identifiable {
-        case exportFoodItem
-        
-        var id: SheetState { self }
-    }
-    
     enum AlertChoice {
         case simpleAlert(type: SimpleAlertType)
         case confirmDelete
@@ -26,7 +21,6 @@ struct FoodItemView: View {
     @ObservedObject var foodItemVM: FoodItemViewModel
     var category: FoodItemCategory
     var listType: FoodItemListView.FoodItemListType
-    @State private var activeSheet: SheetState?
     @State private var showingAlert = false
     @State private var activeAlert: AlertChoice?
     @State private var isConfirming = false
@@ -172,14 +166,9 @@ struct FoodItemView: View {
             .accessibilityIdentifierLeaf("MoveButton")
             
             // Sharing the food item
-            Button("Share", systemImage: "square.and.arrow.up") {
-                activeSheet = .exportFoodItem
-            }
+            ShareLink(item: DataWrapper(dataModelVersion: .version2, foodItemVMs: [foodItemVM], composedFoodItemVMs: []), preview: .init("Share"))
             .tint(.green)
             .accessibilityIdentifierLeaf("ShareButton")
-        }
-        .sheet(item: $activeSheet) {
-            sheetContent($0)
         }
         .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
             alertAction(for: $0)
@@ -201,19 +190,6 @@ struct FoodItemView: View {
             }
         } message: {
             Text("There's an associated recipe, do you want to delete it as well?")
-        }
-    }
-    
-    @ViewBuilder
-    private func sheetContent(_ state: SheetState) -> some View {
-        switch state {
-        case .exportFoodItem:
-            if let path = foodItemVM.exportToURL() {
-                ActivityView(activityItems: [path], applicationActivities: nil)
-                    .accessibilityIdentifierBranch("ExportFoodItem")
-            } else {
-                Text(NSLocalizedString("Could not generate data export", comment: ""))
-            }
         }
     }
     
