@@ -55,6 +55,10 @@ enum SimpleAlertType {
 }
 
 struct MainView: View {
+    enum Tab: Int {
+        case eat = 0, cook, products, ingredients, settings
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var userSettings = UserSettings.shared
     @FetchRequest(
@@ -82,6 +86,7 @@ struct MainView: View {
                         absorptionScheme: absorptionScheme,
                         composedFoodItemVM: UserSettings.shared.composedMeal
                     )
+                    .tag(Tab.eat.rawValue)
                     .tabItem{
                         Image(systemName: "fork.knife")
                         Text("Eat")
@@ -94,6 +99,7 @@ struct MainView: View {
                         composedFoodItem: UserSettings.shared.composedMeal,
                         helpSheet: RecipeListView.SheetState.recipeListHelp
                     )
+                    .tag(Tab.cook.rawValue)
                     .tabItem{
                         Image(systemName: "frying.pan")
                         Text("Cook")
@@ -109,6 +115,7 @@ struct MainView: View {
                         helpSheet: .productMaintenanceListHelp,
                         composedFoodItem: UserSettings.shared.composedMeal
                     )
+                    .tag(Tab.products.rawValue)
                     .tabItem{
                         Image(systemName: "birthday.cake")
                         Text("Products")
@@ -124,6 +131,7 @@ struct MainView: View {
                         helpSheet: .ingredientMaintenanceListHelp,
                         composedFoodItem: UserSettings.shared.composedProduct
                     )
+                    .tag(Tab.ingredients.rawValue)
                     .tabItem{
                         Image(systemName: "carrot")
                         Text("Ingredients")
@@ -135,6 +143,7 @@ struct MainView: View {
                     MenuView(
                         absorptionScheme: absorptionScheme
                     )
+                    .tag(Tab.settings.rawValue)
                     .tabItem{
                         Image(systemName: "gear")
                         Text("Settings")
@@ -152,8 +161,42 @@ struct MainView: View {
                         }
                     }
                 }
+                .onOpenURL { url in
+                    importFoodData(from: url)
+                }
                 .accessibilityIdentifierBranch("MainView")
             )
+        }
+    }
+    
+    private func importFoodData(from url: URL) {
+        // Verify the URL’s extension is fooditem, since EasyFPU only supports files with that extension
+        guard url.pathExtension == "fooddata" else {
+            debugPrint("Error: File must have extension fooddata")
+            return
+        }
+        
+        // Import Food Item
+        do {
+            var errorMessage = ""
+            
+            // Make sure we can access file
+            guard url.startAccessingSecurityScopedResource() else {
+                debugPrint("Failed to access \(url)")
+                return
+            }
+            defer { url.stopAccessingSecurityScopedResource() }
+            
+            let jsonData = try Data(contentsOf: url)
+            if let importData = DataHelper.decodeFoodData(jsonData: jsonData, errorMessage: &errorMessage) {
+                importData.save()
+            } else {
+                debugPrint(errorMessage)
+            }
+            //try FileManager.default.removeItem(at: url)
+        } catch {
+            debugPrint(error)
+            return
         }
     }
 }
