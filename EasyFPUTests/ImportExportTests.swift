@@ -34,7 +34,7 @@ class ImportExportTests {
         #expect(errorMessage.isEmpty, "There should be no error message")
         
         // Check number of ComposedFoodItemVMs and FoodItemVMs
-        #expect(importData!.foodItemVMsToBeImported.count == numberOfItems.0, "The number of FoodItemVMs should be \(numberOfItems.0).")
+        #expect(importData!.foodItemVMsToBeImported?.count == numberOfItems.0, "The number of FoodItemVMs should be \(numberOfItems.0).")
         if numberOfItems.1 == 0 {
             #expect(importData!.composedFoodItemVMsToBeImported == nil || importData!.composedFoodItemVMsToBeImported!.isEmpty, "ComposedFoodItemVM array should be nil or empty.")
         } else {

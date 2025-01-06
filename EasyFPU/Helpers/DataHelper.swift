@@ -28,10 +28,24 @@ enum InvalidNumberError: Error {
     }
 }
 
+enum ImportExportError: Error {
+    case wrongFileExtension
+    case noFileAccess
+}
+
 struct ImportData: Identifiable {
     var id = UUID()
     let foodItemVMsToBeImported: [FoodItemViewModel]?
     let composedFoodItemVMsToBeImported: [ComposedFoodItemViewModel]?
+    
+    /// Returns the number of FoodItemViewModels and ComposedFoodItemViewModels.
+    /// - Returns: The number of FoodItemViewModels and ComposedFoodItemViewModels (in this order).
+    func countItems() -> (Int, Int) {
+        (
+            foodItemVMsToBeImported == nil ? 0 : foodItemVMsToBeImported!.count,
+            composedFoodItemVMsToBeImported == nil ? 0 : composedFoodItemVMsToBeImported!.count
+        )
+    }
     
     func save() {
         if let foodItemVMs = foodItemVMsToBeImported {

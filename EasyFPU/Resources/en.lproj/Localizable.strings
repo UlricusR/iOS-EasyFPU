@@ -274,6 +274,10 @@
 "Help on the Web" = "Help on the Web";
 "Could not identify absorption block" = "Could not identify absorption block";
 
+// Import/export errors
+"Error: File must have extension fooddata" = "File must have extension '.fooddata'.";
+"Failed to access" = "Failed to access";
+
 // Meal export
 "Cannot write data: HealthKit seem not to be available on your device." = "Cannot write data: HealthKit seem not to be available on your device.";
 "Cannot save data to Health: " = "Cannot save data to Health: ";

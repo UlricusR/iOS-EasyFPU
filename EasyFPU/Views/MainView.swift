@@ -70,6 +70,8 @@ struct MainView: View {
     @ObservedObject var absorptionScheme = AbsorptionSchemeViewModel()
     @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert = false
+    @State private var isConfirming = false
+    @State private var importData: ImportData?
     
     var body: some View {
         debugPrint(CoreDataStack.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
@@ -164,39 +166,72 @@ struct MainView: View {
                 .onOpenURL { url in
                     importFoodData(from: url)
                 }
+                .confirmationDialog(
+                    "Import food list",
+                    isPresented: $isConfirming,
+                    titleVisibility: .visible
+                ) {
+                    Button("Replace") {
+                        if let importData {
+                            DataHelper.deleteAllFood()
+                            importData.save()
+                        }
+                    }
+                    Button("Append") {
+                        if let importData {
+                            importData.save()
+                        }
+                    }
+                    Button("Cancel", role: .cancel) {
+                        isConfirming.toggle()
+                    }
+                } message: {
+                    Text("Please select")
+                }
                 .accessibilityIdentifierBranch("MainView")
             )
         }
     }
     
     private func importFoodData(from url: URL) {
-        // Verify the URL’s extension is fooditem, since EasyFPU only supports files with that extension
-        guard url.pathExtension == "fooddata" else {
-            debugPrint("Error: File must have extension fooddata")
-            return
-        }
-        
         // Import Food Item
         do {
+            // Verify the URL’s extension is fooditem, since EasyFPU only supports files with that extension
+            guard url.pathExtension == "fooddata" else {
+                throw ImportExportError.wrongFileExtension
+            }
+            
             var errorMessage = ""
             
             // Make sure we can access file
             guard url.startAccessingSecurityScopedResource() else {
-                debugPrint("Failed to access \(url)")
-                return
+                throw ImportExportError.noFileAccess
             }
             defer { url.stopAccessingSecurityScopedResource() }
             
             let jsonData = try Data(contentsOf: url)
             if let importData = DataHelper.decodeFoodData(jsonData: jsonData, errorMessage: &errorMessage) {
-                importData.save()
+                self.importData = importData
+                let itemCount = importData.countItems()
+                if itemCount == (1, 0) || itemCount == (0, 1) {
+                    // These are single items, we just append them
+                    importData.save()
+                } else {
+                    isConfirming = true
+                }
             } else {
-                debugPrint(errorMessage)
+                activeAlert = .error(message: errorMessage)
+                showingAlert = true
             }
-            //try FileManager.default.removeItem(at: url)
+        } catch ImportExportError.wrongFileExtension {
+            activeAlert = .error(message: "Error: File must have extension fooddata")
+            showingAlert = true
+        } catch ImportExportError.noFileAccess {
+            activeAlert = .error(message: "\(NSLocalizedString("Failed to access", comment: "")) \(url)")
+            showingAlert = true
         } catch {
-            debugPrint(error)
-            return
+            activeAlert = .error(message: error.localizedDescription)
+            showingAlert = true
         }
     }
 }
