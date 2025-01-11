@@ -71,19 +71,7 @@ struct FoodMaintenanceListView: View {
         FoodItemEditor(
             navigationPath: $navigationPath,
             navigationTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
-            draftFoodItemVM: // Create new empty draftFoodItem
-                FoodItemViewModel(
-                    id: UUID(),
-                    name: "",
-                    category: category,
-                    favorite: false,
-                    caloriesPer100g: 0.0,
-                    carbsPer100g: 0.0,
-                    sugarsPer100g: 0.0,
-                    amount: 0,
-                    sourceID: nil,
-                    sourceDB: nil
-                ),
+            draftFoodItemVM: FoodItemViewModel.emptyFoodItem(category: category),
             category: category
         )
         .environment(\.managedObjectContext, managedObjectContext)
@@ -103,7 +91,8 @@ struct FoodMaintenanceListView: View {
             FoodItemEditor(
                 navigationPath: $navigationPath,
                 navigationTitle: NSLocalizedString("Edit food item", comment: ""),
-                draftFoodItemVM: foodItemVM,
+                sourceFoodItem: foodItemVM,
+                draftFoodItemVM: FoodItemViewModel(clone: foodItemVM),
                 category: category
             )
             .environment(\.managedObjectContext, managedObjectContext)

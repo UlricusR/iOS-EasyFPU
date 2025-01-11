@@ -152,7 +152,7 @@
 "Associated Ingredients" = "Associated Recipes";
 "This food item is used as ingredient in the following recipes:" = "This ingredient is used in the following recipes:";
 "Updating the food item will also update the associated recipes." = "Updating the ingredient will change the nutritional values of these recipes.";
-"Update recipes" = "Update recipes";
+"Update recipes" = "Save anyway";
 
 // Meal preview
 "Eat" = "Eat";

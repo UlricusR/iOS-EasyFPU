@@ -86,6 +86,14 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, I
         return true
     }
     
+    /// Updates the values of this TypicalAmountViewModel from another TypicalAmountViewModel.
+    /// - Parameter typicalAmountVM: The TypicalAmountViewModel to update from.
+    func update(from typicalAmountVM: TypicalAmountViewModel) {
+        amount = typicalAmountVM.amount
+        amountAsString = typicalAmountVM.amountAsString
+        comment = typicalAmountVM.comment
+    }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

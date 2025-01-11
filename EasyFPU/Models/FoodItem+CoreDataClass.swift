@@ -132,8 +132,7 @@ public class FoodItem: NSManagedObject {
     static func update(
         _ cdFoodItem: FoodItem,
         with foodItemVM: FoodItemViewModel,
-        typicalAmountsToBeDeleted: [TypicalAmountViewModel],
-        typicalAmountsToBeAdded: [TypicalAmountViewModel]
+        typicalAmountsToBeDeleted: [TypicalAmountViewModel]
     ) {
         cdFoodItem.name = foodItemVM.name
         cdFoodItem.category = foodItemVM.category.rawValue
@@ -167,13 +166,6 @@ public class FoodItem: NSManagedObject {
         for typicalAmountVM in foodItemVM.typicalAmounts {
             let cdTypicalAmount = TypicalAmount.update(with: typicalAmountVM)
             cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
-        }
-        
-        // Add new typical amounts in view model and Core Data
-        for typicalAmountToBeAdded in typicalAmountsToBeAdded {
-            let newCDTypicalAmount = TypicalAmount.create(from: typicalAmountToBeAdded)
-            foodItemVM.typicalAmounts.append(typicalAmountToBeAdded)
-            cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
         }
         
         CoreDataStack.shared.save()

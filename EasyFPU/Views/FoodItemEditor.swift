@@ -25,6 +25,8 @@ struct FoodItemEditor: View {
     
     enum AlertChoice {
         case simpleAlert(type: SimpleAlertType)
+        case updatedIngredients
+        case searchDisclaimer
         case searchWorldwide
     }
     
@@ -34,16 +36,18 @@ struct FoodItemEditor: View {
     
     @Binding var navigationPath: NavigationPath
     var navigationTitle: String
+    
+    /// The source food item, which is modified, or nil if creating a new food item.
+    /// When hitting the Save button of this view, the data from draftFoodItem are copied into the sourceFoodItem
+    var sourceFoodItem: FoodItemViewModel?
+    
+    /// The food item representing the data of this view
     @ObservedObject var draftFoodItemVM: FoodItemViewModel
+    
     var category: FoodItemCategory
     @State private var searchResults = [FoodDatabaseEntry]()
     @State private var notificationState = NotificationState.void
     @State private var activeSheet: SheetState?
-    
-    // Specific alerts
-    @State private var showingScanAlert = false
-    @State private var showingSearchAlert = false
-    @State private var showingUpdateIngredientsAlert = false
     
     // General alert
     @State private var showingAlert = false
@@ -54,21 +58,12 @@ struct FoodItemEditor: View {
         (draftFoodItemVM.sourceDB != nil) ? FoodDatabaseType.getFoodDatabase(type: draftFoodItemVM.sourceDB!) : UserSettings.shared.foodDatabase
     }
     
-    @State private var oldName = ""
-    @State private var oldCaloriesPer100gAsString = ""
-    @State private var oldCarbsPer100gAsString = ""
-    @State private var oldSugarsPer100gAsString = ""
-    @State private var oldAmountAsString = ""
-    
     @State private var newTypicalAmount = ""
     @State private var newTypicalAmountComment = ""
     @State private var newTypicalAmountId: UUID?
-    @State private var typicalAmountsToBeDeleted = [TypicalAmountViewModel]()
-    @State private var typicalAmountsToBeAdded = [TypicalAmountViewModel]()
     @State private var typicalAmountEdited = false
     @State private var notificationStatus = FoodItemEditor.NotificationState.void
     @State private var associatedRecipes: [String] = []
-    @State private var updatedFoodItemVM: FoodItemViewModel?
     
     private let helpScreen = HelpScreen.foodItemEditor
     
@@ -91,7 +86,8 @@ struct FoodItemEditor: View {
                                     if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
                                         performSearch()
                                     } else {
-                                        self.showingSearchAlert = true
+                                        activeAlert = .searchDisclaimer
+                                        showingAlert = true
                                     }
                                 }
                             }) {
@@ -100,33 +96,14 @@ struct FoodItemEditor: View {
                             }
                             .buttonStyle(BorderlessButtonStyle())
                             .accessibilityIdentifierLeaf("SearchButton")
-                            .alert(
-                                "Disclaimer",
-                                isPresented: $showingSearchAlert
-                            ) {
-                                Button("Accept and continue") {
-                                    var settingsError = ""
-                                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                                        activeAlert = .simpleAlert(type: .fatalError(message: settingsError))
-                                        showingAlert = true
-                                    }
-
-                                    // Set dynamic variable
-                                    UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
-                                    
-                                    // Perform search
-                                    self.performSearch()
-                                }
-                                Button("Decline and cancel", role: .cancel) {}
-                            } message: {
-                                Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk.")
-                            }
+                            
                             
                             Button(action: {
                                 if UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted {
                                     navigationPath.append(FoodItemEditorNavigationDestination.Scan)
                                 } else {
-                                    self.showingScanAlert = true
+                                    activeAlert = .searchDisclaimer
+                                    showingAlert = true
                                 }
                             }) {
                                 Image(systemName: "barcode.viewfinder")
@@ -134,27 +111,6 @@ struct FoodItemEditor: View {
                             }
                             .buttonStyle(BorderlessButtonStyle())
                             .accessibilityIdentifierLeaf("ScanButton")
-                            .alert(
-                                "Disclaimer",
-                                isPresented: $showingScanAlert
-                            ) {
-                                Button("Accept and continue") {
-                                    var settingsError = ""
-                                    if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
-                                        activeAlert = .simpleAlert(type: .fatalError(message: settingsError))
-                                        showingAlert = true
-                                    }
-
-                                    // Set dynamic variable
-                                    UserSettings.shared.foodDatabaseUseAtOwnRiskAccepted = true
-                                    
-                                    // Perform scan
-                                    navigationPath.append(FoodItemEditorNavigationDestination.Scan)
-                                }
-                                Button("Decline and cancel", role: .cancel) {}
-                            } message: {
-                                Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk.")
-                            }
                         }
                         
                         // Category
@@ -304,22 +260,8 @@ struct FoodItemEditor: View {
                     HStack {
                         // The cancel button
                         Button(role: .cancel) {
-                            // First quit edit mode
+                            // Quit edit mode
                             navigationPath.removeLast()
-                            
-                            // Undo the deleted typical amounts
-                            for typicalAmountToBeDeleted in self.typicalAmountsToBeDeleted {
-                                self.draftFoodItemVM.typicalAmounts.append(typicalAmountToBeDeleted)
-                            }
-                            self.typicalAmountsToBeDeleted.removeAll()
-                            
-                            // Undo the added typical amounts
-                            for typicalAmountToBeAdded in self.typicalAmountsToBeAdded {
-                                if let index = self.draftFoodItemVM.typicalAmounts.firstIndex(of: typicalAmountToBeAdded) {
-                                    self.draftFoodItemVM.typicalAmounts.remove(at: index)
-                                }
-                            }
-                            self.typicalAmountsToBeAdded.removeAll()
                         } label: {
                             HStack {
                                 Image(systemName: "xmark.circle.fill").imageScale(.large)
@@ -336,7 +278,7 @@ struct FoodItemEditor: View {
                             draftFoodItemVM.name = draftFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
                             
                             // Check if we have duplicate names (if this is a new food item)
-                            if !draftFoodItemVM.hasAssociatedFoodItem() && draftFoodItemVM.nameExists() {
+                            if sourceFoodItem == nil && draftFoodItemVM.nameExists() {
                                 activeAlert = .simpleAlert(type: .warning(message: "A food item with this name already exists"))
                                 showingAlert = true
                             } else {
@@ -352,40 +294,6 @@ struct FoodItemEditor: View {
                         .disabled(draftFoodItemVM.name.isEmpty)
                         .buttonStyle(ActionButton())
                         .accessibilityIdentifierLeaf("SaveButton")
-                        .alert(
-                            "Associated Ingredients",
-                            isPresented: self.$showingUpdateIngredientsAlert
-                        ) {
-                            Button("Update recipes") {
-                                // Update FoodItem
-                                if let updatedFoodItemVM {
-                                    updatedFoodItemVM.update(
-                                        typicalAmountsToBeDeleted: typicalAmountsToBeDeleted,
-                                        typicalAmountsToBeAdded: typicalAmountsToBeAdded
-                                    )
-                                    
-                                    // Reset typical amount temporary arrays
-                                    self.typicalAmountsToBeDeleted.removeAll()
-                                    self.typicalAmountsToBeAdded.removeAll()
-                                }
-                                
-                                // Quit edit mode
-                                navigationPath.removeLast()
-                            }
-                            Button("Cancel", role: .cancel) {
-                                // Reset to original values
-                                draftFoodItemVM.reset()
-                                
-                                // Quit edit mode
-                                navigationPath.removeLast()
-                            }
-                        } message: {
-                            Text(
-                                NSLocalizedString("This food item is used as ingredient in the following recipes:", comment: "") +
-                                "\n\n\(self.associatedRecipes.joined(separator: "\n"))\n\n" +
-                                NSLocalizedString("Updating the food item will also update the associated recipes.", comment: "")
-                            )
-                        }
                     }
                     .padding()
                     .fixedSize(horizontal: false, vertical: true)
@@ -449,113 +357,96 @@ struct FoodItemEditor: View {
         } message: {
             alertMessage(for: $0)
         }
-        .onAppear() {
-            self.oldName = self.draftFoodItemVM.name
-            self.oldCaloriesPer100gAsString = self.draftFoodItemVM.caloriesPer100gAsString
-            self.oldCarbsPer100gAsString = self.draftFoodItemVM.carbsPer100gAsString
-            self.oldSugarsPer100gAsString = self.draftFoodItemVM.sugarsPer100gAsString
-            self.oldAmountAsString = self.draftFoodItemVM.amountAsString
-        }
     }
     
     private func saveFoodItem() {
         // First check if there's an unsaved typical amount
-        if self.newTypicalAmount != "" && self.newTypicalAmountComment != "" { // We have an unsaved typical amount
+        if self.newTypicalAmount != "" { // We have an unsaved typical amount
             self.addTypicalAmount()
         }
         
-        // Create error to store feedback from FoodItemViewModel
-        var error = FoodItemViewModelError.none
-        
-        // Create updated food item
-        if let updatedFoodItemVM = FoodItemViewModel(
-            id: draftFoodItemVM.hasAssociatedFoodItem() ? self.draftFoodItemVM.cdFoodItem!.id : UUID(),
-            name: self.draftFoodItemVM.name,
-            category: self.draftFoodItemVM.category,
-            favorite: self.draftFoodItemVM.favorite,
-            caloriesAsString: self.draftFoodItemVM.caloriesPer100gAsString,
-            carbsAsString: self.draftFoodItemVM.carbsPer100gAsString,
-            sugarsAsString: self.draftFoodItemVM.sugarsPer100gAsString,
-            amountAsString: self.draftFoodItemVM.amountAsString,
-            error: &error,
-            sourceID: self.draftFoodItemVM.sourceID,
-            sourceDB: self.draftFoodItemVM.sourceDB
-        ) { // We have a valid food item
-            self.updatedFoodItemVM = updatedFoodItemVM
+        if sourceFoodItem == nil { // We have a new food item
+            // Create error to store feedback from FoodItemViewModel
+            var error = FoodItemViewModelError.none
             
-            // Add typical amounts
-            self.updatedFoodItemVM!.typicalAmounts = draftFoodItemVM.typicalAmounts
-            
-            if draftFoodItemVM.hasAssociatedFoodItem() { // We need to update an existing food item
-                // Add associated FoodItem to updatedFoodItemVM
-                self.updatedFoodItemVM!.cdFoodItem = draftFoodItemVM.cdFoodItem
+            // Create new food item
+            if let newFoodItemVM = FoodItemViewModel(
+                id: UUID(),
+                name: self.draftFoodItemVM.name,
+                category: self.draftFoodItemVM.category,
+                favorite: self.draftFoodItemVM.favorite,
+                caloriesAsString: self.draftFoodItemVM.caloriesPer100gAsString,
+                carbsAsString: self.draftFoodItemVM.carbsPer100gAsString,
+                sugarsAsString: self.draftFoodItemVM.sugarsPer100gAsString,
+                amountAsString: self.draftFoodItemVM.amountAsString,
+                error: &error,
+                sourceID: self.draftFoodItemVM.sourceID,
+                sourceDB: self.draftFoodItemVM.sourceDB
+            ) { // We have a valid food item
+                // Save in CoreData
+                newFoodItemVM.save()
                 
-                // Check for related Ingredients
-                if self.updatedFoodItemVM!.cdFoodItem!.ingredients?.count ?? 0 > 0 {
+                // Quit edit mode
+                navigationPath.removeLast()
+            } else { // Invalid data, display alert
+                var errMessage = ""
+                
+                // Evaluate error
+                switch error {
+                case .name(let errorMessage):
+                    errMessage = errorMessage
+                case .calories(let errorMessage):
+                    errMessage = NSLocalizedString("Calories: ", comment:"") + errorMessage
+                case .carbs(let errorMessage):
+                    errMessage = NSLocalizedString("Carbs: ", comment:"") + errorMessage
+                case .sugars(let errorMessage):
+                    errMessage = NSLocalizedString("Sugars: ", comment: "") + errorMessage
+                case .tooMuchCarbs(let errorMessage):
+                    errMessage = errorMessage
+                case .tooMuchSugars(let errorMessage):
+                    errMessage = errorMessage
+                case .amount(let errorMessage):
+                    errMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
+                case .none:
+                    debugPrint("No error")
+                }
+                
+                // Display alert and stay in edit mode
+                activeAlert = .simpleAlert(type: .error(message: errMessage))
+                showingAlert = true
+            }
+        } else { // We need to update an existing food item
+            // Check if the nutritional values have changed
+            if sourceFoodItem!.hasDifferentNutritionalValues(comparedTo: draftFoodItemVM) {
+                // If the nutritional values have changed, we need to check for related Ingredients and update all Recipes, where these Ingredients are used
+                if sourceFoodItem!.cdFoodItem?.ingredients?.count ?? 0 > 0 {
                     // Get the names of the ingredients
-                    for case let ingredient as Ingredient in self.updatedFoodItemVM!.cdFoodItem!.ingredients! {
+                    for case let ingredient as Ingredient in sourceFoodItem!.cdFoodItem!.ingredients! {
                         associatedRecipes.append(ingredient.composedFoodItem.name)
                     }
                     
                     // Show alert
-                    self.showingUpdateIngredientsAlert = true
-                } else {
-                    // No associated recipe
-                    
-                    // Update FoodItem
-                    self.updatedFoodItemVM!.update(
-                        typicalAmountsToBeDeleted: typicalAmountsToBeDeleted,
-                        typicalAmountsToBeAdded: typicalAmountsToBeAdded
-                    )
-                    
-                    // Reset typical amount temporary arrays
-                    self.typicalAmountsToBeDeleted.removeAll()
-                    self.typicalAmountsToBeAdded.removeAll()
-                    
-                    // Quit edit mode
-                    navigationPath.removeLast()
+                    activeAlert = .updatedIngredients
+                    self.showingAlert = true
                 }
-            } else { // We have a new food item
-                self.updatedFoodItemVM!.save()
-                
-                // Quit edit mode
+            } else {
+                // Update the source food item
+                updateSourceFoodItem()
+            }
+        }
+    }
+    
+    private func updateSourceFoodItem() {
+        if let sourceFoodItem {
+            var errorMessage = ""
+            if sourceFoodItem.update(from: draftFoodItemVM, errorMessage: &errorMessage) {
+                // Successfully updated source food item, leave edit mode
                 navigationPath.removeLast()
+            } else {
+                // Error updating source food item, display alert
+                activeAlert = .simpleAlert(type: .fatalError(message: errorMessage))
+                showingAlert = true
             }
-        } else { // Invalid data, display alert
-            var errMessage = ""
-            
-            // Evaluate error
-            switch error {
-            case .name(let errorMessage):
-                errMessage = errorMessage
-                self.draftFoodItemVM.name = self.oldName
-            case .calories(let errorMessage):
-                errMessage = NSLocalizedString("Calories: ", comment:"") + errorMessage
-                self.draftFoodItemVM.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
-            case .carbs(let errorMessage):
-                errMessage = NSLocalizedString("Carbs: ", comment:"") + errorMessage
-                self.draftFoodItemVM.carbsPer100gAsString = self.oldCarbsPer100gAsString
-            case .sugars(let errorMessage):
-                errMessage = NSLocalizedString("Sugars: ", comment: "") + errorMessage
-                self.draftFoodItemVM.sugarsPer100gAsString = self.oldSugarsPer100gAsString
-            case .tooMuchCarbs(let errorMessage):
-                errMessage = errorMessage
-                self.draftFoodItemVM.caloriesPer100gAsString = self.oldCaloriesPer100gAsString
-                self.draftFoodItemVM.carbsPer100gAsString = self.oldCarbsPer100gAsString
-            case .tooMuchSugars(let errorMessage):
-                errMessage = errorMessage
-                self.draftFoodItemVM.sugarsPer100gAsString = self.oldSugarsPer100gAsString
-                self.draftFoodItemVM.carbsPer100gAsString = self.oldCarbsPer100gAsString
-            case .amount(let errorMessage):
-                errMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
-                self.draftFoodItemVM.amountAsString = self.oldAmountAsString
-            case .none:
-                debugPrint("No error")
-            }
-            
-            // Display alert and stay in edit mode
-            activeAlert = .simpleAlert(type: .error(message: errMessage))
-            showingAlert = true
         }
     }
     
@@ -574,7 +465,6 @@ struct FoodItemEditor: View {
     }
     
     private func deleteTypicalAmount(_ typicalAmountToBeDeleted: TypicalAmountViewModel) {
-        typicalAmountsToBeDeleted.append(typicalAmountToBeDeleted)
         guard let originalIndex = self.draftFoodItemVM.typicalAmounts.firstIndex(where: { $0.id == typicalAmountToBeDeleted.id }) else {
             activeAlert = .simpleAlert(type: .fatalError(message: NSLocalizedString("Cannot find typical amount ", comment: "") + typicalAmountToBeDeleted.comment))
             showingAlert = true
@@ -597,9 +487,6 @@ struct FoodItemEditor: View {
                 comment: self.newTypicalAmountComment,
                 errorMessage: &errorMessage
             ) {
-                // Temporarily store typical amount in case of cancel (then it needs to be removed again)
-                self.typicalAmountsToBeAdded.append(newTypicalAmount)
-                
                 // Add new typical amount to typical amounts of food item
                 self.draftFoodItemVM.typicalAmounts.append(newTypicalAmount)
                 
@@ -620,9 +507,6 @@ struct FoodItemEditor: View {
             
             // Reset text fields and typical amount id
             deselectTypicalAmount()
-            
-            // Broadcast changed object
-            self.draftFoodItemVM.objectWillChange.send()
         }
     }
     
@@ -704,6 +588,14 @@ struct FoodItemEditor: View {
         switch alert {
         case let .simpleAlert(type: type):
             type.message()
+        case .updatedIngredients:
+            Text(
+                NSLocalizedString("This food item is used as ingredient in the following recipes:", comment: "") +
+                "\n\n\(self.associatedRecipes.joined(separator: "\n"))\n\n" +
+                NSLocalizedString("Updating the food item will also update the associated recipes.", comment: "")
+            )
+        case .searchDisclaimer:
+            Text("The nutritional values from the database may not be correct, please cross-check! Use at your own risk.")
         case .searchWorldwide:
             Text(
                 UserSettings.shared.countryCode != nil ? "\(NSLocalizedString("No food found in", comment: "")) \(UserSettings.shared.countryCode!)." : "No food found"
@@ -716,6 +608,21 @@ struct FoodItemEditor: View {
         switch alert {
         case let .simpleAlert(type: type):
             type.button()
+        case .updatedIngredients:
+            Button("Update recipes") {
+                // Update SourceFoodItem
+                updateSourceFoodItem()
+            }
+            Button("Cancel", role: .cancel) {}
+        case .searchDisclaimer:
+            Button("Accept and continue") {
+                var settingsError = ""
+                if !UserSettings.set(UserSettings.UserDefaultsType.bool(true, UserSettings.UserDefaultsBoolKey.foodDatabaseUseAtOwnRiskAccepted), errorMessage: &settingsError) {
+                    activeAlert = .simpleAlert(type: .fatalError(message: settingsError))
+                    showingAlert = true
+                }
+            }
+            Button("Decline and cancel", role: .cancel) {}
         case .searchWorldwide:
             Button("Cancel", role: .cancel) {}
             Button("Search worldwide") {
@@ -736,6 +643,10 @@ struct FoodItemEditor: View {
         switch activeAlert {
         case let .simpleAlert(type: type):
             LocalizedStringKey(type.title())
+        case .updatedIngredients:
+            LocalizedStringKey("Associated Ingredients")
+        case .searchDisclaimer:
+            LocalizedStringKey("Disclaimer")
         case .searchWorldwide:
             LocalizedStringKey("Warning")
         case nil:

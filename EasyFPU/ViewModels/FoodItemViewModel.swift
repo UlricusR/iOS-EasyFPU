@@ -95,6 +95,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     @Published var amount: Int = 0
     @Published var typicalAmounts = [TypicalAmountViewModel]()
     var cdFoodItem: FoodItem?
+    private(set) var isClone: Bool = false
     
     enum CodingKeys: String, CodingKey {
         case foodItem
@@ -251,6 +252,33 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.sourceDB = sourceDB
     }
     
+    /// Creates a clone of the passed FoodItemViewModel, i.e., identical nutional values, typical amounts and identical ID.
+    /// This should be used for creating a draft FoodItemViewModel for editing, but never for saving.
+    /// - Parameter clone: The cloned FoodItemViewModel.
+    init(clone: FoodItemViewModel) {
+        self.id = clone.id
+        self.name = clone.name
+        self.category = clone.category
+        self.favorite = clone.favorite
+        self.caloriesPer100g = clone.caloriesPer100g
+        self.carbsPer100g = clone.carbsPer100g
+        self.sugarsPer100g = clone.sugarsPer100g
+        self.amount = clone.amount
+        self.sourceID = clone.sourceID
+        self.sourceDB = clone.sourceDB
+        
+        // Mark as clone to avoid saving to CoreData
+        self.isClone = true
+        
+        initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
+        
+        for typicalAmount in clone.typicalAmounts {
+            let newTypicalAmount = TypicalAmountViewModel(amount: typicalAmount.amount, comment: typicalAmount.comment)
+            newTypicalAmount.id = typicalAmount.id
+            self.typicalAmounts.append(newTypicalAmount)
+        }
+    }
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let foodItem = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .foodItem)
@@ -400,6 +428,12 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     
     /// Saves the FoodItemViewModel to a Core Data FoodItem
     func save() {
+        // Never save a clone to Core Data!
+        guard isClone == false else {
+            debugPrint("Fatal error: Cannot save a clone to Core Data!")
+            return
+        }
+        
         // Check for an existing FoodItem with same ID
         if let existingFoodItem = FoodItem.getFoodItemByID(id: self.id) {
             if FoodItemViewModel.hasSameNutritionalValues(lhs: existingFoodItem, rhs: self) {
@@ -415,27 +449,83 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         _ = FoodItem.create(from: self)
     }
     
-    /// Updates the related Core Data FoodItem with the values of this FoodItemViewModel.
-    /// - Parameter typicalAmountsToBeDeleted: The typical amounts which need to be deleted during update.
-    /// - Parameter typicalAmountsToBeAdded: The typical amounts which need to be added during update.
-    func update(
-        typicalAmountsToBeDeleted: [TypicalAmountViewModel],
-        typicalAmountsToBeAdded: [TypicalAmountViewModel]
-    ) {
-        guard let cdFoodItem else { return }
+    /// Checks if two FoodItemViewModels have the same nutritional values.
+    /// - Parameters: otherFoodItemVM: The other FoodItemViewModel to compare with.
+    /// - Returns: True if the nutritional values are the same, false otherwise.
+    func hasDifferentNutritionalValues(comparedTo otherFoodItemVM: FoodItemViewModel) -> Bool {
+        return self.caloriesPer100g != otherFoodItemVM.caloriesPer100g || self.carbsPer100g != otherFoodItemVM.carbsPer100g || self.sugarsPer100g != otherFoodItemVM.sugarsPer100g
+    }
+    
+    /// Updates this FoodItemViewModel and the related Core Data FoodItem with the values of the passed FoodItemViewModel.
+    /// Also updates related TypicalAmounts.
+    /// This is the "counter function" of the clone initializer.
+    /// - Parameter foodItemVM: The source FoodItemViewModel, typically a previously created clone of this FoodItemViewModel.
+    /// - Parameter errorMessage: The error message in case of a fatal error.
+    /// - Returns: False in case of a fatal error, true otherwise.
+    func update(from clone: FoodItemViewModel, errorMessage: inout String) -> Bool {
+        guard isClone == false else {
+            errorMessage = "Cannot update a clone to Core Data!"
+            return false
+        }
+        guard let cdFoodItem else {
+            errorMessage = "Fatal error: No Core Data FoodItem found!"
+            return false
+        }
+        
+        // Update values
+        self.name = clone.name
+        self.category = clone.category
+        self.favorite = clone.favorite
+        self.caloriesPer100g = clone.caloriesPer100g
+        self.carbsPer100g = clone.carbsPer100g
+        self.sugarsPer100g = clone.sugarsPer100g
+        self.amount = clone.amount
+        self.sourceID = clone.sourceID
+        self.sourceDB = clone.sourceDB
+        
+        
+        // Update string representations
+        initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
+        
+        // Update existing typical amounts, add new ones, and remember those added
+        var typicalAmountsToBeDeleted = self.typicalAmounts
+        for typicalAmount in clone.typicalAmounts {
+            if let existingTypicalAmount = typicalAmounts.first(where: { $0.id == typicalAmount.id }) {
+                // Update existing typical amount
+                existingTypicalAmount.update(from: typicalAmount)
+                // Remove from list of typical amounts to be deleted
+                if let index = typicalAmountsToBeDeleted.firstIndex(where: { $0.id == typicalAmount.id }) {
+                    typicalAmountsToBeDeleted.remove(at: index)
+                }
+            } else {
+                // Add new typical amount
+                self.typicalAmounts.append(typicalAmount)
+                // Remove from list of typical amounts to be deleted
+                if let index = typicalAmountsToBeDeleted.firstIndex(where: { $0.id == typicalAmount.id }) {
+                    typicalAmountsToBeDeleted.remove(at: index)
+                }
+            }
+        }
+        // The remaining typical amounts in typicalAmountsToBeDeleted are those to be deleted
+        
+        // Update Core Data FoodItem
         FoodItem.update(
             cdFoodItem,
             with: self,
-            typicalAmountsToBeDeleted: typicalAmountsToBeDeleted,
-            typicalAmountsToBeAdded: typicalAmountsToBeAdded
+            typicalAmountsToBeDeleted: typicalAmountsToBeDeleted
         )
+        
+        return true
     }
     
     /**
      Duplicates a FoodItem.
      */
     func duplicate() {
-        guard let cdFoodItem else { return }
+        guard let cdFoodItem else {
+            debugPrint("Fatal error: No Core Data FoodItem found!")
+            return
+        }
         
         // Check if a recipe is associated, if yes duplicate recipe
         if cdFoodItem.composedFoodItem != nil {
@@ -459,27 +549,6 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         
         FoodItem.delete(cdFoodItem)
         CoreDataStack.shared.save()
-    }
-    
-    /// Resets the values of the FoodItemVM to those of the related Core Data FoodItem (if available).
-    func reset() {
-        if let cdFoodItem {
-            self.name = cdFoodItem.name
-            self.favorite = cdFoodItem.favorite
-            self.category = FoodItemCategory(rawValue: cdFoodItem.category) ?? .product
-            self.caloriesPer100gAsString = String(cdFoodItem.caloriesPer100g)
-            self.carbsPer100gAsString = String(cdFoodItem.carbsPer100g)
-            self.sugarsPer100gAsString = String(cdFoodItem.sugarsPer100g)
-            self.sourceID = cdFoodItem.sourceID
-            self.sourceDB = (cdFoodItem.sourceDB != nil) ? FoodDatabaseType(rawValue: cdFoodItem.sourceDB!) : nil
-            
-            self.typicalAmounts.removeAll()
-            if let cdTypicalAmounts = cdFoodItem.typicalAmounts {
-                for case let cdTypicalAmount as TypicalAmount in cdTypicalAmounts {
-                    self.typicalAmounts.append(TypicalAmountViewModel(from: cdTypicalAmount))
-                }
-            }
-        }
     }
     
     func exportToURL() -> URL? {
@@ -535,6 +604,21 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+    
+    static func emptyFoodItem(category: FoodItemCategory) -> FoodItemViewModel {
+        FoodItemViewModel(
+            id: UUID(),
+            name: "",
+            category: category,
+            favorite: false,
+            caloriesPer100g: 0.0,
+            carbsPer100g: 0.0,
+            sugarsPer100g: 0.0,
+            amount: 0,
+            sourceID: nil,
+            sourceDB: nil
+        )
     }
     
     static func sampleData() -> FoodItemViewModel {

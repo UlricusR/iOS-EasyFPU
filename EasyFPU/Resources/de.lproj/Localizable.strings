@@ -152,7 +152,7 @@
 "Associated Ingredients" = "Verknüpfte Rezepte";
 "This food item is used as ingredient in the following recipes:" = "Diese Zutat wird in folgenden Rezepten genutzt:";
 "Updating the food item will also update the associated recipes." = "Die Aktualisierung der Zutat verändert die Nährwerte dieser Rezepte.";
-"Update recipes" = "Rezepte aktualisieren";
+"Update recipes" = "Trotzdem speichern";
 
 // Meal preview
 "Eat" = "Essen";

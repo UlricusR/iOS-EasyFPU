@@ -156,7 +156,7 @@ struct CoreDataTests {
             foodItemVM.sugarsPer100gAsString = String(foodItemVM.sugarsPer100g / 2)
             
             // Update the cdFoodItem
-            FoodItem.update(cdFoodItem, with: foodItemVM, typicalAmountsToBeDeleted: [], typicalAmountsToBeAdded: [])
+            FoodItem.update(cdFoodItem, with: foodItemVM, typicalAmountsToBeDeleted: [])
             
             // Check results in DB and get the FoodItem
             let cdFoodItemAfterUpdate = FoodItem.getFoodItemByID(id: foodItemID)
@@ -200,7 +200,7 @@ struct CoreDataTests {
             let typicalAmountsToBeDeleted = [sortedTypicalAmounts[1], sortedTypicalAmounts[3]]
             
             // Update the cdFoodItem and pass the TypicalAmounts to be deleted
-            FoodItem.update(cdFoodItem, with: newFoodItemVM, typicalAmountsToBeDeleted: typicalAmountsToBeDeleted, typicalAmountsToBeAdded: [])
+            FoodItem.update(cdFoodItem, with: newFoodItemVM, typicalAmountsToBeDeleted: typicalAmountsToBeDeleted)
             
             // Check results in DB and get the FoodItem
             let cdFoodItemAfterUpdate = FoodItem.getFoodItemByID(id: foodItemVM.id)
@@ -254,16 +254,14 @@ struct CoreDataTests {
             newFoodItemVM.carbsPer100gAsString = String(newFoodItemVM.carbsPer100g / 2)
             newFoodItemVM.sugarsPer100gAsString = String(newFoodItemVM.sugarsPer100g / 2)
             
-            // Create an array of 2 new typical amounts
+            // Add two new typical amounts to the VM
             let newTypicalAmount1 = TypicalAmountViewModel(amount: 99, comment: "Ninetynine")
             let newTypicalAmount2 = TypicalAmountViewModel(amount: 101, comment: "One-O-One")
-            let typicalAmountsToBeAdded = [
-                newTypicalAmount1,
-                newTypicalAmount2
-            ]
+            newFoodItemVM.typicalAmounts.append(newTypicalAmount1)
+            newFoodItemVM.typicalAmounts.append(newTypicalAmount2)
             
             // Update the cdFoodItem and pass the TypicalAmounts to be deleted
-            FoodItem.update(cdFoodItem, with: newFoodItemVM, typicalAmountsToBeDeleted: [], typicalAmountsToBeAdded: typicalAmountsToBeAdded)
+            FoodItem.update(cdFoodItem, with: newFoodItemVM, typicalAmountsToBeDeleted: [])
             
             // Check results in DB and get the FoodItem
             let cdFoodItemAfterUpdate = FoodItem.getFoodItemByID(id: foodItemVM.id)
