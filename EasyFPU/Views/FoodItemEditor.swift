@@ -334,6 +334,7 @@ struct FoodItemEditor: View {
             }
         }
         .toolbar {
+            // The help button
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     activeSheet = .help
@@ -341,6 +342,11 @@ struct FoodItemEditor: View {
                     Image(systemName: "questionmark.circle").imageScale(.large)
                 }
                 .accessibilityIdentifierLeaf("HelpButton")
+            }
+            
+            // The share button
+            ToolbarItem(placement: .navigationBarTrailing) {
+                ShareLink(item: DataWrapper(dataModelVersion: .version2, foodItemVMs: [draftFoodItemVM], composedFoodItemVMs: []), preview: .init("Share"))
             }
         }
         .sheet(item: $activeSheet) {

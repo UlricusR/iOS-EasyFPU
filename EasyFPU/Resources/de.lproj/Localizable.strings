@@ -120,6 +120,7 @@
 "Do you really want to delete this food item? This cannot be undone!" = "Willst Du dieses Essen wirklich löschen? Dies kann nicht rückgängig gemacht werden!";
 "Cannot delete food" = "Kann Essen nicht löschen";
 "This food item is in use in a recipe" = "Diese Zutat wird in folgenden Rezepten verwendet, bitte vor dem Löschen dort entfernen: ";
+"Successfully exported food item to: " = "Essen erfolgreich exportiert nach: ";
 
 // Ingredients
 "Ingredients" = "Zutaten";
@@ -198,6 +199,7 @@
 "Oops! No recipe yet! Then let's go!" = "Hoppla! Noch kein Rezept vorhanden! Dann aber ran!";
 "Start cooking or baking" = "Jetzt kochen oder backen";
 "Your yummy recipe will appear here once you add some ingredients." = "Dein leckeres Rezept wird hier erscheinen, sobald Du Zutaten hinzufügst.";
+"Successfully exported recipe to: " = "Rezept erfolgreich exportiert nach: ";
 "Have you added ingredients to 'My Ingredients'?" = "Hast Du Zutaten zu 'Meine Zutaten' hinzugefügt?";
 "Add ingredients" = "Zutaten hinzufügen";
 "Edit ingredients" = "Zutaten bearbeiten";
@@ -251,7 +253,7 @@
 "Settings" = "Einstellungen";
 "Import from JSON" = "Importieren (Format: JSON)";
 "Export to JSON" = "Exportieren (Format: JSON)";
-"Successfully exported food list to: " = "Essensliste erfolgreich exportiert nach: ";
+"Successfully exported food list to: " = "Alle Essensdaten erfolgreich exportiert nach: ";
 "Failed to export food list to: " = "Konnte Essensliste nicht exportieren nach: ";
 "Failed to access " = "Zugriff nicht möglich auf ";
 "Successfully imported food list" = "Essensliste erfolgreich importiert";
@@ -271,6 +273,10 @@
 "Failed to decode - " = "Konnte nicht entschlüsseln - ";
 "Help on the Web" = "Hilfe im Web";
 "Could not identify absorption block" = "Konnte Absorptionsblock nicht identifizieren.";
+
+// Import/export errors
+"Error: File must have extension fooddata" = "Dateiendung muss '.fooddata' sein.";
+"Failed to access" = "Zugriff verweigert auf";
 
 // Meal export
 "Cannot write data: HealthKit seem not to be available on your device." = "Kann keine Daten schreiben: HealthKit scheint auf Deinem Gerät nicht zur Verfügung zu stehen.";

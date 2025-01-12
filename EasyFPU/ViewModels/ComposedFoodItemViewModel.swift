@@ -185,6 +185,17 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     /// Saves the ComposedFoodItemViewModel as Core Data ComposedFoodItem.
     /// - Returns: False if no ingredients could be found in the ComposedFoodItemViewModel, otherwise true.
     func save() -> Bool {
+        // Check for an existing FoodItem with same ID
+        if let existingComposedFoodItem = ComposedFoodItem.getComposedFoodItemByID(id: self.id) {
+            if ComposedFoodItemViewModel.areIdentical(cdComposedFoodItem: existingComposedFoodItem, composedFoodItemVM: self) {
+                // In case of an identical existing ComposedFoodItem, no new ComposedFoodItem needs to be created
+                return true
+            } else {
+                // Otherwise we need to create a new UUID before saving the VM to Core Data
+                self.id = UUID()
+            }
+        }
+        
         guard let cdComposedFoodItem = ComposedFoodItem.create(from: self) else { return false }
         self.cdComposedFoodItem = cdComposedFoodItem
         return true
@@ -304,6 +315,23 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     
     func getSugars(treatSugarsSeparately: Bool) -> Double {
         treatSugarsSeparately ? self.sugars : 0
+    }
+    
+    static func areIdentical(cdComposedFoodItem: ComposedFoodItem, composedFoodItemVM: ComposedFoodItemViewModel) -> Bool {
+        // Compare related food items
+        let cdIngredients = cdComposedFoodItem.ingredients.allObjects as! [Ingredient]
+        for foodItem in composedFoodItemVM.foodItemVMs {
+            let matchingCDFoodItems = cdIngredients.map {
+                $0.caloriesPer100g == foodItem.caloriesPer100g &&
+                $0.carbsPer100g == foodItem.carbsPer100g &&
+                $0.sugarsPer100g == foodItem.sugarsPer100g &&
+                $0.amount == foodItem.amount
+            }
+            
+            if matchingCDFoodItems.isEmpty { return false }
+        }
+        
+        return true
     }
     
     func encode(to encoder: Encoder) throws {

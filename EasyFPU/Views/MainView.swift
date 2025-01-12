@@ -55,6 +55,10 @@ enum SimpleAlertType {
 }
 
 struct MainView: View {
+    enum Tab: Int {
+        case eat = 0, cook, products, ingredients, settings
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var userSettings = UserSettings.shared
     @FetchRequest(
@@ -66,6 +70,8 @@ struct MainView: View {
     @ObservedObject var absorptionScheme = AbsorptionSchemeViewModel()
     @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert = false
+    @State private var isConfirming = false
+    @State private var importData: ImportData?
     
     var body: some View {
         debugPrint(CoreDataStack.persistentContainer.persistentStoreDescriptions) // The location of the .sqlite file
@@ -82,6 +88,7 @@ struct MainView: View {
                         absorptionScheme: absorptionScheme,
                         composedFoodItemVM: UserSettings.shared.composedMeal
                     )
+                    .tag(Tab.eat.rawValue)
                     .tabItem{
                         Image(systemName: "fork.knife")
                         Text("Eat")
@@ -94,6 +101,7 @@ struct MainView: View {
                         composedFoodItem: UserSettings.shared.composedMeal,
                         helpSheet: RecipeListView.SheetState.recipeListHelp
                     )
+                    .tag(Tab.cook.rawValue)
                     .tabItem{
                         Image(systemName: "frying.pan")
                         Text("Cook")
@@ -109,6 +117,7 @@ struct MainView: View {
                         helpSheet: .productMaintenanceListHelp,
                         composedFoodItem: UserSettings.shared.composedMeal
                     )
+                    .tag(Tab.products.rawValue)
                     .tabItem{
                         Image(systemName: "birthday.cake")
                         Text("Products")
@@ -124,6 +133,7 @@ struct MainView: View {
                         helpSheet: .ingredientMaintenanceListHelp,
                         composedFoodItem: UserSettings.shared.composedProduct
                     )
+                    .tag(Tab.ingredients.rawValue)
                     .tabItem{
                         Image(systemName: "carrot")
                         Text("Ingredients")
@@ -135,6 +145,7 @@ struct MainView: View {
                     MenuView(
                         absorptionScheme: absorptionScheme
                     )
+                    .tag(Tab.settings.rawValue)
                     .tabItem{
                         Image(systemName: "gear")
                         Text("Settings")
@@ -152,8 +163,75 @@ struct MainView: View {
                         }
                     }
                 }
+                .onOpenURL { url in
+                    importFoodData(from: url)
+                }
+                .confirmationDialog(
+                    "Import food list",
+                    isPresented: $isConfirming,
+                    titleVisibility: .visible
+                ) {
+                    Button("Replace") {
+                        if let importData {
+                            DataHelper.deleteAllFood()
+                            importData.save()
+                        }
+                    }
+                    Button("Append") {
+                        if let importData {
+                            importData.save()
+                        }
+                    }
+                    Button("Cancel", role: .cancel) {
+                        isConfirming.toggle()
+                    }
+                } message: {
+                    Text("Please select")
+                }
                 .accessibilityIdentifierBranch("MainView")
             )
+        }
+    }
+    
+    private func importFoodData(from url: URL) {
+        // Import Food Item
+        do {
+            // Verify the URL’s extension is fooditem, since EasyFPU only supports files with that extension
+            guard url.pathExtension == "fooddata" else {
+                throw ImportExportError.wrongFileExtension
+            }
+            
+            var errorMessage = ""
+            
+            // Make sure we can access file
+            guard url.startAccessingSecurityScopedResource() else {
+                throw ImportExportError.noFileAccess
+            }
+            defer { url.stopAccessingSecurityScopedResource() }
+            
+            let jsonData = try Data(contentsOf: url)
+            if let importData = DataHelper.decodeFoodData(jsonData: jsonData, errorMessage: &errorMessage) {
+                self.importData = importData
+                let itemCount = importData.countItems()
+                if itemCount == (1, 0) || itemCount == (0, 1) {
+                    // These are single items, we just append them
+                    importData.save()
+                } else {
+                    isConfirming = true
+                }
+            } else {
+                activeAlert = .error(message: errorMessage)
+                showingAlert = true
+            }
+        } catch ImportExportError.wrongFileExtension {
+            activeAlert = .error(message: "Error: File must have extension fooddata")
+            showingAlert = true
+        } catch ImportExportError.noFileAccess {
+            activeAlert = .error(message: "\(NSLocalizedString("Failed to access", comment: "")) \(url)")
+            showingAlert = true
+        } catch {
+            activeAlert = .error(message: error.localizedDescription)
+            showingAlert = true
         }
     }
 }

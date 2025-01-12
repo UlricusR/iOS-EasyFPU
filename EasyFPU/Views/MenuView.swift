@@ -23,7 +23,7 @@ struct MenuView: View {
     @State private var exporting = false
     @State private var isConfirming = false
     @State private var importData: ImportData?
-    @State private var exportData = ExportJSONDocument()
+    @State private var exportData = FoodDataDocument()
     @State private var showingAlert = false
     @State private var activeAlert: SimpleAlertType?
     
@@ -83,7 +83,14 @@ struct MenuView: View {
                     // Export
                     Button("Export to JSON") {
                         var errorMessage = ""
-                        if let jsonDocument = ExportJSONDocument(errorMessage: &errorMessage) {
+                        let allFoodData = DataHelper.getAllFoodData()
+                        let allFoodItems = allFoodData[0] as! [FoodItemViewModel]
+                        let allComposedFoodItems = allFoodData[1] as! [ComposedFoodItemViewModel]
+                        if let jsonDocument = FoodDataDocument(
+                            foodItems: allFoodItems,
+                            composedFoodItems: allComposedFoodItems,
+                            errorMessage: &errorMessage
+                        ) {
                             self.exportData = jsonDocument
                             exporting = true
                         } else {
@@ -94,7 +101,7 @@ struct MenuView: View {
                     .fileExporter(
                         isPresented: $exporting,
                         document: exportData,
-                        contentType: UTType.json,
+                        contentType: .foodDataType,
                         defaultFilename: createFileName()
                     ) { result in
                         switch result {
@@ -102,7 +109,7 @@ struct MenuView: View {
                             activeAlert = .success(message: NSLocalizedString("Successfully exported food list to: ", comment: "") + file.lastPathComponent)
                             showingAlert = true
                         case .failure(let error):
-                            activeAlert = .success(message: error.localizedDescription)
+                            activeAlert = .error(message: error.localizedDescription)
                             showingAlert = true
                         }
                     }
@@ -169,7 +176,7 @@ struct MenuView: View {
     
     private func importJSON(_ url: URL) {
         var alertMessage = ""
-        if let importData = DataHelper.importFoodItems(url, errorMessage: &alertMessage) {
+        if let importData = DataHelper.importFoodData(url, errorMessage: &alertMessage) {
             self.importData = importData
             
             if DataHelper.hasData() {
@@ -192,8 +199,10 @@ struct MenuView: View {
                 DataHelper.deleteAllFood()
             }
         
-            for foodItemVMToBeImported in importData.foodItemVMsToBeImported {
-                foodItemVMToBeImported.save()
+            if importData.foodItemVMsToBeImported != nil {
+                for foodItemVMToBeImported in importData.foodItemVMsToBeImported! {
+                    foodItemVMToBeImported.save()
+                }
             }
             
             if importData.composedFoodItemVMsToBeImported != nil {

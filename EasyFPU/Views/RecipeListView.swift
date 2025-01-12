@@ -16,7 +16,6 @@ struct RecipeListView: View {
     }
     
     enum SheetState: Identifiable {
-        case exportRecipe
         case recipeListHelp
         
         var id: SheetState { self }
@@ -201,12 +200,6 @@ struct RecipeListView: View {
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
-        case .exportRecipe:
-            if let path = self.composedFoodItem.exportToURL() {
-                ActivityView(activityItems: [path], applicationActivities: nil)
-            } else {
-                Text(NSLocalizedString("Could not generate data export", comment: ""))
-            }
         case .recipeListHelp:
             HelpView(helpScreen: .recipeList)
                 .accessibilityIdentifierBranch("HelpRecipeList")
