@@ -15,7 +15,6 @@ struct FoodItemView: View {
         case confirmDelete
     }
     
-    @Environment(\.managedObjectContext) var managedObjectContext
     @Binding var navigationPath: NavigationPath
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @ObservedObject var foodItemVM: FoodItemViewModel

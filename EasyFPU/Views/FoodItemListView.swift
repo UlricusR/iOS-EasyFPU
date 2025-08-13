@@ -29,7 +29,6 @@ struct FoodItemListView: View {
         var id: SheetState { self }
     }
     
-    @Environment(\.managedObjectContext) var managedObjectContext
     var category: FoodItemCategory
     var listType: FoodItemListType
     var foodItemListTitle: String
@@ -121,7 +120,6 @@ struct FoodItemListView: View {
                         }
                     }) { foodItem in
                         FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
-                            .environment(\.managedObjectContext, self.managedObjectContext)
                             .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                     }
                     .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
