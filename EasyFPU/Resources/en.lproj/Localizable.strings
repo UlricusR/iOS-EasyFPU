@@ -211,6 +211,14 @@
 "Delete recipe" = "Delete recipe";
 "Do you really want to delete this recipe? This cannot be undone!" = "Do you really want to delete this recipe? This cannot be undone!";
 
+// Category editor
+"Categories" = "Categories";
+"Oops! You have not added any categories yet." = "Oops! You have not added any categories yet.";
+"New category" = "New category";
+"Add/Edit Category" = "Add/Edit Category";
+"Existing Categories" = "Existing Categories";
+"Hit return to save" = "Hit return to save";
+
 // Settings editor
 "Absorption scheme" = "Absorption scheme";
 "Absorption Blocks" = "Absorption Blocks";

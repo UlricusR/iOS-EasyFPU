@@ -71,15 +71,15 @@ class FoodCategoryViewModel: ObservableObject, Codable, Hashable, Identifiable {
     /// - Parameter foodCategoryVM: The source FoodCategoryViewModel.
     /// - Parameter errorMessage: The error message in case of a fatal error.
     /// - Returns: False in case of a fatal error, true otherwise.
-    func update(from clone: FoodItemViewModel, errorMessage: inout String) -> Bool {
+    func update(from foodCategoryVM: FoodCategoryViewModel, errorMessage: inout String) -> Bool {
         guard let cdFoodCategory else {
             errorMessage = "Fatal error: No Core Data FoodCategory found!"
             return false
         }
         
         // Update values
-        self.name = clone.name
-        self.category = clone.category
+        self.name = foodCategoryVM.name
+        self.category = foodCategoryVM.category
         
         // Update Core Data FoodCategory
         FoodCategory.update(

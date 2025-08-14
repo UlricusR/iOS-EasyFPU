@@ -13,9 +13,13 @@ enum FoodItemViewModelError: Equatable {
     case none
 }
 
-enum FoodItemCategory: String {
+enum FoodItemCategory: String, CaseIterable, Identifiable {
     case product = "Product"
     case ingredient = "Ingredient"
+    
+    var id: String {
+        self.rawValue
+    }
 }
 
 enum FoodItemUnit: String {
