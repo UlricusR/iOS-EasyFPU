@@ -113,6 +113,9 @@ struct FoodItemEditor: View {
                             .accessibilityIdentifierLeaf("ScanButton")
                         }
                         
+                        // Food Category
+                        
+                        
                         // Category
                         Picker("Category", selection: $draftFoodItemVM.category) {
                             Text("Product").tag(FoodItemCategory.product)
@@ -373,6 +376,7 @@ struct FoodItemEditor: View {
             if let newFoodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: self.draftFoodItemVM.name,
+                foodCategoryVM: self.draftFoodItemVM.foodCategoryVM,
                 category: self.draftFoodItemVM.category,
                 favorite: self.draftFoodItemVM.favorite,
                 caloriesAsString: self.draftFoodItemVM.caloriesPer100gAsString,

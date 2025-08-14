@@ -34,6 +34,7 @@ struct FoodItemListView: View {
     var foodItemListTitle: String
     var helpSheet: SheetState
     @Binding var navigationPath: NavigationPath
+    @ObservedObject var userSettings = UserSettings.shared
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     
     @State private var searchString = ""
@@ -175,6 +176,32 @@ struct FoodItemListView: View {
             }
             
             ToolbarItemGroup(placement: .navigationBarTrailing) {
+                // The grouping button
+                Button(action: {
+                    withAnimation {
+                        var errorMessage = ""
+                        if category == .product {
+                            self.userSettings.groupProductsByCategory.toggle()
+                            _ = UserSettings.set(UserSettings.UserDefaultsType.bool(userSettings.groupProductsByCategory, UserSettings.UserDefaultsBoolKey.groupProductsByCategory), errorMessage: &errorMessage)
+                        } else if category == .ingredient {
+                            self.userSettings.groupIngredientsByCategory.toggle()
+                            _ = UserSettings.set(UserSettings.UserDefaultsType.bool(userSettings.groupIngredientsByCategory, UserSettings.UserDefaultsBoolKey.groupIngredientsByCategory), errorMessage: &errorMessage)
+                        }
+                    }
+                }) {
+                    if category == .product && self.userSettings.groupProductsByCategory ||
+                        category == .ingredient && self.userSettings.groupIngredientsByCategory {
+                        Image(systemName: "square.grid.3x1.below.line.grid.1x2.fill")
+                            .foregroundStyle(Color.blue)
+                            .imageScale(.large)
+                    } else {
+                        Image(systemName: "square.grid.3x1.below.line.grid.1x2")
+                            .foregroundStyle(Color.blue)
+                            .imageScale(.large)
+                    }
+                }
+                
+                // The favorite button
                 Button(action: {
                     withAnimation {
                         self.showFavoritesOnly.toggle()

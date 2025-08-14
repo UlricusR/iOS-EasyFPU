@@ -46,6 +46,7 @@ struct BusinessLogicTests {
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: BusinessLogicTests.name,
+                foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
                 caloriesPer100g: BusinessLogicTests.caloriesPer100g,
@@ -65,6 +66,7 @@ struct BusinessLogicTests {
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: BusinessLogicTests.name,
+                foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
                 caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
@@ -87,6 +89,7 @@ struct BusinessLogicTests {
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: "",
+                foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
                 caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
@@ -117,6 +120,7 @@ struct BusinessLogicTests {
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: BusinessLogicTests.name,
+                foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
                 caloriesAsString: inputString,
@@ -147,6 +151,7 @@ struct BusinessLogicTests {
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: BusinessLogicTests.name,
+                foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
                 caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
@@ -177,6 +182,7 @@ struct BusinessLogicTests {
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: BusinessLogicTests.name,
+                foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
                 caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
@@ -198,6 +204,7 @@ struct BusinessLogicTests {
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: BusinessLogicTests.name,
+                foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
                 caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
@@ -219,6 +226,7 @@ struct BusinessLogicTests {
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: BusinessLogicTests.name,
+                foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
                 caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
@@ -240,6 +248,7 @@ struct BusinessLogicTests {
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: BusinessLogicTests.name,
+                foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
                 caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
@@ -272,6 +281,7 @@ struct BusinessLogicTests {
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: BusinessLogicTests.name,
+                foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
                 caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,

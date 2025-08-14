@@ -11,6 +11,7 @@ import Foundation
 class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, VariableAmountItem {
     var id: UUID
     @Published var name: String
+    @Published var foodCategoryVM: FoodCategoryViewModel? = nil
     var category: FoodItemCategory
     @Published var favorite: Bool
     @Published var amount: Int = 0
@@ -93,13 +94,14 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     
     enum CodingKeys: String, CodingKey {
         case composedFoodItem
-        case id, name, category, favorite, amount, numberOfPortions
+        case id, name, foodCategory, category, favorite, amount, numberOfPortions
         case ingredients
     }
     
-    init(id: UUID, name: String, category: FoodItemCategory, favorite: Bool) {
+    init(id: UUID, name: String, foodCategoryVM: FoodCategoryViewModel?, category: FoodItemCategory, favorite: Bool) {
         self.id = id
         self.name = name
+        self.foodCategoryVM = foodCategoryVM
         self.category = category
         self.favorite = favorite
     }
@@ -107,6 +109,9 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     init(from cdComposedFoodItem: ComposedFoodItem) {
         self.id = cdComposedFoodItem.id // Same ID as the Core Data ComposedFoodItem
         self.name = cdComposedFoodItem.name
+        if let foodCategory = cdComposedFoodItem.foodCategory {
+            self.foodCategoryVM = FoodCategoryViewModel(from: foodCategory)
+        }
         self.category = FoodItemCategory.product
         self.favorite = cdComposedFoodItem.favorite
         self.amount = Int(cdComposedFoodItem.amount)
@@ -143,6 +148,11 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         amount = try composedFoodItem.decode(Int.self, forKey: .amount)
         favorite = try composedFoodItem.decode(Bool.self, forKey: .favorite)
         name = try composedFoodItem.decode(String.self, forKey: .name)
+        if let foodCategoryName = try? composedFoodItem.decode(String.self, forKey: .foodCategory) {
+            if let foodCategory = FoodCategory.getFoodCategoriesByName(name: foodCategoryName)?.first {
+                foodCategoryVM = FoodCategoryViewModel(from: foodCategory)
+            }
+        }
         numberOfPortions = try composedFoodItem.decode(Int.self, forKey: .numberOfPortions)
         
         // Load the ingredients
@@ -152,6 +162,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
             foodItemVMs.append(FoodItemViewModel(
                 id: ingredient.id,
                 name: ingredient.name,
+                foodCategoryVM: ingredient.foodCategoryVM,
                 category: .ingredient,
                 favorite: ingredient.favorite,
                 caloriesPer100g: ingredient.caloriesPer100g,
@@ -339,6 +350,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         var composedFoodItem = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .composedFoodItem)
         try composedFoodItem.encode(id, forKey: .id)
         try composedFoodItem.encode(name, forKey: .name)
+        try composedFoodItem.encode(foodCategoryVM?.name, forKey: .foodCategory)
         try composedFoodItem.encode(favorite, forKey: .favorite)
         try composedFoodItem.encode(amount, forKey: .amount)
         try composedFoodItem.encode(numberOfPortions, forKey: .numberOfPortions)
@@ -354,6 +366,6 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     }
     
     static func sampleData() -> ComposedFoodItemViewModel {
-        ComposedFoodItemViewModel(id: UUID(), name: "Sample Composed Food Item", category: .product, favorite: false)
+        ComposedFoodItemViewModel(id: UUID(), name: "Sample Composed Food Item", foodCategoryVM: nil, category: .product, favorite: false)
     }
 }

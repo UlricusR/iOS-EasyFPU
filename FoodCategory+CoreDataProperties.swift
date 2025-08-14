@@ -21,6 +21,7 @@ extension FoodCategory {
     @NSManaged public var name: String
     @NSManaged public var category: String
     @NSManaged public var foodItems: NSSet?
+    @NSManaged public var composedFoodItems: NSSet?
 
 }
 
@@ -38,6 +39,23 @@ extension FoodCategory {
 
     @objc(removeFoodItem:)
     @NSManaged public func removeFromFoodItems(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for composedFoodItem
+extension FoodCategory {
+
+    @objc(addComposedFoodItemObject:)
+    @NSManaged public func addToComposedFoodItems(_ value: ComposedFoodItem)
+
+    @objc(removeComposedFoodItemObject:)
+    @NSManaged public func removeFromComposedFoodItems(_ value: ComposedFoodItem)
+
+    @objc(addComposedFoodItem:)
+    @NSManaged public func addToComposedFoodItems(_ values: NSSet)
+
+    @objc(removeComposedFoodItem:)
+    @NSManaged public func removeFromComposedFoodItems(_ values: NSSet)
 
 }
 

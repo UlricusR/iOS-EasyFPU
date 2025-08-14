@@ -91,6 +91,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         }
     }
     @Published var category: FoodItemCategory
+    @Published var foodCategoryVM: FoodCategoryViewModel? = nil
     private(set) var caloriesPer100g: Double = 0.0
     private(set) var carbsPer100g: Double = 0.0
     private(set) var sugarsPer100g: Double = 0.0
@@ -103,7 +104,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     
     enum CodingKeys: String, CodingKey {
         case foodItem
-        case id, name, category, favorite, amount, caloriesPer100g, carbsPer100g, sugarsPer100g, sourceID, sourceDB
+        case id, name, foodCategory, category, favorite, amount, caloriesPer100g, carbsPer100g, sugarsPer100g, sourceID, sourceDB
         case typicalAmounts
     }
     
@@ -112,6 +113,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     /// - Parameters:
     ///   - id: The ID of the food item.
     ///   - name: The name of the food item.
+    ///   - foodCategory: The food category of the food item, can be nil.
     ///   - category: The category of the food item.
     ///   - favorite: Whether the food item is a favorite.
     ///   - caloriesPer100g: The calories per 100g of the food item.
@@ -120,9 +122,10 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     ///   - amount: The amount of the food item.
     ///   - sourceID: The ID of the food item in a source food database (normally the barcode ID)
     ///   - sourceDB: The food database the sourceID relates to
-    init(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, sugarsPer100g: Double, amount: Int, sourceID: String?, sourceDB: FoodDatabaseType?) {
+    init(id: UUID, name: String, foodCategoryVM: FoodCategoryViewModel?, category: FoodItemCategory, favorite: Bool, caloriesPer100g: Double, carbsPer100g: Double, sugarsPer100g: Double, amount: Int, sourceID: String?, sourceDB: FoodDatabaseType?) {
         self.id = id
         self.name = name
+        self.foodCategoryVM = foodCategoryVM
         self.category = category
         self.favorite = favorite
         self.caloriesPer100g = caloriesPer100g
@@ -141,6 +144,9 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         // Use ID from Core Date FoodItem
         self.id = cdFoodItem.id
         self.name = cdFoodItem.name
+        if let foodCategory = cdFoodItem.foodCategory {
+            self.foodCategoryVM = FoodCategoryViewModel(from: foodCategory)
+        }
         self.category = FoodItemCategory.init(rawValue: cdFoodItem.category) ?? FoodItemCategory.product // Default is product
         self.favorite = cdFoodItem.favorite
         self.caloriesPer100g = cdFoodItem.caloriesPer100g
@@ -165,6 +171,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     /// - Parameters:
     ///   - id: The ID of the food item.
     ///   - name: The name of the food item.
+    ///   - foodCategory: The food category of the food item, can be nil.
     ///   - category: The category of the food item.
     ///   - favorite: Whether the food item is a favorite.
     ///   - caloriesAsString: The string representation of a decimal number of the calories per 100g of the food item.
@@ -172,7 +179,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     ///   - sugarsAsString: The string representation of a decimal number of the sugars per 100g of the food item.
     ///   - amountAsString: The string representation of a integer number of the amount of the food item.
     ///   - error: Stores potential errors when creating the food item, e.g., unsuccessful conversion of the string representations into numbers.
-    init?(id: UUID, name: String, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError, sourceID: String?, sourceDB: FoodDatabaseType?) {
+    init?(id: UUID, name: String, foodCategoryVM: FoodCategoryViewModel?, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError, sourceID: String?, sourceDB: FoodDatabaseType?) {
         // Check for a correct name
         let foodName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         if foodName == "" {
@@ -181,6 +188,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         } else {
             self.name = foodName
         }
+        
+        self.foodCategoryVM = foodCategoryVM
         
         // Generate ID
         self.id = id
@@ -262,6 +271,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     init(clone: FoodItemViewModel) {
         self.id = clone.id
         self.name = clone.name
+        self.foodCategoryVM = clone.foodCategoryVM
         self.category = clone.category
         self.favorite = clone.favorite
         self.caloriesPer100g = clone.caloriesPer100g
@@ -298,6 +308,11 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
             id = UUID()
         }
         name = try foodItem.decode(String.self, forKey: .name)
+        if let foodCategoryString = try? foodItem.decode(String.self, forKey: .foodCategory) {
+            if let foodCategory = FoodCategory.getFoodCategoriesByName(name: foodCategoryString)?.first {
+                foodCategoryVM = FoodCategoryViewModel(from: foodCategory)
+            }
+        }
         category = try FoodItemCategory.init(rawValue: foodItem.decode(String.self, forKey: .category)) ?? .product
         favorite = try foodItem.decode(Bool.self, forKey: .favorite)
         amount = try foodItem.decode(Int.self, forKey: .amount)
@@ -614,6 +629,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         FoodItemViewModel(
             id: UUID(),
             name: "",
+            foodCategoryVM: nil,
             category: category,
             favorite: false,
             caloriesPer100g: 0.0,
@@ -629,6 +645,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         let foodItemVM = FoodItemViewModel(
             id: UUID(),
             name: "Sample Food Item",
+            foodCategoryVM: nil,
             category: .product,
             favorite: false,
             caloriesPer100g: 100.0,
