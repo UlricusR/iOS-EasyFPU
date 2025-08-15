@@ -167,12 +167,15 @@ struct RecipeListView: View {
                     .environment(\.managedObjectContext, managedObjectContext)
                     .accessibilityIdentifierBranch("CreateRecipe")
                 case let .AddIngredients(recipe: recipe):
-                    FoodItemListView(
+                    let foodListVM = FoodListViewModel(
                         category: .ingredient,
                         listType: .selection,
                         foodItemListTitle: NSLocalizedString("Ingredients", comment: ""),
-                        helpSheet: .ingredientSelectionListHelp,
+                        helpSheet: .ingredientSelectionListHelp
+                    )
+                    FoodItemListView(
                         navigationPath: $navigationPath,
+                        foodListVM: foodListVM,
                         composedFoodItem: recipe
                     )
                     .accessibilityIdentifierBranch("SelectIngredients")

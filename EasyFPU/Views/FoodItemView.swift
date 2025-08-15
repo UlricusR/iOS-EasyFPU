@@ -19,7 +19,7 @@ struct FoodItemView: View {
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @ObservedObject var foodItemVM: FoodItemViewModel
     var category: FoodItemCategory
-    var listType: FoodItemListView.FoodItemListType
+    var listType: FoodListViewModel.FoodItemListType
     @State private var showingAlert = false
     @State private var activeAlert: AlertChoice?
     @State private var isConfirming = false

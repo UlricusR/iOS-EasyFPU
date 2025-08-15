@@ -15,34 +15,15 @@ struct FoodItemListView: View {
         case SelectFoodItem(category: FoodItemCategory, draftFoodItem: FoodItemViewModel, composedFoodItem: ComposedFoodItemViewModel)
     }
     
-    enum FoodItemListType {
-        case maintenance
-        case selection
-    }
-    
-    enum SheetState: Identifiable {
-        case productSelectionListHelp
-        case productMaintenanceListHelp
-        case ingredientSelectionListHelp
-        case ingredientMaintenanceListHelp
-        
-        var id: SheetState { self }
-    }
-    
-    var category: FoodItemCategory
-    var listType: FoodItemListType
-    var foodItemListTitle: String
-    var helpSheet: SheetState
     @Binding var navigationPath: NavigationPath
+    @ObservedObject var foodListVM: FoodListViewModel
     @ObservedObject var userSettings = UserSettings.shared
     @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     
-    @State private var searchString = ""
-    @State private var showFavoritesOnly = false
-    @State private var activeSheet: SheetState?
+    @State private var activeSheet: FoodListViewModel.SheetState?
     
     private var emptyStateImage: Image {
-        switch category {
+        switch foodListVM.category {
         case .product:
             Image("nachos")
         case .ingredient:
@@ -50,7 +31,7 @@ struct FoodItemListView: View {
         }
     }
     private var emptyStateMessage: Text {
-        switch category {
+        switch foodListVM.category {
         case .product:
             Text("Oops! There are no dishes in your list yet. Start by adding some!")
         case .ingredient:
@@ -58,7 +39,7 @@ struct FoodItemListView: View {
         }
     }
     private var emptyStateButtonText: Text {
-        switch category {
+        switch foodListVM.category {
         case .product:
             Text("Add products")
         case .ingredient:
@@ -66,34 +47,15 @@ struct FoodItemListView: View {
         }
     }
     
-    @FetchRequest(
-        entity: FoodItem.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \FoodItem.name, ascending: true)
-        ]
-    ) var foodItems: FetchedResults<FoodItem>
-    
-    private var filteredFoodItems: [FoodItemViewModel] {
-        if searchString == "" {
-            return showFavoritesOnly ?
-            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category && $0.favorite } :
-            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category }
-        } else {
-            return showFavoritesOnly ?
-            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category && $0.favorite && $0.name.lowercased().contains(searchString.lowercased()) } :
-            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category && $0.name.lowercased().contains(searchString.lowercased()) }
-        }
-    }
-    
     var body: some View {
         VStack {
-            if foodItems.isEmpty {
+            if foodListVM.foodItems.isEmpty {
                 // List is empty, so show a nice picture and an action button
                 emptyStateImage.padding()
                 emptyStateMessage.padding()
                 Button {
                     // Add new food item
-                    navigationPath.append(FoodItemListView.FoodListNavigationDestination.AddFoodItem(category: category))
+                    navigationPath.append(FoodItemListView.FoodListNavigationDestination.AddFoodItem(category: foodListVM.category))
                 } label: {
                     HStack {
                         Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
@@ -107,8 +69,8 @@ struct FoodItemListView: View {
             } else {
                 ZStack {
                     // The food list
-                    List(self.filteredFoodItems.sorted {
-                        if listType == .selection {
+                    List(foodListVM.filteredFoodItems.sorted {
+                        if foodListVM.listType == .selection {
                             if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
                                 return true
                             } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
@@ -120,13 +82,13 @@ struct FoodItemListView: View {
                             return $0.name < $1.name
                         }
                     }) { foodItem in
-                        FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
+                        FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: foodListVM.category, listType: foodListVM.listType)
                             .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                     }
-                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
+                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: foodListVM.listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
                     
                     // The overlaying finished button in case we have a selection type list
-                    if listType == .selection {
+                    if foodListVM.listType == .selection {
                         VStack {
                             Spacer()
                             HStack {
@@ -151,12 +113,12 @@ struct FoodItemListView: View {
                 }
             }
         }
-        .navigationTitle(foodItemListTitle)
+        .navigationTitle(foodListVM.foodItemListTitle)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarLeading) {
                 Button(action: {
                     withAnimation {
-                        self.activeSheet = helpSheet
+                        self.activeSheet = foodListVM.helpSheet
                     }
                 }) {
                     Image(systemName: "questionmark.circle")
@@ -166,7 +128,7 @@ struct FoodItemListView: View {
                 
                 Button(action: {
                     // Add new food item
-                    navigationPath.append(FoodItemListView.FoodListNavigationDestination.AddFoodItem(category: category))
+                    navigationPath.append(FoodItemListView.FoodListNavigationDestination.AddFoodItem(category: foodListVM.category))
                 }) {
                     Image(systemName: "plus.circle")
                         .imageScale(.large)
@@ -180,17 +142,17 @@ struct FoodItemListView: View {
                 Button(action: {
                     withAnimation {
                         var errorMessage = ""
-                        if category == .product {
+                        if foodListVM.category == .product {
                             self.userSettings.groupProductsByCategory.toggle()
                             _ = UserSettings.set(UserSettings.UserDefaultsType.bool(userSettings.groupProductsByCategory, UserSettings.UserDefaultsBoolKey.groupProductsByCategory), errorMessage: &errorMessage)
-                        } else if category == .ingredient {
+                        } else if foodListVM.category == .ingredient {
                             self.userSettings.groupIngredientsByCategory.toggle()
                             _ = UserSettings.set(UserSettings.UserDefaultsType.bool(userSettings.groupIngredientsByCategory, UserSettings.UserDefaultsBoolKey.groupIngredientsByCategory), errorMessage: &errorMessage)
                         }
                     }
                 }) {
-                    if category == .product && self.userSettings.groupProductsByCategory ||
-                        category == .ingredient && self.userSettings.groupIngredientsByCategory {
+                    if foodListVM.category == .product && self.userSettings.groupProductsByCategory ||
+                        foodListVM.category == .ingredient && self.userSettings.groupIngredientsByCategory {
                         Image(systemName: "square.grid.3x1.below.line.grid.1x2.fill")
                             .foregroundStyle(Color.blue)
                             .imageScale(.large)
@@ -204,10 +166,10 @@ struct FoodItemListView: View {
                 // The favorite button
                 Button(action: {
                     withAnimation {
-                        self.showFavoritesOnly.toggle()
+                        foodListVM.showFavoritesOnly.toggle()
                     }
                 }) {
-                    if self.showFavoritesOnly {
+                    if foodListVM.showFavoritesOnly {
                         Image(systemName: "star.fill")
                             .foregroundStyle(Color.yellow)
                             .imageScale(.large)
@@ -220,14 +182,14 @@ struct FoodItemListView: View {
                 .accessibilityIdentifierLeaf("FavoriteButton")
             }
         }
-        .searchable(text: self.$searchString)
+        .searchable(text: $foodListVM.searchString)
         .sheet(item: $activeSheet) {
             sheetContent($0)
         }
     }
     
     @ViewBuilder
-    private func sheetContent(_ state: SheetState) -> some View {
+    private func sheetContent(_ state: FoodListViewModel.SheetState) -> some View {
         switch state {
         case .productMaintenanceListHelp:
             HelpView(helpScreen: .productMaintenanceList)
@@ -248,12 +210,15 @@ struct FoodItemListView: View {
 struct FoodItemListView_Previews: PreviewProvider {
     @State private static var navigationPath = NavigationPath()
     static var previews: some View {
-        FoodItemListView(
+        let foodListVM = FoodListViewModel(
             category: .product,
             listType: .selection,
             foodItemListTitle: "My Products",
-            helpSheet: .productSelectionListHelp,
+            helpSheet: .productSelectionListHelp
+        )
+        FoodItemListView(
             navigationPath: $navigationPath,
+            foodListVM: foodListVM,
             composedFoodItem: ComposedFoodItemViewModel.sampleData()
         )
     }

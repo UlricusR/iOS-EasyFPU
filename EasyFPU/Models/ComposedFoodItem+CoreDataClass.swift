@@ -12,8 +12,20 @@ import CoreData
 
 
 public class ComposedFoodItem: NSManagedObject {
-    static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [ComposedFoodItem] {
+    /// Fetches all ComposedFoodItems from Core Data.
+    /// - Parameters:
+    ///   - category: Optional FoodItemCategory to filter the results by. If nil, all ComposedFoodItems are fetched.
+    ///   - viewContext: The NSManagedObjectContext to use for the fetch request. Defaults to CoreDataStack.viewContext.
+    /// - Returns: An array of ComposedFoodItem objects. If no ComposedFoodItems are found, an empty array is returned.
+    static func fetchAll(
+        for category: FoodItemCategory? = nil,
+        viewContext: NSManagedObjectContext = CoreDataStack.viewContext
+    ) -> [ComposedFoodItem] {
         let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        if let category = category {
+            request.predicate = NSPredicate(format: "foodCategory.category == %@", category.rawValue)
+        }
         
         guard let composedFoodItems = try? CoreDataStack.viewContext.fetch(request) else {
             return []
