@@ -41,115 +41,18 @@ struct FoodItemListView: View {
     @State private var showFavoritesOnly = false
     @State private var activeSheet: SheetState?
     
-    private var emptyStateImage: Image {
-        switch category {
-        case .product:
-            Image("nachos")
-        case .ingredient:
-            Image("eggs-color")
-        }
-    }
-    private var emptyStateMessage: Text {
-        switch category {
-        case .product:
-            Text("Oops! There are no dishes in your list yet. Start by adding some!")
-        case .ingredient:
-            Text("Oops! There are no ingredients in your list yet. Start by adding some!")
-        }
-    }
-    private var emptyStateButtonText: Text {
-        switch category {
-        case .product:
-            Text("Add products")
-        case .ingredient:
-            Text("Add ingredients")
-        }
-    }
-    
-    @FetchRequest(
-        entity: FoodItem.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \FoodItem.name, ascending: true)
-        ]
-    ) var foodItems: FetchedResults<FoodItem>
-    
-    private var filteredFoodItems: [FoodItemViewModel] {
-        if searchString == "" {
-            return showFavoritesOnly ?
-            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category && $0.favorite } :
-            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category }
-        } else {
-            return showFavoritesOnly ?
-            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category && $0.favorite && $0.name.lowercased().contains(searchString.lowercased()) } :
-            foodItems.map { FoodItemViewModel(from: $0) } .filter { $0.category == self.category && $0.name.lowercased().contains(searchString.lowercased()) }
-        }
-    }
-    
     var body: some View {
         VStack {
-            if foodItems.isEmpty {
-                // List is empty, so show a nice picture and an action button
-                emptyStateImage.padding()
-                emptyStateMessage.padding()
-                Button {
-                    // Add new food item
-                    navigationPath.append(FoodItemListView.FoodListNavigationDestination.AddFoodItem(category: category))
-                } label: {
-                    HStack {
-                        Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
-                        emptyStateButtonText
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(ActionButton())
-                .padding()
-                .accessibilityIdentifierLeaf("AddFoodItemButton")
-            } else {
-                ZStack {
-                    // The food list
-                    List(self.filteredFoodItems.sorted {
-                        if listType == .selection {
-                            if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
-                                return true
-                            } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
-                                return false
-                            } else {
-                                return $0.name < $1.name
-                            }
-                        } else {
-                            return $0.name < $1.name
-                        }
-                    }) { foodItem in
-                        FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
-                            .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
-                    }
-                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
-                    
-                    // The overlaying finished button in case we have a selection type list
-                    if listType == .selection {
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
-                                Button {
-                                    // Return to previous view
-                                    navigationPath.removeLast()
-                                } label: {
-                                    HStack {
-                                        Image(systemName: "checkmark.circle.fill").imageScale(.large).foregroundStyle(.green)
-                                        Text("Finished")
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                }
-                                .buttonStyle(ActionButton())
-                                .accessibilityIdentifierLeaf("FinishedButton")
-                                Spacer()
-                            }
-                            .padding()
-                        }
-                    }
-                }
-            }
+            // The food list
+            FilteredFoodItemList(
+                category: category,
+                listType: listType,
+                navigationPath: $navigationPath,
+                composedFoodItem: composedFoodItem,
+                searchString: searchString,
+                showFavoritesOnly: showFavoritesOnly,
+                grouping: false
+            )
         }
         .navigationTitle(foodItemListTitle)
         .toolbar {

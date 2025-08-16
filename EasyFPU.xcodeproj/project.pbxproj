@@ -103,6 +103,7 @@
 		1BD809A62D2AB9E5003A2A58 /* FoodDataDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD809A52D2AB9E5003A2A58 /* FoodDataDocument.swift */; };
 		1BD809AE2D2AF4A5003A2A58 /* EasyFPUApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD809AD2D2AF49D003A2A58 /* EasyFPUApp.swift */; };
 		1BDBE39C24FE384C00ED61F1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1BDBE39E24FE384C00ED61F1 /* InfoPlist.strings */; };
+		1BE5F3E72E506B550027B1C1 /* FilteredFoodItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE5F3E62E506B550027B1C1 /* FilteredFoodItemList.swift */; };
 		1BEE525524D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE525324D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift */; };
 		1BEE525624D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE525424D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift */; };
 		1BF1A15A251AA1F8001E561C /* ComposedFoodItemSugarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A159251AA1F8001E561C /* ComposedFoodItemSugarsView.swift */; };
@@ -232,6 +233,7 @@
 		1BDBE39D24FE384C00ED61F1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1BDBE39F24FE385F00ED61F1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1BE506F12A840DE60087DD59 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		1BE5F3E62E506B550027B1C1 /* FilteredFoodItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteredFoodItemList.swift; sourceTree = "<group>"; };
 		1BEE525324D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AbsorptionBlock+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BEE525424D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AbsorptionBlock+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BF1A159251AA1F8001E561C /* ComposedFoodItemSugarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemSugarsView.swift; sourceTree = "<group>"; };
@@ -456,6 +458,7 @@
 				1BAD273F254A008000A730FB /* MainView.swift */,
 				1B5CA4F22D062A1F002AD0A8 /* FoodMaintenanceListView.swift */,
 				1B0868AA254EDDC0005953CC /* FoodItemListView.swift */,
+				1BE5F3E62E506B550027B1C1 /* FilteredFoodItemList.swift */,
 				1B68548924BC9E12005ABB8B /* FoodItemView.swift */,
 				1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */,
 				1B68548724BC70ED005ABB8B /* FoodItemEditor.swift */,
@@ -704,6 +707,7 @@
 				1B68548824BC70ED005ABB8B /* FoodItemEditor.swift in Sources */,
 				1BF8A4C024C21A52008634DF /* FoodItem+CoreDataClass.swift in Sources */,
 				1B9D7DED2E4D0AE900DAE101 /* FoodCategoryViewModel.swift in Sources */,
+				1BE5F3E72E506B550027B1C1 /* FilteredFoodItemList.swift in Sources */,
 				1B6B93742554008C00F0CC7D /* Ingredient+CoreDataClass.swift in Sources */,
 				1BA963E4250807DD00375650 /* HelpMealExportView.swift in Sources */,
 				1B6B93772554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift in Sources */,
