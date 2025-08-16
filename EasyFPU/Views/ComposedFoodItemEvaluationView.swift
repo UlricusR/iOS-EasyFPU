@@ -203,15 +203,12 @@ struct ComposedFoodItemEvaluationView: View {
             .navigationDestination(for: MealNavigationDestination.self) { screen in
                 switch screen {
                 case .SelectProduct:
-                    let foodListVM = FoodListViewModel(
+                    FoodItemListView(
                         category: .product,
                         listType: .selection,
                         foodItemListTitle: NSLocalizedString("My Products", comment: ""),
-                        helpSheet: .productSelectionListHelp
-                    )
-                    FoodItemListView(
+                        helpSheet: .productSelectionListHelp,
                         navigationPath: $navigationPath,
-                        foodListVM: foodListVM,
                         composedFoodItem: composedFoodItemVM
                     )
                     .accessibilityIdentifierBranch("AddProductToMeal")

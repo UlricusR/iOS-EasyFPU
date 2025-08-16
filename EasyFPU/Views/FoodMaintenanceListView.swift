@@ -12,24 +12,21 @@ import CoreData
 struct FoodMaintenanceListView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var category: FoodItemCategory
-    var listType: FoodListViewModel.FoodItemListType
+    var listType: FoodItemListView.FoodItemListType
     var listTitle: String
-    var helpSheet: FoodListViewModel.SheetState
+    var helpSheet: FoodItemListView.SheetState
     var composedFoodItem: ComposedFoodItemViewModel
     
     @State private var navigationPath = NavigationPath()
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            let foodListVM = FoodListViewModel(
+            FoodItemListView(
                 category: category,
                 listType: listType,
                 foodItemListTitle: listTitle,
-                helpSheet: helpSheet
-            )
-            FoodItemListView(
+                helpSheet: helpSheet,
                 navigationPath: $navigationPath,
-                foodListVM: foodListVM,
                 composedFoodItem: composedFoodItem
             )
             .navigationDestination(for: FoodItemListView.FoodListNavigationDestination.self) { screen in

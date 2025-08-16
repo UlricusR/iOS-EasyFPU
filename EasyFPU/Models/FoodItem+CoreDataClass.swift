@@ -12,20 +12,9 @@ import CoreData
 
 
 public class FoodItem: NSManagedObject {
-    /// Fetches Core Data FoodItems.
-    /// - Parameters:
-    ///   - category: Only fetches FoodItems with the given category. If nil, all FoodItems are fetched.
-    ///   - viewContext: The Core Data context to fetch from. Defaults to the main view context.
-    /// - Returns: An array of FoodItems matching the criteria.
-    static func fetchAll(
-        for category: FoodItemCategory? = nil,
-        viewContext: NSManagedObjectContext = CoreDataStack.viewContext
-    ) -> [FoodItem] {
+    static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [FoodItem] {
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        if let category = category {
-            request.predicate = NSPredicate(format: "category == %@", category.rawValue)
-        }
         
         guard let foodItems = try? CoreDataStack.viewContext.fetch(request) else {
             return []
