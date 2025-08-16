@@ -44,17 +44,10 @@ struct CategoryEditor: View {
                             if !trimmedName.isEmpty {
                                 withAnimation {
                                     // TODO check for duplicate names
-                                    let newCategoryVM = FoodCategoryViewModel(id: UUID(), name: trimmedName, category: selectedFoodItemCategory)
                                     if editedCategory == nil { // New item
-                                        newCategoryVM.save()
+                                        _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory)
                                     } else { // Editing existing item
-                                        let existingCategoryVM = FoodCategoryViewModel(from: editedCategory!)
-                                        var errorMessage = ""
-                                        if !existingCategoryVM.update(from: newCategoryVM, errorMessage: &errorMessage) {
-                                            activeAlert = .simpleAlert(type: .fatalError(message: errorMessage))
-                                            showingAlert = true
-                                            return
-                                        }
+                                        FoodCategory.update(editedCategory!, newName: trimmedName, newCategory: selectedFoodItemCategory)
                                         editedCategory = nil // Clear the edited category
                                     }
                                     name = "" // Clear the text field after saving
@@ -72,8 +65,7 @@ struct CategoryEditor: View {
                             .swipeActions(edge: .trailing) {
                                 Button("Delete", systemImage: "trash") {
                                     withAnimation {
-                                        let foodCategoryVM = FoodCategoryViewModel(from: category)
-                                        foodCategoryVM.delete()
+                                        FoodCategory.delete(category)
                                         internalState += 1 // Trigger view update
                                     }
                                 }
@@ -130,8 +122,7 @@ struct CategoryEditor: View {
             Button("Cancel", role: .cancel) {}
             Button("Save") {
                 // TODO check for duplicate names
-                let newCategoryVM = FoodCategoryViewModel(id: UUID(), name: name, category: selectedFoodItemCategory)
-                newCategoryVM.save()
+                _ = FoodCategory.create(id: UUID(), name: name, category: selectedFoodItemCategory)
             }
             .disabled(self.name.isEmpty)
         }

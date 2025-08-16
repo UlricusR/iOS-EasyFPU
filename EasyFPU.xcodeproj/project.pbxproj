@@ -77,7 +77,6 @@
 		1B9723ED2508AC5C00E606A7 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9723EC2508AC5C00E606A7 /* UserSettings.swift */; };
 		1B9D7DEA2E4D076D00DAE101 /* FoodCategory+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9D7DE92E4D076D00DAE101 /* FoodCategory+CoreDataProperties.swift */; };
 		1B9D7DEB2E4D076D00DAE101 /* FoodCategory+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9D7DE82E4D076D00DAE101 /* FoodCategory+CoreDataClass.swift */; };
-		1B9D7DED2E4D0AE900DAE101 /* FoodCategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9D7DEC2E4D0AE900DAE101 /* FoodCategoryViewModel.swift */; };
 		1BA040CA24BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA040C624BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift */; };
 		1BA040CB24BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA040C724BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift */; };
 		1BA1035B2CDBFF2D00776D15 /* AccessibilityIdentifierBranchModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA103592CDBFF2D00776D15 /* AccessibilityIdentifierBranchModifier.swift */; };
@@ -204,7 +203,6 @@
 		1B9723EC2508AC5C00E606A7 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		1B9D7DE82E4D076D00DAE101 /* FoodCategory+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodCategory+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		1B9D7DE92E4D076D00DAE101 /* FoodCategory+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodCategory+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		1B9D7DEC2E4D0AE900DAE101 /* FoodCategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodCategoryViewModel.swift; sourceTree = "<group>"; };
 		1BA040C624BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TypicalAmount+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BA040C724BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TypicalAmount+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BA103592CDBFF2D00776D15 /* AccessibilityIdentifierBranchModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityIdentifierBranchModifier.swift; sourceTree = "<group>"; };
@@ -429,7 +427,6 @@
 			children = (
 				1BD0693B254D97DD00B0E15A /* VariableAmountItem.swift */,
 				1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */,
-				1B9D7DEC2E4D0AE900DAE101 /* FoodCategoryViewModel.swift */,
 				1BC75242254AF786001C4D27 /* ComposedFoodItemViewModel.swift */,
 				1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */,
 				1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */,
@@ -706,7 +703,6 @@
 				1B816B532CAB345C008670B5 /* RecipeView.swift in Sources */,
 				1B68548824BC70ED005ABB8B /* FoodItemEditor.swift in Sources */,
 				1BF8A4C024C21A52008634DF /* FoodItem+CoreDataClass.swift in Sources */,
-				1B9D7DED2E4D0AE900DAE101 /* FoodCategoryViewModel.swift in Sources */,
 				1BE5F3E72E506B550027B1C1 /* FilteredFoodItemList.swift in Sources */,
 				1B6B93742554008C00F0CC7D /* Ingredient+CoreDataClass.swift in Sources */,
 				1BA963E4250807DD00375650 /* HelpMealExportView.swift in Sources */,

@@ -12,9 +12,15 @@ import CoreData
 
 
 public class FoodCategory: NSManagedObject {
-    static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [FoodCategory] {
+    static func fetchAll(
+        category: FoodItemCategory? = nil,
+        viewContext: NSManagedObjectContext = CoreDataStack.viewContext
+    ) -> [FoodCategory] {
         let request: NSFetchRequest<FoodCategory> = FoodCategory.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        if let category = category {
+            request.predicate = NSPredicate(format: "category == %@", category.rawValue)
+        }
         
         guard let foodCategories = try? CoreDataStack.viewContext.fetch(request) else {
             return []
@@ -30,41 +36,38 @@ public class FoodCategory: NSManagedObject {
         try? viewContext.save()
     }
     
-    /**
-     Creates a new Core Data FoodCategory. Does not relate it to the passed FoodItemViewModel.
-     
-     - Parameters:
-        - foodCategoryVM: the source FoodCategoryViewModel.
-        
-     - Returns: the new Core Data FoodCategory.
-     */
-    static func create(from foodCategoryVM: FoodCategoryViewModel) -> FoodCategory {
+    /// Creates a new Core Data FoodCategory with the given values. Does not check for duplicates.
+    /// - Parameters:
+    ///   - id: The unique identifier for the FoodCategory.
+    ///   - name: The name of the FoodCategory.
+    ///   - category: The category type of the FoodCategory, as a FoodItemCategory..
+    /// - Returns: The created FoodCategory object.
+    static func create(id: UUID, name: String, category: FoodItemCategory) -> FoodCategory {
         // Create the FoodCategory
         let cdFoodCategory = FoodCategory(context: CoreDataStack.viewContext)
         
         // Fill data
-        cdFoodCategory.id = foodCategoryVM.id
-        cdFoodCategory.name = foodCategoryVM.name
-        cdFoodCategory.category = foodCategoryVM.category.rawValue
+        cdFoodCategory.id = id
+        cdFoodCategory.name = name
+        cdFoodCategory.category = category.rawValue
         
         // Save
         CoreDataStack.shared.save()
         return cdFoodCategory
     }
     
-    /**
-     Updates a Core Data FoodCategory with the values from a FoodCategoryViewModel.
-     
-     - Parameters:
-        - cdFoodCategory: The Core Data FoodCategory to be updated.
-        - foodCategoryVM: The source FoodCategoryViewModel.
-     */
+    /// Updates an existing Core Data FoodCategory with new values.
+    /// - Parameters:
+    ///   - cdFoodCategory: The existing FoodCategory object to update.
+    ///   - newName: The new name for the FoodCategory.
+    ///   - newCategory: The new category type for the FoodCategory, as a FoodItemCategory.
     static func update(
         _ cdFoodCategory: FoodCategory,
-        with foodCategoryVM: FoodCategoryViewModel
+        newName: String,
+        newCategory: FoodItemCategory
     ) {
-        cdFoodCategory.name = foodCategoryVM.name
-        cdFoodCategory.category = foodCategoryVM.category.rawValue
+        cdFoodCategory.name = newName
+        cdFoodCategory.category = newCategory.rawValue
         
         CoreDataStack.shared.save()
     }

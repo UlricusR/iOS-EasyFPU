@@ -50,8 +50,7 @@ struct FoodItemListView: View {
                 navigationPath: $navigationPath,
                 composedFoodItem: composedFoodItem,
                 searchString: searchString,
-                showFavoritesOnly: showFavoritesOnly,
-                grouping: false
+                showFavoritesOnly: showFavoritesOnly
             )
         }
         .navigationTitle(foodItemListTitle)

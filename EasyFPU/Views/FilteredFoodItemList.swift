@@ -11,10 +11,12 @@ import SwiftUI
 import CoreData
 
 struct FilteredFoodItemList: View {
-    var category: FoodItemCategory
-    var listType: FoodItemListView.FoodItemListType
     @Binding var navigationPath: NavigationPath
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject private var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject private var userSettings = UserSettings.shared
+    
+    private var category: FoodItemCategory
+    private var listType: FoodItemListView.FoodItemListType
     
     @FetchRequest var fetchRequest: FetchedResults<FoodItem>
     
@@ -33,6 +35,22 @@ struct FilteredFoodItemList: View {
                 return $0.name < $1.name
             }
         }
+    }
+    
+    private var groupedFoodItemVMs: [String: [FoodItemViewModel]] {
+        let foodItemVMs = sortedFoodItemVMs
+        
+        // Get the foodItemVMs with an associated FoodCategory
+        let categorizedFoodItemVMs = foodItemVMs.filter { $0.foodCategory != nil }
+        var groupedCategorized = Dictionary(grouping: categorizedFoodItemVMs) { $0.foodCategory!.name }
+        
+        // Append the uncategorized items to the grouped dictionary
+        let uncategorizedFoodItemVMs = foodItemVMs.filter { $0.foodCategory == nil }
+        if !uncategorizedFoodItemVMs.isEmpty {
+            groupedCategorized[NSLocalizedString("Uncategorized", comment: "")] = uncategorizedFoodItemVMs
+        }
+        
+        return groupedCategorized
     }
     
     private var emptyStateImage: Image {
@@ -80,12 +98,27 @@ struct FilteredFoodItemList: View {
             .accessibilityIdentifierLeaf("AddFoodItemButton")
         } else {
             ZStack {
-                // The food list
-                List(sortedFoodItemVMs) { foodItem in
-                    FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType)
-                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                if userSettings.groupProductsByCategory && category == .product || userSettings.groupIngredientsByCategory && category == .ingredient {
+                    // Grouped list
+                    List {
+                        ForEach(groupedFoodItemVMs.keys.sorted(), id: \.self) { key in
+                            Section(header: Text(key)) {
+                                ForEach(groupedFoodItemVMs[key]!, id: \.id) { foodItem in
+                                    FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType, showFoodCategory: false)
+                                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                                }
+                            }
+                        }
+                    }
+                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
+                } else {
+                    // Un-grouped list
+                    List(sortedFoodItemVMs) { foodItem in
+                        FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType, showFoodCategory: true)
+                            .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                    }
+                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
                 }
-                .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
                 
                 // The overlaying finished button in case we have a selection type list
                 if listType == .selection {
@@ -120,8 +153,7 @@ struct FilteredFoodItemList: View {
         navigationPath: Binding<NavigationPath>,
         composedFoodItem: ComposedFoodItemViewModel,
         searchString: String,
-        showFavoritesOnly: Bool,
-        grouping: Bool
+        showFavoritesOnly: Bool
     ) {
         self.category = category
         self.listType = listType

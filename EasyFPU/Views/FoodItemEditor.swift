@@ -114,7 +114,11 @@ struct FoodItemEditor: View {
                         }
                         
                         // Food Category
-                        
+                        Picker("Food Category", selection: $draftFoodItemVM.foodCategory) {
+                            ForEach(FoodCategory.fetchAll(category: category), id: \.id) { foodCategory in
+                                Text(foodCategory.name).tag(foodCategory)
+                            }
+                        }
                         
                         // Category
                         Picker("Category", selection: $draftFoodItemVM.category) {
@@ -376,7 +380,7 @@ struct FoodItemEditor: View {
             if let newFoodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: self.draftFoodItemVM.name,
-                foodCategoryVM: self.draftFoodItemVM.foodCategoryVM,
+                foodCategory: self.draftFoodItemVM.foodCategory,
                 category: self.draftFoodItemVM.category,
                 favorite: self.draftFoodItemVM.favorite,
                 caloriesAsString: self.draftFoodItemVM.caloriesPer100gAsString,

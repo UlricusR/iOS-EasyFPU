@@ -45,7 +45,7 @@ public class FoodItem: NSManagedObject {
         // Fill data
         cdFoodItem.id = foodItemVM.id
         cdFoodItem.name = foodItemVM.name
-        cdFoodItem.foodCategory = foodItemVM.foodCategoryVM?.cdFoodCategory
+        cdFoodItem.foodCategory = foodItemVM.foodCategory
         cdFoodItem.category = foodItemVM.category.rawValue
         cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
         cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
@@ -98,7 +98,7 @@ public class FoodItem: NSManagedObject {
             
             // Fill data
             cdFoodItem.name = composedFoodItemVM.name
-            cdFoodItem.foodCategory = composedFoodItemVM.foodCategoryVM?.cdFoodCategory
+            cdFoodItem.foodCategory = composedFoodItemVM.foodCategory
             cdFoodItem.caloriesPer100g = composedFoodItemVM.caloriesPer100g
             cdFoodItem.carbsPer100g = composedFoodItemVM.carbsPer100g
             cdFoodItem.sugarsPer100g = composedFoodItemVM.sugarsPer100g
@@ -137,7 +137,7 @@ public class FoodItem: NSManagedObject {
         typicalAmountsToBeDeleted: [TypicalAmountViewModel]
     ) {
         cdFoodItem.name = foodItemVM.name
-        cdFoodItem.foodCategory = foodItemVM.foodCategoryVM?.cdFoodCategory
+        cdFoodItem.foodCategory = foodItemVM.foodCategory
         cdFoodItem.category = foodItemVM.category.rawValue
         cdFoodItem.favorite = foodItemVM.favorite
         cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g

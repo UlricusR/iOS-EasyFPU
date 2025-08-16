@@ -88,14 +88,14 @@ class UserSettings: ObservableObject {
     @Published var composedMeal = ComposedFoodItemViewModel(
         id: UUID(),
         name: NSLocalizedString("Total meal", comment: ""),
-        foodCategoryVM: nil,
+        foodCategory: nil,
         category: .product,
         favorite: false
     )
     @Published var composedProduct = ComposedFoodItemViewModel(
         id: UUID(),
         name: NSLocalizedString("Composed product", comment: ""),
-        foodCategoryVM: nil,
+        foodCategory: nil,
         category: .ingredient,
         favorite: false
     )
