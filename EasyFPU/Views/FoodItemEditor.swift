@@ -428,6 +428,9 @@ struct FoodItemEditor: View {
                     // Show alert
                     activeAlert = .updatedIngredients
                     self.showingAlert = true
+                } else {
+                    // Update the source food item
+                    updateSourceFoodItem()
                 }
             } else {
                 // Update the source food item
