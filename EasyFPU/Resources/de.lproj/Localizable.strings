@@ -129,7 +129,6 @@
 "Oops! There are no ingredients in your list yet. Start by adding some!" = "Hoppla! Es sind noch keine Zutaten auf Deiner Liste. Füge welche hinzu!";
 "Ingredient List" = "Zutatenliste";
 "New Ingredient" = "Neue Zutat";
-"Category" = "Kategorie";
 "Composed product" = "Mein Rezept";
 "Weight" = "Gewicht";
 "Final product" = "Mein Rezept";
@@ -212,6 +211,7 @@
 "Do you really want to delete this recipe? This cannot be undone!" = "Willst Du dieses Rezept wirklich löschen? Dies kann nicht rückgängig gemacht werden!";
 
 // Category editor
+"Category" = "Kategorie";
 "Categories" = "Kategorien";
 "Oops! You have not added any categories yet." = "Hoppla! Du hast noch keine Kategorien angelegt.";
 "New category" = "Neue Kategorie";
@@ -219,7 +219,6 @@
 "Existing Categories" = "Vorhandene Kategorien";
 "Hit return to save" = "Zum Speichern Return drücken";
 "Uncategorized" = "Ohne Kategorie";
-"Food Category" = "Lebensmittelkategorie";
 
 // Settings editor
 "Absorption scheme" = "Absorptionsschema";

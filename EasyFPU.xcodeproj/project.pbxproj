@@ -46,6 +46,7 @@
 		1B3CEB9D24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */; };
 		1B3EEB16253368B3004C110A /* HealthExportCarbsPreviewChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */; };
 		1B4329C12CBEB1A500C478C3 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4329C02CBEB19F00C478C3 /* CoreDataStack.swift */; };
+		1B4658A32E51FACE00243CF4 /* DynamicList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4658A22E51FACE00243CF4 /* DynamicList.swift */; };
 		1B51B3302540B31300064EB1 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 1B51B32F2540B31300064EB1 /* CodeScanner */; };
 		1B51B3332540BCB800064EB1 /* FoodPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B51B3322540BCB800064EB1 /* FoodPreview.swift */; };
 		1B5B91062CA9B6B200135569 /* CountryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B91052CA9B6B200135569 /* CountryPickerView.swift */; };
@@ -170,6 +171,7 @@
 		1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionSchemeViewModel.swift; sourceTree = "<group>"; };
 		1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthExportCarbsPreviewChart.swift; sourceTree = "<group>"; };
 		1B4329C02CBEB19F00C478C3 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		1B4658A22E51FACE00243CF4 /* DynamicList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicList.swift; sourceTree = "<group>"; };
 		1B51B3322540BCB800064EB1 /* FoodPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodPreview.swift; sourceTree = "<group>"; };
 		1B5B91052CA9B6B200135569 /* CountryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPickerView.swift; sourceTree = "<group>"; };
 		1B5CA4F22D062A1F002AD0A8 /* FoodMaintenanceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodMaintenanceListView.swift; sourceTree = "<group>"; };
@@ -478,6 +480,7 @@
 				1B377A6724FAA935005AC5C6 /* AboutView.swift */,
 				1B1CC90E24DC4F390014DD7D /* MenuView.swift */,
 				1B8ABDB22E4D1D66008873A3 /* CategoryEditor.swift */,
+				1B4658A22E51FACE00243CF4 /* DynamicList.swift */,
 				1B3CEB9A24D32D38001D64DA /* TherapySettingsEditor.swift */,
 				1BB9BD9F2CDD54650043B465 /* AbsorptionParameterSettingsView.swift */,
 				1BB9BDA12CDD56DB0043B465 /* AbsorptionBlockSettingsView.swift */,
@@ -722,6 +725,7 @@
 				1B0CE2BA250663B5008B04E3 /* HealthDataHelper.swift in Sources */,
 				1B3EEB16253368B3004C110A /* HealthExportCarbsPreviewChart.swift in Sources */,
 				1B18844A253B336500B671A2 /* FoodDatabaseEntry+FoodDatabaseImage.swift in Sources */,
+				1B4658A32E51FACE00243CF4 /* DynamicList.swift in Sources */,
 				1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */,
 				1BA040CA24BF9DE2001308EC /* TypicalAmount+CoreDataClass.swift in Sources */,
 				1BA040CB24BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift in Sources */,

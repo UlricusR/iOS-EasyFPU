@@ -129,7 +129,6 @@
 "Oops! There are no ingredients in your list yet. Start by adding some!" = "Oops! There are no ingredients in your list yet. Start by adding some!";
 "Ingredient List" = "Ingredient List";
 "New Ingredient" = "New Ingredient";
-"Category" = "Category";
 "Composed product" = "My recipe";
 "Weight" = "Weight";
 "Final product" = "My recipe";
@@ -212,6 +211,7 @@
 "Do you really want to delete this recipe? This cannot be undone!" = "Do you really want to delete this recipe? This cannot be undone!";
 
 // Category editor
+"Category" = "Category";
 "Categories" = "Categories";
 "Oops! You have not added any categories yet." = "Oops! You have not added any categories yet.";
 "New category" = "New category";
@@ -219,7 +219,6 @@
 "Existing Categories" = "Existing Categories";
 "Hit return to save" = "Hit return to save";
 "Uncategorized" = "Uncategorized";
-"Food Category" = "Food Category";
 
 // Settings editor
 "Absorption scheme" = "Absorption scheme";

@@ -21,7 +21,6 @@ struct CategoryEditor: View {
     @State private var activeAlert: AlertChoice?
     @State private var name = ""
     @State private var editedCategory: FoodCategory?
-    @State private var internalState: Int = 0 // Used to trigger view updates
     
     var body: some View {
         VStack {
@@ -33,66 +32,65 @@ struct CategoryEditor: View {
             .pickerStyle(.segmented)
             .padding()
                 
-            let foodCategories = getFoodCategories()
-            
-            Form {
-                Section(header: Text("Add/Edit Category"), footer: Text("Hit return to save")) {
-                    // Add new category text field
-                    TextField(LocalizedStringKey("New category"), text: $name, prompt: Text("New category"))
-                        .onSubmit {
-                            let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-                            if !trimmedName.isEmpty {
-                                withAnimation {
-                                    // TODO check for duplicate names
-                                    if editedCategory == nil { // New item
-                                        _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory)
-                                    } else { // Editing existing item
-                                        FoodCategory.update(editedCategory!, newName: trimmedName, newCategory: selectedFoodItemCategory)
-                                        editedCategory = nil // Clear the edited category
-                                    }
-                                    name = "" // Clear the text field after saving
-                                    internalState += 1 // Trigger view update
-                                }
-                            }
-                        }
-                }
-                
-                Section(header: Text("Existing Categories")) {
-                    // List of existing categories
-                    List(foodCategories, id: \.self) { category in
-                        Text(category.name)
-                            .foregroundStyle(editedCategory == category ? .gray : .black)
-                            .swipeActions(edge: .trailing) {
-                                Button("Delete", systemImage: "trash") {
+            ScrollViewReader { proxy in
+                Form {
+                    Section(header: Text("Add/Edit Category"), footer: Text("Hit return to save")) {
+                        // Add new category text field
+                        TextField(LocalizedStringKey("New category"), text: $name, prompt: Text("New category"))
+                            .id(0)
+                            .onSubmit {
+                                let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+                                if !trimmedName.isEmpty {
                                     withAnimation {
-                                        FoodCategory.delete(category)
-                                        internalState += 1 // Trigger view update
+                                        // TODO check for duplicate names
+                                        if editedCategory == nil { // New item
+                                            _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory)
+                                        } else { // Editing existing item
+                                            FoodCategory.update(editedCategory!, newName: trimmedName, newCategory: selectedFoodItemCategory)
+                                            editedCategory = nil // Clear the edited category
+                                        }
+                                        name = "" // Clear the text field after saving
                                     }
                                 }
-                                .tint(.red)
-                                .accessibilityIdentifierLeaf("DeleteButton")
-                            }
-                            .swipeActions(edge: .leading) {
-                                Button("Edit", systemImage: "pencil") {
-                                    editedCategory = category
-                                    name = category.name // Pre-fill the text field with the category name
-                                }
-                                .tint(.blue)
-                                .accessibilityIdentifierLeaf("EditButton")
                             }
                     }
                     
-                    if foodCategories.isEmpty {
-                        HStack {
-                            Image(systemName: "tray")
-                            Text("Oops! You have not added any categories yet.").padding()
+                    Section(header: Text("Existing Categories")) {
+                        // List of existing categories
+                        try? DynamicList(
+                            filterKey: "category",
+                            filterValue: selectedFoodItemCategory.rawValue,
+                            sortKey: "name",
+                            sortAscending: true,
+                            emptyStateMessage: NSLocalizedString("Oops! You have not added any categories yet.", comment: ""),
+                        ) { (category: FoodCategory) in
+                            Text(category.name)
+                                .foregroundStyle(editedCategory == category ? .gray : .black)
+                                .swipeActions(edge: .trailing) {
+                                    Button("Delete", systemImage: "trash") {
+                                        withAnimation {
+                                            FoodCategory.delete(category)
+                                        }
+                                    }
+                                    .tint(.red)
+                                    .accessibilityIdentifierLeaf("DeleteButton")
+                                }
+                                .swipeActions(edge: .leading) {
+                                    Button("Edit", systemImage: "pencil") {
+                                        withAnimation {
+                                            editedCategory = category
+                                            name = category.name // Pre-fill the text field with the category name
+                                            proxy.scrollTo(0, anchor: .top) // Scroll to the text field
+                                        }
+                                    }
+                                    .tint(.blue)
+                                    .accessibilityIdentifierLeaf("EditButton")
+                                }
                         }
-                        .padding()
                     }
                 }
             }
         }
-        .id(internalState) // Trigger view updates when internalState changes
         .navigationTitle("Categories")
         .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
             alertAction(for: $0)
@@ -137,20 +135,5 @@ struct CategoryEditor: View {
         case nil:
             ""
         }
-    }
-    
-    private func getFoodCategories() -> [FoodCategory] {
-        // Fetch food categories based on the selected category
-        let sortDescriptor = NSSortDescriptor(keyPath: \FoodCategory.name, ascending: true)
-        let predicate = NSPredicate(format: "category == %@", selectedFoodItemCategory.rawValue)
-        let fetchRequest: NSFetchRequest<FoodCategory> = FoodCategory.fetchRequest()
-        fetchRequest.predicate = predicate
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        let context = CoreDataStack.viewContext
-        guard let foodCategories = try? context.fetch(fetchRequest) else {
-            return []
-        }
-        
-        return foodCategories.map { $0 }
     }
 }

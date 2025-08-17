@@ -17,6 +17,7 @@ struct FilteredFoodItemList: View {
     
     private var category: FoodItemCategory
     private var listType: FoodItemListView.FoodItemListType
+    private var searchString: String
     
     @FetchRequest var fetchRequest: FetchedResults<FoodItem>
     
@@ -79,7 +80,7 @@ struct FilteredFoodItemList: View {
     }
     
     var body: some View {
-        if fetchRequest.isEmpty {
+        if searchString.isEmpty && fetchRequest.isEmpty {
             // List is empty, so show a nice picture and an action button
             emptyStateImage.padding()
             emptyStateMessage.padding()
@@ -108,6 +109,7 @@ struct FilteredFoodItemList: View {
                                         .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                                 }
                             }
+                            .headerProminence(.increased) // Makes the section header more prominent
                         }
                     }
                     .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
@@ -159,6 +161,7 @@ struct FilteredFoodItemList: View {
         self.listType = listType
         self._navigationPath = navigationPath
         self.composedFoodItem = composedFoodItem
+        self.searchString = searchString
         
         // Configure the fetch request based on the parameters
         let request = NSFetchRequest<FoodItem>(entityName: "FoodItem")

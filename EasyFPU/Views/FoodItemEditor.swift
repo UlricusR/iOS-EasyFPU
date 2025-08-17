@@ -114,16 +114,10 @@ struct FoodItemEditor: View {
                         }
                         
                         // Food Category
-                        Picker("Food Category", selection: $draftFoodItemVM.foodCategory) {
+                        Picker("Category", selection: $draftFoodItemVM.foodCategory) {
                             ForEach(FoodCategory.fetchAll(category: category), id: \.id) { foodCategory in
                                 Text(foodCategory.name).tag(foodCategory)
                             }
-                        }
-                        
-                        // Category
-                        Picker("Category", selection: $draftFoodItemVM.category) {
-                            Text("Product").tag(FoodItemCategory.product)
-                            Text("Ingredient").tag(FoodItemCategory.ingredient)
                         }
                         .accessibilityIdentifierLeaf("CategoryPicker")
                         

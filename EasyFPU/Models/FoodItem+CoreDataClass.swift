@@ -245,6 +245,7 @@ public class FoodItem: NSManagedObject {
     static func setCategory(_ foodItem: FoodItem?, to category: String) {
         if let foodItem = foodItem {
             foodItem.category = category
+            foodItem.foodCategory = nil // Remove the food category, as it belonged to the previous category
             CoreDataStack.viewContext.refresh(foodItem, mergeChanges: true)
             CoreDataStack.shared.save()
         }
