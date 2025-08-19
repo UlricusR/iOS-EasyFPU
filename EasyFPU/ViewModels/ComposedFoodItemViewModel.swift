@@ -147,7 +147,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         favorite = try composedFoodItem.decode(Bool.self, forKey: .favorite)
         name = try composedFoodItem.decode(String.self, forKey: .name)
         if let foodCategoryName = try? composedFoodItem.decode(String.self, forKey: .foodCategory) {
-            foodCategory = FoodCategory.getFoodCategoriesByName(name: foodCategoryName)?.first
+            foodCategory = FoodCategory.getFoodCategoriesByName(name: foodCategoryName, category: category)?.first
         }
         numberOfPortions = try composedFoodItem.decode(Int.self, forKey: .numberOfPortions)
         

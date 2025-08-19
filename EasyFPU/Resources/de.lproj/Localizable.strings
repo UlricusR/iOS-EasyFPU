@@ -218,7 +218,8 @@
 "Add/Edit Category" = "Kategorie hinzufügen/bearbeiten";
 "Existing Categories" = "Vorhandene Kategorien";
 "Hit return to save" = "Zum Speichern Return drücken";
-"Uncategorized" = "Ohne Kategorie";
+"Uncategorized" = "- Ohne Kategorie -";
+"Category already exists!" = "Kategorie existiert bereits!";
 
 // Settings editor
 "Absorption scheme" = "Absorptionsschema";

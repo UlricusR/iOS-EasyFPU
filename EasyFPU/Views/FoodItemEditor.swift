@@ -115,8 +115,9 @@ struct FoodItemEditor: View {
                         
                         // Food Category
                         Picker("Category", selection: $draftFoodItemVM.foodCategory) {
+                            Text("Uncategorized").tag(nil as FoodCategory?)
                             ForEach(FoodCategory.fetchAll(category: category), id: \.id) { foodCategory in
-                                Text(foodCategory.name).tag(foodCategory)
+                                Text(foodCategory.name).tag(foodCategory as FoodCategory?)
                             }
                         }
                         .accessibilityIdentifierLeaf("CategoryPicker")

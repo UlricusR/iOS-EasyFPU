@@ -19,7 +19,7 @@
         <attribute name="category" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="composedFoodItems" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ComposedFoodItem" inverseName="foodCategory" inverseEntity="ComposedFoodItem"/>
+        <relationship name="composedFoodItems" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ComposedFoodItem" inverseName="foodCategory" inverseEntity="ComposedFoodItem"/>
         <relationship name="foodItems" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="foodCategory" inverseEntity="FoodItem"/>
     </entity>
     <entity name="FoodItem" representedClassName=".FoodItem" syncable="YES">

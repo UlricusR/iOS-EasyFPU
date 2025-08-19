@@ -10,15 +10,10 @@ import SwiftUI
 import CoreData
 
 struct CategoryEditor: View {
-    enum AlertChoice {
-        case simpleAlert(type: SimpleAlertType)
-        case addCategory
-    }
-    
     @Binding var navigationPath: NavigationPath
     @State private var selectedFoodItemCategory: FoodItemCategory = .product
     @State private var showingAlert = false
-    @State private var activeAlert: AlertChoice?
+    @State private var activeAlert: SimpleAlertType?
     @State private var name = ""
     @State private var editedCategory: FoodCategory?
     
@@ -41,15 +36,20 @@ struct CategoryEditor: View {
                             .onSubmit {
                                 let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
                                 if !trimmedName.isEmpty {
-                                    withAnimation {
-                                        // TODO check for duplicate names
-                                        if editedCategory == nil { // New item
-                                            _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory)
-                                        } else { // Editing existing item
-                                            FoodCategory.update(editedCategory!, newName: trimmedName, newCategory: selectedFoodItemCategory)
-                                            editedCategory = nil // Clear the edited category
+                                    if FoodCategory.exists(name: trimmedName, category: selectedFoodItemCategory) {
+                                        activeAlert = .warning(message: NSLocalizedString("Category already exists!", comment: ""))
+                                        showingAlert = true
+                                    } else {
+                                        // Save the new or edited category
+                                        withAnimation {
+                                            if editedCategory == nil { // New item
+                                                _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory)
+                                            } else { // Editing existing item
+                                                FoodCategory.update(editedCategory!, newName: trimmedName, newCategory: selectedFoodItemCategory)
+                                                editedCategory = nil // Clear the edited category
+                                            }
+                                            name = "" // Clear the text field after saving
                                         }
-                                        name = "" // Clear the text field after saving
                                     }
                                 }
                             }
@@ -92,48 +92,14 @@ struct CategoryEditor: View {
             }
         }
         .navigationTitle("Categories")
-        .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
-            alertAction(for: $0)
-        } message: {
-            alertMessage(for: $0)
-        }
-    }
-    
-    @ViewBuilder
-    private func alertMessage(for alert: AlertChoice) -> some View {
-        switch alert {
-        case let .simpleAlert(type: type):
-            type.message()
-        case .addCategory:
-            TextField(text: $name) {
-                Text("Name")
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func alertAction(for alert: AlertChoice) -> some View {
-        switch alert {
-        case let .simpleAlert(type: type):
-            type.button()
-        case .addCategory:
-            Button("Cancel", role: .cancel) {}
-            Button("Save") {
-                // TODO check for duplicate names
-                _ = FoodCategory.create(id: UUID(), name: name, category: selectedFoodItemCategory)
-            }
-            .disabled(self.name.isEmpty)
-        }
-    }
-    
-    private var alertTitle: LocalizedStringKey {
-        switch activeAlert {
-        case let .simpleAlert(type: type):
-            LocalizedStringKey(type.title())
-        case .addCategory:
-            LocalizedStringKey("New category")
-        case nil:
-            ""
+        .alert(
+            activeAlert?.title() ?? "Notice",
+            isPresented: $showingAlert,
+            presenting: activeAlert
+        ) { activeAlert in
+            activeAlert.button()
+        } message: { activeAlert in
+            activeAlert.message()
         }
     }
 }

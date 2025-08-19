@@ -300,26 +300,27 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
             let uuidString = try foodItem.decode(String.self, forKey: .id)
             
             // Success --> we overwrite the id (and generate a new one if this goes wrong)
-            id = UUID(uuidString: uuidString) ?? UUID()
+            self.id = UUID(uuidString: uuidString) ?? UUID()
         } catch {
             // We generate a new UUID
-            id = UUID()
+            self.id = UUID()
         }
-        name = try foodItem.decode(String.self, forKey: .name)
+        self.name = try foodItem.decode(String.self, forKey: .name)
+        let category = try FoodItemCategory.init(rawValue: foodItem.decode(String.self, forKey: .category)) ?? .product
+        self.category = category
         if let foodCategoryString = try? foodItem.decode(String.self, forKey: .foodCategory) {
-            foodCategory = FoodCategory.getFoodCategoriesByName(name: foodCategoryString)?.first
+            self.foodCategory = FoodCategory.getFoodCategoriesByName(name: foodCategoryString, category: category)?.first
         }
-        category = try FoodItemCategory.init(rawValue: foodItem.decode(String.self, forKey: .category)) ?? .product
-        favorite = try foodItem.decode(Bool.self, forKey: .favorite)
-        amount = try foodItem.decode(Int.self, forKey: .amount)
-        caloriesPer100g = try foodItem.decode(Double.self, forKey: .caloriesPer100g)
-        carbsPer100g = try foodItem.decode(Double.self, forKey: .carbsPer100g)
-        sugarsPer100g = try foodItem.decode(Double.self, forKey: .sugarsPer100g)
-        sourceID = try? foodItem.decode(String.self, forKey: .sourceID)
+        self.favorite = try foodItem.decode(Bool.self, forKey: .favorite)
+        self.amount = try foodItem.decode(Int.self, forKey: .amount)
+        self.caloriesPer100g = try foodItem.decode(Double.self, forKey: .caloriesPer100g)
+        self.carbsPer100g = try foodItem.decode(Double.self, forKey: .carbsPer100g)
+        self.sugarsPer100g = try foodItem.decode(Double.self, forKey: .sugarsPer100g)
+        self.sourceID = try? foodItem.decode(String.self, forKey: .sourceID)
         if let sourceDBString = try? foodItem.decode(String.self, forKey: .sourceDB) {
-            sourceDB = FoodDatabaseType(rawValue: sourceDBString)
+            self.sourceDB = FoodDatabaseType(rawValue: sourceDBString)
         }
-        typicalAmounts = try foodItem.decode([TypicalAmountViewModel].self, forKey: .typicalAmounts)
+        self.typicalAmounts = try foodItem.decode([TypicalAmountViewModel].self, forKey: .typicalAmounts)
         
         guard
             let caloriesAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: caloriesPer100g)),

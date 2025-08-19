@@ -80,6 +80,13 @@ public class FoodCategory: NSManagedObject {
         CoreDataStack.shared.save()
     }
     
+    /// Checks if a FoodCategory with the given id exists.
+    /// - Parameter name: The name of the FoodCategory to check for.
+    /// - Returns: True if a FoodCategory with the given name exists, false otherwise.
+    static func exists(name: String, category: FoodItemCategory) -> Bool {
+        return getFoodCategoriesByName(name: name, category: category)?.count ?? 0 > 0
+    }
+    
     /**
      Returns the Core Data FoodCategory with the given id.
      
@@ -109,8 +116,8 @@ public class FoodCategory: NSManagedObject {
      
      - Returns: The related Core Data FoodCategory, nil if not found.
      */
-    static func getFoodCategoriesByName(name: String) -> [FoodCategory]? {
-        let predicate = NSPredicate(format: "name == %@", name)
+    static func getFoodCategoriesByName(name: String, category: FoodItemCategory) -> [FoodCategory]? {
+        let predicate = NSPredicate(format: "name == %@ AND category == %@", name, category.rawValue)
         let request: NSFetchRequest<FoodCategory> = FoodCategory.fetchRequest()
         request.predicate = predicate
         do {
