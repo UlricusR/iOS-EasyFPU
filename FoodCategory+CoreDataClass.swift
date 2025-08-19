@@ -87,6 +87,38 @@ public class FoodCategory: NSManagedObject {
         return getFoodCategoriesByName(name: name, category: category)?.count ?? 0 > 0
     }
     
+    /// Checks if the given FoodCategory has related items, either FoodItems or ComposedFoodItems.
+    /// - Parameter foodCategory: The FoodCategory to check for related items.
+    /// - Returns: True if there are related items, false otherwise.
+    static func hasRelatedItems(foodCategory: FoodCategory) -> Bool {
+        var hasRelatedItems = false
+        
+        // Check if there are any related FoodItems
+        let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
+        request.predicate = NSPredicate(format: "foodCategory == %@", foodCategory)
+        
+        do {
+            let result = try CoreDataStack.viewContext.fetch(request)
+            hasRelatedItems = !result.isEmpty
+        } catch {
+            debugPrint("Error fetching food items for category: \(error)")
+        }
+        
+        // Check if there are any related ComposedFoodItems
+        if !hasRelatedItems {
+            let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
+            request.predicate = NSPredicate(format: "foodCategory == %@", foodCategory)
+            do {
+                let result = try CoreDataStack.viewContext.fetch(request)
+                hasRelatedItems = !result.isEmpty
+            } catch {
+                debugPrint("Error fetching composed food items for category: \(error)")
+            }
+        }
+        
+        return hasRelatedItems
+    }
+    
     /**
      Returns the Core Data FoodCategory with the given id.
      

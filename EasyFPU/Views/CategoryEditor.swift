@@ -39,17 +39,18 @@ struct CategoryEditor: View {
                                     if FoodCategory.exists(name: trimmedName, category: selectedFoodItemCategory) {
                                         activeAlert = .warning(message: NSLocalizedString("Category already exists!", comment: ""))
                                         showingAlert = true
-                                    } else {
-                                        // Save the new or edited category
-                                        withAnimation {
-                                            if editedCategory == nil { // New item
-                                                _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory)
-                                            } else { // Editing existing item
-                                                FoodCategory.update(editedCategory!, newName: trimmedName, newCategory: selectedFoodItemCategory)
-                                                editedCategory = nil // Clear the edited category
-                                            }
-                                            name = "" // Clear the text field after saving
+                                        return
+                                    }
+                                    
+                                    // Save the new or edited category
+                                    withAnimation {
+                                        if editedCategory == nil { // New item
+                                            _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory)
+                                        } else { // Editing existing item
+                                            FoodCategory.update(editedCategory!, newName: trimmedName, newCategory: selectedFoodItemCategory)
+                                            editedCategory = nil // Clear the edited category
                                         }
+                                        name = "" // Clear the text field after saving
                                     }
                                 }
                             }
@@ -68,6 +69,11 @@ struct CategoryEditor: View {
                                 .foregroundStyle(editedCategory == category ? .gray : .black)
                                 .swipeActions(edge: .trailing) {
                                     Button("Delete", systemImage: "trash") {
+                                        if FoodCategory.hasRelatedItems(foodCategory: category) {
+                                            activeAlert = .warning(message: NSLocalizedString("Cannot delete category which is in use!", comment: ""))
+                                            showingAlert = true
+                                            return
+                                        }
                                         withAnimation {
                                             FoodCategory.delete(category)
                                         }

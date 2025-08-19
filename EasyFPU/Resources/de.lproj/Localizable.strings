@@ -220,6 +220,7 @@
 "Hit return to save" = "Zum Speichern Return drücken";
 "Uncategorized" = "- Ohne Kategorie -";
 "Category already exists!" = "Kategorie existiert bereits!";
+"Cannot delete category which is in use!" = "Kann Kategorie nicht löschen, da sie benutzt wird!";
 
 // Settings editor
 "Absorption scheme" = "Absorptionsschema";
