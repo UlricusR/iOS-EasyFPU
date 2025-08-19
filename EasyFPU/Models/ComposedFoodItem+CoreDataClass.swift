@@ -48,6 +48,7 @@ public class ComposedFoodItem: NSManagedObject {
         
         // Fill data
         cdComposedFoodItem.name = composedFoodItemVM.name
+        cdComposedFoodItem.foodCategory = composedFoodItemVM.foodCategory
         cdComposedFoodItem.favorite = composedFoodItemVM.favorite
         cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
         cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
@@ -84,6 +85,7 @@ public class ComposedFoodItem: NSManagedObject {
         if let cdComposedFoodItem = composedFoodItemVM.cdComposedFoodItem {
             // Update data in cdComposedFoodItem
             cdComposedFoodItem.name = composedFoodItemVM.name
+            cdComposedFoodItem.foodCategory = composedFoodItemVM.foodCategory
             cdComposedFoodItem.favorite = composedFoodItemVM.favorite
             cdComposedFoodItem.amount = Int64(composedFoodItemVM.amount)
             cdComposedFoodItem.numberOfPortions = Int16(composedFoodItemVM.numberOfPortions)
@@ -98,6 +100,7 @@ public class ComposedFoodItem: NSManagedObject {
             
             // Update related cdFoodItem
             cdComposedFoodItem.foodItem?.name = composedFoodItemVM.name
+            cdComposedFoodItem.foodItem?.foodCategory = composedFoodItemVM.foodCategory
             cdComposedFoodItem.foodItem?.favorite = composedFoodItemVM.favorite
             cdComposedFoodItem.foodItem?.caloriesPer100g = composedFoodItemVM.caloriesPer100g
             cdComposedFoodItem.foodItem?.carbsPer100g = composedFoodItemVM.carbsPer100g
@@ -176,6 +179,7 @@ public class ComposedFoodItem: NSManagedObject {
         
         // Fill data
         cdComposedFoodItem.name = existingComposedFoodItem.name + NSLocalizedString(" - Copy", comment: "")
+        cdComposedFoodItem.foodCategory = existingComposedFoodItem.foodCategory
         cdComposedFoodItem.favorite = existingComposedFoodItem.favorite
         cdComposedFoodItem.amount = existingComposedFoodItem.amount
         cdComposedFoodItem.numberOfPortions = existingComposedFoodItem.numberOfPortions

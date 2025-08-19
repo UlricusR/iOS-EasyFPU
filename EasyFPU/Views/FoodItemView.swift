@@ -15,12 +15,12 @@ struct FoodItemView: View {
         case confirmDelete
     }
     
-    @Environment(\.managedObjectContext) var managedObjectContext
     @Binding var navigationPath: NavigationPath
     @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
     @ObservedObject var foodItemVM: FoodItemViewModel
     var category: FoodItemCategory
     var listType: FoodItemListView.FoodItemListType
+    var showFoodCategory: Bool = true
     @State private var showingAlert = false
     @State private var activeAlert: AlertChoice?
     @State private var isConfirming = false
@@ -57,6 +57,16 @@ struct FoodItemView: View {
                         .accessibilityIdentifierLeaf("IsFavoriteSymbol")
                 }
                 Spacer()
+            }
+            
+            // Optional food category
+            if showFoodCategory && foodItemVM.foodCategory != nil {
+                HStack {
+                    Text(foodItemVM.foodCategory!.name)
+                        .font(.caption)
+                        .accessibilityIdentifierLeaf("FoodCategoryLabel")
+                    Spacer()
+                }
             }
             
             // Second line: Nutritional values per 100g

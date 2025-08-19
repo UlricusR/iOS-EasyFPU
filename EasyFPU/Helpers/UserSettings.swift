@@ -28,6 +28,8 @@ class UserSettings: ObservableObject {
         case exportTotalMealCalories = "ExportTotalMealCalories"
         case treatSugarsSeparately = "TreatSugarsSeparately"
         case searchWorldwide = "SearchWorldwide"
+        case groupProductsByCategory = "GroupProductsByCategory"
+        case groupIngredientsByCategory = "GroupIngredientsByCategory"
     }
     
     enum UserDefaultsDoubleKey: String, CaseIterable {
@@ -79,17 +81,21 @@ class UserSettings: ObservableObject {
     @Published var foodDatabase: FoodDatabase
     @Published var searchWorldwide: Bool
     @Published var countryCode: String?
+    @Published var groupProductsByCategory: Bool
+    @Published var groupIngredientsByCategory: Bool
     
     // The ComposedFoodItems
     @Published var composedMeal = ComposedFoodItemViewModel(
         id: UUID(),
         name: NSLocalizedString("Total meal", comment: ""),
+        foodCategory: nil,
         category: .product,
         favorite: false
     )
     @Published var composedProduct = ComposedFoodItemViewModel(
         id: UUID(),
         name: NSLocalizedString("Composed product", comment: ""),
+        foodCategory: nil,
         category: .ingredient,
         favorite: false
     )
@@ -110,7 +116,9 @@ class UserSettings: ObservableObject {
         alertPeriodAfterExportInMinutes: UserSettings.getValue(for: UserDefaultsIntKey.alertPeriodAfterExportInMinutes) ?? 15,
         foodDatabase: FoodDatabaseType.getFoodDatabase(type: UserSettings.getFoodDatabaseType()),
         searchWorldwide: UserSettings.getValue(for: UserDefaultsBoolKey.searchWorldwide) ?? false,
-        countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode) ?? Locale.current.region?.identifier
+        countryCode: UserSettings.getValue(for: UserDefaultsStringKey.countryCode) ?? Locale.current.region?.identifier,
+        groupProductsByCategory: UserSettings.getValue(for: UserDefaultsBoolKey.groupProductsByCategory) ?? true,
+        groupIngredientsByCategory: UserSettings.getValue(for: UserDefaultsBoolKey.groupIngredientsByCategory) ?? true
     )
     
     private init(
@@ -129,7 +137,9 @@ class UserSettings: ObservableObject {
         alertPeriodAfterExportInMinutes: Int,
         foodDatabase: FoodDatabase,
         searchWorldwide: Bool,
-        countryCode: String?
+        countryCode: String?,
+        groupProductsByCategory: Bool,
+        groupIngredientsByCategory: Bool
     ) {
         self.disclaimerAccepted = disclaimerAccepted
         self.foodDatabaseUseAtOwnRiskAccepted = foodDatabaseUseAtOwnRiskAccepted
@@ -147,6 +157,8 @@ class UserSettings: ObservableObject {
         self.foodDatabase = foodDatabase
         self.searchWorldwide = searchWorldwide
         self.countryCode = countryCode
+        self.groupProductsByCategory = groupProductsByCategory
+        self.groupIngredientsByCategory = groupIngredientsByCategory
     }
     
     // MARK: - Static helper functions

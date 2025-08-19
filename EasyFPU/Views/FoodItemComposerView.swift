@@ -68,6 +68,14 @@ struct FoodItemComposerView: View {
                                         .accessibilityIdentifierLeaf("NameValue")
                                 }
                                 
+                                // Food Category
+                                Picker("Category", selection: self.$composedFoodItemVM.foodCategory) {
+                                    ForEach(FoodCategory.fetchAll(category: .product), id: \.id) { foodCategory in
+                                        Text(foodCategory.name).tag(foodCategory)
+                                    }
+                                }
+                                .accessibilityIdentifierLeaf("CategoryPicker")
+                                
                                 HStack {
                                     Text("Weight")
                                         .accessibilityIdentifierLeaf("WeightLabel")

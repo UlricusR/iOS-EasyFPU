@@ -45,6 +45,7 @@ public class FoodItem: NSManagedObject {
         // Fill data
         cdFoodItem.id = foodItemVM.id
         cdFoodItem.name = foodItemVM.name
+        cdFoodItem.foodCategory = foodItemVM.foodCategory
         cdFoodItem.category = foodItemVM.category.rawValue
         cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
         cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
@@ -97,6 +98,7 @@ public class FoodItem: NSManagedObject {
             
             // Fill data
             cdFoodItem.name = composedFoodItemVM.name
+            cdFoodItem.foodCategory = composedFoodItemVM.foodCategory
             cdFoodItem.caloriesPer100g = composedFoodItemVM.caloriesPer100g
             cdFoodItem.carbsPer100g = composedFoodItemVM.carbsPer100g
             cdFoodItem.sugarsPer100g = composedFoodItemVM.sugarsPer100g
@@ -135,6 +137,7 @@ public class FoodItem: NSManagedObject {
         typicalAmountsToBeDeleted: [TypicalAmountViewModel]
     ) {
         cdFoodItem.name = foodItemVM.name
+        cdFoodItem.foodCategory = foodItemVM.foodCategory
         cdFoodItem.category = foodItemVM.category.rawValue
         cdFoodItem.favorite = foodItemVM.favorite
         cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
@@ -186,6 +189,7 @@ public class FoodItem: NSManagedObject {
         
         // Fill data
         cdFoodItem.name = (existingFoodItem.name) + NSLocalizedString(" - Copy", comment: "")
+        cdFoodItem.foodCategory = existingFoodItem.foodCategory
         cdFoodItem.caloriesPer100g = existingFoodItem.caloriesPer100g
         cdFoodItem.carbsPer100g = existingFoodItem.carbsPer100g
         cdFoodItem.sugarsPer100g = existingFoodItem.sugarsPer100g
@@ -241,6 +245,7 @@ public class FoodItem: NSManagedObject {
     static func setCategory(_ foodItem: FoodItem?, to category: String) {
         if let foodItem = foodItem {
             foodItem.category = category
+            foodItem.foodCategory = nil // Remove the food category, as it belonged to the previous category
             CoreDataStack.viewContext.refresh(foodItem, mergeChanges: true)
             CoreDataStack.shared.save()
         }
