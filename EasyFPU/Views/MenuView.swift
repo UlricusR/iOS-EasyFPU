@@ -11,6 +11,7 @@ import UniformTypeIdentifiers
 
 struct MenuView: View {
     enum SettingsNavigationPath: Hashable {
+        case EditCategories
         case EditTherapySettings
         case EditAppSettings
         case About
@@ -31,6 +32,12 @@ struct MenuView: View {
         NavigationStack(path: $navigationPath) {
             Form {
                 Section(header: Text("Settings")) {
+                    // Category Editor
+                    Button("Categories") {
+                        navigationPath.append(SettingsNavigationPath.EditCategories)
+                    }
+                    .accessibilityIdentifierLeaf("EditCategoriesButton")
+                    
                     // Therapy Settings
                     Button("Therapy Settings") {
                         navigationPath.append(SettingsNavigationPath.EditTherapySettings)
@@ -146,6 +153,12 @@ struct MenuView: View {
             .navigationTitle("Settings")
             .navigationDestination(for: SettingsNavigationPath.self) { screen in
                 switch screen {
+                case .EditCategories:
+                    CategoryEditor(
+                        navigationPath: $navigationPath
+                    )
+                    .environment(\.managedObjectContext, managedObjectContext)
+                    .accessibilityIdentifierBranch("CategoryEditor")
                 case .EditTherapySettings:
                     TherapySettingsEditor(
                         navigationPath: $navigationPath,

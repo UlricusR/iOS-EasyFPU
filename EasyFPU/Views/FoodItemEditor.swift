@@ -113,10 +113,12 @@ struct FoodItemEditor: View {
                             .accessibilityIdentifierLeaf("ScanButton")
                         }
                         
-                        // Category
-                        Picker("Category", selection: $draftFoodItemVM.category) {
-                            Text("Product").tag(FoodItemCategory.product)
-                            Text("Ingredient").tag(FoodItemCategory.ingredient)
+                        // Food Category
+                        Picker("Category", selection: $draftFoodItemVM.foodCategory) {
+                            Text("Uncategorized").tag(nil as FoodCategory?)
+                            ForEach(FoodCategory.fetchAll(category: category), id: \.id) { foodCategory in
+                                Text(foodCategory.name).tag(foodCategory as FoodCategory?)
+                            }
                         }
                         .accessibilityIdentifierLeaf("CategoryPicker")
                         
@@ -373,6 +375,7 @@ struct FoodItemEditor: View {
             if let newFoodItemVM = FoodItemViewModel(
                 id: UUID(),
                 name: self.draftFoodItemVM.name,
+                foodCategory: self.draftFoodItemVM.foodCategory,
                 category: self.draftFoodItemVM.category,
                 favorite: self.draftFoodItemVM.favorite,
                 caloriesAsString: self.draftFoodItemVM.caloriesPer100gAsString,

@@ -162,6 +162,7 @@ struct DataFactory {
         let foodItemVM = FoodItemViewModel(
             id: id,
             name: name,
+            foodCategory: nil,
             category: category!,
             favorite: favorite,
             caloriesPer100g: caloriesPer100g!,
@@ -200,6 +201,7 @@ struct DataFactory {
         let composedFoodItemViewModel = ComposedFoodItemViewModel(
             id: id,
             name: name,
+            foodCategory: nil,
             category: category!,
             favorite: favorite
         )
@@ -247,6 +249,7 @@ struct DataFactory {
         let foodItemVM = FoodItemViewModel(
             id: composedFoodItemViewModel.id,
             name: composedFoodItemViewModel.name,
+            foodCategory: nil,
             category: composedFoodItemViewModel.category,
             favorite: composedFoodItemViewModel.favorite,
             caloriesPer100g: caloriesPer100g,

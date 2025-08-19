@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="24B91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24G84" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="AbsorptionBlock" representedClassName="AbsorptionBlock" syncable="YES">
         <attribute name="absorptionTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -11,8 +11,16 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="numberOfPortions" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="foodCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodCategory" inverseName="composedFoodItems" inverseEntity="FoodCategory"/>
         <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="composedFoodItem" inverseEntity="FoodItem"/>
         <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Ingredient" inverseName="composedFoodItem" inverseEntity="Ingredient"/>
+    </entity>
+    <entity name="FoodCategory" representedClassName=".FoodCategory" syncable="YES">
+        <attribute name="category" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="composedFoodItems" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ComposedFoodItem" inverseName="foodCategory" inverseEntity="ComposedFoodItem"/>
+        <relationship name="foodItems" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="foodCategory" inverseEntity="FoodItem"/>
     </entity>
     <entity name="FoodItem" representedClassName=".FoodItem" syncable="YES">
         <attribute name="caloriesPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -25,6 +33,7 @@
         <attribute name="sourceID" optional="YES" attributeType="String"/>
         <attribute name="sugarsPer100g" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="composedFoodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ComposedFoodItem" inverseName="foodItem" inverseEntity="ComposedFoodItem"/>
+        <relationship name="foodCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodCategory" inverseName="foodItems" inverseEntity="FoodCategory"/>
         <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Ingredient" inverseName="foodItem" inverseEntity="Ingredient"/>
         <relationship name="typicalAmounts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TypicalAmount" inverseName="foodItem" inverseEntity="TypicalAmount"/>
     </entity>

@@ -740,8 +740,6 @@ struct CoreDataTests {
     /// Deletes the FoodItem and its associated TypicalAmounts from the DB. Verifies if deleted.
     /// - Parameter foodItem: The FoodItem to be deleted.
     private static func deleteFoodItemFromDB(_ cdFoodItem: FoodItem) throws {
-        try #require(cdFoodItem != nil)
-        
         // Get the TypicalAmounts - or an empty array if none is found
         let typicalAmountIDs = cdFoodItem.typicalAmounts.array(of: TypicalAmount.self).map({ $0.id })
         
