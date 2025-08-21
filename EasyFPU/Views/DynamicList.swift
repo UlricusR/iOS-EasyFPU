@@ -1,6 +1,7 @@
 //
 //  DynamicList.swift
 //  EasyFPU
+// Related tutorial: https://youtu.be/O4043RVjCGU?si=xnmf9FtA9YUzb4IR
 //
 //  Created by Ulrich Rüth on 17/08/2025.
 //  Copyright © 2025 Ulrich Rüth. All rights reserved.
@@ -28,9 +29,9 @@ struct DynamicList<T: NSManagedObject, Content: View>: View {
         
     }
     
-    init(
+    init<U: CVarArg>(
         filterKey: String,
-        filterValue: String,
+        filterValue: U,
         sortKey: String,
         sortAscending: Bool,
         emptyStateMessage: String = "No items found",
