@@ -66,7 +66,7 @@ struct CategoryEditor: View {
                             emptyStateMessage: NSLocalizedString("Oops! You have not added any categories yet.", comment: ""),
                         ) { (category: FoodCategory) in
                             Text(category.name)
-                                .foregroundStyle(editedCategory == category ? .gray : .black)
+                                .foregroundStyle(editedCategory == category ? .secondary : .primary)
                                 .swipeActions(edge: .trailing) {
                                     Button("Delete", systemImage: "trash") {
                                         if FoodCategory.hasRelatedItems(foodCategory: category) {
