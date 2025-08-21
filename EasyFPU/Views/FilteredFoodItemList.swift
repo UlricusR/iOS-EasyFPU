@@ -1,7 +1,7 @@
 //
 //  FilteredFoodItemList.swift
 //  EasyFPU
-//  Related tutorial: https://www.hackingwithswift.com/quick-start/swiftui/how-to-filter-a-list-using-a-fetchrequest
+//  Related tutorial: https://youtu.be/O4043RVjCGU?si=xnmf9FtA9YUzb4IR
 //
 //  Created by Ulrich Rüth on 16/08/2025.
 //  Copyright © 2025 Ulrich Rüth. All rights reserved.
