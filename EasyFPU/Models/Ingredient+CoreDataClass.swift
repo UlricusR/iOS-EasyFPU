@@ -112,6 +112,7 @@ public class Ingredient: NSManagedObject {
     /**
      Creates new Ingredient from existing one - used to duplicate an Ingredient.
      Contains a reference to the related FoodItem and stores the ID of this FoodItem as separate value for export/import purposes.
+     Does not save the context.
      
      - Parameters:
         - existingIngredient: The Ingredient to be duplicated.
@@ -140,9 +141,6 @@ public class Ingredient: NSManagedObject {
         // Add to ComposedFoodItem
         newCDComposedFoodItem.addToIngredients(cdIngredient)
         
-        // Save new Ingredient
-        CoreDataStack.shared.save()
-        
         return cdIngredient
     }
     
@@ -163,9 +161,6 @@ public class Ingredient: NSManagedObject {
         if ComposedFoodItem.updateRelatedFoodItem(ingredient.composedFoodItem) == nil {
             return nil
         }
-        
-        // Save
-        CoreDataStack.shared.save()
         
         return ingredient
     }

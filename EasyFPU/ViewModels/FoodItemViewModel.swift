@@ -8,36 +8,6 @@
 
 import Foundation
 
-enum FoodItemViewModelError: Equatable {
-    case name(String), calories(String), carbs(String), sugars(String), amount(String), tooMuchCarbs(String), tooMuchSugars(String)
-    case none
-}
-
-enum FoodItemCategory: String, CaseIterable, Identifiable {
-    case product = "Product"
-    case ingredient = "Ingredient"
-    
-    var id: String {
-        self.rawValue
-    }
-}
-
-enum FoodItemUnit: String {
-    case gram = "g"
-    case milliliter = "ml"
-    
-    init?(rawValue: String) {
-        switch rawValue {
-        case FoodItemUnit.gram.rawValue:
-            self = .gram
-        case FoodItemUnit.milliliter.rawValue:
-            self = .milliliter
-        default:
-            return nil
-        }
-    }
-}
-
 class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, VariableAmountItem {
     var id: UUID
     @Published var name: String
@@ -98,7 +68,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     var sourceID: String?
     var sourceDB: FoodDatabaseType?
     @Published var amount: Int = 0
-    @Published var typicalAmounts = [TypicalAmountViewModel]()
+    @Published var typicalAmounts = [TypicalAmountViewModel]() // TODO convert to Core Data TypicalAmount
     var cdFoodItem: FoodItem?
     private(set) var isClone: Bool = false
     
@@ -177,7 +147,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     ///   - sugarsAsString: The string representation of a decimal number of the sugars per 100g of the food item.
     ///   - amountAsString: The string representation of a integer number of the amount of the food item.
     ///   - error: Stores potential errors when creating the food item, e.g., unsuccessful conversion of the string representations into numbers.
-    init?(id: UUID, name: String, foodCategory: FoodCategory?, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemViewModelError, sourceID: String?, sourceDB: FoodDatabaseType?) {
+    init?(id: UUID, name: String, foodCategory: FoodCategory?, category: FoodItemCategory, favorite: Bool, caloriesAsString: String, carbsAsString: String, sugarsAsString: String, amountAsString: String, error: inout FoodItemDataError, sourceID: String?, sourceDB: FoodDatabaseType?) {
         // Check for a correct name
         let foodName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         if foodName == "" {
@@ -343,23 +313,6 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         self.amountAsString = amount == 0 ? "" : DataHelper.intFormatter.string(from: NSNumber(value: amount))!
     }
     
-    func fill(with foodDatabaseEntry: FoodDatabaseEntry) {
-        name = foodDatabaseEntry.name
-        category = foodDatabaseEntry.category
-        sourceID = foodDatabaseEntry.sourceId
-        sourceDB = foodDatabaseEntry.source
-        
-        // When setting string representations, number will be set implicitely
-        caloriesPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.caloriesPer100g.getEnergyInKcal()))!
-        carbsPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.carbsPer100g))!
-        sugarsPer100gAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodDatabaseEntry.sugarsPer100g))!
-        
-        // Add the quantity as typical amount if available
-        if foodDatabaseEntry.quantity > 0 && foodDatabaseEntry.quantityUnit == FoodItemUnit.gram {
-            typicalAmounts.append(TypicalAmountViewModel(amount: Int(foodDatabaseEntry.quantity), comment: NSLocalizedString("As sold", comment: "")))
-        }
-    }
-    
     func getCalories() -> Double {
         Double(self.amount) / 100 * self.caloriesPer100g
     }
@@ -470,69 +423,6 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
     /// - Returns: True if the nutritional values are the same, false otherwise.
     func hasDifferentNutritionalValues(comparedTo otherFoodItemVM: FoodItemViewModel) -> Bool {
         return self.caloriesPer100g != otherFoodItemVM.caloriesPer100g || self.carbsPer100g != otherFoodItemVM.carbsPer100g || self.sugarsPer100g != otherFoodItemVM.sugarsPer100g
-    }
-    
-    /// Updates this FoodItemViewModel and the related Core Data FoodItem with the values of the passed FoodItemViewModel.
-    /// Also updates related TypicalAmounts.
-    /// This is the "counter function" of the clone initializer.
-    /// - Parameter foodItemVM: The source FoodItemViewModel, typically a previously created clone of this FoodItemViewModel.
-    /// - Parameter errorMessage: The error message in case of a fatal error.
-    /// - Returns: False in case of a fatal error, true otherwise.
-    func update(from clone: FoodItemViewModel, errorMessage: inout String) -> Bool {
-        guard isClone == false else {
-            errorMessage = "Cannot update a clone to Core Data!"
-            return false
-        }
-        guard let cdFoodItem else {
-            errorMessage = "Fatal error: No Core Data FoodItem found!"
-            return false
-        }
-        
-        // Update values
-        self.name = clone.name
-        self.foodCategory = clone.foodCategory
-        self.category = clone.category
-        self.favorite = clone.favorite
-        self.caloriesPer100g = clone.caloriesPer100g
-        self.carbsPer100g = clone.carbsPer100g
-        self.sugarsPer100g = clone.sugarsPer100g
-        self.amount = clone.amount
-        self.sourceID = clone.sourceID
-        self.sourceDB = clone.sourceDB
-        
-        
-        // Update string representations
-        initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
-        
-        // Update existing typical amounts, add new ones, and remember those added
-        var typicalAmountsToBeDeleted = self.typicalAmounts
-        for typicalAmount in clone.typicalAmounts {
-            if let existingTypicalAmount = typicalAmounts.first(where: { $0.id == typicalAmount.id }) {
-                // Update existing typical amount
-                existingTypicalAmount.update(from: typicalAmount)
-                // Remove from list of typical amounts to be deleted
-                if let index = typicalAmountsToBeDeleted.firstIndex(where: { $0.id == typicalAmount.id }) {
-                    typicalAmountsToBeDeleted.remove(at: index)
-                }
-            } else {
-                // Add new typical amount
-                self.typicalAmounts.append(typicalAmount)
-                // Remove from list of typical amounts to be deleted
-                if let index = typicalAmountsToBeDeleted.firstIndex(where: { $0.id == typicalAmount.id }) {
-                    typicalAmountsToBeDeleted.remove(at: index)
-                }
-            }
-        }
-        // The remaining typical amounts in typicalAmountsToBeDeleted are those to be deleted
-        
-        // Update Core Data FoodItem
-        FoodItem.update(
-            cdFoodItem,
-            with: self,
-            typicalAmountsToBeDeleted: typicalAmountsToBeDeleted
-        )
-        
-        return true
     }
     
     /**

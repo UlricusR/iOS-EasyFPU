@@ -32,6 +32,24 @@ class DataWrapper: Codable {
         self.composedFoodItemVMs = composedFoodItemVMs
     }
     
+    init(dataModelVersion: DataModelVersion, foodItems: [FoodItem], composedFoodItems: [ComposedFoodItem]) {
+        self.dataModelVersion = dataModelVersion
+        
+        var foodItemVMs: [FoodItemViewModel] = []
+        for foodItem in foodItems {
+            let foodItemVM = FoodItemViewModel(from: foodItem)
+            foodItemVMs.append(foodItemVM)
+        }
+        self.foodItemVMs = foodItemVMs
+        
+        var composedFoodItemVMs: [ComposedFoodItemViewModel] = []
+        for composedFoodItem in composedFoodItems {
+            let composedFoodItemVM = ComposedFoodItemViewModel(from: composedFoodItem)
+            composedFoodItemVMs.append(composedFoodItemVM)
+        }
+        self.composedFoodItemVMs = composedFoodItemVMs
+    }
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let dataModelVersionString = try container.decode(String.self, forKey: .dataModelVersion)

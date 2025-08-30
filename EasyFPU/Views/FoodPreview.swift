@@ -10,7 +10,7 @@ import SwiftUI
 
 struct FoodPreview: View {
     var product: FoodDatabaseEntry
-    @ObservedObject var draftFoodItem: FoodItemViewModel
+    @ObservedObject var editedCDFoodItem: FoodItem
     @Binding var navigationPath: NavigationPath
     var backNavigationIfSelected: Int = 1
     
@@ -25,7 +25,7 @@ struct FoodPreview: View {
                 HStack {
                     Spacer()
                     Button {
-                        draftFoodItem.fill(with: product)
+                        FoodItem.fill(foodItem: editedCDFoodItem, with: product)
                             
                         // Close sheet
                         navigationPath.removeLast(backNavigationIfSelected)

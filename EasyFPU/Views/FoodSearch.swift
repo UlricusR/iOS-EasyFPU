@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct FoodSearch: View {
-    @ObservedObject var draftFoodItem: FoodItemViewModel
+    @ObservedObject var editedCDFoodItem: FoodItem
     var searchResults: [FoodDatabaseEntry]
     @Binding var navigationPath: NavigationPath
     
@@ -18,7 +18,7 @@ struct FoodSearch: View {
             NavigationLink(value: FoodItemEditor.FoodItemEditorNavigationDestination.FoodSearchResultDetails(product: searchResult, backNavigationIfSelected: 2)) {
                 FoodSearchResultPreview(
                     product: searchResult,
-                    draftFoodItem: self.draftFoodItem,
+                    editedCDFoodItem: self.editedCDFoodItem,
                     navigationPath: $navigationPath
                 )
                 .accessibilityIdentifierBranch(String(searchResult.name.prefix(10)))

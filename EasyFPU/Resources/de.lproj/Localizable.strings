@@ -98,6 +98,7 @@
 "Typical amount" = "Typische Menge";
 "Typical amounts:" = "Typische Mengen:";
 "Add to typical amounts" = "Zu typischen Mengen hinzufügen";
+"You have not added any typical amounts yet." = "Du hast noch keine typischen Mengen hinzugefügt.";
 "Could not identify typical amount." = "Konnte typische Menge nicht identifizieren.";
 "Comment" = "Kommentar";
 "As sold" = "Wie verkauft";

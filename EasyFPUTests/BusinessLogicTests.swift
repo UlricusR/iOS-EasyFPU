@@ -61,7 +61,7 @@ struct BusinessLogicTests {
         
         @Test("ID 2: Initialize FoodItemViewModel with string values")
         func initializeFoodItemNormalWithStrings() async throws {
-            var foodItemVMError = FoodItemViewModelError.none
+            var foodItemVMError = FoodItemDataError.none
 
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
@@ -84,7 +84,7 @@ struct BusinessLogicTests {
 
         @Test("ID 3: Initialize FoodItemViewModel with empty name")
         func initializeFoodItemNoName() async throws {
-            var foodItemVMError = FoodItemViewModelError.none
+            var foodItemVMError = FoodItemDataError.none
             
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
@@ -100,7 +100,7 @@ struct BusinessLogicTests {
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError  == FoodItemViewModelError.name(NSLocalizedString("Name must not be empty", comment: "")))
+            #expect(foodItemVMError  == FoodItemDataError.name(NSLocalizedString("Name must not be empty", comment: "")))
             #expect(foodItemVM == nil)
         }
         
@@ -115,7 +115,7 @@ struct BusinessLogicTests {
             ]
         ))
         func initializeFoodItemCaloriesError(inputString: String, errorString: String) async throws {
-            var foodItemVMError = FoodItemViewModelError.none
+            var foodItemVMError = FoodItemDataError.none
             
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
@@ -131,7 +131,7 @@ struct BusinessLogicTests {
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemViewModelError.calories(errorString))
+            #expect(foodItemVMError == FoodItemDataError.calories(errorString))
             #expect(foodItemVM == nil)
         }
         
@@ -146,7 +146,7 @@ struct BusinessLogicTests {
             ]
         ))
         func initializeFoodItemCarbsError(inputString: String, errorString: String) async throws {
-            var foodItemVMError = FoodItemViewModelError.none
+            var foodItemVMError = FoodItemDataError.none
             
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
@@ -162,7 +162,7 @@ struct BusinessLogicTests {
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemViewModelError.carbs(errorString))
+            #expect(foodItemVMError == FoodItemDataError.carbs(errorString))
             #expect(foodItemVM == nil)
         }
         
@@ -177,7 +177,7 @@ struct BusinessLogicTests {
             ]
         ))
         func initializeFoodItemSugarsError(inputString: String, errorString: String) async throws {
-            var foodItemVMError = FoodItemViewModelError.none
+            var foodItemVMError = FoodItemDataError.none
             
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
@@ -193,13 +193,13 @@ struct BusinessLogicTests {
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemViewModelError.sugars(errorString))
+            #expect(foodItemVMError == FoodItemDataError.sugars(errorString))
             #expect(foodItemVM == nil)
         }
         
         @Test("ID 7: Initialize FoodItemViewModel with sugars exceeding carbs")
         func initializeFoodItemSugarsExceedCarbs() async throws {
-            var foodItemVMError = FoodItemViewModelError.none
+            var foodItemVMError = FoodItemDataError.none
             
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
@@ -215,13 +215,13 @@ struct BusinessLogicTests {
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemViewModelError.tooMuchSugars(NSLocalizedString("Sugars exceed carbs", comment: "")))
+            #expect(foodItemVMError == FoodItemDataError.tooMuchSugars(NSLocalizedString("Sugars exceed carbs", comment: "")))
             #expect(foodItemVM == nil)
         }
         
         @Test("ID 8: Initialize FoodItemViewModel with calories from carbs exactly match total calories")
         func initializeFoodItemCaloriesFromCarbsMatchTotalCalories() async throws {
-            var foodItemVMError = FoodItemViewModelError.none
+            var foodItemVMError = FoodItemDataError.none
             
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
@@ -237,13 +237,13 @@ struct BusinessLogicTests {
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemViewModelError.none)
+            #expect(foodItemVMError == FoodItemDataError.none)
             #expect(foodItemVM != nil)
         }
         
         @Test("ID 9: Initialize FoodItemViewModel with calories from carbs exceeding total calories")
         func initializeFoodItemCaloriesFromCarbsExceedTotalCalories() async throws {
-            var foodItemVMError = FoodItemViewModelError.none
+            var foodItemVMError = FoodItemDataError.none
             
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
@@ -259,7 +259,7 @@ struct BusinessLogicTests {
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemViewModelError.tooMuchCarbs(NSLocalizedString("Calories from carbs (4 kcal per gram) exceed total calories", comment: "")))
+            #expect(foodItemVMError == FoodItemDataError.tooMuchCarbs(NSLocalizedString("Calories from carbs (4 kcal per gram) exceed total calories", comment: "")))
             #expect(foodItemVM == nil)
         }
         
@@ -276,7 +276,7 @@ struct BusinessLogicTests {
             ]
         ))
         func initializeFoodItemAmountError(inputString: String, errorString: String) async throws {
-            var foodItemVMError = FoodItemViewModelError.none
+            var foodItemVMError = FoodItemDataError.none
             
             let foodItemVM = FoodItemViewModel(
                 id: UUID(),
@@ -292,7 +292,7 @@ struct BusinessLogicTests {
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemViewModelError.amount(errorString))
+            #expect(foodItemVMError == FoodItemDataError.amount(errorString))
             #expect(foodItemVM == nil)
         }
     }
@@ -302,7 +302,7 @@ struct BusinessLogicTests {
         @Test("ID: 1 - Verify ComposedFoodItemViewModel business logic")
         func verifyComposedFoodItemViewModel() async throws {
             let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel()
-            let allFoodItemVMs = composedFoodItemVM.foodItemVMs
+            let allFoodItemVMs = composedFoodItemVM.foodItems
             
             // Calculate nutritional values
             var calories = 0.0

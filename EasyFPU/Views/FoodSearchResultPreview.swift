@@ -11,7 +11,7 @@ import URLImage
 
 struct FoodSearchResultPreview: View {
     var product: FoodDatabaseEntry
-    @ObservedObject var draftFoodItem: FoodItemViewModel
+    @ObservedObject var editedCDFoodItem: FoodItem
     @Binding var navigationPath: NavigationPath
     
     var body: some View {
@@ -33,7 +33,7 @@ struct FoodSearchResultPreview: View {
         .swipeActions(allowsFullSwipe: true) {
             // Selecting the product
             Button("Select", systemImage: "checkmark.circle") {
-                draftFoodItem.fill(with: product)
+                FoodItem.fill(foodItem: editedCDFoodItem, with: product)
                 navigationPath.removeLast()
             }
             .tint(.green)

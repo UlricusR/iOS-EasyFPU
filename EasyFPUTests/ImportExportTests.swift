@@ -54,7 +54,7 @@ class ImportExportTests {
         
         // Collect all FoodItems
         var foodItemVMs: [FoodItemViewModel] = [foodItemVM]
-        foodItemVMs.append(contentsOf: composedFoodItemVM.foodItemVMs)
+        foodItemVMs.append(contentsOf: composedFoodItemVM.foodItems)
         
         // Prepare the DataWrapper
         let dataWrapper = DataWrapper(dataModelVersion: .version2, foodItemVMs: foodItemVMs, composedFoodItemVMs: composedFoodItemVMs)
@@ -100,7 +100,7 @@ class ImportExportTests {
             let ingredientIDs = composedFoodItemIngredients.map { $0["foodItem"]["id"].stringValue }
             
             // Iterate through ingredients and check them in the JSON
-            for ingredient in composedFoodItemVM.foodItemVMs {
+            for ingredient in composedFoodItemVM.foodItems {
                 try ImportExportTests.checkFoodItem(foodItemVM: ingredient, foodItemIDs: ingredientIDs, allFoodItems: composedFoodItemIngredients)
                 
                 // The ingredient ID needs to match a FoodItem ID

@@ -16,7 +16,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     @Published var favorite: Bool
     @Published var amount: Int = 0
     @Published var numberOfPortions: Int = 0
-    @Published var foodItemVMs = [FoodItemViewModel]()
+    @Published var foodItemVMs = [FoodItemViewModel]() // TODO remove after replacing with foodItems
+    //@Published var foodItems = [FoodItem]()
     
     var cdComposedFoodItem: ComposedFoodItem?
     
