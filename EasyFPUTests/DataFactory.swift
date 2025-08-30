@@ -210,11 +210,11 @@ struct DataFactory {
         composedFoodItemViewModel.amountAsString = amount
         
         // Attach ingredients
-        composedFoodItemViewModel.foodItemVMs.append(try createFoodItemVM(foodItem: self.ingredient1, id: UUID()))
-        composedFoodItemViewModel.foodItemVMs.append(try createFoodItemVM(foodItem: self.ingredient2, id: UUID()))
-        composedFoodItemViewModel.foodItemVMs.append(try createFoodItemVM(foodItem: self.ingredient3, id: UUID()))
-        composedFoodItemViewModel.foodItemVMs.append(try createFoodItemVM(foodItem: self.ingredient4, id: UUID()))
-        composedFoodItemViewModel.foodItemVMs.append(try createFoodItemVM(foodItem: self.ingredient5, id: UUID()))
+        composedFoodItemViewModel.foodItems.append(try createFoodItemVM(foodItem: self.ingredient1, id: UUID()))
+        composedFoodItemViewModel.foodItems.append(try createFoodItemVM(foodItem: self.ingredient2, id: UUID()))
+        composedFoodItemViewModel.foodItems.append(try createFoodItemVM(foodItem: self.ingredient3, id: UUID()))
+        composedFoodItemViewModel.foodItems.append(try createFoodItemVM(foodItem: self.ingredient4, id: UUID()))
+        composedFoodItemViewModel.foodItems.append(try createFoodItemVM(foodItem: self.ingredient5, id: UUID()))
         
         // Return the complete VM
         return composedFoodItemViewModel
@@ -233,7 +233,7 @@ struct DataFactory {
         var sugarsPer100g: Double = 0
         var amount: Int = 0
         
-        for ingredient in composedFoodItemViewModel.foodItemVMs {
+        for ingredient in composedFoodItemViewModel.foodItems {
             caloriesPer100g += Double(ingredient.amount) * ingredient.caloriesPer100g
             carbsPer100g += Double(ingredient.amount) * ingredient.carbsPer100g
             sugarsPer100g += Double(ingredient.amount) * ingredient.sugarsPer100g

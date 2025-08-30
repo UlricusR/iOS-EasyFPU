@@ -11,6 +11,36 @@ import Foundation
 import CoreData
 
 
+enum FoodItemDataError: Equatable {
+    case name(String), calories(String), carbs(String), sugars(String), amount(String), tooMuchCarbs(String), tooMuchSugars(String)
+    case none
+}
+
+enum FoodItemCategory: String, CaseIterable, Identifiable {
+    case product = "Product"
+    case ingredient = "Ingredient"
+    
+    var id: String {
+        self.rawValue
+    }
+}
+
+enum FoodItemUnit: String {
+    case gram = "g"
+    case milliliter = "ml"
+    
+    init?(rawValue: String) {
+        switch rawValue {
+        case FoodItemUnit.gram.rawValue:
+            self = .gram
+        case FoodItemUnit.milliliter.rawValue:
+            self = .milliliter
+        default:
+            return nil
+        }
+    }
+}
+
 public class FoodItem: NSManagedObject {
     static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [FoodItem] {
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
@@ -28,6 +58,18 @@ public class FoodItem: NSManagedObject {
         })
         
         try? viewContext.save()
+    }
+    
+    static func new(category: FoodItemCategory) -> FoodItem {
+        let newFoodItem = FoodItem(context: CoreDataStack.viewContext)
+        newFoodItem.id = UUID()
+        newFoodItem.name = ""
+        newFoodItem.caloriesPer100g = 0.0
+        newFoodItem.carbsPer100g = 0.0
+        newFoodItem.sugarsPer100g = 0.0
+        newFoodItem.favorite = false
+        newFoodItem.category = category.rawValue
+        return newFoodItem
     }
     
     /**
@@ -136,42 +178,38 @@ public class FoodItem: NSManagedObject {
         with foodItemVM: FoodItemViewModel,
         typicalAmountsToBeDeleted: [TypicalAmountViewModel]
     ) {
-        cdFoodItem.name = foodItemVM.name
-        cdFoodItem.foodCategory = foodItemVM.foodCategory
-        cdFoodItem.category = foodItemVM.category.rawValue
-        cdFoodItem.favorite = foodItemVM.favorite
-        cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
-        cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
-        cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
-        cdFoodItem.sourceID = foodItemVM.sourceID
-        cdFoodItem.sourceDB = foodItemVM.sourceDB?.rawValue
-        
+        // TODO remove after fixing tests
+    }
+    
+    /// Updates the ComposedFoodItems (recipes) related to the FoodItem with the nutritional values of the FoodItem.
+    /// - Parameter cdFoodItem: The food item used for updating the recipes.
+    static func updateRelatedRecipes(of cdFoodItem: FoodItem) {
         // Get the related ingredients and update their values
         let relatedIngredients = cdFoodItem.ingredients?.allObjects as? [Ingredient] ?? []
         for ingredient in relatedIngredients {
             _ = Ingredient.update(ingredient, with: cdFoodItem)
         }
+    }
+    
+    static func fill(foodItem: FoodItem, with foodDatabaseEntry: FoodDatabaseEntry) {
+        foodItem.name = foodDatabaseEntry.name
+        foodItem.category = foodDatabaseEntry.category.rawValue
+        foodItem.sourceID = foodDatabaseEntry.sourceId
+        foodItem.sourceDB = foodDatabaseEntry.source.rawValue
         
-        // Remove deleted typical amounts from view model and Core Data
-        for typicalAmountToBeDeleted in typicalAmountsToBeDeleted {
-            // First remove from FoodItemVM
-            foodItemVM.typicalAmounts.removeAll(where: { $0.id == typicalAmountToBeDeleted.id })
+        // When setting string representations, number will be set implicitely
+        foodItem.caloriesPer100g = foodDatabaseEntry.caloriesPer100g.getEnergyInKcal()
+        foodItem.carbsPer100g = foodDatabaseEntry.carbsPer100g
+        foodItem.sugarsPer100g = foodDatabaseEntry.sugarsPer100g
+        
+        // Add the quantity as typical amount if available
+        if foodDatabaseEntry.quantity > 0 && foodDatabaseEntry.quantityUnit == FoodItemUnit.gram {
+            // Create TypicalAmount
+            let cdTypicalAmount = TypicalAmount.create(amount: Int64(foodDatabaseEntry.quantity), comment: NSLocalizedString("As sold", comment: ""))
             
-            // Then remove from Core Data FoodItem
-            if typicalAmountToBeDeleted.cdTypicalAmount != nil {
-                cdFoodItem.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
-                CoreDataStack.viewContext.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
-                CoreDataStack.shared.save()
-            }
+            // Add to cdFoodItem
+            foodItem.addToTypicalAmounts(cdTypicalAmount)
         }
-        
-        // Update typical amounts in Core Data
-        for typicalAmountVM in foodItemVM.typicalAmounts {
-            let cdTypicalAmount = TypicalAmount.update(with: typicalAmountVM)
-            cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
-        }
-        
-        CoreDataStack.shared.save()
     }
     
     /**
@@ -215,15 +253,22 @@ public class FoodItem: NSManagedObject {
         return cdFoodItem
     }
     
-    static func delete(_ foodItem: FoodItem) {
+    /// Deletes the given FoodItem from Core Data. Does not save the context.
+    /// - Parameters:
+    ///   - foodItem: The FoodItem to be deleted.
+    ///   - deleteAssociatedRecipe: If true, the associated ComposedFoodItem (recipe) will also be deleted.
+    static func delete(_ foodItem: FoodItem, deleteAssociatedRecipe: Bool = false) {
         // Deletion of all related typical amounts will happen automatically
         // as we have set Delete Rule to Cascade in data model
         
+        if deleteAssociatedRecipe {
+            if let associatedRecipe = foodItem.composedFoodItem {
+                ComposedFoodItem.delete(associatedRecipe)
+            }
+        }
+        
         // Delete the food item itself
         CoreDataStack.viewContext.delete(foodItem)
-        
-        // And save the context
-        CoreDataStack.shared.save()
     }
     
     /**
@@ -236,6 +281,17 @@ public class FoodItem: NSManagedObject {
     static func add(_ typicalAmount: TypicalAmount, to foodItem: FoodItem) {
         foodItem.addToTypicalAmounts(typicalAmount)
         CoreDataStack.shared.save()
+    }
+    
+    /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this FoodItem exists.
+    /// - Parameter foodItem: The Core Data FoodItem to check the name for.
+    /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
+    static func nameExists(foodItem: FoodItem) -> Bool {
+        let foodItems = FoodItem.getFoodItemsByName(name: foodItem.name)
+        let composedFoodItems = ComposedFoodItem.getComposedFoodItemByName(name: foodItem.name)
+        
+        // We expect the food item to exist exactly once (itself), so if there is more than one, the name already exists
+        return foodItems != nil && foodItems!.count > 1 || composedFoodItems != nil
     }
     
     /// Sets the category of the Core Data FoodItem to the given String. Does not check if the string is a valid FoodItemCategory.
@@ -293,5 +349,39 @@ public class FoodItem: NSManagedObject {
             debugPrint("Error fetching food item: \(error)")
         }
         return nil
+    }
+    
+    static func getCalories(ingredient: Ingredient) -> Double {
+        Double(ingredient.amount) / 100 * ingredient.caloriesPer100g
+    }
+    
+    static func getCarbsInclSugars(ingredient: Ingredient) -> Double {
+        Double(ingredient.amount) / 100 * ingredient.carbsPer100g
+    }
+    
+    static func getSugarsOnly(ingredient: Ingredient) -> Double {
+        Double(ingredient.amount) / 100 * ingredient.sugarsPer100g
+    }
+    
+    static func getRegularCarbs(ingredient: Ingredient, treatSugarsSeparately: Bool) -> Double {
+        Double(ingredient.amount) / 100 * (treatSugarsSeparately ? (ingredient.carbsPer100g - ingredient.sugarsPer100g) : ingredient.carbsPer100g)
+    }
+    
+    static func getSugars(ingredient: Ingredient, treatSugarsSeparately: Bool) -> Double {
+        Double(ingredient.amount) / 100 * (treatSugarsSeparately ? ingredient.sugarsPer100g : 0)
+    }
+    
+    static func getFPU(ingredient: Ingredient) -> FPU {
+        // 1g carbs has ~4 kcal, so calculate carb portion of calories
+        let carbsCal = Double(ingredient.amount) / 100 * ingredient.carbsPer100g * 4;
+
+        // The carbs from fat and protein is the remainder
+        let calFromFP = getCalories(ingredient: ingredient) - carbsCal;
+
+        // 100kcal makes 1 FPU
+        let fpus = calFromFP / 100;
+
+        // Create and return the FPU object
+        return FPU(fpu: fpus)
     }
 }

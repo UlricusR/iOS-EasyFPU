@@ -455,7 +455,7 @@ struct CoreDataTests {
             
             // Create FoodItems for ingredients
             var foodItemIDs = [UUID]()
-            for foodItemVM in composedFoodItemVM.foodItemVMs {
+            for foodItemVM in composedFoodItemVM.foodItems {
                 // Get existing or new FoodItem
                 let relatedFoodItem = FoodItem.create(from: foodItemVM)
                 foodItemVM.cdFoodItem = relatedFoodItem
@@ -514,14 +514,14 @@ struct CoreDataTests {
             let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel() // Pizzateig with 5 Ingredients
             let cdComposedFoodItem = try CoreDataTests.createComposedFoodItemInDB(from: composedFoodItemVM)
             let cdRelatedFoodItem: FoodItem = cdComposedFoodItem.foodItem!
-            try #require(composedFoodItemVM.foodItemVMs.count == 5)
+            try #require(composedFoodItemVM.foodItems.count == 5)
             
             // Store the related FoodItem's ID in the DB
             var foodItemIDs = [UUID]()
             foodItemIDs.append(cdRelatedFoodItem.id)
             
             // Store the FoodItem IDs of the FoodItems (should be identical with those of their view models)
-            for foodItem in composedFoodItemVM.foodItemVMs {
+            for foodItem in composedFoodItemVM.foodItems {
                 foodItemIDs.append(foodItem.id)
             }
             
@@ -529,9 +529,9 @@ struct CoreDataTests {
             let nameAppendix = " - Updated"
             composedFoodItemVM.name += nameAppendix
             composedFoodItemVM.numberOfPortions = composedFoodItemVM.numberOfPortions * 2
-            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[4])
-            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[1])
-            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[0])
+            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItems[4])
+            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItems[1])
+            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItems[0])
             
             // Get the two new ingredients, create them in the DB and add the IDs to the array of IDs
             let newIngredients = try DataFactory.shared.getTwoIngredients()
@@ -598,9 +598,9 @@ struct CoreDataTests {
             let nameAppendix = " - Updated"
             composedFoodItemVM.name += nameAppendix
             composedFoodItemVM.numberOfPortions = composedFoodItemVM.numberOfPortions * 2
-            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[4])
-            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[1])
-            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItemVMs[0])
+            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItems[4])
+            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItems[1])
+            composedFoodItemVM.remove(foodItem: composedFoodItemVM.foodItems[0])
             
             // Get the two new ingredients, create them in the DB and add the IDs to the array of IDs
             let newIngredients = try DataFactory.shared.getTwoIngredients()

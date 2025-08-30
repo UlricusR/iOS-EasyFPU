@@ -167,11 +167,12 @@ public class ComposedFoodItem: NSManagedObject {
         relatedFoodItem.carbsPer100g = carbs / Double(composedFoodItem.amount)
         relatedFoodItem.sugarsPer100g = sugars / Double(composedFoodItem.amount)
         
-        CoreDataStack.shared.save()
-        
         return relatedFoodItem
     }
     
+    /// Duplicates the given ComposedFoodItem, including its Ingredients and related FoodItem. Saves the context.
+    /// - Parameter existingComposedFoodItem: The ComposedFoodItem to be duplicated.
+    /// - Returns: The duplicated ComposedFoodItem, nil if duplication failed.
     static func duplicate(_ existingComposedFoodItem: ComposedFoodItem) -> ComposedFoodItem? {
         // Create new ComposedFoodItem with new ID
         let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
@@ -183,9 +184,6 @@ public class ComposedFoodItem: NSManagedObject {
         cdComposedFoodItem.favorite = existingComposedFoodItem.favorite
         cdComposedFoodItem.amount = existingComposedFoodItem.amount
         cdComposedFoodItem.numberOfPortions = existingComposedFoodItem.numberOfPortions
-        
-        // Save
-        CoreDataStack.shared.save()
         
         // Create ingredients
         for case let ingredient as Ingredient in existingComposedFoodItem.ingredients {
@@ -205,19 +203,21 @@ public class ComposedFoodItem: NSManagedObject {
             // Delete composedFoodItem again
             ComposedFoodItem.delete(cdComposedFoodItem)
             
+            // Save
+            CoreDataStack.shared.save()
+            
             return nil
         }
     }
     
+    /// Deletes the given ComposedFoodItem from Core Data. Does not save the context.
+    /// - Parameter composedFoodItem: The ComposedFoodItem to be deleted.
     static func delete(_ composedFoodItem: ComposedFoodItem) {
         // Deletion of all related ingredients will happen automatically
         // as we have set Delete Rule to Cascade in data model
         
         // Delete the food item itself
         CoreDataStack.viewContext.delete(composedFoodItem)
-        
-        // And save the context
-        CoreDataStack.shared.save()
     }
     
     /**
