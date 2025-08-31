@@ -9,15 +9,15 @@
 import SwiftUI
 
 struct ComposedFoodItemView: View {
-    var foodItem: FoodItemViewModel
+    var ingredient: Ingredient
     @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
     var fontSizeName: Font?
     var fontSizeDetails: Font?
     var foregroundStyleName: Color
     @ObservedObject var userSettings = UserSettings.shared
     var absorptionTimeAsString: String {
-        if foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return DataHelper.intFormatter.string(from: NSNumber(value: foodItem.getFPU().getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+        if FoodItem.getFPU(ingredient: ingredient).getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
+            return DataHelper.intFormatter.string(from: NSNumber(value: FoodItem.getFPU(ingredient: ingredient).getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
         } else {
             return "..."
         }
@@ -27,11 +27,11 @@ struct ComposedFoodItemView: View {
         VStack(alignment: .leading) {
             // Amount and name
             HStack {
-                Text(String(foodItem.amount))
+                Text(String(ingredient.amount))
                     .accessibilityIdentifierLeaf("FoodItemAmountValue")
                 Text("g")
                     .accessibilityIdentifierLeaf("FoodItemAmountUnit")
-                Text(foodItem.name)
+                Text(ingredient.name)
                     .accessibilityIdentifierLeaf("FoodItemName")
             }
             .font(fontSizeName)
@@ -39,7 +39,7 @@ struct ComposedFoodItemView: View {
             
             // Calories
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getCalories()))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: FoodItem.getCalories(ingredient: ingredient)))!)
                     .accessibilityIdentifierLeaf("CaloriesValue")
                 Text("kcal")
                     .accessibilityIdentifierLeaf("CaloriesUnit")
@@ -49,7 +49,7 @@ struct ComposedFoodItemView: View {
             // Sugars
             if userSettings.treatSugarsSeparately {
                 HStack {
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getSugars(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: FoodItem.getSugars(ingredient: ingredient, treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                         .accessibilityIdentifierLeaf("SugarsValue")
                     Text("g Sugars")
                         .accessibilityIdentifierLeaf("SugarsUnit")
@@ -67,7 +67,7 @@ struct ComposedFoodItemView: View {
             
             // Regular Carbs
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getRegularCarbs(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: FoodItem.getRegularCarbs(ingredient: ingredient, treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                     .accessibilityIdentifierLeaf("CarbsValue")
                 Text("g Regular Carbs")
                     .accessibilityIdentifierLeaf("CarbsUnit")
@@ -84,12 +84,12 @@ struct ComposedFoodItemView: View {
             
             // Extended carbs
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().fpu))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: FoodItem.getFPU(ingredient: ingredient).fpu))!)
                     .accessibilityIdentifierLeaf("FPUValue")
                 Text("FPU")
                     .accessibilityIdentifierLeaf("FPUUnit")
                 Text("/")
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.getFPU().getExtendedCarbs()))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: FoodItem.getFPU(ingredient: ingredient).getExtendedCarbs()))!)
                     .accessibilityIdentifierLeaf("ECarbsValue")
                 Text("g Extended Carbs")
                     .accessibilityIdentifierLeaf("ECarbsUnit")

@@ -30,6 +30,25 @@ extension FoodItem {
     @NSManaged public var composedFoodItem: ComposedFoodItem?
     @NSManaged public var typicalAmounts: NSSet?
     @NSManaged public var ingredients: NSSet?
+    
+    //
+    // MARK: - Computed properties
+    //
+    
+    
+    
+    //
+    // MARK: - Custom functions
+    //
+    
+    /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this FoodItem exists.
+    /// - Parameter foodItem: The Core Data FoodItem to check the name for.
+    /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
+    func nameExists() -> Bool {
+        FoodItem.nameExists(name: self.name)
+    }
+    
+    
 }
 
 // MARK: Generated accessors for typicalAmounts

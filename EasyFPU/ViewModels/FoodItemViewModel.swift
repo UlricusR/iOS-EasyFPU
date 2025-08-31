@@ -8,7 +8,7 @@
 
 import Foundation
 
-class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, VariableAmountItem {
+class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable {
     var id: UUID
     @Published var name: String
     @Published var favorite: Bool
@@ -127,9 +127,8 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         initStringRepresentations(amount: amount, carbsPer100g: carbsPer100g, caloriesPer100g: caloriesPer100g, sugarsPer100g: sugarsPer100g)
         
         if cdFoodItem.typicalAmounts != nil {
-            for typicalAmount in cdFoodItem.typicalAmounts!.allObjects {
-                let castedTypicalAmount = typicalAmount as! TypicalAmount
-                typicalAmounts.append(TypicalAmountViewModel(from: castedTypicalAmount))
+            for typicalAmount in cdFoodItem.typicalAmounts!.allObjects as! [TypicalAmount] {
+                typicalAmounts.append(TypicalAmountViewModel(from: typicalAmount))
             }
         }
     }
@@ -449,7 +448,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, Vari
         
         if includeAssociatedRecipe {
             if let associatedRecipe = cdFoodItem.composedFoodItem {
-                ComposedFoodItem.delete(associatedRecipe)
+                ComposedFoodItem.delete(associatedRecipe, includeAssociatedFoodItem: false)
                 CoreDataStack.shared.save()
             }
         }

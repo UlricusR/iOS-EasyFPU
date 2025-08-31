@@ -86,7 +86,7 @@ struct MainView: View {
                     // The meal composer
                     ComposedFoodItemEvaluationView(
                         absorptionScheme: absorptionScheme,
-                        composedFoodItemVM: UserSettings.shared.composedMeal
+                        composedFoodItem: ComposedFoodItem.new(name: NSLocalizedString("Total meal", comment: ""))
                     )
                     .tag(Tab.eat.rawValue)
                     .tabItem{
@@ -98,7 +98,7 @@ struct MainView: View {
                     
                     // The recipe list
                     RecipeListView(
-                        composedFoodItem: UserSettings.shared.composedMeal,
+                        composedFoodItem: ComposedFoodItem.new(name: NSLocalizedString("Total meal", comment: "")),
                         helpSheet: RecipeListView.SheetState.recipeListHelp
                     )
                     .tag(Tab.cook.rawValue)
@@ -115,7 +115,7 @@ struct MainView: View {
                         listType: .maintenance,
                         listTitle: NSLocalizedString("My Products", comment: ""),
                         helpSheet: .productMaintenanceListHelp,
-                        composedFoodItem: UserSettings.shared.composedMeal
+                        composedFoodItem: ComposedFoodItem.new(name: NSLocalizedString("Total meal", comment: ""))
                     )
                     .tag(Tab.products.rawValue)
                     .tabItem{
@@ -131,7 +131,7 @@ struct MainView: View {
                         listType: .maintenance,
                         listTitle: NSLocalizedString("My Ingredients", comment: ""),
                         helpSheet: .ingredientMaintenanceListHelp,
-                        composedFoodItem: UserSettings.shared.composedProduct
+                        composedFoodItem: ComposedFoodItem.new(name: NSLocalizedString("Composed product", comment: ""))
                     )
                     .tag(Tab.ingredients.rawValue)
                     .tabItem{

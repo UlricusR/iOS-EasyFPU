@@ -11,8 +11,8 @@ import SwiftUI
 struct FoodItemListView: View {
     enum FoodListNavigationDestination: Hashable {
         case AddFoodItem(category: FoodItemCategory)
-        case EditFoodItem(category: FoodItemCategory, foodItemVM: FoodItemViewModel)
-        case SelectFoodItem(category: FoodItemCategory, draftFoodItem: FoodItemViewModel, composedFoodItem: ComposedFoodItemViewModel)
+        case EditFoodItem(category: FoodItemCategory, foodItem: FoodItem)
+        case SelectFoodItem(category: FoodItemCategory, ingredient: Ingredient, composedFoodItem: ComposedFoodItem)
     }
     
     enum FoodItemListType {
@@ -35,7 +35,7 @@ struct FoodItemListView: View {
     var helpSheet: SheetState
     @Binding var navigationPath: NavigationPath
     @ObservedObject var userSettings = UserSettings.shared
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
     
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
@@ -156,7 +156,7 @@ struct FoodItemListView_Previews: PreviewProvider {
             foodItemListTitle: "My Products",
             helpSheet: .productSelectionListHelp,
             navigationPath: $navigationPath,
-            composedFoodItem: ComposedFoodItemViewModel.sampleData()
+            composedFoodItem: ComposedFoodItem.new(name: "Sample")
         )
     }
 }

@@ -63,6 +63,7 @@
 "Add products" = "Add dishes";
 "Edit products" = "Edit dishes";
 "Add more" = "Add more";
+"No food item associated to typical amount!" = "No food item associated to typical amount! This should not happen, please contact the app developer.";
 
 // Dishes List
 "Products" = "Dishes";
@@ -191,6 +192,7 @@
 "Search term must not be empty" = "Search term must not be empty";
 " - new" = " - new";
 "A food item with this name already exists" = "An entry with this name already exists";
+"Couldn't duplicate food item. This should not happen, please contact the app developer." = "Couldn't duplicate food item. This should not happen, please contact the app developer.";
 
 // Recipe list and editor
 "Recipe List" = "Recipe List";
@@ -210,6 +212,7 @@
 "Keep product" = "Delete recipe only";
 "Delete recipe" = "Delete recipe";
 "Do you really want to delete this recipe? This cannot be undone!" = "Do you really want to delete this recipe? This cannot be undone!";
+"Tap to select" = "Tap to select";
 
 // Category editor
 "Category" = "Category";

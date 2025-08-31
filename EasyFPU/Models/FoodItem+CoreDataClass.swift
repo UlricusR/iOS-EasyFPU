@@ -42,6 +42,11 @@ enum FoodItemUnit: String {
 }
 
 public class FoodItem: NSManagedObject {
+    
+    //
+    // MARK: - Static methods for data access and manipulation
+    //
+    
     static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [FoodItem] {
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -64,9 +69,9 @@ public class FoodItem: NSManagedObject {
         let newFoodItem = FoodItem(context: CoreDataStack.viewContext)
         newFoodItem.id = UUID()
         newFoodItem.name = ""
-        newFoodItem.caloriesPer100g = 0.0
-        newFoodItem.carbsPer100g = 0.0
-        newFoodItem.sugarsPer100g = 0.0
+        newFoodItem.caloriesPer100g = 0
+        newFoodItem.carbsPer100g = 0
+        newFoodItem.sugarsPer100g = 0
         newFoodItem.favorite = false
         newFoodItem.category = category.rawValue
         return newFoodItem
@@ -164,6 +169,60 @@ public class FoodItem: NSManagedObject {
         return cdFoodItem
     }
     
+    /// Either creates a new Core Data FoodItem from a ComposedFoodItem or updates an existing one.
+    /// Does not save the context.
+    /// - Parameter composedFoodItem: The source ComposedFoodItem.
+    /// - Returns: The existing Core Data FoodItem if found, otherwise a new one.
+    static func createOrUpdate(from composedFoodItem: ComposedFoodItem) -> FoodItem {
+        var cdFoodItem: FoodItem
+        
+        // Check for related FoodItem
+        if let relatedFoodItem = composedFoodItem.foodItem {
+            cdFoodItem = relatedFoodItem
+            
+            // Remove existing TypicalAmounts
+            if let existingTypicalAmounts = cdFoodItem.typicalAmounts {
+                cdFoodItem.removeFromTypicalAmounts(existingTypicalAmounts)
+            }
+        } else if let existingFoodItem = FoodItem.getFoodItemByID(id: composedFoodItem.id) {
+            // There is an existing FoodItem with the same ID, use it
+            cdFoodItem = existingFoodItem
+            
+            // Remove existing TypicalAmounts
+            if let existingTypicalAmounts = cdFoodItem.typicalAmounts {
+                cdFoodItem.removeFromTypicalAmounts(existingTypicalAmounts)
+            }
+        } else {
+            // Create new FoodItem
+            cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
+            cdFoodItem.id = composedFoodItem.id
+        }
+        
+        // Update data
+        cdFoodItem.name = composedFoodItem.name
+        cdFoodItem.foodCategory = composedFoodItem.foodCategory
+        cdFoodItem.caloriesPer100g = composedFoodItem.caloriesPer100g
+        cdFoodItem.carbsPer100g = composedFoodItem.carbsPer100g
+        cdFoodItem.sugarsPer100g = composedFoodItem.sugarsPer100g
+        cdFoodItem.favorite = composedFoodItem.favorite
+        
+        // Set category to product
+        cdFoodItem.category = FoodItemCategory.product.rawValue
+        
+        // Add typical amounts
+        if composedFoodItem.numberOfPortions > 0 {
+            let portionWeight = Int(composedFoodItem.amount) / Int(composedFoodItem.numberOfPortions)
+            for multiplier in 1...Int(composedFoodItem.numberOfPortions) {
+                let portionAmount = portionWeight * multiplier
+                let comment = "\(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(composedFoodItem.numberOfPortions))"
+                let typicalAmount = TypicalAmount.create(amount: Int64(portionAmount), comment: comment)
+                cdFoodItem.addToTypicalAmounts(typicalAmount)
+            }
+        }
+        
+        return cdFoodItem
+    }
+    
     /**
      Updates a Core Data FoodItem with the values from a FoodItemViewModel.
      If related to one or more Ingredients, their values will also be updated.
@@ -179,6 +238,13 @@ public class FoodItem: NSManagedObject {
         typicalAmountsToBeDeleted: [TypicalAmountViewModel]
     ) {
         // TODO remove after fixing tests
+    }
+    
+    /// Checks if an associated recipe exists.
+    /// - Parameter foodItem: The food item to check for an associated recipe.
+    /// - Returns: True if an associated recipe exists.
+    static func hasAssociatedRecipe(foodItem: FoodItem) -> Bool {
+        return foodItem.composedFoodItem != nil
     }
     
     /// Updates the ComposedFoodItems (recipes) related to the FoodItem with the nutritional values of the FoodItem.
@@ -212,15 +278,17 @@ public class FoodItem: NSManagedObject {
         }
     }
     
-    /**
-     Duplicates the FoodItem represented by the existingFoodItemVM
-     
-     - Parameters:
-        - existingFoodItemVM: the FoodItemViewModel to be duplicated
-     
-     - Returns: the new Core Data FoodItem
-     */
-    static func duplicate(_ existingFoodItem: FoodItem) -> FoodItem {
+    /// Duplicates the given FoodItem. If the FoodItem is associated to a ComposedFoodItem (recipe), the recipe will be duplicated instead.
+    /// Saves the context.
+    /// - Parameter existingFoodItem: The FoodItem to be duplicated.
+    /// - Returns: The duplicated FoodItem, nil if something went wrong.
+    static func duplicate(_ existingFoodItem: FoodItem) -> FoodItem? {
+        if existingFoodItem.composedFoodItem != nil {
+            // This food item is associated to a recipe, so rather duplicate the recipe
+            let newComposedFoodItem = ComposedFoodItem.duplicate(existingFoodItem.composedFoodItem!)
+            return newComposedFoodItem!.foodItem // The duplicated recipe should always have a food item, otherwise something is seriously wrong
+        }
+        
         // Create new FoodItem with own ID
         let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         cdFoodItem.id = UUID()
@@ -263,7 +331,7 @@ public class FoodItem: NSManagedObject {
         
         if deleteAssociatedRecipe {
             if let associatedRecipe = foodItem.composedFoodItem {
-                ComposedFoodItem.delete(associatedRecipe)
+                ComposedFoodItem.delete(associatedRecipe, includeAssociatedFoodItem: false)
             }
         }
         
@@ -286,15 +354,39 @@ public class FoodItem: NSManagedObject {
     /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this FoodItem exists.
     /// - Parameter foodItem: The Core Data FoodItem to check the name for.
     /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
-    static func nameExists(foodItem: FoodItem) -> Bool {
-        let foodItems = FoodItem.getFoodItemsByName(name: foodItem.name)
-        let composedFoodItems = ComposedFoodItem.getComposedFoodItemByName(name: foodItem.name)
+    static func nameExists(name: String) -> Bool {
+        let foodItems = FoodItem.getFoodItemsByName(name: name)
+        let composedFoodItems = ComposedFoodItem.getComposedFoodItemByName(name: name)
         
         // We expect the food item to exist exactly once (itself), so if there is more than one, the name already exists
         return foodItems != nil && foodItems!.count > 1 || composedFoodItems != nil
     }
     
-    /// Sets the category of the Core Data FoodItem to the given String. Does not check if the string is a valid FoodItemCategory.
+    /// Returns the names of all associated recipes (ComposedFoodItems) of the given FoodItem.
+    /// - Parameter foodItem: The Core Data FoodItem.
+    /// - Returns: An array of names of associated recipes, nil if there are no associated recipes.
+    static func getAssociatedRecipeNames(foodItem: FoodItem) -> [String]? {
+        if (foodItem.ingredients == nil) || (foodItem.ingredients!.count == 0) {
+            return nil
+        } else {
+            var associatedRecipeNames = [String]()
+            for case let ingredient as Ingredient in foodItem.ingredients! {
+                associatedRecipeNames.append(ingredient.composedFoodItem.name)
+            }
+            return associatedRecipeNames
+        }
+    }
+    
+    /// Changes the category of the Core Data FoodItem from ingredient to product or vice versa.
+    /// - Parameter foodItem: The Core Data FoodItem.
+    static func changeCategory(foodItem: FoodItem) {
+        if let currentCategory = FoodItemCategory(rawValue: foodItem.category) {
+            let newCategory: FoodItemCategory = currentCategory == .ingredient ? .product : .ingredient
+            setCategory(foodItem, to: newCategory.rawValue)
+        }
+    }
+
+    /// Sets the category of the Core Data FoodItem to the given String. Does not check if the string is a valid FoodItemCategory. Saves the context.
     /// - Parameters:
     ///   - foodItem: The Core Data FoodItem.
     ///   - category: The string representation of the FoodItemCategory.

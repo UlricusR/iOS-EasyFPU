@@ -11,7 +11,7 @@ import Foundation
 import CoreData
 
 
-extension ComposedFoodItem {
+extension ComposedFoodItem: VariableAmountItem {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<ComposedFoodItem> {
         return NSFetchRequest<ComposedFoodItem>(entityName: "ComposedFoodItem")
@@ -25,6 +25,151 @@ extension ComposedFoodItem {
     @NSManaged public var foodCategory: FoodCategory?
     @NSManaged public var foodItem: FoodItem?
     @NSManaged public var ingredients: NSSet
+    
+    //
+    // MARK: Computed properties
+    //
+    
+    var calories: Double {
+        var newValue = 0.0
+        for ingredient in ingredients.allObjects as! [Ingredient] {
+            newValue += ingredient.calories
+        }
+        return newValue
+    }
+    
+    private var carbs: Double {
+        var newValue = 0.0
+        for ingredient in ingredients.allObjects as! [Ingredient] {
+            newValue += ingredient.carbsInclSugars
+        }
+        return newValue
+    }
+    
+    private var sugars: Double {
+        var newValue = 0.0
+        for ingredient in ingredients.allObjects as! [Ingredient] {
+            newValue += ingredient.sugarsOnly
+        }
+        return newValue
+    }
+    
+    var fpus: FPU {
+        var fpu = FPU(fpu: 0.0)
+        for ingredient in ingredients.allObjects as! [Ingredient] {
+            let tempFPU = fpu.fpu
+            fpu = FPU(fpu: tempFPU + ingredient.fpus.fpu)
+        }
+        return fpu
+    }
+    
+    var caloriesPer100g: Double {
+        calories / Double(amount) * 100
+    }
+    
+    var carbsPer100g: Double {
+        carbs / Double(amount) * 100
+    }
+    
+    var sugarsPer100g: Double {
+        sugars / Double(amount) * 100
+    }
+    
+    var carbsInclSugars: Double {
+        self.carbs
+    }
+    
+    var carbsWithoutSugars: Double {
+        self.carbs - self.sugars
+    }
+    
+    var sugarsOnly: Double {
+        self.sugars
+    }
+    
+    
+    
+    //
+    // MARK: Custom functions
+    //
+    
+    /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this ComposedFoodItemViewModel exists.
+    /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
+    func nameExists() -> Bool {
+        FoodItem.nameExists(name: self.name)
+    }
+    
+    func regularCarbs(treatSugarsSeparately: Bool) -> Double {
+        treatSugarsSeparately ? self.carbsWithoutSugars : self.carbsInclSugars
+    }
+    
+    func sugars(treatSugarsSeparately: Bool) -> Double {
+        treatSugarsSeparately ? self.sugarsOnly : 0
+    }
+    
+    /// Updates the related FoodItem of this ComposedFoodItem. Does not save the context.
+    func updateRelatedFoodItem() {
+        // Update the related FoodItem or create a new one if it does not exist yet
+        let foodItem = FoodItem.createOrUpdate(from: self)
+        
+        // Relate it to this ComposedFoodItem
+        self.foodItem = foodItem
+    }
+    
+    /// Adds an Ingredient  to the ComposedFoodItem, if it doesn't exist yet.
+    /// - Parameter ingredient: The ingredient to be added.
+    func add(ingredient: Ingredient) {
+        if !ingredients.contains(ingredient) {
+            self.addToIngredients(ingredient)
+            let newAmount = self.amount + ingredient.amount
+            self.amount = newAmount
+        }
+    }
+    
+    /// Checks whether the ComposedFoodItem contains the given FoodItem as one of its ingredients.
+    /// - Parameters:
+    ///   - foodItem: The FoodItem to be checked for.
+    /// - Returns: True if the ComposedFoodItem contains the FoodItem, otherwise false.
+    func contains(foodItem: FoodItem) -> Bool {
+        let foodItems = self.ingredients.compactMap { ($0 as? Ingredient)?.foodItem }
+        return foodItems.contains(foodItem)
+    }
+    
+    /// Returns the Ingredient of the given ComposedFoodItem which relates to the given FoodItem.
+    /// - Parameters:
+    ///   - foodItem: The FoodItem to be checked for.
+    /// - Returns: The Ingredient if found, otherwise nil.
+    func getIngredient(foodItem: FoodItem) -> Ingredient? {
+        for case let ingredient as Ingredient in self.ingredients {
+            if ingredient.foodItem == foodItem {
+                return ingredient
+            }
+        }
+        return nil
+    }
+    
+    /// Removes the Ingredient of the ComposedFoodItem which relates to the given FoodItem. Does not save the context.
+    /// - Parameters:
+    ///   - foodItem: The FoodItem to be removed.
+    func remove(foodItem: FoodItem) {
+        if let ingredientToBeRemoved = getIngredient(foodItem: foodItem) {
+            remove(ingredient: ingredientToBeRemoved)
+        }
+    }
+    
+    /// Removes the Ingredient of the given ComposedFoodItem which relates to the given FoodItem. Does not save the context.
+    /// - Parameters:
+    ///   - foodItem: The FoodItem to be removed.
+    func remove(ingredient: Ingredient) {
+        // Substract the amount of the ingredient from the total amount
+        let newAmount = self.amount - ingredient.amount
+        self.amount = newAmount
+        
+        // Remove the ingredient from the composed food item and delete it
+        self.removeFromIngredients(ingredient)
+        CoreDataStack.viewContext.delete(ingredient)
+    }
+    
     
 }
 

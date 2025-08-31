@@ -12,6 +12,11 @@ import CoreData
 
 
 public class ComposedFoodItem: NSManagedObject {
+    
+    //
+    // MARK: - Static methods for data access and manipulation
+    //
+    
     static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [ComposedFoodItem] {
         let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
         
@@ -27,6 +32,16 @@ public class ComposedFoodItem: NSManagedObject {
         })
         
         try? viewContext.save()
+    }
+    
+    static func new(name: String) -> ComposedFoodItem {
+        let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
+        cdComposedFoodItem.id = UUID()
+        cdComposedFoodItem.name = name
+        cdComposedFoodItem.favorite = false
+        cdComposedFoodItem.amount = 0
+        cdComposedFoodItem.numberOfPortions = 0
+        return cdComposedFoodItem
     }
     
     /**
@@ -75,7 +90,7 @@ public class ComposedFoodItem: NSManagedObject {
     }
     
     /**
-     Updates an existing Core Data ComposedFoodItem.
+     Updates an existing Core Data ComposedFoodItem. Saves the context.
      
      - Parameters:
         - composedFoodItemVM: The source ComposedFoodItemViewModel.
@@ -201,7 +216,7 @@ public class ComposedFoodItem: NSManagedObject {
         } else {
             // No existing FoodItem found to duplicate - this should not happen
             // Delete composedFoodItem again
-            ComposedFoodItem.delete(cdComposedFoodItem)
+            ComposedFoodItem.delete(cdComposedFoodItem, includeAssociatedFoodItem: false)
             
             // Save
             CoreDataStack.shared.save()
@@ -212,7 +227,13 @@ public class ComposedFoodItem: NSManagedObject {
     
     /// Deletes the given ComposedFoodItem from Core Data. Does not save the context.
     /// - Parameter composedFoodItem: The ComposedFoodItem to be deleted.
-    static func delete(_ composedFoodItem: ComposedFoodItem) {
+    static func delete(_ composedFoodItem: ComposedFoodItem, includeAssociatedFoodItem: Bool) {
+        if includeAssociatedFoodItem {
+            if let associatedFoodItem = composedFoodItem.foodItem {
+                FoodItem.delete(associatedFoodItem)
+            }
+        }
+        
         // Deletion of all related ingredients will happen automatically
         // as we have set Delete Rule to Cascade in data model
         
@@ -262,5 +283,60 @@ public class ComposedFoodItem: NSManagedObject {
             debugPrint("Error fetching ComposedFoodItem: \(error)")
         }
         return nil
+    }
+    
+    static func clear(composedFoodItem: ComposedFoodItem) {
+        // Clear ingredients
+        clearIngredients(composedFoodItem: composedFoodItem)
+        
+        // Reset values and create new UUID
+        composedFoodItem.id = UUID()
+        composedFoodItem.name = NSLocalizedString("Composed product", comment: "")
+        composedFoodItem.favorite = false
+        composedFoodItem.numberOfPortions = 0
+    }
+    
+    /**
+     Clears all ingredients and sets the amount to 0.
+     */
+    static func clearIngredients(composedFoodItem: ComposedFoodItem) {
+        for ingredient in composedFoodItem.ingredients.allObjects as! [Ingredient] {
+            ingredient.amount = 0
+            composedFoodItem.removeFromIngredients(ingredient)
+        }
+        composedFoodItem.amount = 0
+    }
+    
+    static func getCarbsInclSugars(composedFoodItem: ComposedFoodItem) -> Double {
+        var newValue = 0.0
+        for ingredient in composedFoodItem.ingredients.allObjects as! [Ingredient] {
+            newValue += FoodItem.getCarbsInclSugars(ingredient: ingredient)
+        }
+        return newValue
+    }
+    
+    static func getSugarsOnly(composedFoodItem: ComposedFoodItem) -> Double {
+        var newValue = 0.0
+        for ingredient in composedFoodItem.ingredients.allObjects as! [Ingredient] {
+            newValue += FoodItem.getSugarsOnly(ingredient: ingredient)
+        }
+        return newValue
+    }
+    
+    static func getRegularCarbs(composedFoodItem: ComposedFoodItem, treatSugarsSeparately: Bool) -> Double {
+        treatSugarsSeparately ? getCarbsInclSugars(composedFoodItem: composedFoodItem) - getSugarsOnly(composedFoodItem: composedFoodItem) : getCarbsInclSugars(composedFoodItem: composedFoodItem)
+    }
+    
+    static func getSugars(composedFoodItem: ComposedFoodItem, treatSugarsSeparately: Bool) -> Double {
+        treatSugarsSeparately ? getSugarsOnly(composedFoodItem: composedFoodItem) : 0
+    }
+    
+    static func fpus(composedFoodItem: ComposedFoodItem) -> FPU {
+        var fpu = FPU(fpu: 0.0)
+        for ingredient in composedFoodItem.ingredients.allObjects as! [Ingredient] {
+            let tempFPU = fpu.fpu
+            fpu = FPU(fpu: tempFPU + FoodItem.getFPU(ingredient: ingredient).fpu)
+        }
+        return fpu
     }
 }

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ComposedFoodItemSugarsView: View {
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
     @ObservedObject var userSettings = UserSettings.shared
     var sugarsTimeAsString: String {
         let time = Date().addingTimeInterval(TimeInterval((userSettings.absorptionTimeSugarsDelayInMinutes + userSettings.mealDelayInMinutes) * 60))
@@ -37,7 +37,7 @@ struct ComposedFoodItemSugarsView: View {
                 
                 VStack(alignment: .leading) { // Answers
                     HStack { // How much?
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.getSugars(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: ComposedFoodItem.getSugars(composedFoodItem: composedFoodItem, treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                             .accessibilityIdentifierLeaf("AmountValue")
                         Text("g Carbs").accessibilityIdentifierLeaf("AmountUnit")
                     }

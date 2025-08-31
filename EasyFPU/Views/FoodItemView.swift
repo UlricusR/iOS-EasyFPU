@@ -16,8 +16,8 @@ struct FoodItemView: View {
     }
     
     @Binding var navigationPath: NavigationPath
-    @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
-    @ObservedObject var foodItemVM: FoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
+    @ObservedObject var foodItem: FoodItem
     var category: FoodItemCategory
     var listType: FoodItemListView.FoodItemListType
     var showFoodCategory: Bool = true
@@ -29,28 +29,29 @@ struct FoodItemView: View {
         VStack {
             // First line: amount, name, favorite
             HStack {
+                let isSelected = composedFoodItem.contains(foodItem: foodItem)
                 if listType == .selection {
-                    if let foodItemIndex = composedFoodItemVM.foodItemVMs.firstIndex(of: foodItemVM) {
+                    if isSelected { // The food item is selected
                         Image(systemName: "xmark.circle")
                             .foregroundStyle(.red)
                             .accessibilityIdentifierLeaf("DeselectFoodItemButton")
-                        Text("\(composedFoodItemVM.foodItemVMs[foodItemIndex].amount)").font(.headline).foregroundStyle(.blue)
+                        Text("\(composedFoodItem.getIngredient(foodItem: foodItem)!.amount)").font(.headline).foregroundStyle(.blue)
                         Text("g").font(.headline).foregroundStyle(.blue)
-                    } else {
+                    } else { // The food item is not selected
                         Image(systemName: "plus.circle")
                             .foregroundStyle(.gray)
                             .accessibilityIdentifierLeaf("SelectFoodItemButton")
                     }
                 }
-                Text(foodItemVM.name)
+                Text(foodItem.name)
                     .font(.headline)
-                    .foregroundStyle(listType == .selection && composedFoodItemVM.foodItemVMs.contains(foodItemVM) ? .blue : .primary)
+                    .foregroundStyle(listType == .selection && isSelected ? .blue : .primary)
                     .accessibilityIdentifierLeaf("FoodItemNameLabel")
-                if foodItemVM.hasAssociatedRecipe() {
+                if FoodItem.hasAssociatedRecipe(foodItem: foodItem) {
                     Image(systemName: "frying.pan.fill").foregroundStyle(.gray).imageScale(.small)
                         .accessibilityIdentifierLeaf("HasAssociatedRecipeSymbol")
                 }
-                if foodItemVM.favorite {
+                if foodItem.favorite {
                     Image(systemName: "star.fill")
                         .foregroundStyle(.yellow)
                         .imageScale(.small)
@@ -60,9 +61,9 @@ struct FoodItemView: View {
             }
             
             // Optional food category
-            if showFoodCategory && foodItemVM.foodCategory != nil {
+            if showFoodCategory && foodItem.foodCategory != nil {
                 HStack {
-                    Text(foodItemVM.foodCategory!.name)
+                    Text(foodItem.foodCategory!.name)
                         .font(.caption)
                         .accessibilityIdentifierLeaf("FoodCategoryLabel")
                     Spacer()
@@ -78,7 +79,7 @@ struct FoodItemView: View {
 
                 Spacer()
 
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItemVM.caloriesPer100g))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.caloriesPer100g))!)
                     .font(.caption)
                     .foregroundStyle(.gray)
                     .accessibilityIdentifierLeaf("CaloriesValue")
@@ -91,7 +92,7 @@ struct FoodItemView: View {
 
                 VStack(alignment: .leading) {
                     HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItemVM.carbsPer100g))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.carbsPer100g))!)
                             .font(.caption)
                             .foregroundStyle(.gray)
                             .accessibilityIdentifierLeaf("CarbsValue")
@@ -103,7 +104,7 @@ struct FoodItemView: View {
                     
                     HStack {
                         Text("Thereof").font(.caption).foregroundStyle(.gray)
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItemVM.sugarsPer100g))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 2).string(from: NSNumber(value: foodItem.sugarsPer100g))!)
                             .font(.caption)
                             .foregroundStyle(.gray)
                             .accessibilityIdentifierLeaf("SugarsValue")
@@ -118,10 +119,11 @@ struct FoodItemView: View {
         .onTapGesture {
             withAnimation(.default) {
                 if listType == .selection {
-                    if composedFoodItemVM.foodItemVMs.contains(foodItemVM) {
-                        composedFoodItemVM.remove(foodItem: foodItemVM)
+                    if composedFoodItem.contains(foodItem: foodItem) {
+                        composedFoodItem.remove(foodItem: foodItem)
                     } else {
-                        navigationPath.append(FoodItemListView.FoodListNavigationDestination.SelectFoodItem(category: category, draftFoodItem: foodItemVM, composedFoodItem: composedFoodItemVM))
+                        let ingredient = Ingredient.create(from: foodItem)
+                        navigationPath.append(FoodItemListView.FoodListNavigationDestination.SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItem))
                     }
                 }
             }
@@ -129,12 +131,12 @@ struct FoodItemView: View {
         .swipeActions(edge: .trailing) {
             // Editing the food item
             Button("Edit", systemImage: "pencil") {
-                if foodItemVM.cdFoodItem?.composedFoodItem != nil {
+                if foodItem.composedFoodItem != nil {
                     // There's an associated recipe, so show message to open Recipe Editor
                     activeAlert = .simpleAlert(type: .notice(message: "This food item is created from a recipe, please open it in the recipe editor"))
                     showingAlert = true
                 } else {
-                    navigationPath.append(FoodItemListView.FoodListNavigationDestination.EditFoodItem(category: category, foodItemVM: foodItemVM))
+                    navigationPath.append(FoodItemListView.FoodListNavigationDestination.EditFoodItem(category: category, foodItem: foodItem))
                 }
             }
             .tint(.blue)
@@ -142,25 +144,26 @@ struct FoodItemView: View {
             
             // Duplicating the food item
             Button("Duplicate", systemImage: "document.on.document") {
-                foodItemVM.duplicate()
+                if FoodItem.duplicate(foodItem) == nil {
+                    activeAlert = .simpleAlert(type: .fatalError(message: "Couldn't duplicate food item. This should not happen, please contact the app developer."))
+                    showingAlert = true
+                }
             }
             .tint(.indigo)
             .accessibilityIdentifierLeaf("DuplicateButton")
             
             // Delete the food item
             Button("Delete", systemImage: "trash") {
-                if foodItemVM.hasAssociatedFoodItem() {
-                    // Check if FoodItem is related to an Ingredient
-                    if let associatedRecipeNames = foodItemVM.getAssociatedRecipeNames() {
-                        // There are associated recipes
-                        activeAlert = .simpleAlert(type: .notice(message: createWarningMessage(from: associatedRecipeNames)))
-                        showingAlert = true
-                    } else if foodItemVM.hasAssociatedRecipe() {
-                        self.isConfirming.toggle()
-                    } else {
-                        self.activeAlert = .confirmDelete
-                        self.showingAlert = true
-                    }
+                // Check if FoodItem is related to an Ingredient
+                if let associatedRecipeNames = FoodItem.getAssociatedRecipeNames(foodItem: foodItem) {
+                    // There are associated recipes
+                    activeAlert = .simpleAlert(type: .notice(message: createWarningMessage(from: associatedRecipeNames)))
+                    showingAlert = true
+                } else if foodItem.composedFoodItem != nil {
+                    self.isConfirming.toggle()
+                } else {
+                    self.activeAlert = .confirmDelete
+                    self.showingAlert = true
                 }
             }
             .tint(.red)
@@ -168,15 +171,15 @@ struct FoodItemView: View {
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             // Moving the food item to another category
-            Button(NSLocalizedString("Move to \(foodItemVM.category == .product ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""), systemImage: "rectangle.2.swap") {
-                composedFoodItemVM.remove(foodItem: foodItemVM)
-                foodItemVM.changeCategory(to: foodItemVM.category == .product ? .ingredient : .product)
+            Button(NSLocalizedString("Move to \(foodItem.category == FoodItemCategory.product.rawValue ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""), systemImage: "rectangle.2.swap") {
+                composedFoodItem.remove(foodItem: foodItem)
+                FoodItem.changeCategory(foodItem: foodItem)
             }
             .tint(.yellow)
             .accessibilityIdentifierLeaf("MoveButton")
             
             // Sharing the food item
-            ShareLink(item: DataWrapper(dataModelVersion: .version2, foodItemVMs: [foodItemVM], composedFoodItemVMs: []), preview: .init("Share"))
+            ShareLink(item: DataWrapper(dataModelVersion: .version2, foodItems: [foodItem], composedFoodItems: []), preview: .init("Share"))
             .tint(.green)
             .accessibilityIdentifierLeaf("ShareButton")
         }
@@ -239,13 +242,13 @@ struct FoodItemView: View {
     
     private func deleteFoodItemOnly() {
         withAnimation(.default) {
-            foodItemVM.delete(includeAssociatedRecipe: false)
+            FoodItem.delete(foodItem, deleteAssociatedRecipe: false)
         }
     }
     
     private func deleteFoodItemAndComposedFoodItem() {
         withAnimation(.default) {
-            foodItemVM.delete(includeAssociatedRecipe: true)
+            FoodItem.delete(foodItem, deleteAssociatedRecipe: true)
         }
     }
     

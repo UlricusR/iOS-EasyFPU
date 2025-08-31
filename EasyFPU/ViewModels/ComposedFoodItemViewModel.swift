@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable, VariableAmountItem {
+class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable {
     var id: UUID
     @Published var name: String
     @Published var foodCategory: FoodCategory? = nil
@@ -16,8 +16,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     @Published var favorite: Bool
     @Published var amount: Int = 0
     @Published var numberOfPortions: Int = 0
-    @Published var foodItemVMs = [FoodItemViewModel]() // TODO remove after replacing with foodItems
-    //@Published var foodItems = [FoodItem]()
+    @Published var foodItemVMs = [FoodItemViewModel]() // TODO should later only be used for encoding/decoding purposes - rename!
+    @Published var ingredients = [Ingredient]()
     
     var cdComposedFoodItem: ComposedFoodItem?
     
@@ -36,33 +36,33 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     
     var calories: Double {
         var newValue = 0.0
-        for foodItem in foodItemVMs {
-            newValue += foodItem.getCalories()
+        for ingredient in ingredients {
+            newValue += FoodItem.getCalories(ingredient: ingredient)
         }
         return newValue
     }
     
     private var carbs: Double {
         var newValue = 0.0
-        for foodItem in foodItemVMs {
-            newValue += foodItem.getCarbsInclSugars()
+        for ingredient in ingredients {
+            newValue += FoodItem.getCarbsInclSugars(ingredient: ingredient)
         }
         return newValue
     }
     
     private var sugars: Double {
         var newValue = 0.0
-        for foodItem in foodItemVMs {
-            newValue += foodItem.getSugarsOnly()
+        for ingredient in ingredients {
+            newValue += FoodItem.getSugarsOnly(ingredient: ingredient)
         }
         return newValue
     }
     
     var fpus: FPU {
         var fpu = FPU(fpu: 0.0)
-        for foodItem in foodItemVMs {
+        for ingredient in ingredients {
             let tempFPU = fpu.fpu
-            fpu = FPU(fpu: tempFPU + foodItem.getFPU().fpu)
+            fpu = FPU(fpu: tempFPU + FoodItem.getFPU(ingredient: ingredient).fpu)
         }
         return fpu
     }
@@ -119,22 +119,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         self.cdComposedFoodItem = cdComposedFoodItem
         
         for case let ingredient as Ingredient in cdComposedFoodItem.ingredients {
-            var newCDFoodItem: FoodItem
-            if let cdFoodItem = ingredient.foodItem {
-                // A FoodItem exists, so use it
-                newCDFoodItem = cdFoodItem
-            } else {
-                // Create a new FoodItem
-                newCDFoodItem = FoodItem.create(from: self)
-            }
-            
-            // Add the amount
-            let foodItemVM = FoodItemViewModel(from: newCDFoodItem)
-            let amount = Int(ingredient.amount)
-            foodItemVM.amount = amount
-            
-            // Add FoodItemVM to ComposedFoodItemVM
-            foodItemVMs.append(foodItemVM)
+            // Add Ingredient to ComposedFoodItemVM
+            ingredients.append(ingredient)
         }
     }
     
@@ -229,11 +215,11 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
             }
         }
         
-        ComposedFoodItem.delete(cdComposedFoodItem)
+        ComposedFoodItem.delete(cdComposedFoodItem, includeAssociatedFoodItem: false)
         CoreDataStack.shared.save()
     }
     
-    /// Adds a FoodItem to the ComposedFoodItem, if it doesn't exist yet.
+    /// Adds a FoodItem to the ComposedFoodItem, if it doesn't exist yet. - TODO remove after replacing with add(Ingredient)
     /// - Parameter foodItem: The food item to be added.
     func add(foodItem: FoodItemViewModel) {
         if !foodItemVMs.contains(foodItem) {
@@ -242,7 +228,16 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         }
     }
     
-    /// Removes a FoodItem from the ComposedFoodItem, if it exists.
+    /// Adds a FoodItem to the ComposedFoodItem, if it doesn't exist yet.
+    /// - Parameter foodItem: The food item to be added.
+    func add(ingredient: Ingredient) {
+        if !ingredients.contains(ingredient) {
+            ingredients.append(ingredient)
+            amountAsString = String(amount + Int(ingredient.amount)) // amount will be set implicitely
+        }
+    }
+    
+    /// Removes a FoodItem from the ComposedFoodItem, if it exists. - TODO remove after replacing with remove(Ingredient)
     /// - Parameter foodItem: The food item to be removed.
     func remove(foodItem: FoodItemViewModel) {
         if let index = foodItemVMs.firstIndex(of: foodItem) {
@@ -254,6 +249,21 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
             // Remove FoodItem
             foodItemVMs[index].amountAsString = "0"
             foodItemVMs.remove(at: index)
+        }
+    }
+    
+    /// Removes a FoodItem from the ComposedFoodItem, if it exists.
+    /// - Parameter foodItem: The food item to be removed.
+    func remove(ingredient: Ingredient) {
+        if let index = ingredients.firstIndex(of: ingredient) {
+            // Substract amount of FoodItem removed
+            let oldFoodItemAmount = Int(ingredients[index].amount)
+            let newComposedFoodItemAmount = amount - oldFoodItemAmount
+            amountAsString = String(newComposedFoodItemAmount)
+            
+            // Remove FoodItem
+            ingredients[index].amount = 0
+            ingredients.remove(at: index)
         }
     }
     
@@ -302,10 +312,10 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
      Clears all ingredients and sets the amount to 0.
      */
     func clearIngredients() {
-        for foodItem in foodItemVMs {
-            foodItem.amountAsString = "0"
+        for ingredient in ingredients {
+            ingredient.amount = 0
         }
-        foodItemVMs.removeAll()
+        ingredients.removeAll()
         amount = 0
     }
     

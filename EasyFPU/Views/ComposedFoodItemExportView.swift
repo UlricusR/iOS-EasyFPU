@@ -11,7 +11,7 @@ import HealthKit
 import LocalAuthentication
 
 struct ComposedFoodItemExportView: View {
-    var composedFoodItem: ComposedFoodItemViewModel
+    var composedFoodItem: ComposedFoodItem
     var absorptionScheme: AbsorptionSchemeViewModel
     @ObservedObject var userSettings = UserSettings.shared
     @ObservedObject var carbsRegimeCalculator = CarbsRegimeCalculator.default

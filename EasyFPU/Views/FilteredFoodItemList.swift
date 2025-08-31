@@ -12,7 +12,7 @@ import CoreData
 
 struct FilteredFoodItemList: View {
     @Binding var navigationPath: NavigationPath
-    @ObservedObject private var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject private var composedFoodItem: ComposedFoodItem
     @ObservedObject private var userSettings = UserSettings.shared
     
     private var category: FoodItemCategory
@@ -21,13 +21,17 @@ struct FilteredFoodItemList: View {
     
     @FetchRequest var fetchRequest: FetchedResults<FoodItem>
     
-    private var sortedFoodItemVMs: [FoodItemViewModel] {
-        let foodItemVMs = fetchRequest.map { FoodItemViewModel(from: $0) }
-        return foodItemVMs.sorted {
+    private var ingredients: [Ingredient] {
+        composedFoodItem.ingredients.allObjects as! [Ingredient]
+    }
+    
+    private var sortedFoodItems: [FoodItem] {
+        let foodItems = fetchRequest.compactMap { $0 } as! [FoodItem]
+        return foodItems.sorted {
             if listType == .selection {
-                if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
+                if composedFoodItem.contains(foodItem: $0) && !composedFoodItem.contains(foodItem: $1) {
                     return true
-                } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
+                } else if !composedFoodItem.contains(foodItem: $0) && composedFoodItem.contains(foodItem: $1) {
                     return false
                 } else {
                     return $0.name < $1.name
@@ -38,17 +42,17 @@ struct FilteredFoodItemList: View {
         }
     }
     
-    private var groupedFoodItemVMs: [String: [FoodItemViewModel]] {
-        let foodItemVMs = sortedFoodItemVMs
+    private var groupedFoodItems: [String: [FoodItem]] {
+        let foodItems = sortedFoodItems
         
-        // Get the foodItemVMs with an associated FoodCategory
-        let categorizedFoodItemVMs = foodItemVMs.filter { $0.foodCategory != nil }
-        var groupedCategorized = Dictionary(grouping: categorizedFoodItemVMs) { $0.foodCategory!.name }
+        // Get the foodItems with an associated FoodCategory
+        let categorizedFoodItems = foodItems.filter { $0.foodCategory != nil }
+        var groupedCategorized = Dictionary(grouping: categorizedFoodItems) { $0.foodCategory!.name }
         
         // Append the uncategorized items to the grouped dictionary
-        let uncategorizedFoodItemVMs = foodItemVMs.filter { $0.foodCategory == nil }
-        if !uncategorizedFoodItemVMs.isEmpty {
-            groupedCategorized[NSLocalizedString("Uncategorized", comment: "")] = uncategorizedFoodItemVMs
+        let uncategorizedFoodItems = foodItems.filter { $0.foodCategory == nil }
+        if !uncategorizedFoodItems.isEmpty {
+            groupedCategorized[NSLocalizedString("Uncategorized", comment: "")] = uncategorizedFoodItems
         }
         
         return groupedCategorized
@@ -102,10 +106,10 @@ struct FilteredFoodItemList: View {
                 if userSettings.groupProductsByCategory && category == .product || userSettings.groupIngredientsByCategory && category == .ingredient {
                     // Grouped list
                     List {
-                        ForEach(groupedFoodItemVMs.keys.sorted(), id: \.self) { key in
+                        ForEach(groupedFoodItems.keys.sorted(), id: \.self) { key in
                             Section(header: Text(key)) {
-                                ForEach(groupedFoodItemVMs[key]!, id: \.id) { foodItem in
-                                    FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType, showFoodCategory: false)
+                                ForEach(groupedFoodItems[key]!, id: \.id) { foodItem in
+                                    FoodItemView(navigationPath: $navigationPath, composedFoodItem: composedFoodItem, foodItem: foodItem, category: self.category, listType: listType, showFoodCategory: false)
                                         .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                                 }
                             }
@@ -115,8 +119,8 @@ struct FilteredFoodItemList: View {
                     .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
                 } else {
                     // Un-grouped list
-                    List(sortedFoodItemVMs) { foodItem in
-                        FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType, showFoodCategory: true)
+                    List(sortedFoodItems) { foodItem in
+                        FoodItemView(navigationPath: $navigationPath, composedFoodItem: composedFoodItem, foodItem: foodItem, category: self.category, listType: listType, showFoodCategory: true)
                             .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
                     }
                     .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
@@ -153,7 +157,7 @@ struct FilteredFoodItemList: View {
         category: FoodItemCategory,
         listType: FoodItemListView.FoodItemListType,
         navigationPath: Binding<NavigationPath>,
-        composedFoodItem: ComposedFoodItemViewModel,
+        composedFoodItem: ComposedFoodItem,
         searchString: String,
         showFavoritesOnly: Bool
     ) {

@@ -133,6 +133,7 @@ struct FoodItemEditor: View {
                     HStack {
                         TextField("Calories per 100g", value: $editedCDFoodItem.caloriesPer100g, format: .number)
                             .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
                             .accessibilityIdentifierLeaf("CaloriesValue")
                         Text("kcal")
                             .accessibilityIdentifierLeaf("CaloriesUnit")
@@ -142,6 +143,7 @@ struct FoodItemEditor: View {
                     HStack {
                         TextField("Carbs per 100g", value: $editedCDFoodItem.carbsPer100g, format: .number)
                             .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
                             .accessibilityIdentifierLeaf("CarbsValue")
                         Text("g Carbs")
                             .accessibilityIdentifierLeaf("CarbsUnit")
@@ -151,16 +153,19 @@ struct FoodItemEditor: View {
                     HStack {
                         TextField("Thereof Sugars per 100g", value: $editedCDFoodItem.sugarsPer100g, format: .number)
                             .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
                             .accessibilityIdentifierLeaf("SugarsValue")
                         Text("g Sugars")
                             .accessibilityIdentifierLeaf("SugarsUnit")
                     }
                 }
                 
-                Section(header: Text("Typical amounts:"), footer: Text("Tap to edit")) {
+                Section(header: Text("Typical amounts:")) {
                     if typicalAmountEdited {
                         HStack {
-                            CustomTextField(titleKey: "Amount", text: $newTypicalAmount, keyboardType: .numberPad)
+                            TextField("Amount", text: $newTypicalAmount)
+                                .keyboardType(.numberPad)
+                                .multilineTextAlignment(.trailing)
                                 .accessibilityIdentifierLeaf("EditTypicalAmountValue")
                             Text("g")
                                 .accessibilityIdentifierLeaf("AmountUnit")
@@ -293,7 +298,7 @@ struct FoodItemEditor: View {
                             editedCDFoodItem.name = editedCDFoodItem.name.trimmingCharacters(in: .whitespacesAndNewlines)
                             
                             // Check if we have duplicate names (if this is a new food item)
-                            if isNewFoodItem && FoodItem.nameExists(foodItem: editedCDFoodItem) {
+                            if isNewFoodItem && editedCDFoodItem.nameExists() {
                                 activeAlert = .simpleAlert(type: .warning(message: "A food item with this name already exists"))
                                 showingAlert = true
                             } else {

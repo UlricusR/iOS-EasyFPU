@@ -63,6 +63,7 @@
 "Add products" = "Speisen hinzufügen";
 "Edit products" = "Speisen bearbeiten";
 "Add more" = "Mehr hinzufügen";
+"No food item associated to typical amount!" = "Kein Essen mit typischer Menge verknüpft! Dies sollte nicht passieren - bitte das Entwicklungsteam informieren.";
 
 // Products List
 "Products" = "Speisen";
@@ -191,6 +192,7 @@
 "Search term must not be empty" = "Suchbegriff darf nicht leer sein";
 " - new" = " - neu";
 "A food item with this name already exists" = "Ein Eintrag mit diesem Namen existiert bereits";
+"Couldn't duplicate food item. This should not happen, please contact the app developer." = "Konnte Essen nicht duplizieren. Das sollte nicht passieren - bitte das Entwicklungsteam informieren.";
 
 // Recipe editor
 "Recipe List" = "Rezeptliste";
@@ -210,6 +212,7 @@
 "Keep product" = "Nur Rezept löschen";
 "Delete recipe" = "Rezept löschen";
 "Do you really want to delete this recipe? This cannot be undone!" = "Willst Du dieses Rezept wirklich löschen? Dies kann nicht rückgängig gemacht werden!";
+"Tap to select" = "Zum Auswählen antippen";
 
 // Category editor
 "Category" = "Kategorie";

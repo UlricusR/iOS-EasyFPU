@@ -11,8 +11,8 @@ import SwiftUI
 struct RecipeListView: View {
     enum RecipeNavigationDestination: Hashable {
         case CreateRecipe
-        case AddIngredients(recipe: ComposedFoodItemViewModel)
-        case EditRecipe(recipe: ComposedFoodItemViewModel)
+        case AddIngredients(recipe: ComposedFoodItem)
+        case EditRecipe(recipe: ComposedFoodItem)
     }
     
     enum SheetState: Identifiable {
@@ -22,7 +22,7 @@ struct RecipeListView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
     var helpSheet: SheetState
     @State private var navigationPath = NavigationPath()
     @State private var searchString = ""
@@ -36,11 +36,12 @@ struct RecipeListView: View {
         ]
     ) var composedFoodItems: FetchedResults<ComposedFoodItem>
     
-    private var filteredComposedFoodItems: [ComposedFoodItemViewModel] {
+    private var filteredComposedFoodItems: [ComposedFoodItem] {
         if searchString == "" {
-            return showFavoritesOnly ? composedFoodItems.map { ComposedFoodItemViewModel(from: $0) } .filter { $0.favorite } : composedFoodItems.map { ComposedFoodItemViewModel(from: $0) }
+            return showFavoritesOnly ? composedFoodItems.map { $0 } .filter { $0.favorite } : composedFoodItems.map { $0 }
         } else {
-            return showFavoritesOnly ? composedFoodItems.map { ComposedFoodItemViewModel(from: $0) } .filter { $0.favorite && $0.name.lowercased().contains(searchString.lowercased()) } : composedFoodItems.map { ComposedFoodItemViewModel(from: $0) } .filter { $0.name.lowercased().contains(searchString.lowercased()) }
+            return showFavoritesOnly ? composedFoodItems.map { $0 } .filter { $0.favorite && $0.name.lowercased().contains(searchString.lowercased()) } : composedFoodItems.map {
+                $0 } .filter { $0.name.lowercased().contains(searchString.lowercased()) }
         }
     }
     
@@ -75,7 +76,7 @@ struct RecipeListView: View {
                         ForEach(self.filteredComposedFoodItems) { composedFoodItem in
                             RecipeView(
                                 navigationPath: $navigationPath,
-                                composedFoodItemVM: composedFoodItem
+                                composedFoodItem: composedFoodItem
                             )
                             .environment(\.managedObjectContext, self.managedObjectContext)
                             .accessibilityIdentifierBranch(String(composedFoodItem.name.prefix(10)))
@@ -138,19 +139,19 @@ struct RecipeListView: View {
                         navigationBarBackButtonHidden: true
                     )
                     .accessibilityIdentifierBranch("AddFoodItem")
-                case let .EditFoodItem(category: category, foodItemVM: foodItemVM):
+                case let .EditFoodItem(category: category, foodItem: foodItem):
                     FoodMaintenanceListView.editFoodItem(
                         $navigationPath: $navigationPath,
                         category: category,
                         managedObjectContext: managedObjectContext,
                         navigationBarBackButtonHidden: true,
-                        foodItemVM: foodItemVM
+                        foodItem: foodItem
                     )
                     .accessibilityIdentifierBranch("EditFoodItem")
-                case let .SelectFoodItem(category: category, draftFoodItem: foodItemVM, composedFoodItem: composedFoodItemVM):
+                case let .SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItemVM):
                     FoodItemSelector(
                         navigationPath: $navigationPath,
-                        draftFoodItem: foodItemVM,
+                        ingredient: ingredient,
                         composedFoodItem: composedFoodItemVM,
                         category: category
                     )
@@ -161,10 +162,12 @@ struct RecipeListView: View {
                 switch screen {
                 case .CreateRecipe:
                     FoodItemComposerView(
-                        composedFoodItemVM: UserSettings.shared.composedProduct,
+                        composedFoodItem: ComposedFoodItem.new(name: NSLocalizedString("Composed product", comment: "")),
+                        isNewRecipe: true,
                         navigationPath: $navigationPath
                     )
                     .environment(\.managedObjectContext, managedObjectContext)
+                    .navigationBarBackButtonHidden()
                     .accessibilityIdentifierBranch("CreateRecipe")
                 case let .AddIngredients(recipe: recipe):
                     FoodItemListView(
@@ -178,16 +181,14 @@ struct RecipeListView: View {
                     .accessibilityIdentifierBranch("SelectIngredients")
                     .navigationBarBackButtonHidden()
                 case let .EditRecipe(recipe: recipe):
-                    if recipe.cdComposedFoodItem != nil {
-                        FoodItemComposerView(
-                            composedFoodItemVM: recipe,
-                            navigationPath: $navigationPath
-                        )
-                        .environment(\.managedObjectContext, managedObjectContext)
-                        .accessibilityIdentifierBranch("EditRecipe")
-                    } else {
-                        Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
-                    }
+                    FoodItemComposerView(
+                        composedFoodItem: recipe,
+                        isNewRecipe: false,
+                        navigationPath: $navigationPath
+                    )
+                    .environment(\.managedObjectContext, managedObjectContext)
+                    .navigationBarBackButtonHidden()
+                    .accessibilityIdentifierBranch("EditRecipe")
                 }
             }
             .searchable(text: self.$searchString)
@@ -211,7 +212,7 @@ struct RecipeListView_Previews: PreviewProvider {
     @State private static var navigationPath = NavigationPath()
     static var previews: some View {
         RecipeListView(
-            composedFoodItem: ComposedFoodItemViewModel.sampleData(),
+            composedFoodItem: ComposedFoodItem.new(name: "Sample"),
             helpSheet: .recipeListHelp
         )
     }

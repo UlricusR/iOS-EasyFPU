@@ -17,7 +17,7 @@ struct RecipeView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @Binding var navigationPath: NavigationPath
-    @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
     @State private var showingAlert = false
     @State private var activeAlert: AlertChoice?
     @State private var isConfirming = false
@@ -25,46 +25,35 @@ struct RecipeView: View {
     var body: some View {
         // Name, favorite
         HStack {
-            Text(composedFoodItemVM.name).font(.headline)
-            if composedFoodItemVM.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
+            Text(composedFoodItem.name).font(.headline)
+            if composedFoodItem.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
             Spacer()
         }
         .accessibilityIdentifierLeaf("RecipeName")
         .swipeActions(edge: .trailing) {
             // Editing the recipe
             Button("Edit", systemImage: "pencil") {
-                if composedFoodItemVM.cdComposedFoodItem != nil {
-                    // Prepare the composed product by filling it with the selected ComposedFoodItem
-                    UserSettings.shared.composedProduct = ComposedFoodItemViewModel(from: composedFoodItemVM.cdComposedFoodItem!)
-                    
-                    // Switch to Ingredients tab
-                    navigationPath.append(RecipeListView.RecipeNavigationDestination.EditRecipe(recipe: composedFoodItemVM))
-                } else {
-                    // No associated cdComposedFoodItem - this should not happen!
-                    activeAlert = .simpleAlert(type: .fatalError(message: "No associated cdComposedFoodItem"))
-                    showingAlert = true
-                }
+                // Switch to Ingredients tab
+                navigationPath.append(RecipeListView.RecipeNavigationDestination.EditRecipe(recipe: composedFoodItem))
             }
             .tint(.blue)
             .accessibilityIdentifierLeaf("EditButton")
             
             // Duplicating the recipe
             Button("Duplicate", systemImage: "document.on.document") {
-                composedFoodItemVM.duplicate()
+                _ = ComposedFoodItem.duplicate(composedFoodItem)
             }
             .tint(.indigo)
             .accessibilityIdentifierLeaf("DuplicateButton")
             
             // Delete the recipe
             Button("Delete", systemImage: "trash") {
-                if composedFoodItemVM.hasAssociatedComposedFoodItem() {
-                    // Check for associated product
-                    if composedFoodItemVM.hasAssociatedFoodItem() {
-                        isConfirming.toggle()
-                    } else {
-                        activeAlert = .confirmDelete
-                        showingAlert = true
-                    }
+                // Check for associated product
+                if composedFoodItem.foodItem != nil {
+                    isConfirming.toggle()
+                } else {
+                    activeAlert = .confirmDelete
+                    showingAlert = true
                 }
             }
             .tint(.red)
@@ -75,8 +64,8 @@ struct RecipeView: View {
             ShareLink(
                 item: DataWrapper(
                     dataModelVersion: .version2,
-                    foodItemVMs: [],
-                    composedFoodItemVMs: [composedFoodItemVM]
+                    foodItems: [],
+                    composedFoodItems: [composedFoodItem]
                 ),
                 preview: .init("Share")
             )
@@ -142,13 +131,13 @@ struct RecipeView: View {
     
     private func deleteRecipeOnly() {
         withAnimation(.default) {
-            composedFoodItemVM.delete(includeAssociatedFoodItem: false)
+            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: false)
         }
     }
     
     private func deleteRecipeAndFoodItem() {
         withAnimation(.default) {
-            composedFoodItemVM.delete(includeAssociatedFoodItem: true)
+            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: true)
         }
     }
 }

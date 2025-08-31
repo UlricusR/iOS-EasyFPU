@@ -9,11 +9,12 @@
 import SwiftUI
 
 struct ComposedFoodItemECarbsView: View {
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
     var absorptionScheme: AbsorptionSchemeViewModel
     var absorptionTimeAsString: String {
-        if composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return DataHelper.intFormatter.string(from: NSNumber(value: composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+        let fpus = ComposedFoodItem.fpus(composedFoodItem: composedFoodItem)
+        if fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
+            return DataHelper.intFormatter.string(from: NSNumber(value: fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
         } else {
             return "..."
         }
@@ -45,7 +46,7 @@ struct ComposedFoodItemECarbsView: View {
                 
                 VStack(alignment: .leading) { // Answers
                     HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.fpus.getExtendedCarbs()))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: ComposedFoodItem.fpus(composedFoodItem: composedFoodItem).getExtendedCarbs()))!)
                             .accessibilityIdentifierLeaf("AmountValue")
                         Text("g Carbs")
                             .accessibilityIdentifierLeaf("AmountUnit")

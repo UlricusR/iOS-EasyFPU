@@ -23,7 +23,7 @@ struct ComposedFoodItemEvaluationView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
-    @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
     @ObservedObject var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
     @State private var navigationPath = NavigationPath()
@@ -32,7 +32,7 @@ struct ComposedFoodItemEvaluationView: View {
     var body: some View {
         NavigationStack(path: $navigationPath) {
             VStack {
-                if composedFoodItemVM.foodItemVMs.isEmpty {
+                if composedFoodItem.ingredients.allObjects.isEmpty {
                     // No products selected for the meal, so display empty state info and a call for action button
                     Image("cutlery-color").padding()
                         .accessibilityIdentifierLeaf("EmptyStateImage")
@@ -74,30 +74,30 @@ struct ComposedFoodItemEvaluationView: View {
                             Section(header: Text("Carbs")) {
                                 // The carbs views
                                 if userSettings.treatSugarsSeparately {
-                                    ComposedFoodItemSugarsView(composedFoodItem: self.composedFoodItemVM)
+                                    ComposedFoodItemSugarsView(composedFoodItem: self.composedFoodItem)
                                         .accessibilityIdentifierBranch("SugarDetails")
                                 }
-                                ComposedFoodItemCarbsView(composedFoodItem: self.composedFoodItemVM)
+                                ComposedFoodItemCarbsView(composedFoodItem: self.composedFoodItem)
                                     .accessibilityIdentifierBranch("CarbsDetails")
-                                ComposedFoodItemECarbsView(composedFoodItem: self.composedFoodItemVM, absorptionScheme: self.absorptionScheme)
+                                ComposedFoodItemECarbsView(composedFoodItem: self.composedFoodItem, absorptionScheme: self.absorptionScheme)
                                     .accessibilityIdentifierBranch("ECarbsDetails")
                             }
                             
                             Section(header: Text("Products"), footer: Text("Swipe to remove")) {
                                 // The included products
                                 List {
-                                    ForEach(composedFoodItemVM.foodItemVMs) { foodItem in
+                                    ForEach(composedFoodItem.ingredients.allObjects as! [Ingredient]) { ingredient in
                                         HStack {
-                                            Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
+                                            Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: Int(ingredient.amount)))!)
                                                 .accessibilityIdentifierLeaf("AmountValue")
                                             Text("g")
                                                 .accessibilityIdentifierLeaf("AmountUnit")
-                                            Text(foodItem.name)
+                                            Text(ingredient.name)
                                                 .accessibilityIdentifierLeaf("Name")
                                         }
-                                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                                        .accessibilityIdentifierBranch(String(ingredient.name.prefix(10)))
                                     }
-                                    .onDelete(perform: removeFoodItems)
+                                    .onDelete(perform: removeIngredients)
                                 }
                                 .accessibilityIdentifierBranch("IncludedProduct")
                                 
@@ -151,6 +151,7 @@ struct ComposedFoodItemEvaluationView: View {
             .navigationTitle(Text("Calculate meal"))
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
+                    // Help button
                     Button(action: {
                         activeSheet = .help
                     }) {
@@ -159,10 +160,11 @@ struct ComposedFoodItemEvaluationView: View {
                     }
                     .accessibilityIdentifierLeaf("HelpButton")
                     
-                    if !composedFoodItemVM.foodItemVMs.isEmpty {
+                    // Clear button
+                    if !composedFoodItem.ingredients.allObjects.isEmpty {
                         Button(action: {
                             withAnimation(.default) {
-                                composedFoodItemVM.clear()
+                                ComposedFoodItem.clear(composedFoodItem: composedFoodItem)
                                 UserSettings.shared.mealDelayInMinutes = 0
                             }
                         }) {
@@ -182,19 +184,19 @@ struct ComposedFoodItemEvaluationView: View {
                         managedObjectContext: managedObjectContext,
                         navigationBarBackButtonHidden: true
                     )
-                case let .EditFoodItem(category: category, foodItemVM: foodItemVM):
+                case let .EditFoodItem(category: category, foodItem: foodItem):
                     FoodMaintenanceListView.editFoodItem(
                         $navigationPath: $navigationPath,
                         category: category,
                         managedObjectContext: managedObjectContext,
                         navigationBarBackButtonHidden: true,
-                        foodItemVM: foodItemVM
+                        foodItem: foodItem
                     )
-                case let .SelectFoodItem(category: category, draftFoodItem: foodItemVM, composedFoodItem: composedFoodItemVM):
+                case let .SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItem):
                     FoodItemSelector(
                         navigationPath: $navigationPath,
-                        draftFoodItem: foodItemVM,
-                        composedFoodItem: composedFoodItemVM,
+                        ingredient: ingredient,
+                        composedFoodItem: composedFoodItem,
                         category: category
                     )
                     .accessibilityIdentifierBranch("SelectFoodItem")
@@ -209,20 +211,20 @@ struct ComposedFoodItemEvaluationView: View {
                         foodItemListTitle: NSLocalizedString("My Products", comment: ""),
                         helpSheet: .productSelectionListHelp,
                         navigationPath: $navigationPath,
-                        composedFoodItem: composedFoodItemVM
+                        composedFoodItem: composedFoodItem
                     )
                     .accessibilityIdentifierBranch("AddProductToMeal")
                     .navigationBarBackButtonHidden()
                 case .Details:
                     ComposedFoodItemDetailsView(
                         absorptionScheme: absorptionScheme,
-                        composedFoodItem: composedFoodItemVM,
+                        composedFoodItem: composedFoodItem,
                         userSettings: userSettings
                     )
                     .accessibilityIdentifierBranch("MealDetails")
                 case .ExportToHealth:
                     ComposedFoodItemExportView(
-                        composedFoodItem: composedFoodItemVM,
+                        composedFoodItem: composedFoodItem,
                         absorptionScheme: absorptionScheme
                     )
                     .accessibilityIdentifierBranch("ExportMealToHealth")
@@ -234,15 +236,15 @@ struct ComposedFoodItemEvaluationView: View {
         }
     }
     
-    func removeFoodItems(at offsets: IndexSet) {
+    func removeIngredients(at offsets: IndexSet) {
         withAnimation {
-            var foodItemsToRemove = [FoodItemViewModel]()
+            var ingredientsToRemove = [Ingredient]()
             for offset in offsets {
-                foodItemsToRemove.append(composedFoodItemVM.foodItemVMs[offset])
+                ingredientsToRemove.append(composedFoodItem.ingredients.allObjects[offset] as! Ingredient)
             }
             
-            for foodItem in foodItemsToRemove {
-                composedFoodItemVM.remove(foodItem: foodItem)
+            for ingredient in ingredientsToRemove {
+                composedFoodItem.remove(ingredient: ingredient)
             }
         }
     }
@@ -261,7 +263,7 @@ struct ComposedFoodItemEvaluationView_Previews: PreviewProvider {
     static var previews: some View {
         ComposedFoodItemEvaluationView(
             absorptionScheme: AbsorptionSchemeViewModel.sampleData(),
-            composedFoodItemVM: ComposedFoodItemViewModel.sampleData()
+            composedFoodItem: ComposedFoodItem.new(name: "Sample Meal")
         )
     }
 }

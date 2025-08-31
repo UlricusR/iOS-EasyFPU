@@ -12,6 +12,11 @@ import CoreData
 
 
 public class Ingredient: NSManagedObject {
+    
+    //
+    // MARK: - Static methods for data access and manipulation
+    //
+    
     static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [Ingredient] {
         let request: NSFetchRequest<Ingredient> = Ingredient.fetchRequest()
         
@@ -32,6 +37,7 @@ public class Ingredient: NSManagedObject {
     /**
      Creates a list of Ingredients from a ComposedFoodItemViewModel and relates it to the Core Data ComposedFoodItem
      Contains a reference to the related FoodItem and stores the ID of this FoodItem as separate value for export/import purposes.
+     Saves the context.
 
      - Parameter composedFoodItemVM: The source view model, the FoodItemViewModels of which are used as Ingredients,
      i.e., only amount and reference to Core Data FoodItem is used
@@ -109,6 +115,27 @@ public class Ingredient: NSManagedObject {
         return cdIngredients.count > 0 ? cdIngredients : nil
     }
     
+    /// Creates new Ingredient from FoodItem. Does not save the context.
+    /// - Parameter foodItem: The FoodItem to create the Ingredient from.
+    static func create(from foodItem: FoodItem) -> Ingredient {
+        let cdIngredient = Ingredient(context: CoreDataStack.viewContext)
+        
+        // Fill data
+        cdIngredient.id = UUID()
+        cdIngredient.relatedFoodItemID = foodItem.id // The id of the related FoodItem
+        cdIngredient.name = foodItem.name
+        cdIngredient.favorite = foodItem.favorite
+        cdIngredient.amount = 0 // Default amount
+        cdIngredient.caloriesPer100g = foodItem.caloriesPer100g
+        cdIngredient.carbsPer100g = foodItem.carbsPer100g
+        cdIngredient.sugarsPer100g = foodItem.sugarsPer100g
+        
+        // Create 1:1 reference to FoodItem
+        cdIngredient.foodItem = foodItem
+        
+        return cdIngredient
+    }
+    
     /**
      Creates new Ingredient from existing one - used to duplicate an Ingredient.
      Contains a reference to the related FoodItem and stores the ID of this FoodItem as separate value for export/import purposes.
@@ -129,7 +156,7 @@ public class Ingredient: NSManagedObject {
         cdIngredient.relatedFoodItemID = existingIngredient.relatedFoodItemID // The id of the related FoodItem
         cdIngredient.name = existingIngredient.name
         cdIngredient.favorite = existingIngredient.favorite
-        cdIngredient.amount = Int64(existingIngredient.amount)
+        cdIngredient.amount = existingIngredient.amount
         cdIngredient.caloriesPer100g = existingIngredient.caloriesPer100g
         cdIngredient.carbsPer100g = existingIngredient.carbsPer100g
         cdIngredient.sugarsPer100g = existingIngredient.sugarsPer100g

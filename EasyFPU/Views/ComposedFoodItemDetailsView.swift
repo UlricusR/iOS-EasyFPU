@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ComposedFoodItemDetailsView: View {
     @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
     @ObservedObject var userSettings = UserSettings.shared
     
     var absorptionTimeAsString: String {
@@ -50,7 +50,7 @@ struct ComposedFoodItemDetailsView: View {
                 // Sugars
                 if userSettings.treatSugarsSeparately {
                     HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: composedFoodItem.getSugars(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: composedFoodItem.sugars(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                             .accessibilityIdentifierLeaf("SugarsValue")
                         Text("g Sugars")
                             .accessibilityIdentifierLeaf("SugarsUnit")
@@ -68,7 +68,7 @@ struct ComposedFoodItemDetailsView: View {
                 
                 // Regular Carbs
                 HStack {
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: composedFoodItem.getRegularCarbs(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: composedFoodItem.regularCarbs(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                         .accessibilityIdentifierLeaf("CarbsValue")
                     Text("g Regular Carbs")
                         .accessibilityIdentifierLeaf("CarbsUnit")
@@ -108,9 +108,9 @@ struct ComposedFoodItemDetailsView: View {
             
             List {
                 // Food items
-                ForEach(composedFoodItem.foodItemVMs, id: \.self) { foodItem in
-                    ComposedFoodItemView(foodItem: foodItem, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundStyleName: Color.accentColor)
-                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                ForEach(composedFoodItem.ingredients.allObjects as! [Ingredient], id: \.self) { ingredient in
+                    ComposedFoodItemView(ingredient: ingredient, absorptionScheme: self.absorptionScheme, fontSizeDetails: .caption, foregroundStyleName: Color.accentColor)
+                        .accessibilityIdentifierBranch(String(ingredient.name.prefix(10)))
                 }
             }
         }

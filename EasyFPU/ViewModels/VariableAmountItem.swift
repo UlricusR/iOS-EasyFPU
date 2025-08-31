@@ -9,6 +9,5 @@
 import Foundation
 
 protocol VariableAmountItem: ObservableObject {
-    var amountAsString: String { get set }
-    var amount: Int { get set }
+    var amount: Int64 { get set }
 }

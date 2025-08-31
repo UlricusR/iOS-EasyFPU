@@ -11,8 +11,8 @@ import SwiftUI
 struct FoodItemSelector: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Binding var navigationPath: NavigationPath
-    @ObservedObject var draftFoodItem: FoodItemViewModel
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    @ObservedObject var ingredient: Ingredient
+    @ObservedObject var composedFoodItem: ComposedFoodItem
     var category: FoodItemCategory
     @State private var newTypicalAmountComment = ""
     @State private var addToTypicalAmounts = false
@@ -22,14 +22,16 @@ struct FoodItemSelector: View {
     private let helpScreen = HelpScreen.foodItemSelector
     
     var body: some View {
+        let typicalAmounts = self.ingredient.foodItem?.typicalAmounts?.allObjects as? [TypicalAmount]
         ZStack {
             // The form with the food item details
             GeometryReader { geometry in
                 Form {
-                    Section(header: self.draftFoodItem.typicalAmounts.isEmpty ? Text(category == .product ? "Enter amount consumed" : "Enter amount used") : Text(category == .product ? "Enter amount consumed or select typical amount" : "Enter amount used or select typical amount")) {
+                    Section(header: typicalAmounts != nil && typicalAmounts!.count > 0 ? Text(category == .product ? "Enter amount consumed" : "Enter amount used") : Text(category == .product ? "Enter amount consumed or select typical amount" : "Enter amount used or select typical amount")) {
                         HStack {
                             Text(category == .product ? "Amount consumed": "Amount used")
-                            CustomTextField(titleKey: category == .product ? "Amount consumed" : "Amount used", text: self.$draftFoodItem.amountAsString, keyboardType: .numberPad)
+                            TextField(category == .product ? "Amount consumed" : "Amount used", value: self.$ingredient.amount, format: .number)
+                                .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
                                 .accessibilityIdentifierLeaf("AmountConsumed")
                             Text("g")
@@ -37,10 +39,10 @@ struct FoodItemSelector: View {
                         }
                         
                         // Buttons to ease input
-                        AmountEntryButtons(variableAmountItem: draftFoodItem, geometry: geometry)
+                        AmountEntryButtons(variableAmountItem: ingredient, geometry: geometry)
                         
                         // Add to typical amounts (only if not connected to a ComposedFoodItem)
-                        if draftFoodItem.cdFoodItem?.composedFoodItem == nil {
+                        if ingredient.foodItem?.composedFoodItem == nil {
                             if self.addToTypicalAmounts {
                                 // User wants to add amount to typical amounts, so comment is required
                                 HStack {
@@ -63,21 +65,21 @@ struct FoodItemSelector: View {
                         }
                     }
                     
-                    if !self.draftFoodItem.typicalAmounts.isEmpty {
-                        Section(header: Text("Typical amounts:")) {
-                            ForEach(self.draftFoodItem.typicalAmounts.sorted()) { typicalAmount in
+                    if typicalAmounts != nil && typicalAmounts!.count > 0 {
+                        Section(header: Text("Typical amounts:"), footer: Text("Tap to select")) {
+                            ForEach(typicalAmounts!.sorted { $0.amount < $1.amount }, id: \.self) { typicalAmount in
                                 HStack {
-                                    Text(typicalAmount.amountAsString)
+                                    Text(String(typicalAmount.amount))
                                         .accessibilityIdentifierLeaf("TypicalAmountValue")
                                     Text("g")
                                         .accessibilityIdentifierLeaf("TypicalAmountUnit")
-                                    Text(typicalAmount.comment)
+                                    Text(typicalAmount.comment ?? "")
                                         .accessibilityIdentifierLeaf("TypicalAmountComment")
                                 }
                                 .onTapGesture {
-                                    self.draftFoodItem.amountAsString = typicalAmount.amountAsString
+                                    self.ingredient.amount = typicalAmount.amount
                                 }
-                                .accessibilityIdentifierBranch("TAmount" + typicalAmount.amountAsString)
+                                .accessibilityIdentifierBranch("TAmount" + String(typicalAmount.amount))
                             }
                         }
                     }
@@ -96,17 +98,11 @@ struct FoodItemSelector: View {
                             self.addTypicalAmount()
                         }
                         
-                        let amountResult = DataHelper.checkForPositiveInt(valueAsString: self.draftFoodItem.amountAsString, allowZero: true)
-                        switch amountResult {
-                        case .success(_):
-                            composedFoodItem.add(foodItem: draftFoodItem)
+                        if self.ingredient.amount > 0 {
+                            composedFoodItem.add(ingredient: ingredient)
                             
                             // Quit edit mode
                             navigationPath.removeLast()
-                        case .failure(let err):
-                            // Display alert and stay in edit mode
-                            activeAlert = .error(message: err.evaluate())
-                            showingAlert = true
                         }
                     } label: {
                         HStack {
@@ -116,7 +112,7 @@ struct FoodItemSelector: View {
                         .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(ActionButton())
-                    .disabled(draftFoodItem.amount <= 0)
+                    .disabled(ingredient.amount <= 0)
                     .accessibilityIdentifierLeaf("AddButton")
                     
                     Spacer()
@@ -124,7 +120,7 @@ struct FoodItemSelector: View {
                 .padding()
             }
         }
-        .navigationTitle(self.draftFoodItem.name)
+        .navigationTitle(self.ingredient.name)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
@@ -152,20 +148,17 @@ struct FoodItemSelector: View {
     }
     
     private func addTypicalAmount() {
-        var errorMessage = ""
-        if let newTypicalAmount = TypicalAmountViewModel(amountAsString: self.draftFoodItem.amountAsString, comment: self.newTypicalAmountComment, errorMessage: &errorMessage) {
-            // Add new typical amount to typical amounts of food item
-            self.draftFoodItem.typicalAmounts.append(newTypicalAmount)
+        let newTypicalAmount = TypicalAmount.create(amount: self.ingredient.amount, comment: self.newTypicalAmountComment)
+        
+        // Relate typical amount to food item
+        if let foodItem = self.ingredient.foodItem {
+            newTypicalAmount.foodItem = foodItem
             
             // Reset text fields
             self.newTypicalAmountComment = ""
-            
-            // Update food item in core data, save and broadcast changed object
-            _ = newTypicalAmount.save(to: draftFoodItem)
-            
             self.addToTypicalAmounts = false
         } else {
-            activeAlert = .error(message: errorMessage)
+            activeAlert = .fatalError(message: NSLocalizedString("No food item associated to typical amount!", comment: ""))
             showingAlert = true
         }
     }
