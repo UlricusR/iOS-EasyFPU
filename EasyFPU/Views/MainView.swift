@@ -154,7 +154,7 @@ struct MainView: View {
                     .accessibilityIdentifierBranch("Settings")
                 }
                 .onAppear {
-                    if self.absorptionScheme.absorptionBlocks.isEmpty {
+                    if self.absorptionScheme.absorptionBlockVMs.isEmpty {
                         // Absorption scheme hasn't been loaded yet
                         var errorMessage = ""
                         if !self.absorptionScheme.initAbsorptionBlocks(with: absorptionBlocks, errorMessage: &errorMessage) {

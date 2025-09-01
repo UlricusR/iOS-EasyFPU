@@ -23,7 +23,7 @@ struct AbsorptionBlockSettingsView: View {
             List {
                 Text("Tap to edit, swipe left to delete")
                     .font(.caption)
-                ForEach(absorptionScheme.absorptionBlocks, id: \.self) { absorptionBlock in
+                ForEach(absorptionScheme.absorptionBlockVMs, id: \.self) { absorptionBlock in
                     HStack {
                         Text(absorptionBlock.maxFpuAsString)
                             .accessibilityIdentifierLeaf("MaxFpuValue")
@@ -105,7 +105,7 @@ struct AbsorptionBlockSettingsView: View {
     }
     
     private func deleteAbsorptionBlock(at offsets: IndexSet) {
-        if absorptionScheme.absorptionBlocks.count > 1 {
+        if absorptionScheme.absorptionBlockVMs.count > 1 {
             offsets.forEach { index in
                 if !absorptionScheme.removeAbsorptionBlock(at: index) {
                     activeAlert = .fatalError(message: "Absorption block index out of range.")
