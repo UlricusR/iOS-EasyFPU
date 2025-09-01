@@ -53,9 +53,6 @@ struct RecipeListView: View {
                     Image("cooking-book-color").padding()
                     Text("Oops! No recipe yet! Then let's go!").padding()
                     Button {
-                        // Reset the shared ComposedViewVM
-                        UserSettings.shared.composedProduct.clear()
-                        
                         // Start new recipe
                         navigationPath.append(RecipeNavigationDestination.CreateRecipe)
                     } label: {
@@ -98,9 +95,6 @@ struct RecipeListView: View {
                     .accessibilityIdentifierLeaf("HelpButton")
                     
                     Button(action: {
-                        // Reset the shared ComposedViewVM
-                        UserSettings.shared.composedProduct.clear()
-                        
                         navigationPath.append(RecipeNavigationDestination.CreateRecipe)
                     }) {
                         Image(systemName: "plus.circle")

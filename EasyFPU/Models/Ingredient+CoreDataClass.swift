@@ -53,54 +53,52 @@ public class Ingredient: NSManagedObject {
         saveContext: Bool
     ) -> [Ingredient]? {
         // We cannot create an Ingredient if no food item ingredients are attached
-        if (composedFoodItemVM.foodItemVMs.count == 0) {
+        if (composedFoodItemVM.ingredients.count == 0) {
             return nil
         }
         
         // Initialize ingredients array
         var cdIngredients = [Ingredient]()
         
-        for foodItemVM in composedFoodItemVM.foodItemVMs {
-            // We need a related cdFoodItem - if none attached, try to get an existing one first
-            if foodItemVM.cdFoodItem == nil {
-                if let existingCDFoodItem = FoodItem.getFoodItemByID(id: foodItemVM.id) {
-                    // There is an existing FoodItem with identical ID, so check the nutritional values
-                    if FoodItemViewModel.hasSameNutritionalValues(lhs: existingCDFoodItem, rhs: foodItemVM) {
-                        // The nutritional values are identical, so relate it to the foodItemVM
-                        foodItemVM.cdFoodItem = existingCDFoodItem
-                    } else {
-                        // Although there is a FoodItem with the same ID, the nutritional values are not identical.
-                        // We better create a new one (next step below), but it requires a new UUID
-                        foodItemVM.id = UUID()
-                    }
+        for foodItemVM in composedFoodItemVM.ingredients {
+            var cdFoodItem: FoodItem? = nil
+            
+            // We need a related cdFoodItem - try to get an existing one first
+            if let existingCDFoodItem = FoodItem.getFoodItemByID(id: foodItemVM.id) {
+                // There is an existing FoodItem with identical ID, so check the nutritional values
+                if FoodItemViewModel.hasSameNutritionalValues(lhs: existingCDFoodItem, rhs: foodItemVM) {
+                    // The nutritional values are identical, so relate it to the foodItemVM
+                    cdFoodItem = existingCDFoodItem
+                } else {
+                    // Although there is a FoodItem with the same ID, the nutritional values are not identical.
+                    // We better create a new one (next step below), but it requires a new UUID
+                    foodItemVM.id = UUID()
                 }
             }
             
             // If there's still no related FoodItem, we need to create a new one
-            if foodItemVM.cdFoodItem == nil {
-                foodItemVM.cdFoodItem = FoodItem.create(from: foodItemVM, saveContext: saveContext)
+            if cdFoodItem == nil {
+                cdFoodItem = FoodItem.create(from: foodItemVM, saveContext: saveContext)
             }
             
-            if let associatedCDFoodItem = foodItemVM.cdFoodItem {
-                // Create Ingredient
-                let cdIngredient = Ingredient(context: CoreDataStack.viewContext)
-                
-                // Fill data
-                cdIngredient.id = UUID()
-                cdIngredient.relatedFoodItemID = associatedCDFoodItem.id // The id of the related FoodItem
-                cdIngredient.name = foodItemVM.name
-                cdIngredient.favorite = foodItemVM.favorite
-                cdIngredient.amount = Int64(foodItemVM.amount)
-                cdIngredient.caloriesPer100g = foodItemVM.caloriesPer100g
-                cdIngredient.carbsPer100g = foodItemVM.carbsPer100g
-                cdIngredient.sugarsPer100g = foodItemVM.sugarsPer100g
-                
-                // Create 1:1 references to ComposedFoodItem and FoodItem
-                cdIngredient.composedFoodItem = cdComposedFoodItem
-                cdIngredient.foodItem = associatedCDFoodItem
-                
-                cdIngredients.append(cdIngredient)
-            }
+            // Create Ingredient
+            let cdIngredient = Ingredient(context: CoreDataStack.viewContext)
+            
+            // Fill data
+            cdIngredient.id = UUID()
+            cdIngredient.relatedFoodItemID = cdFoodItem!.id // The id of the related FoodItem
+            cdIngredient.name = foodItemVM.name
+            cdIngredient.favorite = foodItemVM.favorite
+            cdIngredient.amount = Int64(foodItemVM.amount)
+            cdIngredient.caloriesPer100g = foodItemVM.caloriesPer100g
+            cdIngredient.carbsPer100g = foodItemVM.carbsPer100g
+            cdIngredient.sugarsPer100g = foodItemVM.sugarsPer100g
+            
+            // Create 1:1 references to ComposedFoodItem and FoodItem
+            cdIngredient.composedFoodItem = cdComposedFoodItem
+            cdIngredient.foodItem = cdFoodItem!
+            
+            cdIngredients.append(cdIngredient)
         }
         
         // Create and add ingredients

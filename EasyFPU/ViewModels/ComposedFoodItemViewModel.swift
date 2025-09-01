@@ -8,36 +8,20 @@
 
 import Foundation
 
-class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable {
+class ComposedFoodItemViewModel: Codable, Hashable, Identifiable {
     var id: UUID
-    @Published var name: String
-    @Published var foodCategory: FoodCategory? = nil
+    var name: String
+    var foodCategory: FoodCategory? = nil
     var category: FoodItemCategory
-    @Published var favorite: Bool
-    @Published var amount: Int = 0
-    @Published var numberOfPortions: Int = 0
-    @Published var foodItemVMs = [FoodItemViewModel]() // TODO should later only be used for encoding/decoding purposes - rename!
-    @Published var ingredients = [Ingredient]()
-    
-    var cdComposedFoodItem: ComposedFoodItem?
-    
-    @Published var amountAsString: String = "" {
-        willSet {
-            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
-            switch result {
-            case .success(let amountAsInt):
-                amount = amountAsInt
-            case .failure(let err):
-                debugPrint(err.evaluate())
-                return
-            }
-        }
-    }
+    var favorite: Bool
+    var amount: Int = 0
+    var numberOfPortions: Int = 0
+    var ingredients = [FoodItemViewModel]()
     
     var calories: Double {
         var newValue = 0.0
         for ingredient in ingredients {
-            newValue += ingredient.calories
+            newValue += ingredient.getCalories()
         }
         return newValue
     }
@@ -45,7 +29,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     private var carbs: Double {
         var newValue = 0.0
         for ingredient in ingredients {
-            newValue += ingredient.carbsInclSugars
+            newValue += ingredient.getCarbsInclSugars()
         }
         return newValue
     }
@@ -53,7 +37,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     private var sugars: Double {
         var newValue = 0.0
         for ingredient in ingredients {
-            newValue += ingredient.sugarsOnly
+            newValue += ingredient.getSugarsOnly()
         }
         return newValue
     }
@@ -62,7 +46,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         var fpu = FPU(fpu: 0.0)
         for ingredient in ingredients {
             let tempFPU = fpu.fpu
-            fpu = FPU(fpu: tempFPU + ingredient.fpus.fpu)
+            fpu = FPU(fpu: tempFPU + ingredient.getFPU().fpu)
         }
         return fpu
     }
@@ -114,13 +98,13 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         self.category = FoodItemCategory.product
         self.favorite = cdComposedFoodItem.favorite
         self.amount = Int(cdComposedFoodItem.amount)
-        self.amountAsString = String(amount)
         self.numberOfPortions = Int(cdComposedFoodItem.numberOfPortions)
-        self.cdComposedFoodItem = cdComposedFoodItem
         
         for case let ingredient as Ingredient in cdComposedFoodItem.ingredients {
             // Add Ingredient to ComposedFoodItemVM
-            ingredients.append(ingredient)
+            if let foodItemVM = FoodItemViewModel(from: ingredient) {
+                ingredients.append(foodItemVM)
+            }
         }
     }
     
@@ -142,7 +126,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         let ingredients = try composedFoodItem.decode([FoodItemViewModel].self, forKey: .ingredients)
         for ingredient in ingredients {
             // Create the ingredients as FoodItemViewModels
-            foodItemVMs.append(FoodItemViewModel(
+            self.ingredients.append(FoodItemViewModel(
                 id: ingredient.id,
                 name: ingredient.name,
                 foodCategory: ingredient.foodCategory,
@@ -156,24 +140,6 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
                 sourceDB: nil
             ))
         }
-    }
-    
-    /// Checks if an associated Core Data ComposedFoodItem exists.
-    /// - Returns: True if an associated Core Data ComposedFoodItem exists.
-    func hasAssociatedComposedFoodItem() -> Bool {
-        return cdComposedFoodItem != nil
-    }
-    
-    /// Checks if the associated Core Data ComposedFoodItem is linked to a Core Data FoodItem.
-    /// - Returns: True if both a ComposedFoodItem exists and is linked to a FoodItem.
-    func hasAssociatedFoodItem() -> Bool {
-        return cdComposedFoodItem?.foodItem != nil
-    }
-    
-    /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this ComposedFoodItemViewModel exists.
-    /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
-    func nameExists() -> Bool {
-        ComposedFoodItem.getComposedFoodItemByName(name: self.name) != nil || FoodItem.getFoodItemsByName(name: self.name) != nil
     }
     
     /// Saves the ComposedFoodItemViewModel as Core Data ComposedFoodItem.
@@ -190,63 +156,8 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
             }
         }
         
-        guard let cdComposedFoodItem = ComposedFoodItem.create(from: self, saveContext: true) else { return false }
-        self.cdComposedFoodItem = cdComposedFoodItem
+        guard ComposedFoodItem.create(from: self, saveContext: true) != nil else { return false }
         return true
-    }
-    
-    /// Adds a FoodItem to the ComposedFoodItem, if it doesn't exist yet. - TODO remove after replacing with add(Ingredient)
-    /// - Parameter foodItem: The food item to be added.
-    func add(foodItem: FoodItemViewModel) {
-        if !foodItemVMs.contains(foodItem) {
-            foodItemVMs.append(foodItem)
-            amountAsString = String(amount + foodItem.amount) // amount will be set implicitely
-        }
-    }
-    
-    /// Adds a FoodItem to the ComposedFoodItem, if it doesn't exist yet.
-    /// - Parameter foodItem: The food item to be added.
-    func add(ingredient: Ingredient) {
-        if !ingredients.contains(ingredient) {
-            ingredients.append(ingredient)
-            amountAsString = String(amount + Int(ingredient.amount)) // amount will be set implicitely
-        }
-    }
-    
-    /// Removes a FoodItem from the ComposedFoodItem, if it exists. - TODO remove after replacing with remove(Ingredient)
-    /// - Parameter foodItem: The food item to be removed.
-    func remove(foodItem: FoodItemViewModel) {
-        if let index = foodItemVMs.firstIndex(of: foodItem) {
-            // Substract amount of FoodItem removed
-            let oldFoodItemAmount = foodItemVMs[index].amount
-            let newComposedFoodItemAmount = amount - oldFoodItemAmount
-            amountAsString = String(newComposedFoodItemAmount)
-            
-            // Remove FoodItem
-            foodItemVMs[index].amountAsString = "0"
-            foodItemVMs.remove(at: index)
-        }
-    }
-    
-    /// Removes a FoodItem from the ComposedFoodItem, if it exists.
-    /// - Parameter foodItem: The food item to be removed.
-    func remove(ingredient: Ingredient) {
-        if let index = ingredients.firstIndex(of: ingredient) {
-            // Substract amount of FoodItem removed
-            let oldFoodItemAmount = Int(ingredients[index].amount)
-            let newComposedFoodItemAmount = amount - oldFoodItemAmount
-            amountAsString = String(newComposedFoodItemAmount)
-            
-            // Remove FoodItem
-            ingredients[index].amount = 0
-            ingredients.remove(at: index)
-        }
-    }
-    
-    func duplicate() {
-        if let existingComposedFoodItem = cdComposedFoodItem {
-            _ = ComposedFoodItem.duplicate(existingComposedFoodItem)
-        }
     }
     
     func exportToURL() -> URL? {
@@ -269,57 +180,15 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         }
     }
     
-    /**
-     Resets the entire ComposedFoodItemViewModel, i.e., clears ingredients, resets values, removes link to Core Data ComposedFoodItem and creates a new ID.
-     */
-    func clear() {
-        // Clear ingredients
-        clearIngredients()
-        
-        // Reset values and create new UUID
-        id = UUID()
-        name = NSLocalizedString("Composed product", comment: "")
-        favorite = false
-        numberOfPortions = 0
-        cdComposedFoodItem = nil
-    }
-    
-    /**
-     Clears all ingredients and sets the amount to 0.
-     */
-    func clearIngredients() {
-        for ingredient in ingredients {
-            ingredient.amount = 0
-        }
-        ingredients.removeAll()
-        amount = 0
-    }
-    
-    func getCarbsInclSugars() -> Double {
-        self.carbs
-    }
-    
-    func getSugarsOnly() -> Double {
-        self.sugars
-    }
-    
-    func getRegularCarbs(treatSugarsSeparately: Bool) -> Double {
-        treatSugarsSeparately ? self.carbs - self.sugars : self.carbs
-    }
-    
-    func getSugars(treatSugarsSeparately: Bool) -> Double {
-        treatSugarsSeparately ? self.sugars : 0
-    }
-    
     static func areIdentical(cdComposedFoodItem: ComposedFoodItem, composedFoodItemVM: ComposedFoodItemViewModel) -> Bool {
         // Compare related food items
         let cdIngredients = cdComposedFoodItem.ingredients.allObjects as! [Ingredient]
-        for foodItem in composedFoodItemVM.foodItemVMs {
+        for ingredient in composedFoodItemVM.ingredients {
             let matchingCDFoodItems = cdIngredients.map {
-                $0.caloriesPer100g == foodItem.caloriesPer100g &&
-                $0.carbsPer100g == foodItem.carbsPer100g &&
-                $0.sugarsPer100g == foodItem.sugarsPer100g &&
-                $0.amount == foodItem.amount
+                $0.caloriesPer100g == ingredient.caloriesPer100g &&
+                $0.carbsPer100g == ingredient.carbsPer100g &&
+                $0.sugarsPer100g == ingredient.sugarsPer100g &&
+                $0.amount == ingredient.amount
             }
             
             if matchingCDFoodItems.isEmpty { return false }
@@ -337,7 +206,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         try composedFoodItem.encode(favorite, forKey: .favorite)
         try composedFoodItem.encode(amount, forKey: .amount)
         try composedFoodItem.encode(numberOfPortions, forKey: .numberOfPortions)
-        try composedFoodItem.encode(foodItemVMs, forKey: .ingredients)
+        try composedFoodItem.encode(ingredients, forKey: .ingredients)
     }
     
     func hash(into hasher: inout Hasher) {

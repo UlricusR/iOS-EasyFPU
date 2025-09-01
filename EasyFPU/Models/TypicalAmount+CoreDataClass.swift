@@ -48,7 +48,6 @@ public class TypicalAmount: NSManagedObject {
         cdTypicalAmount.amount = Int64(typicalAmountVM.amount)
         cdTypicalAmount.comment = typicalAmountVM.comment
         cdTypicalAmount.id = typicalAmountVM.id
-        typicalAmountVM.cdTypicalAmount = cdTypicalAmount
         
         // Save new TypicalAmount
         if saveContext {
