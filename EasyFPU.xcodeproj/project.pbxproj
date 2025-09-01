@@ -358,6 +358,7 @@
 				1BA040C724BF9DE2001308EC /* TypicalAmount+CoreDataProperties.swift */,
 				1BEE525324D7611F00F10460 /* AbsorptionBlock+CoreDataClass.swift */,
 				1BEE525424D7611F00F10460 /* AbsorptionBlock+CoreDataProperties.swift */,
+				1B3CEB9C24D33CC8001D64DA /* AbsorptionScheme.swift */,
 				1B004A4A24BA36C1001E362A /* FPU.swift */,
 				1B004A4E24BA3EF1001E362A /* AbsorptionBlockFromJson.swift */,
 			);
@@ -429,7 +430,6 @@
 				1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */,
 				1BC75242254AF786001C4D27 /* ComposedFoodItemViewModel.swift */,
 				1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */,
-				1B3CEB9C24D33CC8001D64DA /* AbsorptionScheme.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
