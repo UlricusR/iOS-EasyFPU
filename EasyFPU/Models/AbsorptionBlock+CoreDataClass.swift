@@ -35,6 +35,40 @@ public class AbsorptionBlock: NSManagedObject {
         try? viewContext.save()
     }
     
+    /// Creates a new Core Data AbsorptionBlock after validating the input strings. If validation fails, sets an appropriate alert message.
+    /// - Parameters:
+    ///   - maxFpuAsString: The maximum FPU as String
+    ///   - absorptionTimeAsString: The absorption time as String
+    ///   - activeAlert: An inout parameter for setting an alert message in case of validation failure.
+    /// - Returns: The created AbsorptionBlock object, or nil if validation fails.
+    static func create(maxFpuAsString: String, absorptionTimeAsString: String, activeAlert: inout SimpleAlertType?) -> AbsorptionBlock? {
+        var maxFPUCandidate: Int = 0
+        var absorptionTimeCandidate: Int = 0
+        
+        // Check for valid max fpu
+        let resultMaxFpu = DataHelper.checkForPositiveInt(valueAsString: maxFpuAsString, allowZero: false)
+        switch resultMaxFpu {
+        case .success(let maxFpu):
+            maxFPUCandidate = maxFpu
+        case .failure(let err):
+            activeAlert = .error(message: err.evaluate())
+            return nil
+        }
+        
+        // Check for valid absorption time
+        let resultAbsorptionTime = DataHelper.checkForPositiveInt(valueAsString: absorptionTimeAsString, allowZero: false)
+        switch resultAbsorptionTime {
+        case .success(let absorptionTime):
+            absorptionTimeCandidate = absorptionTime
+        case .failure(let err):
+            activeAlert = .error(message: err.evaluate())
+            return nil
+        }
+        
+        // Create Core Data absorption block
+        return AbsorptionBlock.create(absorptionTime: absorptionTimeCandidate, maxFpu: maxFPUCandidate, saveContext: true)
+    }
+    
     /// Creates a new Core Data AbsorptionBlock with the given values. Does not check for duplicates.
     /// - Parameters:
     ///   - absorptionTime: The absorption time in minutes.
