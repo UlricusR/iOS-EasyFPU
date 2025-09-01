@@ -70,6 +70,55 @@ extension Ingredient: VariableAmountItem {
         Double(self.amount) / 100 * (treatSugarsSeparately ? self.sugarsPer100g : 0)
     }
     
+    /**
+     Creates new Ingredient from existing one - used to duplicate an Ingredient.
+     Contains a reference to the related FoodItem and stores the ID of this FoodItem as separate value for export/import purposes.
+     Does not save the context.
+     
+     - Parameters:
+        - newCDComposedFoodItem: Used to create the relationship to the Core Data ComposedFoodItem.
+     
+     - Returns: The new Ingredient with with a reference to the newCDComposedFoodItem.
+    */
+    func duplicate(for newCDComposedFoodItem: ComposedFoodItem) -> Ingredient {
+        // Create Ingredient
+        let cdIngredient = Ingredient(context: CoreDataStack.viewContext)
+        
+        // Fill data
+        cdIngredient.id = UUID()
+        cdIngredient.relatedFoodItemID = self.relatedFoodItemID // The id of the related FoodItem
+        cdIngredient.name = self.name
+        cdIngredient.favorite = self.favorite
+        cdIngredient.amount = self.amount
+        cdIngredient.caloriesPer100g = self.caloriesPer100g
+        cdIngredient.carbsPer100g = self.carbsPer100g
+        cdIngredient.sugarsPer100g = self.sugarsPer100g
+        
+        // Create 1:1 references to ComposedFoodItem and FoodItem
+        cdIngredient.composedFoodItem = newCDComposedFoodItem
+        cdIngredient.foodItem = self.foodItem
+        
+        // Add to ComposedFoodItem
+        newCDComposedFoodItem.addToIngredients(cdIngredient)
+        
+        return cdIngredient
+    }
+    
+    /// Updates the values of the Ingredient with those of the FoodItem (but not the ID).
+    /// Also updates the FoodItem of the related ComposedFoodItem.
+    /// - Parameters:
+    ///   - foodItem: The FoodItem the values are copied of.
+    func update(with foodItem: FoodItem) {
+        self.name = foodItem.name
+        self.favorite = foodItem.favorite
+        self.caloriesPer100g = foodItem.caloriesPer100g
+        self.carbsPer100g = foodItem.carbsPer100g
+        self.sugarsPer100g = foodItem.sugarsPer100g
+        
+        // Update the FoodItem of the related ComposedFoodItem
+        composedFoodItem.updateRelatedFoodItem()
+    }
+    
     
 }
 

@@ -20,7 +20,7 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
                 self.maxFpu = maxFpu
                 
                 // Update Core Data AbsorptionBlock
-                AbsorptionBlock.updateMaxFpu(cdAbsorptionBlock: cdAbsorptionBlock, with: maxFpu)
+                cdAbsorptionBlock.updateMaxFpu(with: maxFpu, saveContext: true)
             case .failure(let err):
                 debugPrint(err.evaluate())
                 return
@@ -37,7 +37,7 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
                 self.absorptionTime = absorptionTime
                 
                 // Update Core Data AbsorptionBlock
-                AbsorptionBlock.updateAbsorptionTime(cdAbsorptionBlock: cdAbsorptionBlock, with: absorptionTime)
+                cdAbsorptionBlock.updateAbsorptionTime(with: absorptionTime, saveContext: true)
             case .failure(let err):
                 debugPrint(err.evaluate())
                 return
@@ -59,7 +59,7 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
     
     init(from absorptionBlock: AbsorptionBlockFromJson) {
         self.id = UUID()
-        self.cdAbsorptionBlock = AbsorptionBlock.create(from: absorptionBlock, id: self.id)
+        self.cdAbsorptionBlock = AbsorptionBlock.create(from: absorptionBlock, id: self.id, saveContext: true)
         self.maxFpu = absorptionBlock.maxFpu
         self.maxFpuAsString = String(absorptionBlock.maxFpu)
         self.absorptionTime = absorptionBlock.absorptionTime
@@ -93,7 +93,7 @@ class AbsorptionBlockViewModel: ObservableObject, Hashable, Comparable, Identifi
         self.id = UUID()
         
         // Create Core Data absorption block
-        self.cdAbsorptionBlock = AbsorptionBlock.create(absorptionTime: absorptionTime, maxFpu: maxFpu)
+        self.cdAbsorptionBlock = AbsorptionBlock.create(absorptionTime: absorptionTime, maxFpu: maxFpu, saveContext: true)
     }
     
     func hash(into hasher: inout Hasher) {

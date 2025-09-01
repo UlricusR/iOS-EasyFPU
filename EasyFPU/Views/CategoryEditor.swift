@@ -45,9 +45,9 @@ struct CategoryEditor: View {
                                     // Save the new or edited category
                                     withAnimation {
                                         if editedCategory == nil { // New item
-                                            _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory)
+                                            _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory, saveContext: true)
                                         } else { // Editing existing item
-                                            FoodCategory.update(editedCategory!, newName: trimmedName, newCategory: selectedFoodItemCategory)
+                                            editedCategory!.update(newName: trimmedName, newCategory: selectedFoodItemCategory, saveContext: true)
                                             editedCategory = nil // Clear the edited category
                                         }
                                         name = "" // Clear the text field after saving
@@ -69,13 +69,13 @@ struct CategoryEditor: View {
                                 .foregroundStyle(editedCategory == category ? .secondary : .primary)
                                 .swipeActions(edge: .trailing) {
                                     Button("Delete", systemImage: "trash") {
-                                        if FoodCategory.hasRelatedItems(foodCategory: category) {
+                                        if category.hasRelatedItems() {
                                             activeAlert = .warning(message: NSLocalizedString("Cannot delete category which is in use!", comment: ""))
                                             showingAlert = true
                                             return
                                         }
                                         withAnimation {
-                                            FoodCategory.delete(category)
+                                            FoodCategory.delete(category, saveContext: true)
                                         }
                                     }
                                     .tint(.red)

@@ -41,7 +41,7 @@ struct RecipeView: View {
             
             // Duplicating the recipe
             Button("Duplicate", systemImage: "document.on.document") {
-                _ = ComposedFoodItem.duplicate(composedFoodItem)
+                _ = composedFoodItem.duplicate(saveContext: true)
             }
             .tint(.indigo)
             .accessibilityIdentifierLeaf("DuplicateButton")

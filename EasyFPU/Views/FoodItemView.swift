@@ -47,7 +47,7 @@ struct FoodItemView: View {
                     .font(.headline)
                     .foregroundStyle(listType == .selection && isSelected ? .blue : .primary)
                     .accessibilityIdentifierLeaf("FoodItemNameLabel")
-                if FoodItem.hasAssociatedRecipe(foodItem: foodItem) {
+                if foodItem.hasAssociatedRecipe() {
                     Image(systemName: "frying.pan.fill").foregroundStyle(.gray).imageScale(.small)
                         .accessibilityIdentifierLeaf("HasAssociatedRecipeSymbol")
                 }
@@ -144,7 +144,7 @@ struct FoodItemView: View {
             
             // Duplicating the food item
             Button("Duplicate", systemImage: "document.on.document") {
-                if FoodItem.duplicate(foodItem) == nil {
+                if foodItem.duplicate(saveContext: true) == nil {
                     activeAlert = .simpleAlert(type: .fatalError(message: "Couldn't duplicate food item. This should not happen, please contact the app developer."))
                     showingAlert = true
                 }
@@ -155,7 +155,7 @@ struct FoodItemView: View {
             // Delete the food item
             Button("Delete", systemImage: "trash") {
                 // Check if FoodItem is related to an Ingredient
-                if let associatedRecipeNames = FoodItem.getAssociatedRecipeNames(foodItem: foodItem) {
+                if let associatedRecipeNames = foodItem.getAssociatedRecipeNames() {
                     // There are associated recipes
                     activeAlert = .simpleAlert(type: .notice(message: createWarningMessage(from: associatedRecipeNames)))
                     showingAlert = true
@@ -173,7 +173,7 @@ struct FoodItemView: View {
             // Moving the food item to another category
             Button(NSLocalizedString("Move to \(foodItem.category == FoodItemCategory.product.rawValue ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""), systemImage: "rectangle.2.swap") {
                 composedFoodItem.remove(foodItem: foodItem)
-                FoodItem.changeCategory(foodItem: foodItem)
+                foodItem.changeCategory(saveContext: true)
             }
             .tint(.yellow)
             .accessibilityIdentifierLeaf("MoveButton")

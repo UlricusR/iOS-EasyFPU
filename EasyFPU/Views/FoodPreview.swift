@@ -25,7 +25,7 @@ struct FoodPreview: View {
                 HStack {
                     Spacer()
                     Button {
-                        FoodItem.fill(foodItem: editedCDFoodItem, with: product)
+                        editedCDFoodItem.fill(with: product)
                             
                         // Close sheet
                         navigationPath.removeLast(backNavigationIfSelected)

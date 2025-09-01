@@ -37,7 +37,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     var calories: Double {
         var newValue = 0.0
         for ingredient in ingredients {
-            newValue += FoodItem.getCalories(ingredient: ingredient)
+            newValue += ingredient.calories
         }
         return newValue
     }
@@ -45,7 +45,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     private var carbs: Double {
         var newValue = 0.0
         for ingredient in ingredients {
-            newValue += FoodItem.getCarbsInclSugars(ingredient: ingredient)
+            newValue += ingredient.carbsInclSugars
         }
         return newValue
     }
@@ -53,7 +53,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
     private var sugars: Double {
         var newValue = 0.0
         for ingredient in ingredients {
-            newValue += FoodItem.getSugarsOnly(ingredient: ingredient)
+            newValue += ingredient.sugarsOnly
         }
         return newValue
     }
@@ -62,7 +62,7 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
         var fpu = FPU(fpu: 0.0)
         for ingredient in ingredients {
             let tempFPU = fpu.fpu
-            fpu = FPU(fpu: tempFPU + FoodItem.getFPU(ingredient: ingredient).fpu)
+            fpu = FPU(fpu: tempFPU + ingredient.fpus.fpu)
         }
         return fpu
     }
@@ -190,33 +190,9 @@ class ComposedFoodItemViewModel: ObservableObject, Codable, Hashable, Identifiab
             }
         }
         
-        guard let cdComposedFoodItem = ComposedFoodItem.create(from: self) else { return false }
+        guard let cdComposedFoodItem = ComposedFoodItem.create(from: self, saveContext: true) else { return false }
         self.cdComposedFoodItem = cdComposedFoodItem
         return true
-    }
-    
-    /// Updates the related Core Data ComposedFoodItem with the values of this ComposedFoodItemViewModel.
-    /// - Returns: False if no related Core Data ComposedFoodItem was found (shouldn't happen).
-    func update() -> Bool {
-        guard let cdComposedFoodItem = ComposedFoodItem.update(self) else { return false }
-        self.cdComposedFoodItem = cdComposedFoodItem
-        return true
-    }
-    
-    /// Deletes the Core Data ComposedFoodItem if available.
-    /// - Parameter includeAssociatedRecipe: If true, the Core Data FoodItem associated to the ComposedFoodItem is also deleted, if available.
-    func delete(includeAssociatedFoodItem: Bool) {
-        guard let cdComposedFoodItem else { return }
-        
-        if includeAssociatedFoodItem {
-            if let associatedFoodItem = cdComposedFoodItem.foodItem {
-                FoodItem.delete(associatedFoodItem)
-                CoreDataStack.shared.save()
-            }
-        }
-        
-        ComposedFoodItem.delete(cdComposedFoodItem, includeAssociatedFoodItem: false)
-        CoreDataStack.shared.save()
     }
     
     /// Adds a FoodItem to the ComposedFoodItem, if it doesn't exist yet. - TODO remove after replacing with add(Ingredient)

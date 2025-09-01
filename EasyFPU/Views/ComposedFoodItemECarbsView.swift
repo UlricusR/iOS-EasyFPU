@@ -12,9 +12,8 @@ struct ComposedFoodItemECarbsView: View {
     @ObservedObject var composedFoodItem: ComposedFoodItem
     var absorptionScheme: AbsorptionSchemeViewModel
     var absorptionTimeAsString: String {
-        let fpus = ComposedFoodItem.fpus(composedFoodItem: composedFoodItem)
-        if fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return DataHelper.intFormatter.string(from: NSNumber(value: fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+        if composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
+            return DataHelper.intFormatter.string(from: NSNumber(value: composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
         } else {
             return "..."
         }
@@ -46,7 +45,7 @@ struct ComposedFoodItemECarbsView: View {
                 
                 VStack(alignment: .leading) { // Answers
                     HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: ComposedFoodItem.fpus(composedFoodItem: composedFoodItem).getExtendedCarbs()))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: composedFoodItem.fpus.getExtendedCarbs()))!)
                             .accessibilityIdentifierLeaf("AmountValue")
                         Text("g Carbs")
                             .accessibilityIdentifierLeaf("AmountUnit")

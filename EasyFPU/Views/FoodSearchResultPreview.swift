@@ -33,7 +33,7 @@ struct FoodSearchResultPreview: View {
         .swipeActions(allowsFullSwipe: true) {
             // Selecting the product
             Button("Select", systemImage: "checkmark.circle") {
-                FoodItem.fill(foodItem: editedCDFoodItem, with: product)
+                editedCDFoodItem.fill(with: product)
                 navigationPath.removeLast()
             }
             .tint(.green)

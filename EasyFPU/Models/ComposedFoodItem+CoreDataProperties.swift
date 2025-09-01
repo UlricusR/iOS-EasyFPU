@@ -87,11 +87,75 @@ extension ComposedFoodItem: VariableAmountItem {
         self.sugars
     }
     
-    
-    
     //
     // MARK: Custom functions
     //
+    
+    /// Duplicates the given ComposedFoodItem, including its Ingredients and related FoodItem.
+    /// - Parameter saveContext: If true, the Core Data context is saved after duplication.
+    /// - Returns: The duplicated ComposedFoodItem, nil if duplication failed.
+    func duplicate(saveContext: Bool) -> ComposedFoodItem? {
+        // Create new ComposedFoodItem with new ID
+        let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
+        cdComposedFoodItem.id = UUID()
+        
+        // Fill data
+        cdComposedFoodItem.name = self.name + NSLocalizedString(" - Copy", comment: "")
+        cdComposedFoodItem.foodCategory = self.foodCategory
+        cdComposedFoodItem.favorite = self.favorite
+        cdComposedFoodItem.amount = self.amount
+        cdComposedFoodItem.numberOfPortions = self.numberOfPortions
+        
+        // Create ingredients
+        for case let ingredient as Ingredient in self.ingredients {
+            _ = ingredient.duplicate(for: cdComposedFoodItem)
+        }
+        
+        // Create related FoodItem
+        if let existingFoodItem = self.foodItem {
+            cdComposedFoodItem.foodItem = existingFoodItem.duplicate(saveContext: saveContext)
+            
+            // Save
+            if saveContext {
+                CoreDataStack.shared.save()
+            }
+            
+            return cdComposedFoodItem
+        } else {
+            // No existing FoodItem found to duplicate - this should not happen
+            // Delete composedFoodItem again
+            ComposedFoodItem.delete(cdComposedFoodItem, includeAssociatedFoodItem: false)
+            
+            // Save
+            if saveContext {
+                CoreDataStack.shared.save()
+            }
+            
+            return nil
+        }
+    }
+    
+    /// Removes all ingredients from the ComposedFoodItem, resets its amount to 0 and sets new values, including a new UUID. Does not save the context.
+    /// - Parameter name: The new name for the ComposedFoodItem once cleared.
+    func clear(name: String) {
+        // Clear ingredients
+        for ingredient in self.ingredients.allObjects as! [Ingredient] {
+            ingredient.amount = 0
+            self.removeFromIngredients(ingredient)
+            
+            // Delete ingredient
+            CoreDataStack.viewContext.delete(ingredient)
+        }
+        
+        // Reset amount
+        self.amount = 0
+        
+        // Reset values and create new UUID
+        self.id = UUID()
+        self.name = name
+        self.favorite = false
+        self.numberOfPortions = 0
+    }
     
     /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this ComposedFoodItemViewModel exists.
     /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.

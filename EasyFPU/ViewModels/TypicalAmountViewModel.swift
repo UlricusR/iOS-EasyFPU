@@ -81,8 +81,8 @@ class TypicalAmountViewModel: ObservableObject, Hashable, Comparable, Codable, I
     /// - Returns: False if no Core Data FoodItem was found (should not happen), otherwise true.
     func save(to foodItemVM: FoodItemViewModel) -> Bool {
         guard let cdFoodItem = foodItemVM.cdFoodItem else { return false }
-        let newTypicalAmount = TypicalAmount.create(from: self)
-        FoodItem.add(newTypicalAmount, to: cdFoodItem)
+        let newTypicalAmount = TypicalAmount.create(from: self, saveContext: true)
+        FoodItem.add(newTypicalAmount, to: cdFoodItem, saveContext: true)
         return true
     }
     

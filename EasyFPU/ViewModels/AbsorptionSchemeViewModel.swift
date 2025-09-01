@@ -236,7 +236,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
                 let alert = SimpleAlertType.error(message: "Maximum FPU value already exists")
                 
                 // Remove newAbsorptionBlock from Core Data
-                AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock)
+                AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock, saveContext: true)
                 
                 return alert
             }
@@ -252,7 +252,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             let alert = SimpleAlertType.fatalError(message: "Cannot determine absorption block index.")
             
             // Remove newAbsorptionBlock from Core Data
-            AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock)
+            AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock, saveContext: true)
             
             return alert
         }
@@ -266,7 +266,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
                 let alert = SimpleAlertType.error(message: "Absorption time is equals or larger than the one of the following absorption block")
                 
                 // Remove newAbsorptionBlock from Core Data
-                AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock)
+                AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock, saveContext: true)
                 
                 return alert
             } else {
@@ -283,7 +283,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
                 let alert = SimpleAlertType.error(message: "Absorption time is equals or less than the one of the block before")
                 
                 // Remove newAbsorptionBlock from Core Data
-                AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock)
+                AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock, saveContext: true)
                 
                 return alert
             } else {
@@ -299,7 +299,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             let alert = SimpleAlertType.error(message: "Absorption time must be between previous and following block")
             
             // Remove newAbsorptionBlock from Core Data
-            AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock)
+            AbsorptionBlock.remove(newAbsorptionBlock.cdAbsorptionBlock, saveContext: true)
             
             return alert
         } else {
@@ -335,7 +335,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
                 return schemeAlert
             } else {
                 // Addition was successful, so delete old absorption block in Core Data, as we don't need it any longer
-                AbsorptionBlock.remove(existingAbsorptionBlock.cdAbsorptionBlock)
+                AbsorptionBlock.remove(existingAbsorptionBlock.cdAbsorptionBlock, saveContext: true)
                 
                 // Return nil, as job is successfully done
                 return nil
@@ -352,7 +352,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
     func removeAbsorptionBlock(at absorptionBlockIndex: Int) -> Bool {
         if absorptionBlockIndex < absorptionBlocks.count {
             // Delete Core Data absorption block
-            AbsorptionBlock.remove(absorptionBlocks[absorptionBlockIndex].cdAbsorptionBlock)
+            AbsorptionBlock.remove(absorptionBlocks[absorptionBlockIndex].cdAbsorptionBlock, saveContext: true)
             
             // Remove VM from scheme
             absorptionBlocks.remove(at: absorptionBlockIndex)

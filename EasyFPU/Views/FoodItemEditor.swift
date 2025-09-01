@@ -474,13 +474,14 @@ struct FoodItemEditor: View {
     }
     
     private func updateRelatedRecipesAndSave() {
-        FoodItem.updateRelatedRecipes(of: editedCDFoodItem)
+        editedCDFoodItem.updateRelatedRecipes()
         
         // Save and exit
         saveContextAndExit()
     }
     
     /// Saves the context and exits the edit mode
+    /// - Parameter deletingFoodItem: If true, the food item will be deleted before saving
     private func saveContextAndExit(deletingFoodItem: Bool = false) {
         // Leave edit mode
         navigationPath.removeLast()

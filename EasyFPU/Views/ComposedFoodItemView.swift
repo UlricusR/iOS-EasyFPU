@@ -16,8 +16,8 @@ struct ComposedFoodItemView: View {
     var foregroundStyleName: Color
     @ObservedObject var userSettings = UserSettings.shared
     var absorptionTimeAsString: String {
-        if FoodItem.getFPU(ingredient: ingredient).getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return DataHelper.intFormatter.string(from: NSNumber(value: FoodItem.getFPU(ingredient: ingredient).getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+        if ingredient.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
+            return DataHelper.intFormatter.string(from: NSNumber(value: ingredient.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
         } else {
             return "..."
         }
@@ -39,7 +39,7 @@ struct ComposedFoodItemView: View {
             
             // Calories
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: FoodItem.getCalories(ingredient: ingredient)))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: ingredient.calories))!)
                     .accessibilityIdentifierLeaf("CaloriesValue")
                 Text("kcal")
                     .accessibilityIdentifierLeaf("CaloriesUnit")
@@ -49,7 +49,7 @@ struct ComposedFoodItemView: View {
             // Sugars
             if userSettings.treatSugarsSeparately {
                 HStack {
-                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: FoodItem.getSugars(ingredient: ingredient, treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
+                    Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: ingredient.getSugars(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                         .accessibilityIdentifierLeaf("SugarsValue")
                     Text("g Sugars")
                         .accessibilityIdentifierLeaf("SugarsUnit")
@@ -67,7 +67,7 @@ struct ComposedFoodItemView: View {
             
             // Regular Carbs
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: FoodItem.getRegularCarbs(ingredient: ingredient, treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: ingredient.getRegularCarbs(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                     .accessibilityIdentifierLeaf("CarbsValue")
                 Text("g Regular Carbs")
                     .accessibilityIdentifierLeaf("CarbsUnit")
@@ -84,12 +84,12 @@ struct ComposedFoodItemView: View {
             
             // Extended carbs
             HStack {
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: FoodItem.getFPU(ingredient: ingredient).fpu))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: ingredient.fpus.fpu))!)
                     .accessibilityIdentifierLeaf("FPUValue")
                 Text("FPU")
                     .accessibilityIdentifierLeaf("FPUUnit")
                 Text("/")
-                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: FoodItem.getFPU(ingredient: ingredient).getExtendedCarbs()))!)
+                Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: ingredient.fpus.getExtendedCarbs()))!)
                     .accessibilityIdentifierLeaf("ECarbsValue")
                 Text("g Extended Carbs")
                     .accessibilityIdentifierLeaf("ECarbsUnit")

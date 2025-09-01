@@ -390,7 +390,9 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable {
     func changeCategory(to newCategory: FoodItemCategory) {
         if category != newCategory {
             category = newCategory
-            FoodItem.setCategory(cdFoodItem, to: newCategory.rawValue)
+            if let foodItem = cdFoodItem {
+                foodItem.setCategory(to: newCategory.rawValue, saveContext: true)
+            }
         }
     }
     
@@ -414,7 +416,7 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable {
         }
         
         // Create the new FoodItem
-        _ = FoodItem.create(from: self)
+        _ = FoodItem.create(from: self, saveContext: true)
     }
     
     /// Checks if two FoodItemViewModels have the same nutritional values.
@@ -435,26 +437,10 @@ class FoodItemViewModel: ObservableObject, Codable, Hashable, Identifiable {
         
         // Check if a recipe is associated, if yes duplicate recipe
         if cdFoodItem.composedFoodItem != nil {
-            _ = ComposedFoodItem.duplicate(cdFoodItem.composedFoodItem!)
+            _ = cdFoodItem.composedFoodItem!.duplicate(saveContext: true)
         } else {
             // Create the duplicate in Core Data
             _ = FoodItem.duplicate(cdFoodItem)}
-    }
-    
-    /// Deletes the Core Data FoodItem if available.
-    /// - Parameter includeAssociatedRecipe: If true, the Core Data ComposedFoodItem associated to the FoodItem is also deleted, if available.
-    func delete(includeAssociatedRecipe: Bool) {
-        guard let cdFoodItem else { return }
-        
-        if includeAssociatedRecipe {
-            if let associatedRecipe = cdFoodItem.composedFoodItem {
-                ComposedFoodItem.delete(associatedRecipe, includeAssociatedFoodItem: false)
-                CoreDataStack.shared.save()
-            }
-        }
-        
-        FoodItem.delete(cdFoodItem)
-        CoreDataStack.shared.save()
     }
     
     func exportToURL() -> URL? {

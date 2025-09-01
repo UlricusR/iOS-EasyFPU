@@ -164,7 +164,8 @@ struct ComposedFoodItemEvaluationView: View {
                     if !composedFoodItem.ingredients.allObjects.isEmpty {
                         Button(action: {
                             withAnimation(.default) {
-                                ComposedFoodItem.clear(composedFoodItem: composedFoodItem)
+                                // Clear the composed food item
+                                composedFoodItem.clear(name: NSLocalizedString("Composed product", comment: ""))
                                 UserSettings.shared.mealDelayInMinutes = 0
                             }
                         }) {

@@ -309,7 +309,7 @@ struct CoreDataTests {
             #expect(foodItemTypicalAmounts.count == 4, "There should be 4 TypicalAmounts associated with the FoodItem.")
             
             // Duplicate the cdFoodItem
-            let duplicatedCDFoodItem = FoodItem.duplicate(cdFoodItem)
+            let duplicatedCDFoodItem = cdFoodItem.duplicate()
             
             // Check results in DB and get the FoodItem
             let duplicatedCDFoodItemInDB = FoodItem.getFoodItemByID(id: duplicatedCDFoodItem.id)
@@ -371,7 +371,7 @@ struct CoreDataTests {
             let cdFoodItem = try CoreDataTests.createFoodItemInDB(from: foodItemVM, withTypicalAmounts: false)
             
             // Change category to FoodItemCategory.product
-            FoodItem.setCategory(cdFoodItem, to: FoodItemCategory.product.rawValue)
+            cdFoodItem.setCategory(to: FoodItemCategory.product.rawValue)
             #expect(cdFoodItem.category == FoodItemCategory.product.rawValue)
             
             // Change category to FoodItemCategory.ingredient
@@ -637,7 +637,7 @@ struct CoreDataTests {
             #expect(cdIngredients.count == 5, "There should be 5 Ingredients associated with the ComposedFoodItem.")
             
             // Duplicate the cdFoodItem
-            let duplicatedCDComposedFoodItem = ComposedFoodItem.duplicate(cdComposedFoodItem)
+            let duplicatedCDComposedFoodItem = cdComposedFoodItem.duplicate()
             try #require(duplicatedCDComposedFoodItem != nil, "The duplicated ComposedFoodItem should be found in the DB.")
             
             // Check results in DB and get the FoodItem
