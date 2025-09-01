@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AbsorptionBlockSettingsView: View {
-    @ObservedObject var absorptionScheme: AbsorptionScheme
+    @State var absorptionScheme: AbsorptionScheme
     @Binding var activeAlert: SimpleAlertType?
     @Binding var showingAlert: Bool
     @State private var newMaxFpu: Int = 0
@@ -73,7 +73,15 @@ struct AbsorptionBlockSettingsView: View {
                     .accessibilityIdentifierLeaf("AddAbsorptionTimeUnit")
                 Button(action: {
                     if self.newAbsorptionBlockId == nil { // This is a new absorption block
-                        _ = AbsorptionBlock.create(absorptionTime: self.newAbsorptionTime, maxFpu: self.newMaxFpu, saveContext: true)
+                        if let schemeAlert = absorptionScheme.add(maxFPU: self.newMaxFpu, absorptionTime: self.newAbsorptionTime) {
+                            activeAlert = schemeAlert
+                            self.showingAlert = true
+                        } else {
+                            // Reset text fields
+                            self.newMaxFpu = 0
+                            self.newAbsorptionTime = 0
+                            self.updateButton = false
+                        }
                     } else { // This is an existing typical amount
                         if let schemeAlert = absorptionScheme.replace(existingAbsorptionBlockID: self.newAbsorptionBlockId!, newMaxFpu: self.newMaxFpu, newAbsorptionTime: self.newAbsorptionTime) {
                             activeAlert = schemeAlert

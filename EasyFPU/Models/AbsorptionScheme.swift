@@ -8,136 +8,28 @@
 
 import SwiftUI
 
-class AbsorptionScheme: ObservableObject {
-    @Published var absorptionBlocks = [AbsorptionBlock]()
+@Observable class AbsorptionScheme {
+    var absorptionBlocks = [AbsorptionBlock]()
     
     // Absorption block parameters for sugars
-    private(set) var delaySugars: Int = AbsorptionScheme.absorptionTimeSugarsDelayDefault
-    @Published var delaySugarsAsString = "" {
-        willSet {
-            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
-            switch result {
-            case .success(let value):
-                self.delaySugars = value
-            case .failure(let err):
-                debugPrint(err.evaluate())
-                return
-            }
-        }
-    }
-    private(set) var intervalSugars: Int = AbsorptionScheme.absorptionTimeSugarsIntervalDefault
-    @Published var intervalSugarsAsString = "" {
-        willSet {
-            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
-            switch result {
-            case .success(let value):
-                self.intervalSugars = value
-            case .failure(let err):
-                debugPrint(err.evaluate())
-                return
-            }
-        }
-    }
-    private(set) var durationSugars: Double = AbsorptionScheme.absoprtionTimeSugarsDurationDefault
-    @Published var durationSugarsAsString = "" {
-        willSet {
-            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
-            switch result {
-            case .success(let value):
-                self.durationSugars = value
-            case .failure(let err):
-                debugPrint(err.evaluate())
-                return
-            }
-        }
-    }
+    var delaySugars: Int = AbsorptionScheme.absorptionTimeSugarsDelayDefault
+    var intervalSugars: Int = AbsorptionScheme.absorptionTimeSugarsIntervalDefault
+    var durationSugars: Double = AbsorptionScheme.absoprtionTimeSugarsDurationDefault
     
     // Absorption block parameters for carbs
-    private(set) var delayCarbs: Int = AbsorptionScheme.absorptionTimeCarbsDelayDefault
-    @Published var delayCarbsAsString = "" {
-        willSet {
-            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
-            switch result {
-            case .success(let value):
-                self.delayCarbs = value
-            case .failure(let err):
-                debugPrint(err.evaluate())
-                return
-            }
-        }
-    }
-    private(set) var intervalCarbs: Int = AbsorptionScheme.absorptionTimeCarbsIntervalDefault
-    @Published var intervalCarbsAsString = "" {
-        willSet {
-            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
-            switch result {
-            case .success(let value):
-                self.intervalCarbs = value
-            case .failure(let err):
-                debugPrint(err.evaluate())
-                return
-            }
-        }
-    }
-    private(set) var durationCarbs: Double = AbsorptionScheme.absoprtionTimeCarbsDurationDefault
-    @Published var durationCarbsAsString = "" {
-        willSet {
-            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
-            switch result {
-            case .success(let value):
-                self.durationCarbs = value
-            case .failure(let err):
-                debugPrint(err.evaluate())
-                return
-            }
-        }
-    }
+    var delayCarbs: Int = AbsorptionScheme.absorptionTimeCarbsDelayDefault
+    var intervalCarbs: Int = AbsorptionScheme.absorptionTimeCarbsIntervalDefault
+    var durationCarbs: Double = AbsorptionScheme.absoprtionTimeCarbsDurationDefault
     
     // Absorption block parameters for e-Carbs
-    private(set) var delayECarbs: Int = AbsorptionScheme.absorptionTimeECarbsDelayDefault
-    @Published var delayECarbsAsString = "" {
-        willSet {
-            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
-            switch result {
-            case .success(let value):
-                self.delayECarbs = value
-            case .failure(let err):
-                debugPrint(err.evaluate())
-                return
-            }
-        }
-    }
-    private(set) var intervalECarbs: Int = AbsorptionScheme.absorptionTimeECarbsIntervalDefault
-    @Published var intervalECarbsAsString = "" {
-        willSet {
-            let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
-            switch result {
-            case .success(let value):
-                self.intervalECarbs = value
-            case .failure(let err):
-                debugPrint(err.evaluate())
-                return
-            }
-        }
-    }
+    var delayECarbs: Int = AbsorptionScheme.absorptionTimeECarbsDelayDefault
+    var intervalECarbs: Int = AbsorptionScheme.absorptionTimeECarbsIntervalDefault
     
     // e-Carbs factor
-    private(set) var eCarbsFactor: Double = AbsorptionScheme.eCarbsFactorDefault
-    @Published var eCarbsFactorAsString = "" {
-        willSet {
-            let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
-            switch result {
-            case .success(let value):
-                self.eCarbsFactor = value
-            case .failure(let err):
-                debugPrint(err.evaluate())
-                return
-            }
-        }
-    }
+    var eCarbsFactor: Double = AbsorptionScheme.eCarbsFactorDefault
     
     // Treat sugars separately
-    @Published var treatSugarsSeparately: Bool = AbsorptionScheme.treatSugarsSeparatelyDefault
+    var treatSugarsSeparately: Bool = AbsorptionScheme.treatSugarsSeparatelyDefault
     
     static let absorptionTimeSugarsDelayDefault: Int = 0 // minutes
     static let absorptionTimeSugarsIntervalDefault: Int = 5 // minutes
@@ -154,41 +46,32 @@ class AbsorptionScheme: ObservableObject {
         // Sugars
         let delaySugars = UserSettings.shared.absorptionTimeSugarsDelayInMinutes
         self.delaySugars = delaySugars
-        self.delaySugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delaySugars))!
         
         let intervalSugars = UserSettings.shared.absorptionTimeSugarsIntervalInMinutes
         self.intervalSugars = intervalSugars
-        self.intervalSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: intervalSugars))!
         
         let durationSugars = UserSettings.shared.absorptionTimeSugarsDurationInHours
         self.durationSugars = durationSugars
-        self.durationSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: durationSugars))!
         
         // Carbs
         let delayCarbs = UserSettings.shared.absorptionTimeCarbsDelayInMinutes
         self.delayCarbs = delayCarbs
-        self.delayCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delayCarbs))!
         
         let intervalCarbs = UserSettings.shared.absorptionTimeCarbsIntervalInMinutes
         self.intervalCarbs = intervalCarbs
-        self.intervalCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: intervalCarbs))!
         
         let durationCarbs = UserSettings.shared.absorptionTimeCarbsDurationInHours
         self.durationCarbs = durationCarbs
-        self.durationCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: durationCarbs))!
         
         // E-Carbs
         let delayECarbs = UserSettings.shared.absorptionTimeECarbsDelayInMinutes
         self.delayECarbs = delayECarbs
-        self.delayECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: delayECarbs))!
         
         let intervalECarbs = UserSettings.shared.absorptionTimeECarbsIntervalInMinutes
         self.intervalECarbs = intervalECarbs
-        self.intervalECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: intervalECarbs))!
         
         let eCarbsFactor = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionScheme.eCarbsFactorDefault
         self.eCarbsFactor = eCarbsFactor
-        self.eCarbsFactorAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: eCarbsFactor))!
         
         self.treatSugarsSeparately = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionScheme.treatSugarsSeparatelyDefault
     }
@@ -208,6 +91,11 @@ class AbsorptionScheme: ObservableObject {
         absorptionBlocks = absorptionBlocks.sorted()
         
         return true
+    }
+    
+    func add(maxFPU: Int, absorptionTime: Int) -> SimpleAlertType? {
+        let newAbsorptionBlock = AbsorptionBlock.create(absorptionTime: absorptionTime, maxFpu: maxFPU, saveContext: true)
+        return add(newAbsorptionBlock: newAbsorptionBlock)
     }
     
     /// Tries to add a new absorption block to the absorption scheme. Several checks ensure that the absorption block fits:
@@ -305,51 +193,12 @@ class AbsorptionScheme: ObservableObject {
         }
     }
     
-    /// Tries to replace an absorption block with another one. If not successful, the existing absorption block is kept.
+    /// Replaces an existing absorption block with a new one. The new absorption block is created from the given parameters.
     /// - Parameters:
     ///   - existingAbsorptionBlockID: The ID of the existing absorption block to be replaced.
-    ///   - newMaxFpuAsString: The maxFPU of the new absorption block.
-    ///   - newAbsorptionTimeAsString: The absorptionTime of the new absorption block.
-    ///   - errorMessage: Stores the error message if something goes wrong.
-    /// - Returns: True in case of a successful replacement, otherwise false (along with the errorMessage).
-    func replace(existingAbsorptionBlockID: UUID, newMaxFpuAsString: String, newAbsorptionTimeAsString: String) -> SimpleAlertType? {
-        // Find the absorption block to be replaced and store it for later potential undoing
-        guard let index = self.absorptionBlocks.firstIndex(where: { $0.id == existingAbsorptionBlockID }) else {
-            return .fatalError(message: "Could not identify absorption block")
-        }
-        let existingAbsorptionBlock = self.absorptionBlocks[index]
-        
-        // Remove the existing absorption block
-        self.absorptionBlocks.remove(at: index)
-        
-        // Try to create the new absorption block
-        var blockAlert: SimpleAlertType? = nil
-        if let newAbsorptionBlock = AbsorptionBlock.create(maxFpuAsString: newMaxFpuAsString, absorptionTimeAsString: newAbsorptionTimeAsString, activeAlert: &blockAlert) {
-            // The absorption block was successfully created, now add it to the absorption scheme
-            if let schemeAlert = self.add(newAbsorptionBlock: newAbsorptionBlock) {
-                // Addition was unsuccessful, so undo deletion of block by adding it at the old position
-                self.absorptionBlocks.insert(existingAbsorptionBlock, at: index)
-                return schemeAlert
-            } else {
-                // Addition was successful, so delete old absorption block in Core Data, as we don't need it any longer
-                AbsorptionBlock.remove(existingAbsorptionBlock, saveContext: true)
-                
-                // Return nil, as job is successfully done
-                return nil
-            }
-        } else {
-            // The absorption block was not created successfully, so return false
-            return blockAlert
-        }
-    }
-    
-    /// Tries to replace an absorption block with another one. If not successful, the existing absorption block is kept.
-    /// - Parameters:
-    ///   - existingAbsorptionBlockID: The ID of the existing absorption block to be replaced.
-    ///   - newMaxFpuAsString: The maxFPU of the new absorption block.
-    ///   - newAbsorptionTimeAsString: The absorptionTime of the new absorption block.
-    ///   - errorMessage: Stores the error message if something goes wrong.
-    /// - Returns: True in case of a successful replacement, otherwise false (along with the errorMessage).
+    ///   - newMaxFpu: The maxFPU of the new absorption block.
+    ///   - newAbsorptionTime: The absorption time of the new absorption block.
+    /// - Returns: A SimpleAlertType if the replacement was not successful, nil otherwise.
     func replace(existingAbsorptionBlockID: UUID, newMaxFpu: Int, newAbsorptionTime: Int) -> SimpleAlertType? {
         // Find the absorption block to be replaced and store it for later potential undoing
         guard let index = self.absorptionBlocks.firstIndex(where: { $0.id == existingAbsorptionBlockID }) else {
@@ -475,12 +324,11 @@ class AbsorptionScheme: ObservableObject {
     
     static func sampleData() -> AbsorptionScheme {
         let absorptionScheme = AbsorptionScheme()
-        var alert: SimpleAlertType?
-        absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(maxFpuAsString: "1", absorptionTimeAsString: "3", activeAlert: &alert)!)
-        absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(maxFpuAsString: "2", absorptionTimeAsString: "4", activeAlert: &alert)!)
-        absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(maxFpuAsString: "3", absorptionTimeAsString: "5", activeAlert: &alert)!)
-        absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(maxFpuAsString: "4", absorptionTimeAsString: "6", activeAlert: &alert)!)
-        absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(maxFpuAsString: "6", absorptionTimeAsString: "8", activeAlert: &alert)!)
+        absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(absorptionTime: 3, maxFpu: 1, saveContext: false))
+        absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(absorptionTime: 4, maxFpu: 2, saveContext: false))
+        absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(absorptionTime: 5, maxFpu: 3, saveContext: false))
+        absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(absorptionTime: 6, maxFpu: 4, saveContext: false))
+        absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(absorptionTime: 8, maxFpu: 6, saveContext: false))
         return absorptionScheme
     }
 }

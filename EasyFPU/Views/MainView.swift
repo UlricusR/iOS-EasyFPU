@@ -67,7 +67,7 @@ struct MainView: View {
             NSSortDescriptor(keyPath: \AbsorptionBlock.absorptionTime, ascending: true)
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
-    @ObservedObject var absorptionScheme = AbsorptionScheme()
+    @State var absorptionScheme = AbsorptionScheme()
     @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert = false
     @State private var isConfirming = false

@@ -22,7 +22,7 @@ struct ComposedFoodItemEvaluationView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @ObservedObject var absorptionScheme: AbsorptionScheme
+    @State var absorptionScheme: AbsorptionScheme
     @ObservedObject var composedFoodItem: ComposedFoodItem
     @ObservedObject var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
