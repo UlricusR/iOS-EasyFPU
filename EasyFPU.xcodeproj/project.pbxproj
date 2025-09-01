@@ -41,7 +41,6 @@
 		1B30351D2CB4326300F1210A /* HelpViewFoodItemMaintenanceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B30351C2CB4326300F1210A /* HelpViewFoodItemMaintenanceList.swift */; };
 		1B377A6624FA5A44005AC5C6 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */; };
 		1B377A6824FAA935005AC5C6 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B377A6724FAA935005AC5C6 /* AboutView.swift */; };
-		1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */; };
 		1B3CEB9B24D32D38001D64DA /* TherapySettingsEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9A24D32D38001D64DA /* TherapySettingsEditor.swift */; };
 		1B3CEB9D24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */; };
 		1B3EEB16253368B3004C110A /* HealthExportCarbsPreviewChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */; };
@@ -166,7 +165,6 @@
 		1B30351C2CB4326300F1210A /* HelpViewFoodItemMaintenanceList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewFoodItemMaintenanceList.swift; sourceTree = "<group>"; };
 		1B377A6524FA5A44005AC5C6 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 		1B377A6724FAA935005AC5C6 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
-		1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbsorptionBlockViewModel.swift; sourceTree = "<group>"; };
 		1B3CEB9A24D32D38001D64DA /* TherapySettingsEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TherapySettingsEditor.swift; sourceTree = "<group>"; };
 		1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionSchemeViewModel.swift; sourceTree = "<group>"; };
 		1B3EEB15253368B3004C110A /* HealthExportCarbsPreviewChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthExportCarbsPreviewChart.swift; sourceTree = "<group>"; };
@@ -431,7 +429,6 @@
 				1B8A4A8F24CABA2100542212 /* FoodItemViewModel.swift */,
 				1BC75242254AF786001C4D27 /* ComposedFoodItemViewModel.swift */,
 				1B8A4A9124CABA5800542212 /* TypicalAmountViewModel.swift */,
-				1B3CEB9824D32D02001D64DA /* AbsorptionBlockViewModel.swift */,
 				1B3CEB9C24D33CC8001D64DA /* AbsorptionSchemeViewModel.swift */,
 			);
 			path = ViewModels;
@@ -701,7 +698,6 @@
 				1BF1A160251AA336001E561C /* ComposedFoodItemECarbsView.swift in Sources */,
 				1BA1035E2CDBFF6A00776D15 /* ParentAccessibilityBranchKey.swift in Sources */,
 				1B12690F2A8E699C0047B1F5 /* DataVersionFinder.swift in Sources */,
-				1B3CEB9924D32D02001D64DA /* AbsorptionBlockViewModel.swift in Sources */,
 				1BB9BD9E2CDD4F750043B465 /* AppSettingsEditor.swift in Sources */,
 				1B816B532CAB345C008670B5 /* RecipeView.swift in Sources */,
 				1B68548824BC70ED005ABB8B /* FoodItemEditor.swift in Sources */,
