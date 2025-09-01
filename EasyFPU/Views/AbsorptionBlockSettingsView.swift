@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AbsorptionBlockSettingsView: View {
-    @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
+    @ObservedObject var absorptionScheme: AbsorptionScheme
     @Binding var activeAlert: SimpleAlertType?
     @Binding var showingAlert: Bool
     @State private var newMaxFpu: Int = 0

@@ -22,7 +22,7 @@ struct ComposedFoodItemEvaluationView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
+    @ObservedObject var absorptionScheme: AbsorptionScheme
     @ObservedObject var composedFoodItem: ComposedFoodItem
     @ObservedObject var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
@@ -263,7 +263,7 @@ struct ComposedFoodItemEvaluationView: View {
 struct ComposedFoodItemEvaluationView_Previews: PreviewProvider {
     static var previews: some View {
         ComposedFoodItemEvaluationView(
-            absorptionScheme: AbsorptionSchemeViewModel.sampleData(),
+            absorptionScheme: AbsorptionScheme.sampleData(),
             composedFoodItem: ComposedFoodItem.new(name: "Sample Meal")
         )
     }

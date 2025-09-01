@@ -422,7 +422,7 @@ struct BusinessLogicTests {
         @Test("ID 4 - Absorption Scheme")
         func absorptionScheme() async throws {
             // Create AbsorptionSchemeViewModel
-            let absorptionSchemeVM = AbsorptionSchemeViewModel()
+            let absorptionSchemeVM = AbsorptionScheme()
             for absorptionBlockJson in absorptionBlocks {
                 absorptionSchemeVM.absorptionBlockVMs.append(AbsorptionBlockViewModel(from: absorptionBlockJson))
             }

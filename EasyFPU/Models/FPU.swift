@@ -19,7 +19,7 @@ struct FPU {
         fpu * UserSettings.shared.eCarbsFactor
     }
     
-    func getAbsorptionTime(absorptionScheme: AbsorptionSchemeViewModel) -> Int? {
+    func getAbsorptionTime(absorptionScheme: AbsorptionScheme) -> Int? {
         absorptionScheme.getAbsorptionTime(fpus: fpu)
     }
 }

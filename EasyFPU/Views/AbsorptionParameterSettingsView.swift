@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AbsorptionParameterSettingsView: View {
-    @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
+    @ObservedObject var draftAbsorptionScheme: AbsorptionScheme
     @Binding var activeAlert: SimpleAlertType?
     @Binding var showingAlert: Bool
     
@@ -229,24 +229,24 @@ struct AbsorptionParameterSettingsView: View {
     
     func resetSugarsToDefaults() {
         // Reset absorption time (for sugars) delay, interval and duration
-        draftAbsorptionScheme.delaySugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault))!
-        draftAbsorptionScheme.intervalSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault))!
-        draftAbsorptionScheme.durationSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault))!
+        draftAbsorptionScheme.delaySugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionScheme.absorptionTimeSugarsDelayDefault))!
+        draftAbsorptionScheme.intervalSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionScheme.absorptionTimeSugarsIntervalDefault))!
+        draftAbsorptionScheme.durationSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionScheme.absoprtionTimeSugarsDurationDefault))!
     }
      
     func resetCarbsToDefaults() {
         // Reset absorption time (for carbs) delay, interval and duration
-        draftAbsorptionScheme.delayCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault))!
-        draftAbsorptionScheme.intervalCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsIntervalDefault))!
-        draftAbsorptionScheme.durationCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault))!
+        draftAbsorptionScheme.delayCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionScheme.absorptionTimeCarbsDelayDefault))!
+        draftAbsorptionScheme.intervalCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionScheme.absorptionTimeCarbsIntervalDefault))!
+        draftAbsorptionScheme.durationCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionScheme.absoprtionTimeCarbsDurationDefault))!
     }
      
     func resetECarbsToDefaults() {
         // Reset absorption time (for e-carbs) delay and interval
-        draftAbsorptionScheme.delayECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault))!
-        draftAbsorptionScheme.intervalECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault))!
+        draftAbsorptionScheme.delayECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionScheme.absorptionTimeECarbsDelayDefault))!
+        draftAbsorptionScheme.intervalECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionScheme.absorptionTimeECarbsIntervalDefault))!
         
         // Reset eCarbs factor
-        draftAbsorptionScheme.eCarbsFactorAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.eCarbsFactorDefault))!
+        draftAbsorptionScheme.eCarbsFactorAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionScheme.eCarbsFactorDefault))!
     }
 }

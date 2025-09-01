@@ -11,7 +11,7 @@ import CountryPicker
 
 struct TherapySettingsEditor: View {
     @Binding var navigationPath: NavigationPath
-    @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
+    @ObservedObject var absorptionScheme: AbsorptionScheme
     @ObservedObject var userSettings = UserSettings.shared
     @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert: Bool = false

@@ -8,11 +8,11 @@
 
 import SwiftUI
 
-class AbsorptionSchemeViewModel: ObservableObject {
+class AbsorptionScheme: ObservableObject {
     @Published var absorptionBlocks = [AbsorptionBlock]()
     
     // Absorption block parameters for sugars
-    private(set) var delaySugars: Int = AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault
+    private(set) var delaySugars: Int = AbsorptionScheme.absorptionTimeSugarsDelayDefault
     @Published var delaySugarsAsString = "" {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
@@ -25,7 +25,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             }
         }
     }
-    private(set) var intervalSugars: Int = AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault
+    private(set) var intervalSugars: Int = AbsorptionScheme.absorptionTimeSugarsIntervalDefault
     @Published var intervalSugarsAsString = "" {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
@@ -38,7 +38,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             }
         }
     }
-    private(set) var durationSugars: Double = AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault
+    private(set) var durationSugars: Double = AbsorptionScheme.absoprtionTimeSugarsDurationDefault
     @Published var durationSugarsAsString = "" {
         willSet {
             let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
@@ -53,7 +53,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
     }
     
     // Absorption block parameters for carbs
-    private(set) var delayCarbs: Int = AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault
+    private(set) var delayCarbs: Int = AbsorptionScheme.absorptionTimeCarbsDelayDefault
     @Published var delayCarbsAsString = "" {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
@@ -66,7 +66,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             }
         }
     }
-    private(set) var intervalCarbs: Int = AbsorptionSchemeViewModel.absorptionTimeCarbsIntervalDefault
+    private(set) var intervalCarbs: Int = AbsorptionScheme.absorptionTimeCarbsIntervalDefault
     @Published var intervalCarbsAsString = "" {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
@@ -79,7 +79,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             }
         }
     }
-    private(set) var durationCarbs: Double = AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault
+    private(set) var durationCarbs: Double = AbsorptionScheme.absoprtionTimeCarbsDurationDefault
     @Published var durationCarbsAsString = "" {
         willSet {
             let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
@@ -94,7 +94,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
     }
     
     // Absorption block parameters for e-Carbs
-    private(set) var delayECarbs: Int = AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault
+    private(set) var delayECarbs: Int = AbsorptionScheme.absorptionTimeECarbsDelayDefault
     @Published var delayECarbsAsString = "" {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: true)
@@ -107,7 +107,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
             }
         }
     }
-    private(set) var intervalECarbs: Int = AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault
+    private(set) var intervalECarbs: Int = AbsorptionScheme.absorptionTimeECarbsIntervalDefault
     @Published var intervalECarbsAsString = "" {
         willSet {
             let result = DataHelper.checkForPositiveInt(valueAsString: newValue, allowZero: false)
@@ -122,7 +122,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
     }
     
     // e-Carbs factor
-    private(set) var eCarbsFactor: Double = AbsorptionSchemeViewModel.eCarbsFactorDefault
+    private(set) var eCarbsFactor: Double = AbsorptionScheme.eCarbsFactorDefault
     @Published var eCarbsFactorAsString = "" {
         willSet {
             let result = DataHelper.checkForPositiveDouble(valueAsString: newValue, allowZero: false)
@@ -137,7 +137,7 @@ class AbsorptionSchemeViewModel: ObservableObject {
     }
     
     // Treat sugars separately
-    @Published var treatSugarsSeparately: Bool = AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault
+    @Published var treatSugarsSeparately: Bool = AbsorptionScheme.treatSugarsSeparatelyDefault
     
     static let absorptionTimeSugarsDelayDefault: Int = 0 // minutes
     static let absorptionTimeSugarsIntervalDefault: Int = 5 // minutes
@@ -186,11 +186,11 @@ class AbsorptionSchemeViewModel: ObservableObject {
         self.intervalECarbs = intervalECarbs
         self.intervalECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: intervalECarbs))!
         
-        let eCarbsFactor = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionSchemeViewModel.eCarbsFactorDefault
+        let eCarbsFactor = UserSettings.getValue(for: UserSettings.UserDefaultsDoubleKey.eCarbsFactor) ?? AbsorptionScheme.eCarbsFactorDefault
         self.eCarbsFactor = eCarbsFactor
         self.eCarbsFactorAsString = DataHelper.doubleFormatter(numberOfDigits: 0).string(from: NSNumber(value: eCarbsFactor))!
         
-        self.treatSugarsSeparately = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionSchemeViewModel.treatSugarsSeparatelyDefault
+        self.treatSugarsSeparately = UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.treatSugarsSeparately) ?? AbsorptionScheme.treatSugarsSeparatelyDefault
     }
     
     /// Initializes the absorption scheme with absorption blocks - this function should be called immeditely after the class has been initialized.
@@ -473,8 +473,8 @@ class AbsorptionSchemeViewModel: ObservableObject {
         return true
     }
     
-    static func sampleData() -> AbsorptionSchemeViewModel {
-        let absorptionScheme = AbsorptionSchemeViewModel()
+    static func sampleData() -> AbsorptionScheme {
+        let absorptionScheme = AbsorptionScheme()
         var alert: SimpleAlertType?
         absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(maxFpuAsString: "1", absorptionTimeAsString: "3", activeAlert: &alert)!)
         absorptionScheme.absorptionBlocks.append(AbsorptionBlock.create(maxFpuAsString: "2", absorptionTimeAsString: "4", activeAlert: &alert)!)
