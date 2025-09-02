@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ComposedFoodItemViewModel: Codable, Hashable, Identifiable {
+class ComposedFoodItemPersistence: Codable, Hashable, Identifiable {
     var id: UUID
     var name: String
     var foodCategory: FoodCategory? = nil
@@ -16,7 +16,7 @@ class ComposedFoodItemViewModel: Codable, Hashable, Identifiable {
     var favorite: Bool
     var amount: Int = 0
     var numberOfPortions: Int = 0
-    var ingredients = [FoodItemViewModel]()
+    var ingredients = [FoodItemPersistence]()
     
     var calories: Double {
         var newValue = 0.0
@@ -63,14 +63,14 @@ class ComposedFoodItemViewModel: Codable, Hashable, Identifiable {
         sugars / Double(amount) * 100
     }
     
-    var typicalAmounts: [TypicalAmountViewModel] {
-        var typicalAmounts = [TypicalAmountViewModel]()
+    var typicalAmounts: [TypicalAmountPersistence] {
+        var typicalAmounts = [TypicalAmountPersistence]()
         if numberOfPortions > 0 {
             let portionWeight = amount / numberOfPortions
             for multiplier in 1...numberOfPortions {
                 let portionAmount = portionWeight * multiplier
                 let comment = "\(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(numberOfPortions))"
-                let typicalAmount = TypicalAmountViewModel(amount: portionAmount, comment: comment)
+                let typicalAmount = TypicalAmountPersistence(amount: portionAmount, comment: comment)
                 typicalAmounts.append(typicalAmount)
             }
         }
@@ -102,7 +102,7 @@ class ComposedFoodItemViewModel: Codable, Hashable, Identifiable {
         
         for case let ingredient as Ingredient in cdComposedFoodItem.ingredients {
             // Add Ingredient to ComposedFoodItemVM
-            if let foodItemVM = FoodItemViewModel(from: ingredient) {
+            if let foodItemVM = FoodItemPersistence(from: ingredient) {
                 ingredients.append(foodItemVM)
             }
         }
@@ -123,10 +123,10 @@ class ComposedFoodItemViewModel: Codable, Hashable, Identifiable {
         numberOfPortions = try composedFoodItem.decode(Int.self, forKey: .numberOfPortions)
         
         // Load the ingredients
-        let ingredients = try composedFoodItem.decode([FoodItemViewModel].self, forKey: .ingredients)
+        let ingredients = try composedFoodItem.decode([FoodItemPersistence].self, forKey: .ingredients)
         for ingredient in ingredients {
             // Create the ingredients as FoodItemViewModels
-            self.ingredients.append(FoodItemViewModel(
+            self.ingredients.append(FoodItemPersistence(
                 id: ingredient.id,
                 name: ingredient.name,
                 foodCategory: ingredient.foodCategory,
@@ -147,7 +147,7 @@ class ComposedFoodItemViewModel: Codable, Hashable, Identifiable {
     func save() -> Bool {
         // Check for an existing FoodItem with same ID
         if let existingComposedFoodItem = ComposedFoodItem.getComposedFoodItemByID(id: self.id) {
-            if ComposedFoodItemViewModel.areIdentical(cdComposedFoodItem: existingComposedFoodItem, composedFoodItemVM: self) {
+            if ComposedFoodItemPersistence.areIdentical(cdComposedFoodItem: existingComposedFoodItem, composedFoodItemVM: self) {
                 // In case of an identical existing ComposedFoodItem, no new ComposedFoodItem needs to be created
                 return true
             } else {
@@ -180,7 +180,7 @@ class ComposedFoodItemViewModel: Codable, Hashable, Identifiable {
         }
     }
     
-    static func areIdentical(cdComposedFoodItem: ComposedFoodItem, composedFoodItemVM: ComposedFoodItemViewModel) -> Bool {
+    static func areIdentical(cdComposedFoodItem: ComposedFoodItem, composedFoodItemVM: ComposedFoodItemPersistence) -> Bool {
         // Compare related food items
         let cdIngredients = cdComposedFoodItem.ingredients.allObjects as! [Ingredient]
         for ingredient in composedFoodItemVM.ingredients {
@@ -213,11 +213,11 @@ class ComposedFoodItemViewModel: Codable, Hashable, Identifiable {
         hasher.combine(id)
     }
     
-    static func == (lhs: ComposedFoodItemViewModel, rhs: ComposedFoodItemViewModel) -> Bool {
+    static func == (lhs: ComposedFoodItemPersistence, rhs: ComposedFoodItemPersistence) -> Bool {
         lhs.id == rhs.id
     }
     
-    static func sampleData() -> ComposedFoodItemViewModel {
-        ComposedFoodItemViewModel(id: UUID(), name: "Sample Composed Food Item", foodCategory: nil, category: .product, favorite: false)
+    static func sampleData() -> ComposedFoodItemPersistence {
+        ComposedFoodItemPersistence(id: UUID(), name: "Sample Composed Food Item", foodCategory: nil, category: .product, favorite: false)
     }
 }

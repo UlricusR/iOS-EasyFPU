@@ -58,7 +58,7 @@ public class ComposedFoodItem: NSManagedObject {
      
      - Returns: A Core Data ComposedFoodItem; nil if there are no Ingredients.
      */
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel, saveContext: Bool) -> ComposedFoodItem? {
+    static func create(from composedFoodItemVM: ComposedFoodItemPersistence, saveContext: Bool) -> ComposedFoodItem? {
         // Create new ComposedFoodItem
         let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
         

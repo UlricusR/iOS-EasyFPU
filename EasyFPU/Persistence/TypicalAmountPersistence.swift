@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TypicalAmountViewModel: Hashable, Comparable, Codable, Identifiable {
+class TypicalAmountPersistence: Hashable, Comparable, Codable, Identifiable {
     var id = UUID()
     var comment: String
     var amount: Int = 0
@@ -47,19 +47,19 @@ class TypicalAmountViewModel: Hashable, Comparable, Codable, Identifiable {
         try container.encode(comment, forKey: .comment)
     }
     
-    static func == (lhs: TypicalAmountViewModel, rhs: TypicalAmountViewModel) -> Bool {
+    static func == (lhs: TypicalAmountPersistence, rhs: TypicalAmountPersistence) -> Bool {
         lhs.id == rhs.id
     }
     
-    static func < (lhs: TypicalAmountViewModel, rhs: TypicalAmountViewModel) -> Bool {
+    static func < (lhs: TypicalAmountPersistence, rhs: TypicalAmountPersistence) -> Bool {
         lhs.amount < rhs.amount
     }
     
-    static func sampleData() -> [TypicalAmountViewModel] {
+    static func sampleData() -> [TypicalAmountPersistence] {
         [
-            TypicalAmountViewModel(amount: 100, comment: "Sample comment"),
-            TypicalAmountViewModel(amount: 200, comment: "Another sample comment"),
-            TypicalAmountViewModel(amount: 300, comment: "Yet another sample comment")
+            TypicalAmountPersistence(amount: 100, comment: "Sample comment"),
+            TypicalAmountPersistence(amount: 200, comment: "Another sample comment"),
+            TypicalAmountPersistence(amount: 300, comment: "Yet another sample comment")
         ]
     }
 }

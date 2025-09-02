@@ -8,7 +8,7 @@
 
 import Foundation
 
-class FoodItemViewModel: Codable, Hashable, Identifiable {
+class FoodItemPersistence: Codable, Hashable, Identifiable {
     var id: UUID
     var name: String
     var favorite: Bool
@@ -20,7 +20,7 @@ class FoodItemViewModel: Codable, Hashable, Identifiable {
     var sourceID: String?
     var sourceDB: FoodDatabaseType?
     var amount: Int = 0
-    var typicalAmounts = [TypicalAmountViewModel]()
+    var typicalAmounts = [TypicalAmountPersistence]()
     private(set) var isClone: Bool = false
     
     enum CodingKeys: String, CodingKey {
@@ -80,7 +80,7 @@ class FoodItemViewModel: Codable, Hashable, Identifiable {
         
         if cdFoodItem.typicalAmounts != nil {
             for typicalAmount in cdFoodItem.typicalAmounts!.allObjects as! [TypicalAmount] {
-                typicalAmounts.append(TypicalAmountViewModel(from: typicalAmount))
+                typicalAmounts.append(TypicalAmountPersistence(from: typicalAmount))
             }
         }
     }
@@ -116,7 +116,7 @@ class FoodItemViewModel: Codable, Hashable, Identifiable {
         if let sourceDBString = try? foodItem.decode(String.self, forKey: .sourceDB) {
             self.sourceDB = FoodDatabaseType(rawValue: sourceDBString)
         }
-        self.typicalAmounts = try foodItem.decode([TypicalAmountViewModel].self, forKey: .typicalAmounts)
+        self.typicalAmounts = try foodItem.decode([TypicalAmountPersistence].self, forKey: .typicalAmounts)
     }
     
     func getCalories() -> Double {
@@ -163,7 +163,7 @@ class FoodItemViewModel: Codable, Hashable, Identifiable {
         
         // Check for an existing FoodItem with same ID
         if let existingFoodItem = FoodItem.getFoodItemByID(id: self.id) {
-            if FoodItemViewModel.hasSameNutritionalValues(lhs: existingFoodItem, rhs: self) {
+            if FoodItemPersistence.hasSameNutritionalValues(lhs: existingFoodItem, rhs: self) {
                 // In case of an existing FoodItem with identical nutritional values, no new FoodItem needs to be created
                 return
             } else {
@@ -179,7 +179,7 @@ class FoodItemViewModel: Codable, Hashable, Identifiable {
     /// Checks if two FoodItemViewModels have the same nutritional values.
     /// - Parameters: otherFoodItemVM: The other FoodItemViewModel to compare with.
     /// - Returns: True if the nutritional values are the same, false otherwise.
-    func hasDifferentNutritionalValues(comparedTo otherFoodItemVM: FoodItemViewModel) -> Bool {
+    func hasDifferentNutritionalValues(comparedTo otherFoodItemVM: FoodItemPersistence) -> Bool {
         return self.caloriesPer100g != otherFoodItemVM.caloriesPer100g || self.carbsPer100g != otherFoodItemVM.carbsPer100g || self.sugarsPer100g != otherFoodItemVM.sugarsPer100g
     }
     
@@ -224,7 +224,7 @@ class FoodItemViewModel: Codable, Hashable, Identifiable {
         try foodItem.encode(typicalAmounts, forKey: .typicalAmounts)
     }
     
-    static func == (lhs: FoodItemViewModel, rhs: FoodItemViewModel) -> Bool {
+    static func == (lhs: FoodItemPersistence, rhs: FoodItemPersistence) -> Bool {
         lhs.id == rhs.id
     }
 
@@ -233,7 +233,7 @@ class FoodItemViewModel: Codable, Hashable, Identifiable {
     ///   - lhs: The FoodItem to be compared.
     ///   - rhs: The FoodItemViewModel to be compared.
     /// - Returns: True if all nutritional values are identical.
-    static func hasSameNutritionalValues(lhs: FoodItem, rhs: FoodItemViewModel) -> Bool {
+    static func hasSameNutritionalValues(lhs: FoodItem, rhs: FoodItemPersistence) -> Bool {
         lhs.caloriesPer100g == rhs.caloriesPer100g &&
         lhs.carbsPer100g == rhs.carbsPer100g &&
         lhs.sugarsPer100g == rhs.sugarsPer100g
@@ -243,8 +243,8 @@ class FoodItemViewModel: Codable, Hashable, Identifiable {
         hasher.combine(id)
     }
     
-    static func sampleData() -> FoodItemViewModel {
-        let foodItemVM = FoodItemViewModel(
+    static func sampleData() -> FoodItemPersistence {
+        let foodItemVM = FoodItemPersistence(
             id: UUID(),
             name: "Sample Food Item",
             foodCategory: nil,
@@ -258,8 +258,8 @@ class FoodItemViewModel: Codable, Hashable, Identifiable {
             sourceDB: nil
         )
         
-        foodItemVM.typicalAmounts.append(TypicalAmountViewModel(amount: 100, comment: "As sold"))
-        foodItemVM.typicalAmounts.append(TypicalAmountViewModel(amount: 25, comment: "As served"))
+        foodItemVM.typicalAmounts.append(TypicalAmountPersistence(amount: 100, comment: "As sold"))
+        foodItemVM.typicalAmounts.append(TypicalAmountPersistence(amount: 25, comment: "As served"))
         
         return foodItemVM
     }

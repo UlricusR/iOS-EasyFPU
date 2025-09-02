@@ -48,7 +48,7 @@ public class Ingredient: NSManagedObject {
      - of if there are no FoodItems attached to the ComposedFoodItem (should never be the case)
      */
     static func create(
-        from composedFoodItemVM: ComposedFoodItemViewModel,
+        from composedFoodItemVM: ComposedFoodItemPersistence,
         relateTo cdComposedFoodItem: ComposedFoodItem,
         saveContext: Bool
     ) -> [Ingredient]? {
@@ -66,7 +66,7 @@ public class Ingredient: NSManagedObject {
             // We need a related cdFoodItem - try to get an existing one first
             if let existingCDFoodItem = FoodItem.getFoodItemByID(id: foodItemVM.id) {
                 // There is an existing FoodItem with identical ID, so check the nutritional values
-                if FoodItemViewModel.hasSameNutritionalValues(lhs: existingCDFoodItem, rhs: foodItemVM) {
+                if FoodItemPersistence.hasSameNutritionalValues(lhs: existingCDFoodItem, rhs: foodItemVM) {
                     // The nutritional values are identical, so relate it to the foodItemVM
                     cdFoodItem = existingCDFoodItem
                 } else {

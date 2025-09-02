@@ -11,8 +11,8 @@ import CoreTransferable
 
 class DataWrapper: Codable {
     var dataModelVersion: DataModelVersion
-    var foodItemVMs: [FoodItemViewModel]
-    var composedFoodItemVMs: [ComposedFoodItemViewModel]
+    var foodItemVMs: [FoodItemPersistence]
+    var composedFoodItemVMs: [ComposedFoodItemPersistence]
     
     enum CodingKeys: String, CodingKey {
         case dataModelVersion
@@ -26,7 +26,7 @@ class DataWrapper: Codable {
         composedFoodItemVMs = []
     }
     
-    init(dataModelVersion: DataModelVersion, foodItemVMs: [FoodItemViewModel], composedFoodItemVMs: [ComposedFoodItemViewModel]) {
+    init(dataModelVersion: DataModelVersion, foodItemVMs: [FoodItemPersistence], composedFoodItemVMs: [ComposedFoodItemPersistence]) {
         self.dataModelVersion = dataModelVersion
         self.foodItemVMs = foodItemVMs
         self.composedFoodItemVMs = composedFoodItemVMs
@@ -35,16 +35,16 @@ class DataWrapper: Codable {
     init(dataModelVersion: DataModelVersion, foodItems: [FoodItem], composedFoodItems: [ComposedFoodItem]) {
         self.dataModelVersion = dataModelVersion
         
-        var foodItemVMs: [FoodItemViewModel] = []
+        var foodItemVMs: [FoodItemPersistence] = []
         for foodItem in foodItems {
-            let foodItemVM = FoodItemViewModel(from: foodItem)
+            let foodItemVM = FoodItemPersistence(from: foodItem)
             foodItemVMs.append(foodItemVM)
         }
         self.foodItemVMs = foodItemVMs
         
-        var composedFoodItemVMs: [ComposedFoodItemViewModel] = []
+        var composedFoodItemVMs: [ComposedFoodItemPersistence] = []
         for composedFoodItem in composedFoodItems {
-            let composedFoodItemVM = ComposedFoodItemViewModel(from: composedFoodItem)
+            let composedFoodItemVM = ComposedFoodItemPersistence(from: composedFoodItem)
             composedFoodItemVMs.append(composedFoodItemVM)
         }
         self.composedFoodItemVMs = composedFoodItemVMs
@@ -57,8 +57,8 @@ class DataWrapper: Codable {
             throw DataVersionFinder.DataModelError.invalidDataModelVersion("'" + dataModelVersionString + "' " + NSLocalizedString("is not a valid data model", comment: ""))
         }
         self.dataModelVersion = dataModelVersion
-        self.foodItemVMs = try container.decode([FoodItemViewModel].self, forKey: .foodItems)
-        self.composedFoodItemVMs = try container.decode([ComposedFoodItemViewModel].self, forKey: .recipes)
+        self.foodItemVMs = try container.decode([FoodItemPersistence].self, forKey: .foodItems)
+        self.composedFoodItemVMs = try container.decode([ComposedFoodItemPersistence].self, forKey: .recipes)
     }
     
     func encode(to encoder: Encoder) throws {

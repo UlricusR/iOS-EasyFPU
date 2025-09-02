@@ -89,7 +89,7 @@ public class FoodItem: NSManagedObject {
         
      - Returns: the new Core Data FoodItem.
      */
-    static func create(from foodItemVM: FoodItemViewModel, saveContext: Bool) -> FoodItem {
+    static func create(from foodItemVM: FoodItemPersistence, saveContext: Bool) -> FoodItem {
         // Create the FoodItem
         let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         
@@ -132,7 +132,7 @@ public class FoodItem: NSManagedObject {
      
      - Returns: The existing Core Data FoodItem if found, otherwise a new one.
      */
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel, saveContext: Bool) -> FoodItem {
+    static func create(from composedFoodItemVM: ComposedFoodItemPersistence, saveContext: Bool) -> FoodItem {
         var cdFoodItem: FoodItem
         
         // Return the existing Core Data FoodItem, if found

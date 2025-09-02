@@ -40,7 +40,7 @@ public class TypicalAmount: NSManagedObject {
     /// - Parameter typicalAmountVM: The source TypicalAmountViewModel.
     /// - Parameter saveContext: A Boolean indicating whether to save the Core Data context after creating.
     /// - Returns: The created Core Data TypicalAmount.
-    static func create(from typicalAmountVM: TypicalAmountViewModel, saveContext: Bool) -> TypicalAmount {
+    static func create(from typicalAmountVM: TypicalAmountPersistence, saveContext: Bool) -> TypicalAmount {
         // Create TypicalAmount
         let cdTypicalAmount = TypicalAmount(context: CoreDataStack.viewContext)
         

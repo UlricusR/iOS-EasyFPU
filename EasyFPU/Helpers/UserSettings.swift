@@ -85,14 +85,14 @@ class UserSettings: ObservableObject {
     @Published var groupIngredientsByCategory: Bool
     
     // The ComposedFoodItems
-    @Published var composedMeal = ComposedFoodItemViewModel(
+    @Published var composedMeal = ComposedFoodItemPersistence(
         id: UUID(),
         name: NSLocalizedString("Total meal", comment: ""),
         foodCategory: nil,
         category: .product,
         favorite: false
     )
-    @Published var composedProduct = ComposedFoodItemViewModel(
+    @Published var composedProduct = ComposedFoodItemPersistence(
         id: UUID(),
         name: NSLocalizedString("Composed product", comment: ""),
         foodCategory: nil,

@@ -91,8 +91,8 @@ struct MenuView: View {
                     Button("Export to JSON") {
                         var errorMessage = ""
                         let allFoodData = DataHelper.getAllFoodData()
-                        let allFoodItems = allFoodData[0] as! [FoodItemViewModel]
-                        let allComposedFoodItems = allFoodData[1] as! [ComposedFoodItemViewModel]
+                        let allFoodItems = allFoodData[0] as! [FoodItemPersistence]
+                        let allComposedFoodItems = allFoodData[1] as! [ComposedFoodItemPersistence]
                         if let jsonDocument = FoodDataDocument(
                             foodItems: allFoodItems,
                             composedFoodItems: allComposedFoodItems,

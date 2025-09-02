@@ -35,8 +35,8 @@ enum ImportExportError: Error {
 
 struct ImportData: Identifiable {
     var id = UUID()
-    let foodItemVMsToBeImported: [FoodItemViewModel]?
-    let composedFoodItemVMsToBeImported: [ComposedFoodItemViewModel]?
+    let foodItemVMsToBeImported: [FoodItemPersistence]?
+    let composedFoodItemVMsToBeImported: [ComposedFoodItemPersistence]?
     
     /// Returns the number of FoodItemViewModels and ComposedFoodItemViewModels.
     /// - Returns: The number of FoodItemViewModels and ComposedFoodItemViewModels (in this order).
@@ -100,16 +100,16 @@ struct DataHelper {
     static func getAllFoodData() -> [[Any]] {
         // Get Core Data FoodItems and load them into FoodItemViewModels
         let cdFoodItems = FoodItem.fetchAll()
-        var foodItems = [FoodItemViewModel]()
+        var foodItems = [FoodItemPersistence]()
         for cdFoodItem in cdFoodItems {
-            foodItems.append(FoodItemViewModel(from: cdFoodItem))
+            foodItems.append(FoodItemPersistence(from: cdFoodItem))
         }
         
         // Get Core Data ComposedFoodItems and load them into ComposedFoodItemViewModels
         let cdComposedFoodItems = ComposedFoodItem.fetchAll()
-        var composedFoodItems = [ComposedFoodItemViewModel]()
+        var composedFoodItems = [ComposedFoodItemPersistence]()
         for cdComposedFoodItem in cdComposedFoodItems {
-            composedFoodItems.append(ComposedFoodItemViewModel(from: cdComposedFoodItem))
+            composedFoodItems.append(ComposedFoodItemPersistence(from: cdComposedFoodItem))
         }
         
         return [foodItems, composedFoodItems]
@@ -165,7 +165,7 @@ struct DataHelper {
             var importData: ImportData
             switch dataModelVersion {
             case .version1:
-                let foodItemVMsToBeImported = try decoder.decode([FoodItemViewModel].self, from: jsonData)
+                let foodItemVMsToBeImported = try decoder.decode([FoodItemPersistence].self, from: jsonData)
                 importData = ImportData(foodItemVMsToBeImported: foodItemVMsToBeImported, composedFoodItemVMsToBeImported: nil)
             case .version2:
                 let wrappedData = try decoder.decode(DataWrapper.self, from: jsonData)
