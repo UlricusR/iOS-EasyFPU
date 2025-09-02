@@ -18,16 +18,10 @@ struct BusinessLogicTests {
     private static let carbsPer100g: Double = 83.321
     private static let sugarsPer100g: Double = 12.21
     private static let amount: Int = 456
-    private static let caloriesPer100gAsString: String = "432" + Locale.current.decimalSeparator! + "123"
-    private static let carbsPer100gAsString: String = "83" + Locale.current.decimalSeparator! + "321"
-    private static let sugarsPer100gAsString: String = "12" + Locale.current.decimalSeparator! + "21"
-    private static let amountAsString: String = "456"
     private static let comment: String = "This is a comment"
     
     private static let absorptionTime: Int = 5
-    private static let absorptionTimeAsString = "5"
     private static let maxFPU: Int = 3
-    private static let maxFPUAsString = "3"
     
     // Are exactly double values from defaults
     private static let absorptionBlocks: [AbsorptionBlockFromJson] = [
@@ -39,11 +33,11 @@ struct BusinessLogicTests {
     ]
         
 
-    @Suite("FoodItemViewModel Tests")
-    struct FoodItemViewModelTests {
-        @Test("ID 1: Initialize FoodItemViewModel with numeric values")
+    @Suite("FoodItem Tests")
+    struct FoodItemTests {
+        @Test("ID 1: Initialize FoodItem with numeric values")
         func initializeFoodItemNormal() async throws {
-            let foodItemVM = FoodItemViewModel(
+            let foodItemPersistence = FoodItemPersistence(
                 id: UUID(),
                 name: BusinessLogicTests.name,
                 foodCategory: nil,
@@ -56,244 +50,199 @@ struct BusinessLogicTests {
                 sourceID: nil,
                 sourceDB: nil
             )
-            BusinessLogicTests.checkFoodItemValues(foodItemVM: foodItemVM)
+            let foodItem = FoodItem.create(from: foodItemPersistence, saveContext: false)
+            let ingredient = Ingredient.create(from: foodItem)
+            BusinessLogicTests.checkFoodItemValues(ingredient: ingredient)
         }
         
-        @Test("ID 2: Initialize FoodItemViewModel with string values")
-        func initializeFoodItemNormalWithStrings() async throws {
-            var foodItemVMError = FoodItemDataError.none
-
-            let foodItemVM = FoodItemViewModel(
-                id: UUID(),
-                name: BusinessLogicTests.name,
-                foodCategory: nil,
-                category: BusinessLogicTests.category,
-                favorite: BusinessLogicTests.favorite,
-                caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
-                carbsAsString: BusinessLogicTests.carbsPer100gAsString,
-                sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
-                amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError,
-                sourceID: nil,
-                sourceDB: nil
-            )
-            #expect(foodItemVMError  == .none)
-            try #require(foodItemVM != nil)
-            BusinessLogicTests.checkFoodItemValues(foodItemVM: foodItemVM!)
-        }
-
         @Test("ID 3: Initialize FoodItemViewModel with empty name")
         func initializeFoodItemNoName() async throws {
-            var foodItemVMError = FoodItemDataError.none
-            
-            let foodItemVM = FoodItemViewModel(
+            let foodItemPersistence = FoodItemPersistence(
                 id: UUID(),
                 name: "",
                 foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
-                caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
-                carbsAsString: BusinessLogicTests.carbsPer100gAsString,
-                sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
-                amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError,
+                caloriesPer100g: BusinessLogicTests.caloriesPer100g,
+                carbsPer100g: BusinessLogicTests.carbsPer100g,
+                sugarsPer100g: BusinessLogicTests.sugarsPer100g,
+                amount: BusinessLogicTests.amount,
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError  == FoodItemDataError.name(NSLocalizedString("Name must not be empty", comment: "")))
-            #expect(foodItemVM == nil)
+            let foodItem = FoodItem.create(from: foodItemPersistence, saveContext: false)
+            let foodItemDataError = foodItem.validateInput()
+            #expect(foodItemDataError  == FoodItemDataError.name(NSLocalizedString("Name must not be empty", comment: "")))
         }
         
         @Test("ID 4: Initialize FoodItemViewModel with error in calories", arguments: zip(
             [
-                "asdf",
-                "-3" + Locale.current.decimalSeparator! + "567"
+                -3.567
             ],
             [
-                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value not a number", comment: ""),
                 NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be negative", comment: "")
             ]
         ))
-        func initializeFoodItemCaloriesError(inputString: String, errorString: String) async throws {
-            var foodItemVMError = FoodItemDataError.none
-            
-            let foodItemVM = FoodItemViewModel(
+        func initializeFoodItemCaloriesError(inputValue: Double, errorString: String) async throws {
+            let foodItemPersistence = FoodItemPersistence(
                 id: UUID(),
                 name: BusinessLogicTests.name,
                 foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
-                caloriesAsString: inputString,
-                carbsAsString: BusinessLogicTests.carbsPer100gAsString,
-                sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
-                amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError,
+                caloriesPer100g: inputValue,
+                carbsPer100g: BusinessLogicTests.carbsPer100g,
+                sugarsPer100g: BusinessLogicTests.sugarsPer100g,
+                amount: BusinessLogicTests.amount,
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemDataError.calories(errorString))
-            #expect(foodItemVM == nil)
+            let foodItem = FoodItem.create(from: foodItemPersistence, saveContext: false)
+            let foodItemDataError = foodItem.validateInput()
+            #expect(foodItemDataError == FoodItemDataError.calories(errorString))
         }
         
         @Test("ID 5: Initialize FoodItemViewModel with error in carbs", arguments: zip(
             [
-                "asdf",
-                "-3" + Locale.current.decimalSeparator! + "567"
+                -3.567
             ],
             [
-                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value not a number", comment: ""),
                 NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be negative", comment: "")
             ]
         ))
-        func initializeFoodItemCarbsError(inputString: String, errorString: String) async throws {
-            var foodItemVMError = FoodItemDataError.none
-            
-            let foodItemVM = FoodItemViewModel(
+        func initializeFoodItemCarbsError(inputValue: Double, errorString: String) async throws {
+            let foodItemPersistence = FoodItemPersistence(
                 id: UUID(),
                 name: BusinessLogicTests.name,
                 foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
-                caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
-                carbsAsString: inputString,
-                sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
-                amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError,
+                caloriesPer100g: BusinessLogicTests.caloriesPer100g,
+                carbsPer100g: inputValue,
+                sugarsPer100g: BusinessLogicTests.sugarsPer100g,
+                amount: BusinessLogicTests.amount,
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemDataError.carbs(errorString))
-            #expect(foodItemVM == nil)
+            let foodItem = FoodItem.create(from: foodItemPersistence, saveContext: false)
+            let foodItemDataError = foodItem.validateInput()
+            #expect(foodItemDataError == FoodItemDataError.carbs(errorString))
         }
         
         @Test("ID 6: Initialize FoodItemViewModel with error in sugars", arguments: zip(
             [
-                "asdf",
-                "-3" + Locale.current.decimalSeparator! + "567"
+                -3.567
             ],
             [
-                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value not a number", comment: ""),
                 NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be negative", comment: "")
             ]
         ))
-        func initializeFoodItemSugarsError(inputString: String, errorString: String) async throws {
-            var foodItemVMError = FoodItemDataError.none
-            
-            let foodItemVM = FoodItemViewModel(
+        func initializeFoodItemSugarsError(inputValue: Double, errorString: String) async throws {
+            let foodItemPersistence = FoodItemPersistence(
                 id: UUID(),
                 name: BusinessLogicTests.name,
                 foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
-                caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
-                carbsAsString: BusinessLogicTests.carbsPer100gAsString,
-                sugarsAsString: inputString,
-                amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError,
+                caloriesPer100g: BusinessLogicTests.caloriesPer100g,
+                carbsPer100g: BusinessLogicTests.carbsPer100g,
+                sugarsPer100g: inputValue,
+                amount: BusinessLogicTests.amount,
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemDataError.sugars(errorString))
-            #expect(foodItemVM == nil)
+            let foodItem = FoodItem.create(from: foodItemPersistence, saveContext: false)
+            let foodItemDataError = foodItem.validateInput()
+            #expect(foodItemDataError == FoodItemDataError.sugars(errorString))
         }
         
         @Test("ID 7: Initialize FoodItemViewModel with sugars exceeding carbs")
         func initializeFoodItemSugarsExceedCarbs() async throws {
-            var foodItemVMError = FoodItemDataError.none
-            
-            let foodItemVM = FoodItemViewModel(
+            let foodItemPersistence = FoodItemPersistence(
                 id: UUID(),
                 name: BusinessLogicTests.name,
                 foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
-                caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
-                carbsAsString: BusinessLogicTests.carbsPer100gAsString,
-                sugarsAsString: String(BusinessLogicTests.carbsPer100g + 1),
-                amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError,
+                caloriesPer100g: BusinessLogicTests.caloriesPer100g,
+                carbsPer100g: BusinessLogicTests.carbsPer100g,
+                sugarsPer100g: BusinessLogicTests.carbsPer100g + 1,
+                amount: BusinessLogicTests.amount,
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemDataError.tooMuchSugars(NSLocalizedString("Sugars exceed carbs", comment: "")))
-            #expect(foodItemVM == nil)
+            let foodItem = FoodItem.create(from: foodItemPersistence, saveContext: false)
+            let foodItemDataError = foodItem.validateInput()
+            #expect(foodItemDataError == FoodItemDataError.tooMuchSugars(NSLocalizedString("Sugars exceed carbs", comment: "")))
         }
         
         @Test("ID 8: Initialize FoodItemViewModel with calories from carbs exactly match total calories")
         func initializeFoodItemCaloriesFromCarbsMatchTotalCalories() async throws {
-            var foodItemVMError = FoodItemDataError.none
-            
-            let foodItemVM = FoodItemViewModel(
+            let foodItemPersistence = FoodItemPersistence(
                 id: UUID(),
                 name: BusinessLogicTests.name,
                 foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
-                caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
-                carbsAsString: NumberFormatter().string(from: BusinessLogicTests.caloriesPer100g / 4 as NSNumber)!,
-                sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
-                amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError,
+                caloriesPer100g: BusinessLogicTests.caloriesPer100g,
+                carbsPer100g: BusinessLogicTests.caloriesPer100g / 4,
+                sugarsPer100g: BusinessLogicTests.sugarsPer100g,
+                amount: BusinessLogicTests.amount,
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemDataError.none)
-            #expect(foodItemVM != nil)
+            let foodItem = FoodItem.create(from: foodItemPersistence, saveContext: false)
+            let foodItemDataError = foodItem.validateInput()
+            #expect(foodItemDataError == FoodItemDataError.none)
         }
         
         @Test("ID 9: Initialize FoodItemViewModel with calories from carbs exceeding total calories")
         func initializeFoodItemCaloriesFromCarbsExceedTotalCalories() async throws {
-            var foodItemVMError = FoodItemDataError.none
-            
-            let foodItemVM = FoodItemViewModel(
+            let foodItemPersistence = FoodItemPersistence(
                 id: UUID(),
                 name: BusinessLogicTests.name,
                 foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
-                caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
-                carbsAsString: NumberFormatter().string(from: BusinessLogicTests.caloriesPer100g / 4 + 1 as NSNumber)!,
-                sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
-                amountAsString: BusinessLogicTests.amountAsString,
-                error: &foodItemVMError,
+                caloriesPer100g: BusinessLogicTests.caloriesPer100g,
+                carbsPer100g: BusinessLogicTests.caloriesPer100g / 4 + 1,
+                sugarsPer100g: BusinessLogicTests.sugarsPer100g,
+                amount: BusinessLogicTests.amount,
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemDataError.tooMuchCarbs(NSLocalizedString("Calories from carbs (4 kcal per gram) exceed total calories", comment: "")))
-            #expect(foodItemVM == nil)
+            let foodItem = FoodItem.create(from: foodItemPersistence, saveContext: false)
+            let foodItemDataError = foodItem.validateInput()
+            #expect(foodItemDataError == FoodItemDataError.tooMuchCarbs(NSLocalizedString("Calories from carbs (4 kcal per gram) exceed total calories", comment: "")))
         }
         
         @Test("ID 10: Initialize FoodItemViewModel with error in amount", arguments: zip(
             [
-                "asdf",
-                "-3" + Locale.current.decimalSeparator! + "567",
-                "-3"
+                -3.567,
+                -3
             ],
             [
-                NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value not a number", comment: ""),
                 NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be negative", comment: ""),
                 NSLocalizedString("Input error: ", comment: "") + NSLocalizedString("Value must not be negative", comment: "")
             ]
         ))
-        func initializeFoodItemAmountError(inputString: String, errorString: String) async throws {
-            var foodItemVMError = FoodItemDataError.none
-            
-            let foodItemVM = FoodItemViewModel(
+        func initializeFoodItemAmountError(inputValue: Double, errorString: String) async throws {
+            let foodItemPersistence = FoodItemPersistence(
                 id: UUID(),
                 name: BusinessLogicTests.name,
                 foodCategory: nil,
                 category: BusinessLogicTests.category,
                 favorite: BusinessLogicTests.favorite,
-                caloriesAsString: BusinessLogicTests.caloriesPer100gAsString,
-                carbsAsString: BusinessLogicTests.carbsPer100gAsString,
-                sugarsAsString: BusinessLogicTests.sugarsPer100gAsString,
-                amountAsString: inputString,
-                error: &foodItemVMError,
+                caloriesPer100g: BusinessLogicTests.caloriesPer100g,
+                carbsPer100g: BusinessLogicTests.carbsPer100g,
+                sugarsPer100g: BusinessLogicTests.sugarsPer100g,
+                amount: inputString,
                 sourceID: nil,
                 sourceDB: nil
             )
-            #expect(foodItemVMError == FoodItemDataError.amount(errorString))
-            #expect(foodItemVM == nil)
+            let foodItem = FoodItem.create(from: foodItemPersistence, saveContext: false)
+            let foodItemDataError = foodItem.validateInput()
+            #expect(foodItemDataError == FoodItemDataError.amount(errorString))
         }
     }
     
@@ -568,41 +517,35 @@ struct BusinessLogicTests {
     // Helper functions
     //
     
-    private static func checkFoodItemValues(foodItemVM: FoodItemViewModel) {
+    private static func checkFoodItemValues(ingredient: Ingredient) {
         // Direct values
-        #expect(foodItemVM.id != nil)
-        #expect(foodItemVM.name == BusinessLogicTests.name)
-        #expect(foodItemVM.category == BusinessLogicTests.category)
-        #expect(foodItemVM.favorite == BusinessLogicTests.favorite)
-        #expect(foodItemVM.caloriesPer100g == BusinessLogicTests.caloriesPer100g)
-        #expect(foodItemVM.carbsPer100g == BusinessLogicTests.carbsPer100g)
-        #expect(foodItemVM.sugarsPer100g == BusinessLogicTests.sugarsPer100g)
-        #expect(foodItemVM.amount == BusinessLogicTests.amount)
-        #expect(foodItemVM.caloriesPer100gAsString == BusinessLogicTests.caloriesPer100gAsString)
-        #expect(foodItemVM.carbsPer100gAsString == BusinessLogicTests.carbsPer100gAsString)
-        #expect(foodItemVM.sugarsPer100gAsString == BusinessLogicTests.sugarsPer100gAsString)
-        #expect(foodItemVM.amountAsString == BusinessLogicTests.amountAsString)
+        #expect(ingredient.name == BusinessLogicTests.name)
+        #expect(ingredient.favorite == BusinessLogicTests.favorite)
+        #expect(ingredient.caloriesPer100g == BusinessLogicTests.caloriesPer100g)
+        #expect(ingredient.carbsPer100g == BusinessLogicTests.carbsPer100g)
+        #expect(ingredient.sugarsPer100g == BusinessLogicTests.sugarsPer100g)
+        #expect(ingredient.amount == BusinessLogicTests.amount)
         
         // Calculated values
-        #expect(BusinessLogicTests.roundToFiveDecimals(foodItemVM.getCalories()) == BusinessLogicTests.roundToFiveDecimals(BusinessLogicTests.caloriesPer100g / 100 * Double(BusinessLogicTests.amount)))
-        #expect(BusinessLogicTests.roundToFiveDecimals(foodItemVM.getCarbsInclSugars()) == BusinessLogicTests.roundToFiveDecimals(BusinessLogicTests.carbsPer100g / 100 * Double(BusinessLogicTests.amount)))
-        #expect(BusinessLogicTests.roundToFiveDecimals(foodItemVM.getSugarsOnly()) == BusinessLogicTests.roundToFiveDecimals(BusinessLogicTests.sugarsPer100g / 100 * Double(BusinessLogicTests.amount)))
-        #expect(BusinessLogicTests.roundToFiveDecimals(foodItemVM.getRegularCarbs(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals((BusinessLogicTests.carbsPer100g - BusinessLogicTests.sugarsPer100g) / 100 * Double(BusinessLogicTests.amount)))
-        #expect(BusinessLogicTests.roundToFiveDecimals(foodItemVM.getRegularCarbs(treatSugarsSeparately: false)) == BusinessLogicTests.roundToFiveDecimals(BusinessLogicTests.carbsPer100g / 100 * Double(BusinessLogicTests.amount)))
-        #expect(BusinessLogicTests.roundToFiveDecimals(foodItemVM.getSugars(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals(BusinessLogicTests.sugarsPer100g / 100 * Double(BusinessLogicTests.amount)))
-        #expect(foodItemVM.getSugars(treatSugarsSeparately: false) == 0)
+        #expect(BusinessLogicTests.roundToFiveDecimals(ingredient.calories) == BusinessLogicTests.roundToFiveDecimals(BusinessLogicTests.caloriesPer100g / 100 * Double(BusinessLogicTests.amount)))
+        #expect(BusinessLogicTests.roundToFiveDecimals(ingredient.carbsInclSugars) == BusinessLogicTests.roundToFiveDecimals(BusinessLogicTests.carbsPer100g / 100 * Double(BusinessLogicTests.amount)))
+        #expect(BusinessLogicTests.roundToFiveDecimals(ingredient.sugarsOnly) == BusinessLogicTests.roundToFiveDecimals(BusinessLogicTests.sugarsPer100g / 100 * Double(BusinessLogicTests.amount)))
+        #expect(BusinessLogicTests.roundToFiveDecimals(ingredient.getRegularCarbs(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals((BusinessLogicTests.carbsPer100g - BusinessLogicTests.sugarsPer100g) / 100 * Double(BusinessLogicTests.amount)))
+        #expect(BusinessLogicTests.roundToFiveDecimals(ingredient.getRegularCarbs(treatSugarsSeparately: false)) == BusinessLogicTests.roundToFiveDecimals(BusinessLogicTests.carbsPer100g / 100 * Double(BusinessLogicTests.amount)))
+        #expect(BusinessLogicTests.roundToFiveDecimals(ingredient.getSugars(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals(BusinessLogicTests.sugarsPer100g / 100 * Double(BusinessLogicTests.amount)))
+        #expect(ingredient.getSugars(treatSugarsSeparately: false) == 0)
         
         // Calculate FPU, see https://www.rueth.info/iOS-EasyFPU/manual/#absorption-scheme-for-extended-carbs
         let totalCalories = BusinessLogicTests.caloriesPer100g / 100 * Double(BusinessLogicTests.amount)
         let carbsCalories = 4 * BusinessLogicTests.carbsPer100g / 100 * Double(BusinessLogicTests.amount)
         let fpCalories = totalCalories - carbsCalories
         let fpus = fpCalories / 100
-        #expect(foodItemVM.getFPU().fpu == fpus)
+        #expect(ingredient.fpus.fpu == fpus)
         
         // Calculate e-carbs
         let eCarbsFactor = UserSettings.shared.eCarbsFactor
         let eCarbs = fpus * eCarbsFactor
-        #expect(foodItemVM.getFPU().getExtendedCarbs() == eCarbs)
+        #expect(ingredient.fpus.getExtendedCarbs() == eCarbs)
     }
     
     private static func checkTypicalAmountValues(typicalAmountVM: TypicalAmountViewModel) {
