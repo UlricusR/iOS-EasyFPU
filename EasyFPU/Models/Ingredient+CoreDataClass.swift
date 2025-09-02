@@ -48,19 +48,19 @@ public class Ingredient: NSManagedObject {
      - of if there are no FoodItems attached to the ComposedFoodItem (should never be the case)
      */
     static func create(
-        from composedFoodItemVM: ComposedFoodItemPersistence,
+        from composedFoodItemPersistence: ComposedFoodItemPersistence,
         relateTo cdComposedFoodItem: ComposedFoodItem,
         saveContext: Bool
     ) -> [Ingredient]? {
         // We cannot create an Ingredient if no food item ingredients are attached
-        if (composedFoodItemVM.ingredients.count == 0) {
+        if (composedFoodItemPersistence.ingredients.count == 0) {
             return nil
         }
         
         // Initialize ingredients array
         var cdIngredients = [Ingredient]()
         
-        for foodItemVM in composedFoodItemVM.ingredients {
+        for foodItemVM in composedFoodItemPersistence.ingredients {
             var cdFoodItem: FoodItem? = nil
             
             // We need a related cdFoodItem - try to get an existing one first

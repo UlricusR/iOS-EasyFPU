@@ -54,6 +54,45 @@ extension FoodItem {
         return self.composedFoodItem != nil
     }
     
+    func validateInput() -> FoodItemDataError {
+        // Check for a correct name
+        let foodName = self.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        if foodName == "" {
+            return .name(NSLocalizedString("Name must not be empty", comment: ""))
+        } else {
+            self.name = foodName
+        }
+        
+        // Check for valid calories
+        if self.caloriesPer100g < 0.0 {
+            return .calories(NSLocalizedString("Value must not be negative", comment: ""))
+        }
+        
+        // Check for valid carbs
+        if self.carbsPer100g < 0.0 {
+            return .carbs(NSLocalizedString("Value must not be negative", comment: ""))
+        }
+        
+        // Check for valid sugars
+        if self.sugarsPer100g < 0.0 {
+            return .sugars(NSLocalizedString("Value must not be negative", comment: ""))
+        }
+        
+        // Check if sugars exceed carbs
+        if self.sugarsPer100g > self.carbsPer100g {
+            return .tooMuchSugars(NSLocalizedString("Sugars exceed carbs", comment: ""))
+        }
+        
+        // Check if calories from carbs exceed total calories
+        if self.carbsPer100g * 4 > self.caloriesPer100g {
+            return .tooMuchCarbs(NSLocalizedString("Calories from carbs (4 kcal per gram) exceed total calories", comment: ""))
+        }
+        
+        return .none
+    }
+    
+    
+    
     /// Updates the ComposedFoodItems (recipes) related to the FoodItem with the nutritional values of the FoodItem.
     func updateRelatedRecipes() {
         // Get the related ingredients and update their values

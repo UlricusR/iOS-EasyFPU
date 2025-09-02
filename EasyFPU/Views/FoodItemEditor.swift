@@ -386,7 +386,7 @@ struct FoodItemEditor: View {
         }
         
         // Validate input
-        let error = validateInput()
+        let error = editedCDFoodItem.validateInput()
         if error == .none {
             if !isNewFoodItem { // We need to update an existing food item
                 // We need to check for related Ingredients and update all Recipes, where these Ingredients are used
@@ -434,43 +434,6 @@ struct FoodItemEditor: View {
             activeAlert = .simpleAlert(type: .error(message: errMessage))
             showingAlert = true
         }
-    }
-    
-    private func validateInput() -> FoodItemDataError {
-        // Check for a correct name
-        let foodName = editedCDFoodItem.name.trimmingCharacters(in: .whitespacesAndNewlines)
-        if foodName == "" {
-            return .name(NSLocalizedString("Name must not be empty", comment: ""))
-        } else {
-            editedCDFoodItem.name = foodName
-        }
-        
-        // Check for valid calories
-        if editedCDFoodItem.caloriesPer100g < 0.0 {
-            return .calories(NSLocalizedString("Value must not be negative", comment: ""))
-        }
-        
-        // Check for valid carbs
-        if editedCDFoodItem.carbsPer100g < 0.0 {
-            return .carbs(NSLocalizedString("Value must not be negative", comment: ""))
-        }
-        
-        // Check for valid sugars
-        if editedCDFoodItem.sugarsPer100g < 0.0 {
-            return .sugars(NSLocalizedString("Value must not be negative", comment: ""))
-        }
-        
-        // Check if sugars exceed carbs
-        if editedCDFoodItem.sugarsPer100g > editedCDFoodItem.carbsPer100g {
-            return .tooMuchSugars(NSLocalizedString("Sugars exceed carbs", comment: ""))
-        }
-        
-        // Check if calories from carbs exceed total calories
-        if editedCDFoodItem.carbsPer100g * 4 > editedCDFoodItem.caloriesPer100g {
-            return .tooMuchCarbs(NSLocalizedString("Calories from carbs (4 kcal per gram) exceed total calories", comment: ""))
-        }
-        
-        return .none
     }
     
     private func updateRelatedRecipesAndSave() {
