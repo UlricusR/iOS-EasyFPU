@@ -14,6 +14,27 @@ import CoreData
 enum FoodItemDataError: Equatable {
     case name(String), calories(String), carbs(String), sugars(String), amount(String), tooMuchCarbs(String), tooMuchSugars(String)
     case none
+    
+    func localizedDescription() -> String {
+        switch self {
+        case .name(let errorMessage):
+            errorMessage
+        case .calories(let errorMessage):
+            NSLocalizedString("Calories: ", comment:"") + errorMessage
+        case .carbs(let errorMessage):
+            NSLocalizedString("Carbs: ", comment:"") + errorMessage
+        case .sugars(let errorMessage):
+            NSLocalizedString("Sugars: ", comment: "") + errorMessage
+        case .tooMuchCarbs(let errorMessage):
+            errorMessage
+        case .tooMuchSugars(let errorMessage):
+            errorMessage
+        case .amount(let errorMessage):
+            NSLocalizedString("Amount: ", comment:"") + errorMessage
+        case .none:
+            ""
+        }
+    }
 }
 
 enum FoodItemCategory: String, CaseIterable, Identifiable {
@@ -80,33 +101,36 @@ public class FoodItem: NSManagedObject {
         return newFoodItem
     }
     
-    /**
-     Creates a new Core Data FoodItem. Does not relate it to the passed FoodItemViewModel. Saves the context.
-     
-     - Parameters:
-        - foodItedVM: the source FoodItemViewModel.
-        - saveContext: If true, the context will be saved after creation.
-        
-     - Returns: the new Core Data FoodItem.
-     */
-    static func create(from foodItemVM: FoodItemPersistence, saveContext: Bool) -> FoodItem {
+    /// Creates a new Core Data FoodItem from a FoodItemPersistence.
+    /// - Parameters:
+    ///   - foodItedPersistence: The source FoodItemPersistence.
+    ///   - saveContext: If true, the context will be saved after creation.
+    ///   - dataError: An inout parameter that will contain any validation error encountered during creation.
+    /// - Returns: The new Core Data FoodItem, or nil if there was a validation error.
+    static func create(from foodItedPersistence: FoodItemPersistence, saveContext: Bool, dataError: inout FoodItemDataError) -> FoodItem? {
         // Create the FoodItem
         let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         
         // Fill data
-        cdFoodItem.id = foodItemVM.id
-        cdFoodItem.name = foodItemVM.name
-        cdFoodItem.foodCategory = foodItemVM.foodCategory
-        cdFoodItem.category = foodItemVM.category.rawValue
-        cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
-        cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
-        cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
-        cdFoodItem.favorite = foodItemVM.favorite
-        cdFoodItem.sourceID = foodItemVM.sourceID
-        cdFoodItem.sourceDB = foodItemVM.sourceDB?.rawValue
+        cdFoodItem.id = foodItedPersistence.id
+        cdFoodItem.name = foodItedPersistence.name
+        cdFoodItem.foodCategory = foodItedPersistence.foodCategory
+        cdFoodItem.category = foodItedPersistence.category.rawValue
+        cdFoodItem.caloriesPer100g = foodItedPersistence.caloriesPer100g
+        cdFoodItem.carbsPer100g = foodItedPersistence.carbsPer100g
+        cdFoodItem.sugarsPer100g = foodItedPersistence.sugarsPer100g
+        cdFoodItem.favorite = foodItedPersistence.favorite
+        cdFoodItem.sourceID = foodItedPersistence.sourceID
+        cdFoodItem.sourceDB = foodItedPersistence.sourceDB?.rawValue
+        
+        // Validate the data
+        dataError = cdFoodItem.validateInput()
+        guard dataError == .none else {
+            return nil
+        }
         
         // Add typical amounts
-        for typicalAmount in foodItemVM.typicalAmounts {
+        for typicalAmount in foodItedPersistence.typicalAmounts {
             let newCDTypicalAmount = TypicalAmount.create(from: typicalAmount, saveContext: saveContext)
             cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
         }

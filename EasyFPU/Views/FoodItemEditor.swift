@@ -408,27 +408,7 @@ struct FoodItemEditor: View {
                 saveContextAndExit()
             }
         } else { // Invalid data, display alert
-            var errMessage = ""
-            
-            // Evaluate error
-            switch error {
-            case .name(let errorMessage):
-                errMessage = errorMessage
-            case .calories(let errorMessage):
-                errMessage = NSLocalizedString("Calories: ", comment:"") + errorMessage
-            case .carbs(let errorMessage):
-                errMessage = NSLocalizedString("Carbs: ", comment:"") + errorMessage
-            case .sugars(let errorMessage):
-                errMessage = NSLocalizedString("Sugars: ", comment: "") + errorMessage
-            case .tooMuchCarbs(let errorMessage):
-                errMessage = errorMessage
-            case .tooMuchSugars(let errorMessage):
-                errMessage = errorMessage
-            case .amount(let errorMessage):
-                errMessage = NSLocalizedString("Amount: ", comment:"") + errorMessage
-            case .none:
-                debugPrint("No error")
-            }
+            let errMessage = error.localizedDescription()
             
             // Display alert and stay in edit mode
             activeAlert = .simpleAlert(type: .error(message: errMessage))

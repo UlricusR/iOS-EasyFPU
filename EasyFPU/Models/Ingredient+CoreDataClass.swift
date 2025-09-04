@@ -78,7 +78,12 @@ public class Ingredient: NSManagedObject {
             
             // If there's still no related FoodItem, we need to create a new one
             if cdFoodItem == nil {
-                cdFoodItem = FoodItem.create(from: foodItemVM, saveContext: saveContext)
+                var dataError: FoodItemDataError = .none
+                cdFoodItem = FoodItem.create(from: foodItemVM, saveContext: saveContext, dataError: &dataError)
+                guard (cdFoodItem != nil) else {
+                    debugPrint("Error creating FoodItem for Ingredient: \(dataError)")
+                    continue // Skip this ingredient
+                }
             }
             
             // Create Ingredient

@@ -173,7 +173,11 @@ class FoodItemPersistence: Codable, Hashable, Identifiable {
         }
         
         // Create the new FoodItem
-        _ = FoodItem.create(from: self, saveContext: true)
+        var dataError: FoodItemDataError = .none
+        guard FoodItem.create(from: self, saveContext: true, dataError: &dataError) != nil else {
+            debugPrint("Error saving FoodItem: \(dataError)")
+            return
+        }
     }
     
     /// Checks if two FoodItemViewModels have the same nutritional values.
