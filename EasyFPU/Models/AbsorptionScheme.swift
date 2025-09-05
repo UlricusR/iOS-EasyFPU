@@ -78,11 +78,11 @@ import SwiftUI
     
     /// Initializes the absorption scheme with absorption blocks - this function should be called immeditely after the class has been initialized.
     /// - Parameter cdAbsorptionBlocks: The Core Data absorption blocks to be added.
-    func initAbsorptionBlocks(with cdAbsorptionBlocks: FetchedResults<AbsorptionBlock>, errorMessage: inout String) -> Bool {
+    func initAbsorptionBlocks(with cdAbsorptionBlocks: FetchedResults<AbsorptionBlock>, saveContext: Bool, errorMessage: inout String) -> Bool {
         // Load absorption blocks
         if cdAbsorptionBlocks.isEmpty {
             // Absorption blocks are empty, so initialize with default absorption scheme
-            if !loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) { return false }
+            if !loadDefaultAbsorptionBlocks(saveContext: saveContext, errorMessage: &errorMessage) { return false }
         } else {
             self.absorptionBlocks = Array(cdAbsorptionBlocks)
         }
@@ -93,9 +93,9 @@ import SwiftUI
         return true
     }
     
-    func add(maxFPU: Int, absorptionTime: Int) -> SimpleAlertType? {
-        let newAbsorptionBlock = AbsorptionBlock.create(absorptionTime: absorptionTime, maxFpu: maxFPU, saveContext: true)
-        return add(newAbsorptionBlock: newAbsorptionBlock)
+    func add(maxFPU: Int, absorptionTime: Int, saveContext: Bool) -> SimpleAlertType? {
+        let newAbsorptionBlock = AbsorptionBlock.create(absorptionTime: absorptionTime, maxFpu: maxFPU, saveContext: saveContext)
+        return add(newAbsorptionBlock: newAbsorptionBlock, saveContext: saveContext)
     }
     
     /// Tries to add a new absorption block to the absorption scheme. Several checks ensure that the absorption block fits:
@@ -107,7 +107,7 @@ import SwiftUI
     ///   - newAbsorptionBlock: The absorption block to be added.
     ///   - errorMessage: The error message in case of no success.
     /// - Returns: False if any of the checks is not passed, true if the block was added.
-    func add(newAbsorptionBlock: AbsorptionBlock) -> SimpleAlertType? {
+    func add(newAbsorptionBlock: AbsorptionBlock, saveContext: Bool) -> SimpleAlertType? {
         // Check no. 1: If the list is empty, then everything is fine, as the new block is the first one
         if absorptionBlocks.count == 0 {
             absorptionBlocks.append(newAbsorptionBlock)
@@ -121,7 +121,7 @@ import SwiftUI
                 let alert = SimpleAlertType.error(message: "Maximum FPU value already exists")
                 
                 // Remove newAbsorptionBlock from Core Data
-                AbsorptionBlock.remove(newAbsorptionBlock, saveContext: true)
+                AbsorptionBlock.remove(newAbsorptionBlock, saveContext: saveContext)
                 
                 return alert
             }
@@ -137,7 +137,7 @@ import SwiftUI
             let alert = SimpleAlertType.fatalError(message: "Cannot determine absorption block index.")
             
             // Remove newAbsorptionBlock from Core Data
-            AbsorptionBlock.remove(newAbsorptionBlock, saveContext: true)
+            AbsorptionBlock.remove(newAbsorptionBlock, saveContext: saveContext)
             
             return alert
         }
@@ -151,7 +151,7 @@ import SwiftUI
                 let alert = SimpleAlertType.error(message: "Absorption time is equals or larger than the one of the following absorption block")
                 
                 // Remove newAbsorptionBlock from Core Data
-                AbsorptionBlock.remove(newAbsorptionBlock, saveContext: true)
+                AbsorptionBlock.remove(newAbsorptionBlock, saveContext: saveContext)
                 
                 return alert
             } else {
@@ -168,7 +168,7 @@ import SwiftUI
                 let alert = SimpleAlertType.error(message: "Absorption time is equals or less than the one of the block before")
                 
                 // Remove newAbsorptionBlock from Core Data
-                AbsorptionBlock.remove(newAbsorptionBlock, saveContext: true)
+                AbsorptionBlock.remove(newAbsorptionBlock, saveContext: saveContext)
                 
                 return alert
             } else {
@@ -184,7 +184,7 @@ import SwiftUI
             let alert = SimpleAlertType.error(message: "Absorption time must be between previous and following block")
             
             // Remove newAbsorptionBlock from Core Data
-            AbsorptionBlock.remove(newAbsorptionBlock, saveContext: true)
+            AbsorptionBlock.remove(newAbsorptionBlock, saveContext: saveContext)
             
             return alert
         } else {
@@ -199,7 +199,7 @@ import SwiftUI
     ///   - newMaxFpu: The maxFPU of the new absorption block.
     ///   - newAbsorptionTime: The absorption time of the new absorption block.
     /// - Returns: A SimpleAlertType if the replacement was not successful, nil otherwise.
-    func replace(existingAbsorptionBlockID: UUID, newMaxFpu: Int, newAbsorptionTime: Int) -> SimpleAlertType? {
+    func replace(existingAbsorptionBlockID: UUID, newMaxFpu: Int, newAbsorptionTime: Int, saveContext: Bool) -> SimpleAlertType? {
         // Find the absorption block to be replaced and store it for later potential undoing
         guard let index = self.absorptionBlocks.firstIndex(where: { $0.id == existingAbsorptionBlockID }) else {
             return .fatalError(message: "Could not identify absorption block")
@@ -210,16 +210,16 @@ import SwiftUI
         self.absorptionBlocks.remove(at: index)
         
         // Try to create the new absorption block
-        let newAbsorptionBlock = AbsorptionBlock.create(absorptionTime: newAbsorptionTime, maxFpu: newMaxFpu, saveContext: true)
+        let newAbsorptionBlock = AbsorptionBlock.create(absorptionTime: newAbsorptionTime, maxFpu: newMaxFpu, saveContext: saveContext)
         
         // The absorption block was successfully created, now add it to the absorption scheme
-        if let schemeAlert = self.add(newAbsorptionBlock: newAbsorptionBlock) {
+        if let schemeAlert = self.add(newAbsorptionBlock: newAbsorptionBlock, saveContext: saveContext) {
             // Addition was unsuccessful, so undo deletion of block by adding it at the old position
             self.absorptionBlocks.insert(existingAbsorptionBlock, at: index)
             return schemeAlert
         } else {
             // Addition was successful, so delete old absorption block in Core Data, as we don't need it any longer
-            AbsorptionBlock.remove(existingAbsorptionBlock, saveContext: true)
+            AbsorptionBlock.remove(existingAbsorptionBlock, saveContext: saveContext)
             
             // Return nil, as job is successfully done
             return nil
@@ -229,10 +229,10 @@ import SwiftUI
     /// Removes the absorptionBlock at the given index from the scheme and deletes it in Core Data.
     /// - Parameter absorptionBlockIndex: The index of the absorptionBlock to be removed.
     /// - Returns: False if the absorptionBlockIndex is out of range, true otherwise.
-    func removeAbsorptionBlock(at absorptionBlockIndex: Int) -> Bool {
+    func removeAbsorptionBlock(at absorptionBlockIndex: Int, saveContext: Bool) -> Bool {
         if absorptionBlockIndex < absorptionBlocks.count {
             // Delete Core Data absorption block
-            AbsorptionBlock.remove(absorptionBlocks[absorptionBlockIndex], saveContext: true)
+            AbsorptionBlock.remove(absorptionBlocks[absorptionBlockIndex], saveContext: saveContext)
             
             // Remove VM from scheme
             absorptionBlocks.remove(at: absorptionBlockIndex)
@@ -246,14 +246,14 @@ import SwiftUI
     /// Removes all existing absorption blocks and loads the default absorption blocks
     /// - Parameter errorMessage: Stores potential error messages.
     /// - Returns: False if the defaults could not be loaded, otherwise true.
-    func resetToDefaultAbsorptionBlocks(errorMessage: inout String) -> Bool {
+    func resetToDefaultAbsorptionBlocks(saveContext: Bool, errorMessage: inout String) -> Bool {
         // Delete Core Data
         AbsorptionBlock.deleteAll()
         
         // Empty list
         absorptionBlocks.removeAll()
         
-        if !loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) {
+        if !loadDefaultAbsorptionBlocks(saveContext: saveContext, errorMessage: &errorMessage) {
             return false
         } else {
             // Sort absorption blocks
@@ -305,7 +305,7 @@ import SwiftUI
         }
     }
     
-    private func loadDefaultAbsorptionBlocks(errorMessage: inout String) -> Bool {
+    private func loadDefaultAbsorptionBlocks(saveContext: Bool, errorMessage: inout String) -> Bool {
         // Absorption blocks are empty, so initialize with default absorption scheme
         guard let defaultAbsorptionBlocks = DataHelper.loadDefaultAbsorptionBlocks(errorMessage: &errorMessage) else {
             return false
@@ -313,11 +313,13 @@ import SwiftUI
         
         // Create absorption blocks from default absorption block, but don't save context yet, but only once after the loop
         for absorptionBlock in defaultAbsorptionBlocks {
-            absorptionBlocks.append(AbsorptionBlock.create(from: absorptionBlock, id: UUID(), saveContext: false))
+            absorptionBlocks.append(AbsorptionBlock.create(from: absorptionBlock, id: UUID(), saveContext: saveContext))
         }
         
         // Save the context
-        CoreDataStack.shared.save()
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
         
         return true
     }

@@ -157,7 +157,7 @@ struct MainView: View {
                     if self.absorptionScheme.absorptionBlocks.isEmpty {
                         // Absorption scheme hasn't been loaded yet
                         var errorMessage = ""
-                        if !self.absorptionScheme.initAbsorptionBlocks(with: absorptionBlocks, errorMessage: &errorMessage) {
+                        if !self.absorptionScheme.initAbsorptionBlocks(with: absorptionBlocks, saveContext: true, errorMessage: &errorMessage) {
                             activeAlert = .fatalError(message: errorMessage)
                             showingAlert = true
                         }

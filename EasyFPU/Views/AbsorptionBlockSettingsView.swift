@@ -48,7 +48,7 @@ struct AbsorptionBlockSettingsView: View {
             // The reset button
             Button("Reset to default") {
                 var errorMessage = ""
-                if !absorptionScheme.resetToDefaultAbsorptionBlocks(errorMessage: &errorMessage) {
+                if !absorptionScheme.resetToDefaultAbsorptionBlocks(saveContext: true, errorMessage: &errorMessage) {
                     activeAlert = .fatalError(message: errorMessage)
                     showingAlert = true
                 }
@@ -73,7 +73,7 @@ struct AbsorptionBlockSettingsView: View {
                     .accessibilityIdentifierLeaf("AddAbsorptionTimeUnit")
                 Button(action: {
                     if self.newAbsorptionBlockId == nil { // This is a new absorption block
-                        if let schemeAlert = absorptionScheme.add(maxFPU: self.newMaxFpu, absorptionTime: self.newAbsorptionTime) {
+                        if let schemeAlert = absorptionScheme.add(maxFPU: self.newMaxFpu, absorptionTime: self.newAbsorptionTime, saveContext: true) {
                             activeAlert = schemeAlert
                             self.showingAlert = true
                         } else {
@@ -83,7 +83,12 @@ struct AbsorptionBlockSettingsView: View {
                             self.updateButton = false
                         }
                     } else { // This is an existing typical amount
-                        if let schemeAlert = absorptionScheme.replace(existingAbsorptionBlockID: self.newAbsorptionBlockId!, newMaxFpu: self.newMaxFpu, newAbsorptionTime: self.newAbsorptionTime) {
+                        if let schemeAlert = absorptionScheme.replace(
+                            existingAbsorptionBlockID: self.newAbsorptionBlockId!,
+                            newMaxFpu: self.newMaxFpu,
+                            newAbsorptionTime: self.newAbsorptionTime,
+                            saveContext: true
+                        ) {
                             activeAlert = schemeAlert
                             self.showingAlert = true
                         } else {
@@ -104,7 +109,7 @@ struct AbsorptionBlockSettingsView: View {
     private func deleteAbsorptionBlock(at offsets: IndexSet) {
         if absorptionScheme.absorptionBlocks.count > 1 {
             offsets.forEach { index in
-                if !absorptionScheme.removeAbsorptionBlock(at: index) {
+                if !absorptionScheme.removeAbsorptionBlock(at: index, saveContext: true) {
                     activeAlert = .fatalError(message: "Absorption block index out of range.")
                     showingAlert = true
                 }
