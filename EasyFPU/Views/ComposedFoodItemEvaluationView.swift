@@ -24,7 +24,7 @@ struct ComposedFoodItemEvaluationView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @State var absorptionScheme: AbsorptionScheme
     @ObservedObject var composedFoodItem: ComposedFoodItem
-    @ObservedObject var userSettings = UserSettings.shared
+    @State var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
     @State private var navigationPath = NavigationPath()
     @State var activeSheet: SheetState?

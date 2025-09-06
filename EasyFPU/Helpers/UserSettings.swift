@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-class UserSettings: ObservableObject {
+@Observable class UserSettings {
     // MARK: - The keys
     enum UserDefaultsType {
         case bool(Bool, UserSettings.UserDefaultsBoolKey)
@@ -61,44 +61,28 @@ class UserSettings: ObservableObject {
     }
     
     // MARK: - The key store for syncing via iCloud
-    private static var keyStore = NSUbiquitousKeyValueStore()
+    private static let keyStore = NSUbiquitousKeyValueStore()
     
     // MARK: - Dynamic user settings are treated here
-    @Published var disclaimerAccepted: Bool
-    @Published var foodDatabaseUseAtOwnRiskAccepted: Bool
-    @Published var absorptionTimeSugarsDelayInMinutes: Int
-    @Published var absorptionTimeSugarsIntervalInMinutes: Int
-    @Published var absorptionTimeSugarsDurationInHours: Double
-    @Published var absorptionTimeCarbsDelayInMinutes: Int
-    @Published var absorptionTimeCarbsIntervalInMinutes: Int
-    @Published var absorptionTimeCarbsDurationInHours: Double
-    @Published var absorptionTimeECarbsDelayInMinutes: Int
-    @Published var absorptionTimeECarbsIntervalInMinutes: Int
-    @Published var eCarbsFactor: Double
-    @Published var treatSugarsSeparately: Bool
-    @Published var mealDelayInMinutes: Int = 0
-    @Published var alertPeriodAfterExportInMinutes: Int = 15
-    @Published var foodDatabase: FoodDatabase
-    @Published var searchWorldwide: Bool
-    @Published var countryCode: String?
-    @Published var groupProductsByCategory: Bool
-    @Published var groupIngredientsByCategory: Bool
-    
-    // The ComposedFoodItems
-    @Published var composedMeal = ComposedFoodItemPersistence(
-        id: UUID(),
-        name: NSLocalizedString("Total meal", comment: ""),
-        foodCategory: nil,
-        category: .product,
-        favorite: false
-    )
-    @Published var composedProduct = ComposedFoodItemPersistence(
-        id: UUID(),
-        name: NSLocalizedString("Composed product", comment: ""),
-        foodCategory: nil,
-        category: .ingredient,
-        favorite: false
-    )
+    var disclaimerAccepted: Bool
+    var foodDatabaseUseAtOwnRiskAccepted: Bool
+    var absorptionTimeSugarsDelayInMinutes: Int
+    var absorptionTimeSugarsIntervalInMinutes: Int
+    var absorptionTimeSugarsDurationInHours: Double
+    var absorptionTimeCarbsDelayInMinutes: Int
+    var absorptionTimeCarbsIntervalInMinutes: Int
+    var absorptionTimeCarbsDurationInHours: Double
+    var absorptionTimeECarbsDelayInMinutes: Int
+    var absorptionTimeECarbsIntervalInMinutes: Int
+    var eCarbsFactor: Double
+    var treatSugarsSeparately: Bool
+    var mealDelayInMinutes: Int = 0
+    var alertPeriodAfterExportInMinutes: Int = 15
+    var foodDatabase: FoodDatabase
+    var searchWorldwide: Bool
+    var countryCode: String?
+    var groupProductsByCategory: Bool
+    var groupIngredientsByCategory: Bool
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,

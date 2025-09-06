@@ -12,7 +12,7 @@ import CountryPicker
 struct TherapySettingsEditor: View {
     @Binding var navigationPath: NavigationPath
     @State var absorptionScheme: AbsorptionScheme
-    @ObservedObject var userSettings = UserSettings.shared
+    @State var userSettings = UserSettings.shared
     @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert: Bool = false
     @State private var showingScreen = false

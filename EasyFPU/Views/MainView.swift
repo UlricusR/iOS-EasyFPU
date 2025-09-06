@@ -60,7 +60,7 @@ struct MainView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @ObservedObject var userSettings = UserSettings.shared
+    @State var userSettings = UserSettings.shared
     @FetchRequest(
         entity: AbsorptionBlock.entity(),
         sortDescriptors: [
@@ -98,7 +98,6 @@ struct MainView: View {
                     
                     // The recipe list
                     RecipeListView(
-                        composedFoodItem: ComposedFoodItem.new(name: NSLocalizedString("Total meal", comment: "")),
                         helpSheet: RecipeListView.SheetState.recipeListHelp
                     )
                     .tag(Tab.cook.rawValue)

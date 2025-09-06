@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ComposedFoodItemECarbsView: View {
-    @ObservedObject var composedFoodItem: ComposedFoodItem
+    @State var composedFoodItem: ComposedFoodItem
     var absorptionScheme: AbsorptionScheme
     var absorptionTimeAsString: String {
         if composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
@@ -18,7 +18,7 @@ struct ComposedFoodItemECarbsView: View {
             return "..."
         }
     }
-    @ObservedObject var userSettings = UserSettings.shared
+    @State var userSettings = UserSettings.shared
     var extendedCarbsTimeAsString: String {
         let time = Date().addingTimeInterval(TimeInterval((userSettings.absorptionTimeECarbsDelayInMinutes + userSettings.mealDelayInMinutes) * 60))
         return HealthExportCarbsPreviewChart.timeStyle.string(from: time)

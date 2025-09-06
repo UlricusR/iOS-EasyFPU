@@ -22,7 +22,6 @@ struct RecipeListView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @ObservedObject var composedFoodItem: ComposedFoodItem
     var helpSheet: SheetState
     @State private var navigationPath = NavigationPath()
     @State private var searchString = ""
@@ -142,11 +141,11 @@ struct RecipeListView: View {
                         foodItem: foodItem
                     )
                     .accessibilityIdentifierBranch("EditFoodItem")
-                case let .SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItemVM):
+                case let .SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItem):
                     FoodItemSelector(
                         navigationPath: $navigationPath,
                         ingredient: ingredient,
-                        composedFoodItem: composedFoodItemVM,
+                        composedFoodItem: composedFoodItem,
                         category: category
                     )
                     .accessibilityIdentifierBranch("SelectFoodItem")
@@ -206,7 +205,6 @@ struct RecipeListView_Previews: PreviewProvider {
     @State private static var navigationPath = NavigationPath()
     static var previews: some View {
         RecipeListView(
-            composedFoodItem: ComposedFoodItem.new(name: "Sample"),
             helpSheet: .recipeListHelp
         )
     }

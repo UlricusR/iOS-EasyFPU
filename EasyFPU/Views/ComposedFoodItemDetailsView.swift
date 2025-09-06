@@ -11,7 +11,7 @@ import SwiftUI
 struct ComposedFoodItemDetailsView: View {
     @State var absorptionScheme: AbsorptionScheme
     @ObservedObject var composedFoodItem: ComposedFoodItem
-    @ObservedObject var userSettings = UserSettings.shared
+    @State var userSettings = UserSettings.shared
     
     var absorptionTimeAsString: String {
         if composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {

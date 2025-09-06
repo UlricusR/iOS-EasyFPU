@@ -13,7 +13,7 @@ import CoreData
 struct FilteredFoodItemList: View {
     @Binding var navigationPath: NavigationPath
     @ObservedObject private var composedFoodItem: ComposedFoodItem
-    @ObservedObject private var userSettings = UserSettings.shared
+    @State private var userSettings = UserSettings.shared
     
     private var category: FoodItemCategory
     private var listType: FoodItemListView.FoodItemListType

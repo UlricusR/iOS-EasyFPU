@@ -34,7 +34,7 @@ struct FoodItemListView: View {
     var foodItemListTitle: String
     var helpSheet: SheetState
     @Binding var navigationPath: NavigationPath
-    @ObservedObject var userSettings = UserSettings.shared
+    @State var userSettings = UserSettings.shared
     @ObservedObject var composedFoodItem: ComposedFoodItem
     
     @State private var searchString = ""

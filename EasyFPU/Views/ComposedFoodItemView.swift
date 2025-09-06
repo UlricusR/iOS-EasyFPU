@@ -14,7 +14,7 @@ struct ComposedFoodItemView: View {
     var fontSizeName: Font?
     var fontSizeDetails: Font?
     var foregroundStyleName: Color
-    @ObservedObject var userSettings = UserSettings.shared
+    @State var userSettings = UserSettings.shared
     var absorptionTimeAsString: String {
         if ingredient.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
             return DataHelper.intFormatter.string(from: NSNumber(value: ingredient.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
