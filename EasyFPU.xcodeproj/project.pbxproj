@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B0040582D254B7700D2FAF2 /* CustomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0040572D254B7400D2FAF2 /* CustomButtons.swift */; };
+		1B004A3224BA3035001E362A /* EasyFPU.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1B004A3024BA3035001E362A /* EasyFPU.xcdatamodeld */; };
 		1B004A3624BA3038001E362A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B004A3524BA3038001E362A /* Assets.xcassets */; };
 		1B004A3924BA3038001E362A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B004A3824BA3038001E362A /* Preview Assets.xcassets */; };
 		1B004A4624BA338A001E362A /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B004A4524BA338A001E362A /* CloudKit.framework */; };
@@ -715,6 +716,7 @@
 				1B6654B52A76B91300BEA5A0 /* ComposedFoodItemDetailsView.swift in Sources */,
 				1BF1A15D251AA2B2001E561C /* ComposedFoodItemCarbsView.swift in Sources */,
 				1B6B861A2517D1AC00ED10FE /* CarbsEntry.swift in Sources */,
+				1B004A3224BA3035001E362A /* EasyFPU.xcdatamodeld in Sources */,
 				1B24AD6C24BE38E800F3A100 /* FoodItemSelector.swift in Sources */,
 				1B0CE2BA250663B5008B04E3 /* HealthDataHelper.swift in Sources */,
 				1B3EEB16253368B3004C110A /* HealthExportCarbsPreviewChart.swift in Sources */,
