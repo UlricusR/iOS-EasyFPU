@@ -258,23 +258,26 @@ public class FoodItem: NSManagedObject {
     /// - Parameters:
     ///   - foodItem: The FoodItem to be deleted.
     ///   - deleteAssociatedRecipe: If true, the associated ComposedFoodItem (recipe) will also be deleted.
-    static func delete(_ foodItem: FoodItem, deleteAssociatedRecipe: Bool = false) {
+    static func delete(_ foodItem: FoodItem, deleteAssociatedRecipe: Bool = false, saveContext: Bool) {
         // Deletion of all related typical amounts will happen automatically
         // as we have set Delete Rule to Cascade in data model
         
         if deleteAssociatedRecipe {
             if let associatedRecipe = foodItem.composedFoodItem {
-                ComposedFoodItem.delete(associatedRecipe, includeAssociatedFoodItem: false)
+                ComposedFoodItem.delete(associatedRecipe, includeAssociatedFoodItem: false, saveContext: false)
             }
         }
         
         // Delete the food item itself
         CoreDataStack.viewContext.delete(foodItem)
+        
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
     }
     
     /**
      Adds a TypicalAmount to a FoodItem.
-     TODO check if still needed after refacturing.
      
      - Parameters:
         - typicalAmount: The Core Data TypicalAmount to add.
@@ -295,8 +298,8 @@ public class FoodItem: NSManagedObject {
         let foodItems = FoodItem.getFoodItemsByName(name: name)
         let composedFoodItems = ComposedFoodItem.getComposedFoodItemByName(name: name)
         
-        // We expect the food item to exist exactly once (itself), so if there is more than one, the name already exists
-        return foodItems != nil && foodItems!.count > 1 || composedFoodItems != nil
+        // We expect the food item not to exist
+        return foodItems != nil && foodItems!.count > 0 || composedFoodItems != nil
     }
     
     /**

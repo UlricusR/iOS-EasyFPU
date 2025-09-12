@@ -431,7 +431,7 @@ struct FoodItemEditor: View {
         
         if deletingFoodItem {
             // Delete food item
-            FoodItem.delete(editedCDFoodItem)
+            FoodItem.delete(editedCDFoodItem, saveContext: false)
         }
         
         // Save

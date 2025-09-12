@@ -124,7 +124,7 @@ extension ComposedFoodItem: VariableAmountItem {
         } else {
             // No existing FoodItem found to duplicate - this should not happen
             // Delete composedFoodItem again
-            ComposedFoodItem.delete(cdComposedFoodItem, includeAssociatedFoodItem: false)
+            ComposedFoodItem.delete(cdComposedFoodItem, includeAssociatedFoodItem: false, saveContext: saveContext)
             
             // Save
             if saveContext {

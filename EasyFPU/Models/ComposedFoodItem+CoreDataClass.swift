@@ -34,17 +34,11 @@ public class ComposedFoodItem: NSManagedObject {
         try? viewContext.save()
     }
     
-    /// Creates a new ComposedFoodItem with the given name. Other values are set to defaults. Does not save the context.
-    /// - Parameter name: The name of the new ComposedFoodItem.
-    /// - Returns: The new ComposedFoodItem.
-    static func new(name: String) -> ComposedFoodItem {
-        let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
-        cdComposedFoodItem.id = UUID()
-        cdComposedFoodItem.name = name
-        cdComposedFoodItem.favorite = false
-        cdComposedFoodItem.amount = 0
-        cdComposedFoodItem.numberOfPortions = 0
-        return cdComposedFoodItem
+    static func fetchRequestWithoutChildren() -> NSFetchRequest<ComposedFoodItem> {
+        let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
+        request.includesSubentities = false
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \ComposedFoodItem.name, ascending: true)]
+        return request
     }
     
     /**
@@ -94,14 +88,49 @@ public class ComposedFoodItem: NSManagedObject {
         }
     }
     
+    /// Creates a new ComposedFoodItem from the given ComposedFoodItem.
+    /// Typically used for creating a permanent ComposedFoodItem from a TempComposedFoodItem.
+    /// - Parameters:
+    ///   - composedFoodItem: The source ComposedFoodItem.
+    ///   - saveContext: Whether to permanently save the changes to the core data stack.
+    /// - Returns: The created ComposedFoodItem.
+    static func create(from composedFoodItem: ComposedFoodItem, saveContext: Bool) -> ComposedFoodItem {
+        // Create new ComposedFoodItem
+        let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
+        
+        // Use the ID of the ComposedFoodItemViewModel
+        cdComposedFoodItem.id = composedFoodItem.id
+        
+        // Fill data
+        cdComposedFoodItem.name = composedFoodItem.name
+        cdComposedFoodItem.foodCategory = composedFoodItem.foodCategory
+        cdComposedFoodItem.favorite = composedFoodItem.favorite
+        cdComposedFoodItem.amount = composedFoodItem.amount
+        cdComposedFoodItem.numberOfPortions = composedFoodItem.numberOfPortions
+        
+        // Link ingredients
+        for ingredient in composedFoodItem.ingredients {
+            if let cdIngredient = ingredient as? Ingredient {
+                cdComposedFoodItem.addToIngredients(cdIngredient)
+            }
+        }
+        
+        // Save new composed food item
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
+        
+        return cdComposedFoodItem
+    }
+    
     /// Deletes the given ComposedFoodItem. Does not save the context.
     /// - Parameters:
     ///   - composedFoodItem: The ComposedFoodItem to delete.
     ///   - includeAssociatedFoodItem: If true, also deletes the associated FoodItem, if any.
-    static func delete(_ composedFoodItem: ComposedFoodItem, includeAssociatedFoodItem: Bool) {
+    static func delete(_ composedFoodItem: ComposedFoodItem, includeAssociatedFoodItem: Bool, saveContext: Bool) {
         if includeAssociatedFoodItem {
             if let associatedFoodItem = composedFoodItem.foodItem {
-                FoodItem.delete(associatedFoodItem)
+                FoodItem.delete(associatedFoodItem, saveContext: false)
             }
         }
         
@@ -110,6 +139,10 @@ public class ComposedFoodItem: NSManagedObject {
         
         // Delete the food item itself
         CoreDataStack.viewContext.delete(composedFoodItem)
+        
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
     }
     
     /**
@@ -141,9 +174,10 @@ public class ComposedFoodItem: NSManagedObject {
      
      - Returns: The related Core Data ComposedFoodItem, nil if not found.
      */
-    static func getComposedFoodItemByName(name: String) -> ComposedFoodItem? {
+    static func getComposedFoodItemByName(name: String, includeSubEntities: Bool = false) -> ComposedFoodItem? {
         let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
+        request.includesSubentities = includeSubEntities
         request.predicate = predicate
         do {
             let result = try CoreDataStack.viewContext.fetch(request)

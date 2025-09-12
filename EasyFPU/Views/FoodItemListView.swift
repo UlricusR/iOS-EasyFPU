@@ -156,7 +156,7 @@ struct FoodItemListView_Previews: PreviewProvider {
             foodItemListTitle: "My Products",
             helpSheet: .productSelectionListHelp,
             navigationPath: $navigationPath,
-            composedFoodItem: ComposedFoodItem.new(name: "Sample")
+            composedFoodItem: TempComposedFoodItem.new(name: "Sample")
         )
     }
 }

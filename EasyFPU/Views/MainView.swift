@@ -86,7 +86,7 @@ struct MainView: View {
                     // The meal composer
                     ComposedFoodItemEvaluationView(
                         absorptionScheme: absorptionScheme,
-                        composedFoodItem: ComposedFoodItem.new(name: NSLocalizedString("Total meal", comment: ""))
+                        composedFoodItem: UserSettings.shared.meal
                     )
                     .tag(Tab.eat.rawValue)
                     .tabItem{
@@ -114,7 +114,7 @@ struct MainView: View {
                         listType: .maintenance,
                         listTitle: NSLocalizedString("My Products", comment: ""),
                         helpSheet: .productMaintenanceListHelp,
-                        composedFoodItem: ComposedFoodItem.new(name: NSLocalizedString("Total meal", comment: ""))
+                        composedFoodItem: UserSettings.shared.meal
                     )
                     .tag(Tab.products.rawValue)
                     .tabItem{
@@ -130,7 +130,7 @@ struct MainView: View {
                         listType: .maintenance,
                         listTitle: NSLocalizedString("My Ingredients", comment: ""),
                         helpSheet: .ingredientMaintenanceListHelp,
-                        composedFoodItem: ComposedFoodItem.new(name: NSLocalizedString("Composed product", comment: ""))
+                        composedFoodItem: UserSettings.shared.recipe
                     )
                     .tag(Tab.ingredients.rawValue)
                     .tabItem{

@@ -10,6 +10,8 @@ import CoreData
 
 final class CoreDataStack {
     static let dataStoreName = "EasyFPU"
+    static let tempConfiguration = "Temp"
+    static let cloudConfiguration = "Cloud"
     static let shared = CoreDataStack()
     
     let storeType: String
@@ -17,18 +19,45 @@ final class CoreDataStack {
     // Create a persistent container as a lazy variable to defer instantiation until its first use.
     lazy var persistentContainer: NSPersistentContainer = {
         var container: NSPersistentContainer
+        var descriptions: [NSPersistentStoreDescription] = []
         
-        if storeType == NSInMemoryStoreType {
+        // Create an in-memory store to use for temporary storage of data
+        let tempDescription = NSPersistentStoreDescription()
+        tempDescription.type = NSInMemoryStoreType
+        tempDescription.configuration = CoreDataStack.tempConfiguration
+        descriptions.append(tempDescription)
+        
+        if storeType == NSInMemoryStoreType { // Used for testing only
             let description = NSPersistentStoreDescription()
             description.type = storeType
+            description.configuration = CoreDataStack.cloudConfiguration // Use the Cloud configuration, so that we have the same model as the SQLite store
+            descriptions.append(description)
             
             // Create an in-memory store
             container = NSPersistentContainer(name: CoreDataStack.dataStoreName)
-            container.persistentStoreDescriptions = [description]
-        } else {
+        } else { // Used for normal app usage
+            // Define the SQLite store location
+            let storeURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("\(CoreDataStack.dataStoreName).sqlite")
+            let description = NSPersistentStoreDescription(url: storeURL)
+            description.configuration = CoreDataStack.cloudConfiguration
+            description.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.info.rueth.EasyFPU")
+            descriptions.append(description)
+            
             // Create an SQLite store
             container = NSPersistentCloudKitContainer(name: CoreDataStack.dataStoreName)
         }
+        
+        // Add the store descriptions to the container. The order of the descriptions
+        // in the array is important. The first description is the one used by
+        // defaultFetchRequestTemplate, and the first SQLite description is the
+        // one used by viewContext.
+        // The order of the descriptions in the array is also important for
+        // determining which stores are used for which configurations.
+        // The first description is used for the default configuration, the second
+        // for the second configuration, and so on.
+        // In our case, the first description is the in-memory store for the Temp configuration,
+        // the second description is the SQLite store for the Cloud configuration.
+        container.persistentStoreDescriptions = descriptions
         
         // Load any persistent stores, which creates a store if none exists.
         container.loadPersistentStores { _, error in

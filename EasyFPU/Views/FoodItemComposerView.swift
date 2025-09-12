@@ -301,8 +301,16 @@ struct FoodItemComposerView: View {
     }
     
     private func saveAndExit() {
+        // If this is a new recipe, we need to create a permanent ComposedFoodItem
+        if isNewRecipe {
+            _ = ComposedFoodItem.create(from: composedFoodItem, saveContext: false)
+        }
+        
         // Save the context
         CoreDataStack.shared.save()
+        
+        // Reset the temporary composed food item
+        UserSettings.shared.recipe.clear(name: UserSettings.recipeDefaultName)
         
         // Exit the view
         navigationPath.removeLast()
@@ -312,6 +320,9 @@ struct FoodItemComposerView: View {
     private func cancelAndExit() {
         // Rollback changes
         CoreDataStack.viewContext.rollback()
+        
+        // Reset the temporary composed food item
+        UserSettings.shared.recipe.clear(name: UserSettings.recipeDefaultName)
         
         // Leave edit mode
         navigationPath.removeLast()
@@ -341,7 +352,7 @@ struct FoodItemComposerView: View {
     
     private func deleteRecipeOnly() {
         withAnimation(.default) {
-            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: false)
+            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: false, saveContext: false)
             
             // Save and exit
             saveAndExit()
@@ -350,7 +361,7 @@ struct FoodItemComposerView: View {
     
     private func deleteRecipeAndFoodItem() {
         withAnimation(.default) {
-            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: true)
+            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: true, saveContext: false)
             
             // Save and exit
             saveAndExit()
@@ -405,7 +416,7 @@ struct FoodItemComposerView_Previews: PreviewProvider {
     @State private static var navigationPath = NavigationPath()
     static var previews: some View {
         FoodItemComposerView(
-            composedFoodItem: ComposedFoodItem.new(name: "Sample"),
+            composedFoodItem: TempComposedFoodItem.new(name: "Sample"),
             isNewRecipe: true,
             navigationPath: $navigationPath
         )

@@ -242,13 +242,13 @@ struct FoodItemView: View {
     
     private func deleteFoodItemOnly() {
         withAnimation(.default) {
-            FoodItem.delete(foodItem, deleteAssociatedRecipe: false)
+            FoodItem.delete(foodItem, deleteAssociatedRecipe: false, saveContext: true)
         }
     }
     
     private func deleteFoodItemAndComposedFoodItem() {
         withAnimation(.default) {
-            FoodItem.delete(foodItem, deleteAssociatedRecipe: true)
+            FoodItem.delete(foodItem, deleteAssociatedRecipe: true, saveContext: true)
         }
     }
     

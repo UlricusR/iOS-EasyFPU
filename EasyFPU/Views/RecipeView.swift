@@ -131,13 +131,13 @@ struct RecipeView: View {
     
     private func deleteRecipeOnly() {
         withAnimation(.default) {
-            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: false)
+            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: false, saveContext: true)
         }
     }
     
     private func deleteRecipeAndFoodItem() {
         withAnimation(.default) {
-            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: true)
+            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: true, saveContext: true)
         }
     }
 }

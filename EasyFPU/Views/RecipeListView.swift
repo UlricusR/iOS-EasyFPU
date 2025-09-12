@@ -28,12 +28,8 @@ struct RecipeListView: View {
     @State private var showFavoritesOnly = false
     @State private var activeSheet: SheetState?
     
-    @FetchRequest(
-        entity: ComposedFoodItem.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \ComposedFoodItem.name, ascending: true)
-        ]
-    ) var composedFoodItems: FetchedResults<ComposedFoodItem>
+    @FetchRequest(fetchRequest: ComposedFoodItem.fetchRequestWithoutChildren())
+    var composedFoodItems: FetchedResults<ComposedFoodItem>
     
     private var filteredComposedFoodItems: [ComposedFoodItem] {
         if searchString == "" {
@@ -155,7 +151,7 @@ struct RecipeListView: View {
                 switch screen {
                 case .CreateRecipe:
                     FoodItemComposerView(
-                        composedFoodItem: ComposedFoodItem.new(name: NSLocalizedString("Composed product", comment: "")),
+                        composedFoodItem: UserSettings.shared.recipe,
                         isNewRecipe: true,
                         navigationPath: $navigationPath
                     )

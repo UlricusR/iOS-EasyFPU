@@ -165,7 +165,7 @@ struct ComposedFoodItemEvaluationView: View {
                         Button(action: {
                             withAnimation(.default) {
                                 // Clear the composed food item
-                                composedFoodItem.clear(name: NSLocalizedString("Composed product", comment: ""))
+                                composedFoodItem.clear(name: UserSettings.mealDefaultName)
                                 UserSettings.shared.mealDelayInMinutes = 0
                             }
                         }) {
@@ -264,7 +264,7 @@ struct ComposedFoodItemEvaluationView_Previews: PreviewProvider {
     static var previews: some View {
         ComposedFoodItemEvaluationView(
             absorptionScheme: AbsorptionScheme.sampleData(),
-            composedFoodItem: ComposedFoodItem.new(name: "Sample Meal")
+            composedFoodItem: TempComposedFoodItem.new(name: "Sample Meal")
         )
     }
 }
