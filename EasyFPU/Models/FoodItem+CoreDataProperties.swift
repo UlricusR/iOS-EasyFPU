@@ -44,8 +44,8 @@ extension FoodItem {
     /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this FoodItem exists.
     /// - Parameter foodItem: The Core Data FoodItem to check the name for.
     /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
-    func nameExists() -> Bool {
-        FoodItem.nameExists(name: self.name)
+    func nameExists(isNew: Bool) -> Bool {
+        FoodItem.nameExists(name: self.name, isNew: isNew)
     }
     
     /// Checks if an associated recipe exists.

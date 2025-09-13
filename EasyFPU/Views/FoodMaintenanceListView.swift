@@ -71,7 +71,7 @@ struct FoodMaintenanceListView: View {
         FoodItemEditor(
             navigationPath: $navigationPath,
             navigationTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
-            editedCDFoodItem: FoodItem.new(category: category),
+            editedCDFoodItem: TempFoodItem.new(category: category),
             isNewFoodItem: true,
             category: category
         )

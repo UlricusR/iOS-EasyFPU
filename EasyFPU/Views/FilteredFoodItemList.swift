@@ -169,6 +169,7 @@ struct FilteredFoodItemList: View {
         
         // Configure the fetch request based on the parameters
         let request = NSFetchRequest<FoodItem>(entityName: "FoodItem")
+        request.includesSubentities = false // We do not want to fetch TempFoodItems here
         if showFavoritesOnly {
             if searchString.isEmpty {
                 request.predicate = NSPredicate(format: "category == %@ AND favorite == true", category.rawValue)

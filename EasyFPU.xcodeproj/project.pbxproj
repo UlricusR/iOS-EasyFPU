@@ -89,6 +89,8 @@
 		1BAD2740254A008000A730FB /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAD273F254A008000A730FB /* MainView.swift */; };
 		1BAEE0862500C5FB00B4891F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAEE0852500C5FB00B4891F /* HealthKit.framework */; };
 		1BAEE0882500E12400B4891F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BAEE0872500E12400B4891F /* Default-568h@2x.png */; };
+		1BB46E632E754426004455B6 /* TempFoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB46E622E754426004455B6 /* TempFoodItem+CoreDataProperties.swift */; };
+		1BB46E642E754426004455B6 /* TempFoodItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB46E612E754426004455B6 /* TempFoodItem+CoreDataClass.swift */; };
 		1BB631DA24FBDA9400B75EF3 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB631D924FBDA9400B75EF3 /* HelpView.swift */; };
 		1BB9BD9E2CDD4F750043B465 /* AppSettingsEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9BD9D2CDD4F750043B465 /* AppSettingsEditor.swift */; };
 		1BB9BDA02CDD54650043B465 /* AbsorptionParameterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB9BD9F2CDD54650043B465 /* AbsorptionParameterSettingsView.swift */; };
@@ -217,6 +219,8 @@
 		1BAD273F254A008000A730FB /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		1BAEE0852500C5FB00B4891F /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		1BAEE0872500E12400B4891F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		1BB46E612E754426004455B6 /* TempFoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TempFoodItem+CoreDataClass.swift"; sourceTree = "<group>"; };
+		1BB46E622E754426004455B6 /* TempFoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TempFoodItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BB631D924FBDA9400B75EF3 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		1BB9BD9D2CDD4F750043B465 /* AppSettingsEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsEditor.swift; sourceTree = "<group>"; };
 		1BB9BD9F2CDD54650043B465 /* AbsorptionParameterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbsorptionParameterSettingsView.swift; sourceTree = "<group>"; };
@@ -349,6 +353,8 @@
 		1B004A4724BA3419001E362A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1BB46E612E754426004455B6 /* TempFoodItem+CoreDataClass.swift */,
+				1BB46E622E754426004455B6 /* TempFoodItem+CoreDataProperties.swift */,
 				1BD397F22E74724100231407 /* TempComposedFoodItem+CoreDataClass.swift */,
 				1BD397F32E74724100231407 /* TempComposedFoodItem+CoreDataProperties.swift */,
 				1B5E644E2CC835C600022BDF /* Optional+Extensions.swift */,
@@ -685,6 +691,8 @@
 				1BD397F52E74724100231407 /* TempComposedFoodItem+CoreDataProperties.swift in Sources */,
 				1B6106BB24D93346001F2284 /* DataHelper.swift in Sources */,
 				1B0868AB254EDDC0005953CC /* FoodItemListView.swift in Sources */,
+				1BB46E632E754426004455B6 /* TempFoodItem+CoreDataProperties.swift in Sources */,
+				1BB46E642E754426004455B6 /* TempFoodItem+CoreDataClass.swift in Sources */,
 				1BAD273D25495B4100A730FB /* FoodPreviewContent.swift in Sources */,
 				1B6867E324FD22D60057EC6A /* HelpViewFoodItemEditor.swift in Sources */,
 				1B9723ED2508AC5C00E606A7 /* UserSettings.swift in Sources */,

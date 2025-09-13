@@ -159,8 +159,8 @@ extension ComposedFoodItem: VariableAmountItem {
     
     /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this ComposedFoodItemViewModel exists.
     /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
-    func nameExists() -> Bool {
-        FoodItem.nameExists(name: self.name)
+    func nameExists(isNew: Bool) -> Bool {
+        FoodItem.nameExists(name: self.name, isNew: isNew)
     }
     
     func regularCarbs(treatSugarsSeparately: Bool) -> Double {

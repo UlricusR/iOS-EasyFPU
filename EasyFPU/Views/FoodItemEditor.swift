@@ -298,7 +298,7 @@ struct FoodItemEditor: View {
                             editedCDFoodItem.name = editedCDFoodItem.name.trimmingCharacters(in: .whitespacesAndNewlines)
                             
                             // Check if we have duplicate names (if this is a new food item)
-                            if isNewFoodItem && editedCDFoodItem.nameExists() {
+                            if editedCDFoodItem.nameExists(isNew: isNewFoodItem) {
                                 activeAlert = .simpleAlert(type: .warning(message: "A food item with this name already exists"))
                                 showingAlert = true
                             } else {
@@ -390,7 +390,7 @@ struct FoodItemEditor: View {
         if error == .none {
             if !isNewFoodItem { // We need to update an existing food item
                 // We need to check for related Ingredients and update all Recipes, where these Ingredients are used
-                if editedCDFoodItem.ingredients?.count ?? 0 > 0 {
+                if editedCDFoodItem.ingredients?.count ?? 0 > 0 { // There are related ingredients
                     // Get the names of the ingredients
                     for case let ingredient as Ingredient in editedCDFoodItem.ingredients! {
                         associatedRecipes.append(ingredient.composedFoodItem.name)
@@ -399,11 +399,14 @@ struct FoodItemEditor: View {
                     // Show alert
                     activeAlert = .updatedIngredients
                     self.showingAlert = true
-                } else {
+                } else { // There are no related ingredients, just save and exit
                     // Save and exit
                     saveContextAndExit()
                 }
-            } else {
+            } else { // This is a new food item, so we need to create a new permanent food item
+                // Create the new permanent food item
+                _ = FoodItem.create(from: editedCDFoodItem, saveContext: false)
+                
                 // Save and exit
                 saveContextAndExit()
             }
@@ -670,7 +673,7 @@ struct FoodItemEditor_Previews: PreviewProvider {
         FoodItemEditor(
             navigationPath: $navigationPath,
             navigationTitle: "Sample Food Item",
-            editedCDFoodItem: FoodItem.new(category: .product),
+            editedCDFoodItem: TempFoodItem.new(category: .product),
             isNewFoodItem: true,
             category: .product
         )

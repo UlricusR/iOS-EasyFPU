@@ -193,7 +193,7 @@ struct FoodItemComposerView: View {
                                     composedFoodItem.name = composedFoodItem.name.trimmingCharacters(in: .whitespacesAndNewlines)
                                     
                                     // Check if this is a new recipe and, if yes, the name already exists
-                                    if isNewRecipe && composedFoodItem.nameExists() {
+                                    if composedFoodItem.nameExists(isNew: isNewRecipe) {
                                         activeAlert = .simpleAlert(type: .notice(message: "A food item with this name already exists"))
                                         showingAlert = true
                                     } else {

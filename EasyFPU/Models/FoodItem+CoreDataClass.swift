@@ -86,42 +86,27 @@ public class FoodItem: NSManagedObject {
         try? viewContext.save()
     }
     
-    /// Creates a new Core Data FoodItem with default values. Does not save the context.
-    /// - Parameter category: The category of the new FoodItem.
-    /// - Returns: The new Core Data FoodItem.
-    static func new(category: FoodItemCategory) -> FoodItem {
-        let newFoodItem = FoodItem(context: CoreDataStack.viewContext)
-        newFoodItem.id = UUID()
-        newFoodItem.name = ""
-        newFoodItem.caloriesPer100g = 0
-        newFoodItem.carbsPer100g = 0
-        newFoodItem.sugarsPer100g = 0
-        newFoodItem.favorite = false
-        newFoodItem.category = category.rawValue
-        return newFoodItem
-    }
-    
-    /// Creates a new Core Data FoodItem from a FoodItemPersistence.
+    /// Creates a new Core Data FoodItem from a FoodItemPersistence. Validates the data.
     /// - Parameters:
     ///   - foodItedPersistence: The source FoodItemPersistence.
     ///   - saveContext: If true, the context will be saved after creation.
     ///   - dataError: An inout parameter that will contain any validation error encountered during creation.
     /// - Returns: The new Core Data FoodItem, or nil if there was a validation error.
-    static func create(from foodItedPersistence: FoodItemPersistence, saveContext: Bool, dataError: inout FoodItemDataError) -> FoodItem? {
+    static func create(from foodItemPersistence: FoodItemPersistence, saveContext: Bool, dataError: inout FoodItemDataError) -> FoodItem? {
         // Create the FoodItem
         let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         
         // Fill data
-        cdFoodItem.id = foodItedPersistence.id
-        cdFoodItem.name = foodItedPersistence.name
-        cdFoodItem.foodCategory = foodItedPersistence.foodCategory
-        cdFoodItem.category = foodItedPersistence.category.rawValue
-        cdFoodItem.caloriesPer100g = foodItedPersistence.caloriesPer100g
-        cdFoodItem.carbsPer100g = foodItedPersistence.carbsPer100g
-        cdFoodItem.sugarsPer100g = foodItedPersistence.sugarsPer100g
-        cdFoodItem.favorite = foodItedPersistence.favorite
-        cdFoodItem.sourceID = foodItedPersistence.sourceID
-        cdFoodItem.sourceDB = foodItedPersistence.sourceDB?.rawValue
+        cdFoodItem.id = foodItemPersistence.id
+        cdFoodItem.name = foodItemPersistence.name
+        cdFoodItem.foodCategory = foodItemPersistence.foodCategory
+        cdFoodItem.category = foodItemPersistence.category.rawValue
+        cdFoodItem.caloriesPer100g = foodItemPersistence.caloriesPer100g
+        cdFoodItem.carbsPer100g = foodItemPersistence.carbsPer100g
+        cdFoodItem.sugarsPer100g = foodItemPersistence.sugarsPer100g
+        cdFoodItem.favorite = foodItemPersistence.favorite
+        cdFoodItem.sourceID = foodItemPersistence.sourceID
+        cdFoodItem.sourceDB = foodItemPersistence.sourceDB?.rawValue
         
         // Validate the data
         dataError = cdFoodItem.validateInput()
@@ -130,9 +115,50 @@ public class FoodItem: NSManagedObject {
         }
         
         // Add typical amounts
-        for typicalAmount in foodItedPersistence.typicalAmounts {
+        for typicalAmount in foodItemPersistence.typicalAmounts {
             let newCDTypicalAmount = TypicalAmount.create(from: typicalAmount, saveContext: saveContext)
             cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
+        }
+        
+        // Save
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
+        return cdFoodItem
+    }
+    
+    /// Creates a new Core Data FoodItem from a FoodItem.
+    /// Does not validate the data, as it is assumed that the data has already been validated.
+    /// Typically used to create a FoodItem from a TempFoodItem.
+    /// - Parameters:
+    ///   - foodItedPersistence: The source FoodItemPersistence.
+    ///   - saveContext: If true, the context will be saved after creation.
+    ///   - dataError: An inout parameter that will contain any validation error encountered during creation.
+    /// - Returns: The new Core Data FoodItem, or nil if there was a validation error.
+    static func create(from foodItem: FoodItem, saveContext: Bool) -> FoodItem {
+        // Create the FoodItem
+        let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
+        
+        // Fill data
+        cdFoodItem.id = foodItem.id
+        cdFoodItem.name = foodItem.name
+        cdFoodItem.foodCategory = foodItem.foodCategory
+        cdFoodItem.category = foodItem.category
+        cdFoodItem.caloriesPer100g = foodItem.caloriesPer100g
+        cdFoodItem.carbsPer100g = foodItem.carbsPer100g
+        cdFoodItem.sugarsPer100g = foodItem.sugarsPer100g
+        cdFoodItem.favorite = foodItem.favorite
+        cdFoodItem.sourceID = foodItem.sourceID
+        cdFoodItem.sourceDB = foodItem.sourceDB
+        
+        // Add typical amounts
+        if let typicalAmounts = foodItem.typicalAmounts {
+            for typicalAmount in typicalAmounts {
+                if let cdTypicalAmount = typicalAmount as? TypicalAmount {
+                    cdTypicalAmount.foodItem = cdFoodItem
+                    cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
+                }
+            }
         }
         
         // Save
@@ -294,12 +320,14 @@ public class FoodItem: NSManagedObject {
     /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this FoodItem exists.
     /// - Parameter foodItem: The Core Data FoodItem to check the name for.
     /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
-    static func nameExists(name: String) -> Bool {
+    static func nameExists(name: String, isNew: Bool) -> Bool {
         let foodItems = FoodItem.getFoodItemsByName(name: name)
-        let composedFoodItems = ComposedFoodItem.getComposedFoodItemByName(name: name)
+        let composedFoodItems = ComposedFoodItem.getComposedFoodItemsByName(name: name)
         
         // We expect the food item not to exist
-        return foodItems != nil && foodItems!.count > 0 || composedFoodItems != nil
+        // If isNew is true, we expect 0 items, as we are creating a new one
+        // If isNew is false, we expect 1 item, as we are editing an existing one
+        return foodItems != nil && foodItems!.count > (isNew ? 0 : 1) || composedFoodItems != nil && composedFoodItems!.count > (isNew ? 0 : 1)
     }
     
     /**
@@ -324,16 +352,15 @@ public class FoodItem: NSManagedObject {
         return nil
     }
     
-    /**
-     Returns the Core Data FoodItem with the given name.
-     
-     - Parameter name: The Core Data entry name.
-     
-     - Returns: The related Core Data FoodItem, nil if not found.
-     */
-    static func getFoodItemsByName(name: String) -> [FoodItem]? {
+    /// Returns the Core Data FoodItems with the given name.
+    /// - Parameters:
+    ///   - name: The Core Data entry name.
+    ///   - includeSubEntities: If true, TempFoodItems will be included in the fetch request. Default is false.
+    /// - Returns: The related Core Data FoodItems, nil if not found.
+    static func getFoodItemsByName(name: String, includeSubEntities: Bool = false) -> [FoodItem]? {
         let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
+        request.includesSubentities = includeSubEntities
         request.predicate = predicate
         do {
             let result = try CoreDataStack.viewContext.fetch(request)

@@ -111,6 +111,7 @@ public class ComposedFoodItem: NSManagedObject {
         // Link ingredients
         for ingredient in composedFoodItem.ingredients {
             if let cdIngredient = ingredient as? Ingredient {
+                cdIngredient.composedFoodItem = cdComposedFoodItem
                 cdComposedFoodItem.addToIngredients(cdIngredient)
             }
         }
@@ -167,14 +168,12 @@ public class ComposedFoodItem: NSManagedObject {
         return nil
     }
     
-    /**
-     Returns the Core Data ComposedFoodItem with the given name.
-     
-     - Parameter name: The Core Data entry name.
-     
-     - Returns: The related Core Data ComposedFoodItem, nil if not found.
-     */
-    static func getComposedFoodItemByName(name: String, includeSubEntities: Bool = false) -> ComposedFoodItem? {
+    /// Returns all Core Data ComposedFoodItems with the given name.
+    /// - Parameters:
+    ///   - name: The Core Data entry name.
+    ///   - includeSubEntities: If true, also includes sub-entities of ComposedFoodItem. Default is false.
+    /// - Returns: An array of related Core Data ComposedFoodItems, nil if not found.
+    static func getComposedFoodItemsByName(name: String, includeSubEntities: Bool = false) -> [ComposedFoodItem]? {
         let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
         request.includesSubentities = includeSubEntities
@@ -182,7 +181,7 @@ public class ComposedFoodItem: NSManagedObject {
         do {
             let result = try CoreDataStack.viewContext.fetch(request)
             if !result.isEmpty {
-                return result[0]
+                return result
             }
         } catch {
             debugPrint("Error fetching ComposedFoodItem: \(error)")
