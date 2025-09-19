@@ -363,11 +363,6 @@ struct FoodItemEditor: View {
                 }
                 .accessibilityIdentifierLeaf("HelpButton")
             }
-            
-            // The share button
-            /*ToolbarItem(placement: .navigationBarTrailing) {
-                ShareLink(item: DataWrapper(dataModelVersion: .version2, foodItems: [editedCDFoodItem], composedFoodItems: []), preview: .init("Share"))
-            } TODO - Implement share button - gives exception if a FoodItem is deleted */
         }
         .sheet(item: $activeSheet) {
             sheetContent($0)
