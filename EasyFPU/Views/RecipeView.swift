@@ -61,16 +61,18 @@ struct RecipeView: View {
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             // Sharing the recipe
-            ShareLink(
-                item: DataWrapper(
-                    dataModelVersion: .version2,
-                    foodItems: [],
-                    composedFoodItems: [composedFoodItem]
-                ),
-                preview: .init("Share")
-            )
-            .tint(.green)
-            .accessibilityIdentifierLeaf("ShareButton")
+            if !(composedFoodItem.isFault || composedFoodItem.isDeleted) {
+                ShareLink(
+                    item: DataWrapper(
+                        dataModelVersion: .version2,
+                        foodItems: [],
+                        composedFoodItems: [composedFoodItem]
+                    ),
+                    preview: .init("Share")
+                )
+                .tint(.green)
+                .accessibilityIdentifierLeaf("ShareButton")
+            }
         }
         .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
             alertAction(for: $0)

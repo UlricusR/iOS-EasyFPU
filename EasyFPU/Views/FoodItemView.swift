@@ -179,9 +179,11 @@ struct FoodItemView: View {
             .accessibilityIdentifierLeaf("MoveButton")
             
             // Sharing the food item
-            ShareLink(item: DataWrapper(dataModelVersion: .version2, foodItems: [foodItem], composedFoodItems: []), preview: .init("Share"))
-            .tint(.green)
-            .accessibilityIdentifierLeaf("ShareButton")
+            if !(foodItem.isFault || foodItem.isDeleted) {
+                ShareLink(item: DataWrapper(dataModelVersion: .version2, foodItems: [foodItem], composedFoodItems: []), preview: .init("Share"))
+                    .tint(.green)
+                    .accessibilityIdentifierLeaf("ShareButton")
+            }
         }
         .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
             alertAction(for: $0)
