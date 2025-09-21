@@ -351,7 +351,7 @@ struct CoreDataTests {
             
             // Delete FoodItem - 5 FoodItems for Ingredients should remain
             try CoreDataTests.deleteFoodItemFromDB(cdFoodItem)
-            FoodItem.delete(cdFoodItem)
+            FoodItem.delete(cdFoodItem, saveContext: true)
         }
         
         @Test("ID: 14 - Update ComposedFoodItem - related FoodItem")
@@ -429,7 +429,7 @@ struct CoreDataTests {
             for foodItemID in foodItemIDs {
                 // Delete FoodItem
                 let cdFoodItem = FoodItem.getFoodItemByID(id: foodItemID)
-                FoodItem.delete(cdFoodItem!)
+                FoodItem.delete(cdFoodItem!, saveContext: true)
                 if let deletedFoodItem = FoodItem.getFoodItemByID(id: foodItemID) {
                     #expect(deletedFoodItem.isDeleted == true, "The FoodItem should not be found in the DB after deletion.")
                 }
@@ -558,7 +558,7 @@ struct CoreDataTests {
         let foodItemID = cdFoodItem.id
         
         // Delete the FoodItem
-        FoodItem.delete(cdFoodItem)
+        FoodItem.delete(cdFoodItem, saveContext: false)
         if let deletedFoodItem = FoodItem.getFoodItemByID(id: foodItemID) {
             // The context is not saved yet, therefore the object is still available, but should have isDeleted=true
             #expect(deletedFoodItem.isDeleted == true, "The FoodItem should no longer be found in the DB by its ID.")
@@ -595,7 +595,7 @@ struct CoreDataTests {
         let composedFoodItemID = cdComposedFoodItem.id
         
         // Delete the ComposedFoodItem
-        ComposedFoodItem.delete(cdComposedFoodItem, includeAssociatedFoodItem: true)
+        ComposedFoodItem.delete(cdComposedFoodItem, includeAssociatedFoodItem: true, saveContext: false)
         if let deletedComposedFoodItem = ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemID) {
             // The context is not saved yet, therefore the object is still available, but should have isDeleted=true
             #expect(deletedComposedFoodItem.isDeleted == true, "The ComposedFoodItem should no longer be found in the DB by its ID.")

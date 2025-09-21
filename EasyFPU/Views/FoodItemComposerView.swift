@@ -150,42 +150,26 @@ struct FoodItemComposerView: View {
                             }
                         }
                     }
-                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace + 60, trailing: 0)) // Required to avoid the content to be hidden by the Edit and Save buttons
+                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the Edit and Save buttons
                     
                     // The overlaying buttons
                     if composedFoodItem.ingredients.allObjects.count > 0 {
                         VStack {
                             Spacer()
                             
-                            // The Add More button
-                            Button {
-                                navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItem))
-                            } label: {
-                                HStack {
-                                    Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
-                                    Text("Add more")
-                                }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            }
-                            .buttonStyle(ActionButton())
-                            .accessibilityIdentifierLeaf("EditButton")
-                            .padding(.horizontal)
-                            .fixedSize(horizontal: false, vertical: true)
-                            
                             HStack {
-                                // The cancel button
-                                Button(role: .cancel) {
-                                    // Cancel and exit
-                                    cancelAndExit()
+                                // The Add More button
+                                Button {
+                                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItem))
                                 } label: {
                                     HStack {
-                                        Image(systemName: "xmark.circle.fill").imageScale(.large)
-                                        Text("Cancel")
+                                        Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
+                                        Text("Add more")
                                     }
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 }
-                                .buttonStyle(CancelButton())
-                                .accessibilityIdentifierLeaf("CancelButton")
+                                .buttonStyle(ActionButton())
+                                .accessibilityIdentifierLeaf("EditButton")
                                 
                                 // The Save button
                                 Button {
@@ -232,8 +216,7 @@ struct FoodItemComposerView: View {
                                     Text(message)
                                 }
                             }
-                            .padding(.horizontal)
-                            .padding(.bottom)
+                            .padding()
                             .fixedSize(horizontal: false, vertical: true)
                         }
                     }
@@ -242,7 +225,17 @@ struct FoodItemComposerView: View {
         }
         .navigationTitle(Text("Final product"))
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
+            ToolbarItemGroup(placement: .navigationBarLeading) {
+                // The back button, which at the same time is a cancel button
+                Button(action: {
+                    // Cancel and exit
+                    cancelAndExit()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .imageScale(.large)
+                }
+                
+                // The help button
                 Button(action: {
                     activeSheet = .help
                 }) {
@@ -296,13 +289,13 @@ struct FoodItemComposerView: View {
     }
     
     private func saveAndExit() {
-        // If this is a new recipe, we need to create a permanent ComposedFoodItem
         if isNewRecipe {
-            _ = ComposedFoodItem.create(from: composedFoodItem, saveContext: false)
+            // If this is a new recipe, we need to create a permanent ComposedFoodItem
+            _ = ComposedFoodItem.create(from: composedFoodItem, saveContext: true)
+        } else {
+            // Just save the context
+            CoreDataStack.shared.save()
         }
-        
-        // Save the context
-        CoreDataStack.shared.save()
         
         // Reset the temporary composed food item
         UserSettings.shared.recipe.clear(name: UserSettings.recipeDefaultName)
@@ -340,7 +333,6 @@ struct FoodItemComposerView: View {
             
             for ingredient in ingredientsToRemove {
                 composedFoodItem.removeFromIngredients(ingredient)
-                CoreDataStack.viewContext.delete(ingredient)
             }
         }
     }
