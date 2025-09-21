@@ -218,6 +218,7 @@ class FoodItemPersistence: Codable, Hashable, Identifiable {
         try foodItem.encode(id.uuidString, forKey: .id)
         try foodItem.encode(name, forKey: .name)
         try foodItem.encode(category.rawValue, forKey: .category)
+        if foodCategory != nil { try foodItem.encode(foodCategory!.name, forKey: .foodCategory) }
         try foodItem.encode(favorite, forKey: .favorite)
         try foodItem.encode(amount, forKey: .amount)
         try foodItem.encode(caloriesPer100g, forKey: .caloriesPer100g)
