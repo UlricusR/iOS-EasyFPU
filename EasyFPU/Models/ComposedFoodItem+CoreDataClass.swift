@@ -111,6 +111,8 @@ public class ComposedFoodItem: NSManagedObject {
         // Link ingredients
         for ingredient in composedFoodItem.ingredients {
             if let cdIngredient = ingredient as? Ingredient {
+                // Remove ingredient from temporary composed food item and add it to the permanent one
+                composedFoodItem.removeFromIngredients(cdIngredient)
                 cdIngredient.composedFoodItem = cdComposedFoodItem
                 cdComposedFoodItem.addToIngredients(cdIngredient)
             }

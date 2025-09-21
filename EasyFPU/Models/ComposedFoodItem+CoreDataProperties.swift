@@ -142,9 +142,6 @@ extension ComposedFoodItem: VariableAmountItem {
         for ingredient in self.ingredients.allObjects as! [Ingredient] {
             ingredient.amount = 0
             self.removeFromIngredients(ingredient)
-            
-            // Delete ingredient
-            CoreDataStack.viewContext.delete(ingredient)
         }
         
         // Reset amount
@@ -231,7 +228,6 @@ extension ComposedFoodItem: VariableAmountItem {
         
         // Remove the ingredient from the composed food item and delete it
         self.removeFromIngredients(ingredient)
-        CoreDataStack.viewContext.delete(ingredient)
     }
     
     
