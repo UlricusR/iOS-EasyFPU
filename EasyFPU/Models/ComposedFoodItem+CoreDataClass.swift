@@ -88,31 +88,30 @@ public class ComposedFoodItem: NSManagedObject {
         }
     }
     
-    /// Creates a new ComposedFoodItem from the given ComposedFoodItem.
-    /// Typically used for creating a permanent ComposedFoodItem from a TempComposedFoodItem.
+    /// Creates a new ComposedFoodItem from the given TempComposedFoodItem.
     /// - Parameters:
-    ///   - composedFoodItem: The source ComposedFoodItem.
+    ///   - tempComposedFoodItem: The source TempComposedFoodItem.
     ///   - saveContext: Whether to permanently save the changes to the core data stack.
     /// - Returns: The created ComposedFoodItem.
-    static func create(from composedFoodItem: ComposedFoodItem, saveContext: Bool) -> ComposedFoodItem {
+    static func create(from tempComposedFoodItem: TempComposedFoodItem, saveContext: Bool) -> ComposedFoodItem {
         // Create new ComposedFoodItem
         let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
+        CoreDataStack.shared.save()
         
-        // Use the ID of the ComposedFoodItemViewModel
-        cdComposedFoodItem.id = composedFoodItem.id
+        // We create a new ID, because the TempComposedFoodItem reuses the same ID when cleared
+        cdComposedFoodItem.id = UUID()
         
         // Fill data
-        cdComposedFoodItem.name = composedFoodItem.name
-        cdComposedFoodItem.foodCategory = composedFoodItem.foodCategory
-        cdComposedFoodItem.favorite = composedFoodItem.favorite
-        cdComposedFoodItem.amount = composedFoodItem.amount
-        cdComposedFoodItem.numberOfPortions = composedFoodItem.numberOfPortions
+        cdComposedFoodItem.name = tempComposedFoodItem.name
+        cdComposedFoodItem.foodCategory = tempComposedFoodItem.foodCategory
+        cdComposedFoodItem.favorite = tempComposedFoodItem.favorite
+        cdComposedFoodItem.amount = tempComposedFoodItem.amount
+        cdComposedFoodItem.numberOfPortions = tempComposedFoodItem.numberOfPortions
         
         // Link ingredients
-        for ingredient in composedFoodItem.ingredients {
+        for ingredient in tempComposedFoodItem.ingredients {
             if let cdIngredient = ingredient as? Ingredient {
-                // Remove ingredient from temporary composed food item and add it to the permanent one
-                composedFoodItem.removeFromIngredients(cdIngredient)
+                // Add the ingredient to the permanent ComposedFoodItem
                 cdIngredient.composedFoodItem = cdComposedFoodItem
                 cdComposedFoodItem.addToIngredients(cdIngredient)
             }

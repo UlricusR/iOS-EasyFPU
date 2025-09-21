@@ -15,37 +15,30 @@ struct FoodItemView: View {
         case confirmDelete
     }
     
-    @Binding var navigationPath: NavigationPath
-    @ObservedObject var composedFoodItem: ComposedFoodItem
-    @ObservedObject var foodItem: FoodItem
-    var category: FoodItemCategory
-    var listType: FoodItemListView.FoodItemListType
-    var showFoodCategory: Bool = true
-    @State private var showingAlert = false
-    @State private var activeAlert: AlertChoice?
-    @State private var isConfirming = false
-    
-    var body: some View {
-        VStack {
-            // First line: amount, name, favorite
+    /// A nested view showing the content of the food item when in selection mode.
+    private struct Content: View {
+        @Binding var navigationPath: NavigationPath
+        var foodItem: FoodItem
+        @ObservedObject var composedFoodItem: ComposedFoodItem
+        var category: FoodItemCategory
+        
+        var body: some View {
             HStack {
                 let isSelected = composedFoodItem.contains(foodItem: foodItem)
-                if listType == .selection {
-                    if isSelected { // The food item is selected
-                        Image(systemName: "xmark.circle")
-                            .foregroundStyle(.red)
-                            .accessibilityIdentifierLeaf("DeselectFoodItemButton")
-                        Text("\(composedFoodItem.getIngredient(foodItem: foodItem)!.amount)").font(.headline).foregroundStyle(.blue)
-                        Text("g").font(.headline).foregroundStyle(.blue)
-                    } else { // The food item is not selected
-                        Image(systemName: "plus.circle")
-                            .foregroundStyle(.gray)
-                            .accessibilityIdentifierLeaf("SelectFoodItemButton")
-                    }
+                if isSelected { // The food item is selected
+                    Image(systemName: "xmark.circle")
+                        .foregroundStyle(.red)
+                        .accessibilityIdentifierLeaf("DeselectFoodItemButton")
+                    Text("\(composedFoodItem.getIngredient(foodItem: foodItem)!.amount)").font(.headline).foregroundStyle(.blue)
+                    Text("g").font(.headline).foregroundStyle(.blue)
+                } else { // The food item is not selected
+                    Image(systemName: "plus.circle")
+                        .foregroundStyle(.gray)
+                        .accessibilityIdentifierLeaf("SelectFoodItemButton")
                 }
                 Text(foodItem.name)
                     .font(.headline)
-                    .foregroundStyle(listType == .selection && isSelected ? .blue : .primary)
+                    .foregroundStyle(isSelected ? .blue : .primary)
                     .accessibilityIdentifierLeaf("FoodItemNameLabel")
                 if foodItem.hasAssociatedRecipe() {
                     Image(systemName: "frying.pan.fill").foregroundStyle(.gray).imageScale(.small)
@@ -58,6 +51,51 @@ struct FoodItemView: View {
                         .accessibilityIdentifierLeaf("IsFavoriteSymbol")
                 }
                 Spacer()
+            }
+            .onTapGesture {
+                withAnimation {
+                    if composedFoodItem.contains(foodItem: foodItem) {
+                        composedFoodItem.remove(foodItem: foodItem)
+                    } else {
+                        let ingredient = Ingredient.create(from: foodItem)
+                        navigationPath.append(FoodItemListView.FoodListNavigationDestination.SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItem))
+                    }
+                }
+            }
+        }
+    }
+    
+    @Binding var navigationPath: NavigationPath
+    var composedFoodItem: ComposedFoodItem?
+    @ObservedObject var foodItem: FoodItem
+    var category: FoodItemCategory
+    var showFoodCategory: Bool = true
+    @State private var showingAlert = false
+    @State private var activeAlert: AlertChoice?
+    @State private var isConfirming = false
+    
+    var body: some View {
+        VStack {
+            // First line: amount, name, favorite
+            HStack {
+                if let composedFoodItem = composedFoodItem {
+                    Content(navigationPath: $navigationPath, foodItem: foodItem, composedFoodItem: composedFoodItem, category: category)
+                } else {
+                    Text(foodItem.name)
+                        .font(.headline)
+                        .accessibilityIdentifierLeaf("FoodItemNameLabel")
+                    if foodItem.hasAssociatedRecipe() {
+                        Image(systemName: "frying.pan.fill").foregroundStyle(.gray).imageScale(.small)
+                            .accessibilityIdentifierLeaf("HasAssociatedRecipeSymbol")
+                    }
+                    if foodItem.favorite {
+                        Image(systemName: "star.fill")
+                            .foregroundStyle(.yellow)
+                            .imageScale(.small)
+                            .accessibilityIdentifierLeaf("IsFavoriteSymbol")
+                    }
+                    Spacer()
+                }
             }
             
             // Optional food category
@@ -116,18 +154,6 @@ struct FoodItemView: View {
                 }
             }
         }
-        .onTapGesture {
-            withAnimation(.default) {
-                if listType == .selection {
-                    if composedFoodItem.contains(foodItem: foodItem) {
-                        composedFoodItem.remove(foodItem: foodItem)
-                    } else {
-                        let ingredient = Ingredient.create(from: foodItem)
-                        navigationPath.append(FoodItemListView.FoodListNavigationDestination.SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItem))
-                    }
-                }
-            }
-        }
         .swipeActions(edge: .trailing) {
             // Editing the food item
             Button("Edit", systemImage: "pencil") {
@@ -172,7 +198,9 @@ struct FoodItemView: View {
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             // Moving the food item to another category
             Button(NSLocalizedString("Move to \(foodItem.category == FoodItemCategory.product.rawValue ? FoodItemCategory.ingredient.rawValue : FoodItemCategory.product.rawValue) List", comment: ""), systemImage: "rectangle.2.swap") {
-                composedFoodItem.remove(foodItem: foodItem)
+                if composedFoodItem != nil {
+                    composedFoodItem!.remove(foodItem: foodItem)
+                }
                 foodItem.changeCategory(saveContext: true)
             }
             .tint(.yellow)

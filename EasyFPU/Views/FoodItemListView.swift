@@ -15,9 +15,9 @@ struct FoodItemListView: View {
         case SelectFoodItem(category: FoodItemCategory, ingredient: Ingredient, composedFoodItem: ComposedFoodItem)
     }
     
-    enum FoodItemListType {
+    enum FoodItemListType: Equatable {
         case maintenance
-        case selection
+        case selection(composedFoodItem: ComposedFoodItem)
     }
     
     enum SheetState: Identifiable {
@@ -35,7 +35,7 @@ struct FoodItemListView: View {
     var helpSheet: SheetState
     @Binding var navigationPath: NavigationPath
     @State var userSettings = UserSettings.shared
-    @ObservedObject var composedFoodItem: ComposedFoodItem
+    private var composedFoodItem: ComposedFoodItem?
     
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
@@ -46,11 +46,10 @@ struct FoodItemListView: View {
             // The food list
             FilteredFoodItemList(
                 category: category,
-                listType: listType,
                 navigationPath: $navigationPath,
-                composedFoodItem: composedFoodItem,
                 searchString: searchString,
-                showFavoritesOnly: showFavoritesOnly
+                showFavoritesOnly: showFavoritesOnly,
+                composedFoodItem: composedFoodItem
             )
         }
         .navigationTitle(foodItemListTitle)
@@ -128,6 +127,27 @@ struct FoodItemListView: View {
         }
     }
     
+    init(
+        category: FoodItemCategory,
+        listType: FoodItemListType,
+        foodItemListTitle: String,
+        helpSheet: SheetState,
+        navigationPath: Binding<NavigationPath>
+    ) {
+        self.category = category
+        self.listType = listType
+        self.foodItemListTitle = foodItemListTitle
+        self.helpSheet = helpSheet
+        self._navigationPath = navigationPath
+        
+        switch listType {
+        case .maintenance:
+            self.composedFoodItem = nil
+        case .selection(let composedFoodItem):
+            self.composedFoodItem = composedFoodItem
+        }
+    }
+    
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
@@ -152,11 +172,10 @@ struct FoodItemListView_Previews: PreviewProvider {
     static var previews: some View {
         FoodItemListView(
             category: .product,
-            listType: .selection,
+            listType: .selection(composedFoodItem: TempComposedFoodItem.new(name: "Sample")),
             foodItemListTitle: "My Products",
             helpSheet: .productSelectionListHelp,
-            navigationPath: $navigationPath,
-            composedFoodItem: TempComposedFoodItem.new(name: "Sample")
+            navigationPath: $navigationPath
         )
     }
 }

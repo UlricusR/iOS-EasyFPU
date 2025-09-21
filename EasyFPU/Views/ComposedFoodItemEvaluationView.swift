@@ -21,9 +21,11 @@ struct ComposedFoodItemEvaluationView: View {
         var id: SheetState { self }
     }
     
+    static let mealDefaultName = NSLocalizedString("Total meal", comment: "")
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @State var absorptionScheme: AbsorptionScheme
-    @ObservedObject var composedFoodItem: ComposedFoodItem
+    @ObservedObject var composedFoodItem = TempComposedFoodItem.new(name: mealDefaultName)
     @State var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
     @State private var navigationPath = NavigationPath()
@@ -165,7 +167,7 @@ struct ComposedFoodItemEvaluationView: View {
                         Button(action: {
                             withAnimation(.default) {
                                 // Clear the composed food item
-                                composedFoodItem.clear(name: UserSettings.mealDefaultName)
+                                composedFoodItem.clear(name: ComposedFoodItemEvaluationView.mealDefaultName)
                                 UserSettings.shared.mealDelayInMinutes = 0
                             }
                         }) {
@@ -208,11 +210,10 @@ struct ComposedFoodItemEvaluationView: View {
                 case .SelectProduct:
                     FoodItemListView(
                         category: .product,
-                        listType: .selection,
+                        listType: .selection(composedFoodItem: composedFoodItem),
                         foodItemListTitle: NSLocalizedString("My Products", comment: ""),
                         helpSheet: .productSelectionListHelp,
-                        navigationPath: $navigationPath,
-                        composedFoodItem: composedFoodItem
+                        navigationPath: $navigationPath
                     )
                     .accessibilityIdentifierBranch("AddProductToMeal")
                     .navigationBarBackButtonHidden()
@@ -226,7 +227,14 @@ struct ComposedFoodItemEvaluationView: View {
                 case .ExportToHealth:
                     ComposedFoodItemExportView(
                         composedFoodItem: composedFoodItem,
-                        absorptionScheme: absorptionScheme
+                        absorptionScheme: absorptionScheme,
+                        carbsRegimeCalculator: CarbsRegimeCalculator(
+                            composedFoodItem: composedFoodItem,
+                            eCarbsAbsorptionTimeInHours: 5,
+                            includeSugars: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealSugars) ?? false,
+                            includeTotalMealCarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false,
+                            includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true
+                        )
                     )
                     .accessibilityIdentifierBranch("ExportMealToHealth")
                 }

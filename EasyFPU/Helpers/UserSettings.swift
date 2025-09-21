@@ -63,10 +63,6 @@ import SwiftUI
     // MARK: - The key store for syncing via iCloud
     private static let keyStore = NSUbiquitousKeyValueStore()
     
-    // MARK: - Static constants
-    static let mealDefaultName = NSLocalizedString("Total meal", comment: "")
-    static let recipeDefaultName = NSLocalizedString("Composed product", comment: "")
-    
     // MARK: - Dynamic user settings are treated here
     var disclaimerAccepted: Bool
     var foodDatabaseUseAtOwnRiskAccepted: Bool
@@ -87,10 +83,6 @@ import SwiftUI
     var countryCode: String?
     var groupProductsByCategory: Bool
     var groupIngredientsByCategory: Bool
-    
-    // MARK: - The composed food items
-    var meal = TempComposedFoodItem.new(name: mealDefaultName)
-    var recipe = TempComposedFoodItem.new(name: recipeDefaultName)
     
     static let shared = UserSettings(
         disclaimerAccepted: UserSettings.getValue(for: UserDefaultsBoolKey.disclaimerAccepted) ?? false,

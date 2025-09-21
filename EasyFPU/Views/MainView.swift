@@ -85,8 +85,7 @@ struct MainView: View {
                 TabView {
                     // The meal composer
                     ComposedFoodItemEvaluationView(
-                        absorptionScheme: absorptionScheme,
-                        composedFoodItem: UserSettings.shared.meal
+                        absorptionScheme: absorptionScheme
                     )
                     .tag(Tab.eat.rawValue)
                     .tabItem{
@@ -113,8 +112,7 @@ struct MainView: View {
                         category: .product,
                         listType: .maintenance,
                         listTitle: NSLocalizedString("My Products", comment: ""),
-                        helpSheet: .productMaintenanceListHelp,
-                        composedFoodItem: UserSettings.shared.meal
+                        helpSheet: .productMaintenanceListHelp
                     )
                     .tag(Tab.products.rawValue)
                     .tabItem{
@@ -129,8 +127,7 @@ struct MainView: View {
                         category: .ingredient,
                         listType: .maintenance,
                         listTitle: NSLocalizedString("My Ingredients", comment: ""),
-                        helpSheet: .ingredientMaintenanceListHelp,
-                        composedFoodItem: UserSettings.shared.recipe
+                        helpSheet: .ingredientMaintenanceListHelp
                     )
                     .tag(Tab.ingredients.rawValue)
                     .tabItem{
@@ -192,6 +189,11 @@ struct MainView: View {
         }
     }
     
+    init() {
+        // Remove all temporary composed food items that might have been left behind
+        removeTempComposedFoodItmes()
+    }
+    
     private func importFoodData(from url: URL) {
         // Import Food Item
         do {
@@ -231,6 +233,16 @@ struct MainView: View {
         } catch {
             activeAlert = .error(message: error.localizedDescription)
             showingAlert = true
+        }
+    }
+    
+    private func removeTempComposedFoodItmes() {
+        let allComposedFoodItems = TempComposedFoodItem.fetchAll()
+        for item in allComposedFoodItems {
+            if item is TempComposedFoodItem {
+                debugPrint("Removing temporary composed food item \(item.name) left behind")
+                CoreDataStack.viewContext.delete(item)
+            }
         }
     }
 }

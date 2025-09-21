@@ -13,8 +13,8 @@ import LocalAuthentication
 struct ComposedFoodItemExportView: View {
     var composedFoodItem: ComposedFoodItem
     var absorptionScheme: AbsorptionScheme
+    @ObservedObject var carbsRegimeCalculator: CarbsRegimeCalculator
     @State var userSettings = UserSettings.shared
-    @ObservedObject var carbsRegimeCalculator = CarbsRegimeCalculator.default
     @State var showingSheet = false
     @State var showingAlert = false
     @State var activeAlert: SimpleAlertType?

@@ -127,32 +127,30 @@ public class FoodItem: NSManagedObject {
         return cdFoodItem
     }
     
-    /// Creates a new Core Data FoodItem from a FoodItem.
+    /// Creates a new Core Data FoodItem from a TempFoodItem.
     /// Does not validate the data, as it is assumed that the data has already been validated.
-    /// Typically used to create a FoodItem from a TempFoodItem.
     /// - Parameters:
-    ///   - foodItedPersistence: The source FoodItemPersistence.
+    ///   - tempFoodItem: The source TempFoodItem.
     ///   - saveContext: If true, the context will be saved after creation.
-    ///   - dataError: An inout parameter that will contain any validation error encountered during creation.
     /// - Returns: The new Core Data FoodItem, or nil if there was a validation error.
-    static func create(from foodItem: FoodItem, saveContext: Bool) -> FoodItem {
+    static func create(from tempFoodItem: TempFoodItem, saveContext: Bool) -> FoodItem {
         // Create the FoodItem
         let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         
         // Fill data
-        cdFoodItem.id = foodItem.id
-        cdFoodItem.name = foodItem.name
-        cdFoodItem.foodCategory = foodItem.foodCategory
-        cdFoodItem.category = foodItem.category
-        cdFoodItem.caloriesPer100g = foodItem.caloriesPer100g
-        cdFoodItem.carbsPer100g = foodItem.carbsPer100g
-        cdFoodItem.sugarsPer100g = foodItem.sugarsPer100g
-        cdFoodItem.favorite = foodItem.favorite
-        cdFoodItem.sourceID = foodItem.sourceID
-        cdFoodItem.sourceDB = foodItem.sourceDB
+        cdFoodItem.id = UUID()
+        cdFoodItem.name = tempFoodItem.name
+        cdFoodItem.foodCategory = tempFoodItem.foodCategory
+        cdFoodItem.category = tempFoodItem.category
+        cdFoodItem.caloriesPer100g = tempFoodItem.caloriesPer100g
+        cdFoodItem.carbsPer100g = tempFoodItem.carbsPer100g
+        cdFoodItem.sugarsPer100g = tempFoodItem.sugarsPer100g
+        cdFoodItem.favorite = tempFoodItem.favorite
+        cdFoodItem.sourceID = tempFoodItem.sourceID
+        cdFoodItem.sourceDB = tempFoodItem.sourceDB
         
         // Add typical amounts
-        if let typicalAmounts = foodItem.typicalAmounts {
+        if let typicalAmounts = tempFoodItem.typicalAmounts {
             for typicalAmount in typicalAmounts {
                 if let cdTypicalAmount = typicalAmount as? TypicalAmount {
                     cdTypicalAmount.foodItem = cdFoodItem

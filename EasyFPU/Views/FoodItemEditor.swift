@@ -41,7 +41,6 @@ struct FoodItemEditor: View {
     
     /// The food item representing the data of this view
     @ObservedObject var editedCDFoodItem: FoodItem
-    var isNewFoodItem: Bool
     
     var category: FoodItemCategory
     @State private var searchResults = [FoodDatabaseEntry]()
@@ -260,7 +259,7 @@ struct FoodItemEditor: View {
                 }
                 
                 // Delete food item (only when editing an existing food item)
-                if !isNewFoodItem { // We are editing an existing food item
+                if !(editedCDFoodItem is TempFoodItem) { // We are editing an existing food item
                     Section {
                         Button("Delete food item", role: .destructive) {
                             // Save the context and exit
@@ -298,7 +297,7 @@ struct FoodItemEditor: View {
                             editedCDFoodItem.name = editedCDFoodItem.name.trimmingCharacters(in: .whitespacesAndNewlines)
                             
                             // Check if we have duplicate names (if this is a new food item)
-                            if editedCDFoodItem.nameExists(isNew: isNewFoodItem) {
+                            if editedCDFoodItem.nameExists(isNew: editedCDFoodItem is TempFoodItem) {
                                 activeAlert = .simpleAlert(type: .warning(message: "A food item with this name already exists"))
                                 showingAlert = true
                             } else {
@@ -383,7 +382,7 @@ struct FoodItemEditor: View {
         // Validate input
         let error = editedCDFoodItem.validateInput()
         if error == .none {
-            if !isNewFoodItem { // We need to update an existing food item
+            if !(editedCDFoodItem is TempFoodItem) { // We need to update an existing food item
                 // We need to check for related Ingredients and update all Recipes, where these Ingredients are used
                 if editedCDFoodItem.ingredients?.count ?? 0 > 0 { // There are related ingredients
                     // Get the names of the ingredients
@@ -400,7 +399,7 @@ struct FoodItemEditor: View {
                 }
             } else { // This is a new food item, so we need to create a new permanent food item
                 // Create the new permanent food item
-                _ = FoodItem.create(from: editedCDFoodItem, saveContext: false)
+                _ = FoodItem.create(from: editedCDFoodItem as! TempFoodItem, saveContext: false)
                 
                 // Save and exit
                 saveContextAndExit()
@@ -669,7 +668,6 @@ struct FoodItemEditor_Previews: PreviewProvider {
             navigationPath: $navigationPath,
             navigationTitle: "Sample Food Item",
             editedCDFoodItem: TempFoodItem.new(category: .product),
-            isNewFoodItem: true,
             category: .product
         )
     }

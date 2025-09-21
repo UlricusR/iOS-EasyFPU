@@ -23,7 +23,6 @@ struct FoodItemComposerView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var composedFoodItem: ComposedFoodItem
-    var isNewRecipe: Bool
     @Binding var navigationPath: NavigationPath
     private let helpScreen = HelpScreen.foodItemComposer
     @State private var activeSheet: SheetState?
@@ -133,7 +132,7 @@ struct FoodItemComposerView: View {
                             }
                             
                             // Delete recipe (only when editing an existing one)
-                            if !isNewRecipe {
+                            if !(composedFoodItem is TempComposedFoodItem) {
                                 Section {
                                     Button("Delete recipe", role: .destructive) {
                                         // Check for associated product
@@ -177,7 +176,7 @@ struct FoodItemComposerView: View {
                                     composedFoodItem.name = composedFoodItem.name.trimmingCharacters(in: .whitespacesAndNewlines)
                                     
                                     // Check if this is a new recipe and, if yes, the name already exists
-                                    if composedFoodItem.nameExists(isNew: isNewRecipe) {
+                                    if composedFoodItem.nameExists(isNew: composedFoodItem is TempComposedFoodItem) {
                                         activeAlert = .simpleAlert(type: .notice(message: "A food item with this name already exists"))
                                         showingAlert = true
                                     } else {
@@ -289,16 +288,16 @@ struct FoodItemComposerView: View {
     }
     
     private func saveAndExit() {
-        if isNewRecipe {
+        if composedFoodItem is TempComposedFoodItem {
             // If this is a new recipe, we need to create a permanent ComposedFoodItem
-            _ = ComposedFoodItem.create(from: composedFoodItem, saveContext: true)
+            _ = ComposedFoodItem.create(from: composedFoodItem as! TempComposedFoodItem, saveContext: true)
+            
+            // Delete the temporary composed food item
+            TempComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: false, saveContext: false)
         } else {
             // Just save the context
             CoreDataStack.shared.save()
         }
-        
-        // Reset the temporary composed food item
-        UserSettings.shared.recipe.clear(name: UserSettings.recipeDefaultName)
         
         // Exit the view
         navigationPath.removeLast()
@@ -308,9 +307,6 @@ struct FoodItemComposerView: View {
     private func cancelAndExit() {
         // Rollback changes
         CoreDataStack.viewContext.rollback()
-        
-        // Reset the temporary composed food item
-        UserSettings.shared.recipe.clear(name: UserSettings.recipeDefaultName)
         
         // Leave edit mode
         navigationPath.removeLast()
@@ -404,7 +400,6 @@ struct FoodItemComposerView_Previews: PreviewProvider {
     static var previews: some View {
         FoodItemComposerView(
             composedFoodItem: TempComposedFoodItem.new(name: "Sample"),
-            isNewRecipe: true,
             navigationPath: $navigationPath
         )
     }

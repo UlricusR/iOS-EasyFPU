@@ -21,6 +21,8 @@ struct RecipeListView: View {
         var id: SheetState { self }
     }
     
+    static let recipeDefaultName = NSLocalizedString("Composed product", comment: "")
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     var helpSheet: SheetState
     @State private var navigationPath = NavigationPath()
@@ -151,8 +153,7 @@ struct RecipeListView: View {
                 switch screen {
                 case .CreateRecipe:
                     FoodItemComposerView(
-                        composedFoodItem: UserSettings.shared.recipe,
-                        isNewRecipe: true,
+                        composedFoodItem: TempComposedFoodItem.new(name: RecipeListView.recipeDefaultName),
                         navigationPath: $navigationPath
                     )
                     .environment(\.managedObjectContext, managedObjectContext)
@@ -161,18 +162,16 @@ struct RecipeListView: View {
                 case let .AddIngredients(recipe: recipe):
                     FoodItemListView(
                         category: .ingredient,
-                        listType: .selection,
+                        listType: .selection(composedFoodItem: recipe),
                         foodItemListTitle: NSLocalizedString("Ingredients", comment: ""),
                         helpSheet: .ingredientSelectionListHelp,
-                        navigationPath: $navigationPath,
-                        composedFoodItem: recipe
+                        navigationPath: $navigationPath
                     )
                     .accessibilityIdentifierBranch("SelectIngredients")
                     .navigationBarBackButtonHidden()
                 case let .EditRecipe(recipe: recipe):
                     FoodItemComposerView(
                         composedFoodItem: recipe,
-                        isNewRecipe: false,
                         navigationPath: $navigationPath
                     )
                     .environment(\.managedObjectContext, managedObjectContext)

@@ -15,7 +15,6 @@ struct FoodMaintenanceListView: View {
     var listType: FoodItemListView.FoodItemListType
     var listTitle: String
     var helpSheet: FoodItemListView.SheetState
-    var composedFoodItem: ComposedFoodItem
     
     @State private var navigationPath = NavigationPath()
     
@@ -26,8 +25,7 @@ struct FoodMaintenanceListView: View {
                 listType: listType,
                 foodItemListTitle: listTitle,
                 helpSheet: helpSheet,
-                navigationPath: $navigationPath,
-                composedFoodItem: composedFoodItem
+                navigationPath: $navigationPath
             )
             .navigationDestination(for: FoodItemListView.FoodListNavigationDestination.self) { screen in
                 switch screen {
@@ -72,7 +70,6 @@ struct FoodMaintenanceListView: View {
             navigationPath: $navigationPath,
             navigationTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
             editedCDFoodItem: TempFoodItem.new(category: category),
-            isNewFoodItem: true,
             category: category
         )
         .environment(\.managedObjectContext, managedObjectContext)
@@ -92,7 +89,6 @@ struct FoodMaintenanceListView: View {
             navigationPath: $navigationPath,
             navigationTitle: NSLocalizedString("Edit food item", comment: ""),
             editedCDFoodItem: foodItem,
-            isNewFoodItem: false,
             category: category
         )
         .environment(\.managedObjectContext, managedObjectContext)
