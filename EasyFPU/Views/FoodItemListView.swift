@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct FoodItemListView: View {
     enum FoodListNavigationDestination: Hashable {
@@ -164,18 +165,5 @@ struct FoodItemListView: View {
             HelpView(helpScreen: .ingredientSelectionList)
                 .accessibilityIdentifierBranch("HelpIngredientSelectionList")
         }
-    }
-}
-
-struct FoodItemListView_Previews: PreviewProvider {
-    @State private static var navigationPath = NavigationPath()
-    static var previews: some View {
-        FoodItemListView(
-            category: .product,
-            listType: .selection(composedFoodItem: TempComposedFoodItem.new(name: "Sample")),
-            foodItemListTitle: "My Products",
-            helpSheet: .productSelectionListHelp,
-            navigationPath: $navigationPath
-        )
     }
 }

@@ -153,7 +153,6 @@ struct RecipeListView: View {
                 switch screen {
                 case .CreateRecipe:
                     FoodItemComposerView(
-                        composedFoodItem: TempComposedFoodItem.new(name: RecipeListView.recipeDefaultName),
                         navigationPath: $navigationPath
                     )
                     .environment(\.managedObjectContext, managedObjectContext)
@@ -171,8 +170,8 @@ struct RecipeListView: View {
                     .navigationBarBackButtonHidden()
                 case let .EditRecipe(recipe: recipe):
                     FoodItemComposerView(
-                        composedFoodItem: recipe,
-                        navigationPath: $navigationPath
+                        navigationPath: $navigationPath,
+                        composedFoodItem: recipe
                     )
                     .environment(\.managedObjectContext, managedObjectContext)
                     .navigationBarBackButtonHidden()

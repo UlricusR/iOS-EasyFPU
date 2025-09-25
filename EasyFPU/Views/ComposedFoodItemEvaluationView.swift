@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ComposedFoodItemEvaluationView: View {
     enum MealNavigationDestination: Hashable {
@@ -25,7 +26,8 @@ struct ComposedFoodItemEvaluationView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @State var absorptionScheme: AbsorptionScheme
-    @ObservedObject var composedFoodItem = TempComposedFoodItem.new(name: mealDefaultName)
+    @ObservedObject var composedFoodItem: ComposedFoodItem
+    private var tempMealContext: NSManagedObjectContext
     @State var userSettings = UserSettings.shared
     private let helpScreen = HelpScreen.mealDetails
     @State private var navigationPath = NavigationPath()
@@ -245,6 +247,17 @@ struct ComposedFoodItemEvaluationView: View {
         }
     }
     
+    init(absorptionScheme: AbsorptionScheme, managedObjectContext: NSManagedObjectContext) {
+        self.absorptionScheme = absorptionScheme
+        
+        // Create the temporary context for the meal
+        self.tempMealContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        self.tempMealContext.parent = managedObjectContext
+        
+        // Create the temporary composed food item for the meal
+        self.composedFoodItem = ComposedFoodItem.new(name: ComposedFoodItemEvaluationView.mealDefaultName, context: tempMealContext)
+    }
+    
     func removeIngredients(at offsets: IndexSet) {
         withAnimation {
             var ingredientsToRemove = [Ingredient]()
@@ -265,14 +278,5 @@ struct ComposedFoodItemEvaluationView: View {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpCalculateMeal")
         }
-    }
-}
-
-struct ComposedFoodItemEvaluationView_Previews: PreviewProvider {
-    static var previews: some View {
-        ComposedFoodItemEvaluationView(
-            absorptionScheme: AbsorptionScheme.sampleData(),
-            composedFoodItem: TempComposedFoodItem.new(name: "Sample Meal")
-        )
     }
 }

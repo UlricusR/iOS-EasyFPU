@@ -118,10 +118,10 @@ public class Ingredient: NSManagedObject {
         return cdIngredients.count > 0 ? cdIngredients : nil
     }
     
-    /// Creates new Ingredient from FoodItem. Does not save the context.
+    /// Creates new Ingredient from FoodItem. Does not save the context. Does not relate the FoodItem to the Ingredient.
     /// - Parameter foodItem: The FoodItem to create the Ingredient from.
-    static func create(from foodItem: FoodItem) -> Ingredient {
-        let cdIngredient = Ingredient(context: CoreDataStack.viewContext)
+    static func create(from foodItem: FoodItem, context: NSManagedObjectContext) -> Ingredient {
+        let cdIngredient = Ingredient(context: context)
         
         // Fill data
         cdIngredient.id = UUID()
@@ -133,8 +133,9 @@ public class Ingredient: NSManagedObject {
         cdIngredient.carbsPer100g = foodItem.carbsPer100g
         cdIngredient.sugarsPer100g = foodItem.sugarsPer100g
         
-        // Create 1:1 reference to FoodItem
-        cdIngredient.foodItem = foodItem
+        // Store the managed object ID of the related FoodItem
+        // (we cannot link directly, as they might be in different contexts)
+        cdIngredient.relatedFoodItemObjectID = foodItem.objectID.uriRepresentation()
         
         return cdIngredient
     }

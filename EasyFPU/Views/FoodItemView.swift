@@ -8,6 +8,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import CoreData
 
 struct FoodItemView: View {
     enum AlertChoice {
@@ -57,7 +58,8 @@ struct FoodItemView: View {
                     if composedFoodItem.contains(foodItem: foodItem) {
                         composedFoodItem.remove(foodItem: foodItem)
                     } else {
-                        let ingredient = Ingredient.create(from: foodItem)
+                        // We need to create the Ingredient
+                        let ingredient = Ingredient.create(from: foodItem, context: composedFoodItem.managedObjectContext!)
                         navigationPath.append(FoodItemListView.FoodListNavigationDestination.SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItem))
                     }
                 }
@@ -67,6 +69,7 @@ struct FoodItemView: View {
     
     @Binding var navigationPath: NavigationPath
     var composedFoodItem: ComposedFoodItem?
+    var tempContext: NSManagedObjectContext?
     @ObservedObject var foodItem: FoodItem
     var category: FoodItemCategory
     var showFoodCategory: Bool = true
@@ -79,7 +82,12 @@ struct FoodItemView: View {
             // First line: amount, name, favorite
             HStack {
                 if let composedFoodItem = composedFoodItem {
-                    Content(navigationPath: $navigationPath, foodItem: foodItem, composedFoodItem: composedFoodItem, category: category)
+                    Content(
+                        navigationPath: $navigationPath,
+                        foodItem: foodItem,
+                        composedFoodItem: composedFoodItem,
+                        category: category
+                    )
                 } else {
                     Text(foodItem.name)
                         .font(.headline)

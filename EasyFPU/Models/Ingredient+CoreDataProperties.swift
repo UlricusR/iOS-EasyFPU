@@ -19,6 +19,7 @@ extension Ingredient: VariableAmountItem {
 
     @NSManaged public var id: UUID
     @NSManaged public var relatedFoodItemID: UUID? // The id of the related FoodItem
+    @NSManaged public var relatedFoodItemObjectID: URL?
     @NSManaged public var name: String
     @NSManaged public var favorite: Bool
     @NSManaged public var amount: Int64

@@ -41,6 +41,19 @@ public class ComposedFoodItem: NSManagedObject {
         return request
     }
     
+    /// Creates a new ComposedFoodItem with the given name. Other values are set to defaults. Does not save the context.
+    /// - Parameter name: The name of the new ComposedFoodItem.
+    /// - Returns: The new ComposedFoodItem.
+    static func new(name: String, context: NSManagedObjectContext) -> ComposedFoodItem {
+        let cdComposedFoodItem = ComposedFoodItem(context: context)
+        cdComposedFoodItem.id = UUID()
+        cdComposedFoodItem.name = name
+        cdComposedFoodItem.favorite = false
+        cdComposedFoodItem.amount = 0
+        cdComposedFoodItem.numberOfPortions = 0
+        return cdComposedFoodItem
+    }
+    
     /**
      Creates a new ComposedFoodItem from the ComposedFoodItemViewModel.
      Creates the Ingredients and relates them to the new ComposedFoodItem.
@@ -86,43 +99,6 @@ public class ComposedFoodItem: NSManagedObject {
             }
             return nil
         }
-    }
-    
-    /// Creates a new ComposedFoodItem from the given TempComposedFoodItem.
-    /// - Parameters:
-    ///   - tempComposedFoodItem: The source TempComposedFoodItem.
-    ///   - saveContext: Whether to permanently save the changes to the core data stack.
-    /// - Returns: The created ComposedFoodItem.
-    static func create(from tempComposedFoodItem: TempComposedFoodItem, saveContext: Bool) -> ComposedFoodItem {
-        // Create new ComposedFoodItem
-        let cdComposedFoodItem = ComposedFoodItem(context: CoreDataStack.viewContext)
-        CoreDataStack.shared.save()
-        
-        // We create a new ID, because the TempComposedFoodItem reuses the same ID when cleared
-        cdComposedFoodItem.id = UUID()
-        
-        // Fill data
-        cdComposedFoodItem.name = tempComposedFoodItem.name
-        cdComposedFoodItem.foodCategory = tempComposedFoodItem.foodCategory
-        cdComposedFoodItem.favorite = tempComposedFoodItem.favorite
-        cdComposedFoodItem.amount = tempComposedFoodItem.amount
-        cdComposedFoodItem.numberOfPortions = tempComposedFoodItem.numberOfPortions
-        
-        // Link ingredients
-        for ingredient in tempComposedFoodItem.ingredients {
-            if let cdIngredient = ingredient as? Ingredient {
-                // Add the ingredient to the permanent ComposedFoodItem
-                cdIngredient.composedFoodItem = cdComposedFoodItem
-                cdComposedFoodItem.addToIngredients(cdIngredient)
-            }
-        }
-        
-        // Save new composed food item
-        if saveContext {
-            CoreDataStack.shared.save()
-        }
-        
-        return cdComposedFoodItem
     }
     
     /// Deletes the given ComposedFoodItem. Does not save the context.

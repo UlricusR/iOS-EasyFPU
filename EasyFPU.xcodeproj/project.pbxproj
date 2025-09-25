@@ -101,8 +101,6 @@
 		1BC7524F254AFD5D001C4D27 /* FoodItemComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC7524E254AFD5D001C4D27 /* FoodItemComposerView.swift */; };
 		1BCC1BEF2519036F00920264 /* CarbsRegime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCC1BEE2519036F00920264 /* CarbsRegime.swift */; };
 		1BD0693C254D97DD00B0E15A /* VariableAmountItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD0693B254D97DD00B0E15A /* VariableAmountItem.swift */; };
-		1BD397F42E74724100231407 /* TempComposedFoodItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD397F22E74724100231407 /* TempComposedFoodItem+CoreDataClass.swift */; };
-		1BD397F52E74724100231407 /* TempComposedFoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD397F32E74724100231407 /* TempComposedFoodItem+CoreDataProperties.swift */; };
 		1BD809A62D2AB9E5003A2A58 /* FoodDataDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD809A52D2AB9E5003A2A58 /* FoodDataDocument.swift */; };
 		1BD809AE2D2AF4A5003A2A58 /* EasyFPUApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD809AD2D2AF49D003A2A58 /* EasyFPUApp.swift */; };
 		1BDBE39C24FE384C00ED61F1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1BDBE39E24FE384C00ED61F1 /* InfoPlist.strings */; };
@@ -113,6 +111,8 @@
 		1BF1A15D251AA2B2001E561C /* ComposedFoodItemCarbsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A15C251AA2B2001E561C /* ComposedFoodItemCarbsView.swift */; };
 		1BF1A160251AA336001E561C /* ComposedFoodItemECarbsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A15F251AA336001E561C /* ComposedFoodItemECarbsView.swift */; };
 		1BF21B072552813000590068 /* ActivityIndicatorDynamicText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF21B062552813000590068 /* ActivityIndicatorDynamicText.swift */; };
+		1BF541F62E848738005CEE88 /* TempComposedFoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF541F52E848738005CEE88 /* TempComposedFoodItem+CoreDataProperties.swift */; };
+		1BF541F72E848738005CEE88 /* TempComposedFoodItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF541F42E848738005CEE88 /* TempComposedFoodItem+CoreDataClass.swift */; };
 		1BF8A4C024C21A52008634DF /* FoodItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF8A4BE24C21A52008634DF /* FoodItem+CoreDataClass.swift */; };
 		1BF8A4C124C21A52008634DF /* FoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */; };
 		1BFDFA24250A1DBB00379EB3 /* CarbsRegimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */; };
@@ -232,8 +232,6 @@
 		1BC9691F2CD7B8AE00A35ACA /* EasyFPUUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EasyFPUUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BCC1BEE2519036F00920264 /* CarbsRegime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsRegime.swift; sourceTree = "<group>"; };
 		1BD0693B254D97DD00B0E15A /* VariableAmountItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariableAmountItem.swift; sourceTree = "<group>"; };
-		1BD397F22E74724100231407 /* TempComposedFoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TempComposedFoodItem+CoreDataClass.swift"; sourceTree = "<group>"; };
-		1BD397F32E74724100231407 /* TempComposedFoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TempComposedFoodItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BD809A52D2AB9E5003A2A58 /* FoodDataDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDataDocument.swift; sourceTree = "<group>"; };
 		1BD809AD2D2AF49D003A2A58 /* EasyFPUApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyFPUApp.swift; sourceTree = "<group>"; };
 		1BDBE39D24FE384C00ED61F1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -246,6 +244,8 @@
 		1BF1A15C251AA2B2001E561C /* ComposedFoodItemCarbsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemCarbsView.swift; sourceTree = "<group>"; };
 		1BF1A15F251AA336001E561C /* ComposedFoodItemECarbsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedFoodItemECarbsView.swift; sourceTree = "<group>"; };
 		1BF21B062552813000590068 /* ActivityIndicatorDynamicText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorDynamicText.swift; sourceTree = "<group>"; };
+		1BF541F42E848738005CEE88 /* TempComposedFoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TempComposedFoodItem+CoreDataClass.swift"; sourceTree = "<group>"; };
+		1BF541F52E848738005CEE88 /* TempComposedFoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TempComposedFoodItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BF8A4BE24C21A52008634DF /* FoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1BF8A4BF24C21A52008634DF /* FoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1BFDFA23250A1DBB00379EB3 /* CarbsRegimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbsRegimeCalculator.swift; sourceTree = "<group>"; };
@@ -353,10 +353,10 @@
 		1B004A4724BA3419001E362A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1BF541F42E848738005CEE88 /* TempComposedFoodItem+CoreDataClass.swift */,
+				1BF541F52E848738005CEE88 /* TempComposedFoodItem+CoreDataProperties.swift */,
 				1BB46E612E754426004455B6 /* TempFoodItem+CoreDataClass.swift */,
 				1BB46E622E754426004455B6 /* TempFoodItem+CoreDataProperties.swift */,
-				1BD397F22E74724100231407 /* TempComposedFoodItem+CoreDataClass.swift */,
-				1BD397F32E74724100231407 /* TempComposedFoodItem+CoreDataProperties.swift */,
 				1B5E644E2CC835C600022BDF /* Optional+Extensions.swift */,
 				1B6B93702554008C00F0CC7D /* Ingredient+CoreDataClass.swift */,
 				1B6B93712554008C00F0CC7D /* Ingredient+CoreDataProperties.swift */,
@@ -683,12 +683,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BF541F62E848738005CEE88 /* TempComposedFoodItem+CoreDataProperties.swift in Sources */,
+				1BF541F72E848738005CEE88 /* TempComposedFoodItem+CoreDataClass.swift in Sources */,
 				1BCC1BEF2519036F00920264 /* CarbsRegime.swift in Sources */,
 				1BF21B072552813000590068 /* ActivityIndicatorDynamicText.swift in Sources */,
 				1BD0693C254D97DD00B0E15A /* VariableAmountItem.swift in Sources */,
 				1BD809AE2D2AF4A5003A2A58 /* EasyFPUApp.swift in Sources */,
-				1BD397F42E74724100231407 /* TempComposedFoodItem+CoreDataClass.swift in Sources */,
-				1BD397F52E74724100231407 /* TempComposedFoodItem+CoreDataProperties.swift in Sources */,
 				1B6106BB24D93346001F2284 /* DataHelper.swift in Sources */,
 				1B0868AB254EDDC0005953CC /* FoodItemListView.swift in Sources */,
 				1BB46E632E754426004455B6 /* TempFoodItem+CoreDataProperties.swift in Sources */,

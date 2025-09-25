@@ -45,6 +45,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="relatedFoodItemID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="relatedFoodItemObjectID" optional="YES" transient="YES" attributeType="URI"/>
         <attribute name="sugarsPer100g" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="composedFoodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ComposedFoodItem" inverseName="ingredients" inverseEntity="ComposedFoodItem"/>
         <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="ingredients" inverseEntity="FoodItem"/>
