@@ -117,7 +117,7 @@ extension Ingredient: VariableAmountItem {
         self.sugarsPer100g = foodItem.sugarsPer100g
         
         // Update the FoodItem of the related ComposedFoodItem
-        composedFoodItem.updateRelatedFoodItem()
+        composedFoodItem.createOrUpdateRelatedFoodItem()
     }
     
     

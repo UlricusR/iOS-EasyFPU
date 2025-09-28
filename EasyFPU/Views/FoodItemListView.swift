@@ -18,7 +18,7 @@ struct FoodItemListView: View {
     
     enum FoodItemListType: Equatable {
         case maintenance
-        case selection(composedFoodItem: ComposedFoodItem)
+        case selection(composedFoodItem: ComposedFoodItem, tempContext: NSManagedObjectContext?)
     }
     
     enum SheetState: Identifiable {
@@ -37,6 +37,7 @@ struct FoodItemListView: View {
     @Binding var navigationPath: NavigationPath
     @State var userSettings = UserSettings.shared
     private var composedFoodItem: ComposedFoodItem?
+    private var tempContext: NSManagedObjectContext?
     
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
@@ -50,7 +51,8 @@ struct FoodItemListView: View {
                 navigationPath: $navigationPath,
                 searchString: searchString,
                 showFavoritesOnly: showFavoritesOnly,
-                composedFoodItem: composedFoodItem
+                composedFoodItem: composedFoodItem,
+                tempContext: tempContext
             )
         }
         .navigationTitle(foodItemListTitle)
@@ -144,8 +146,10 @@ struct FoodItemListView: View {
         switch listType {
         case .maintenance:
             self.composedFoodItem = nil
-        case .selection(let composedFoodItem):
+            self.tempContext = nil
+        case .selection(let composedFoodItem, let tempContext):
             self.composedFoodItem = composedFoodItem
+            self.tempContext = tempContext
         }
     }
     

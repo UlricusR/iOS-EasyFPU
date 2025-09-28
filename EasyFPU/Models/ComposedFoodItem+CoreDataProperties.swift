@@ -167,8 +167,8 @@ extension ComposedFoodItem: VariableAmountItem {
         treatSugarsSeparately ? self.sugarsOnly : 0
     }
     
-    /// Updates the related FoodItem of this ComposedFoodItem. Does not save the context.
-    func updateRelatedFoodItem() {
+    /// Creates a new or updates the related FoodItem of this ComposedFoodItem. Does not save the context.
+    func createOrUpdateRelatedFoodItem() {
         // Update the related FoodItem or create a new one if it does not exist yet
         let foodItem = FoodItem.createOrUpdate(from: self)
         
@@ -247,10 +247,4 @@ extension ComposedFoodItem {
     @objc(removeIngredients:)
     @NSManaged public func removeFromIngredients(_ values: NSSet)
 
-}
-
-extension ComposedFoodItem : Identifiable {
-    public static func == (lhs: ComposedFoodItem, rhs: ComposedFoodItem) -> Bool {
-        lhs.id == rhs.id
-    }
 }

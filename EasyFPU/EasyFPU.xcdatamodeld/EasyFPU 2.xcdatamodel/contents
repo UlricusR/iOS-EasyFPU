@@ -50,7 +50,6 @@
         <relationship name="composedFoodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ComposedFoodItem" inverseName="ingredients" inverseEntity="ComposedFoodItem"/>
         <relationship name="foodItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodItem" inverseName="ingredients" inverseEntity="FoodItem"/>
     </entity>
-    <entity name="TempComposedFoodItem" representedClassName="TempComposedFoodItem" parentEntity="ComposedFoodItem" syncable="YES"/>
     <entity name="TempFoodItem" representedClassName="TempFoodItem" parentEntity="FoodItem" syncable="YES"/>
     <entity name="TypicalAmount" representedClassName=".TypicalAmount" syncable="YES">
         <attribute name="amount" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>

@@ -24,8 +24,8 @@ struct FoodItemComposerView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var composedFoodItem: ComposedFoodItem
+    private var tempContext: NSManagedObjectContext?
     @Binding var navigationPath: NavigationPath
-    private var isNewRecipe: Bool
     private let helpScreen = HelpScreen.foodItemComposer
     @State private var activeSheet: SheetState?
     @State private var showingAlert: Bool = false
@@ -35,6 +35,10 @@ struct FoodItemComposerView: View {
     @State private var existingFoodItem: FoodItem?
     @State private var isConfirming = false
     
+    private var isNewRecipe: Bool {
+        tempContext != nil
+    }
+    
     var body: some View {
         VStack {
             if composedFoodItem.ingredients.allObjects.isEmpty {
@@ -43,7 +47,7 @@ struct FoodItemComposerView: View {
                 Text("Your yummy recipe will appear here once you add some ingredients.").padding()
                 Button {
                     // Add new product to composed food item
-                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItem))
+                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItem, tempContext: tempContext))
                 } label: {
                     HStack {
                         Image(systemName: "plus.circle")
@@ -161,7 +165,7 @@ struct FoodItemComposerView: View {
                             HStack {
                                 // The Add More button
                                 Button {
-                                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItem))
+                                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItem, tempContext: tempContext))
                                 } label: {
                                     HStack {
                                         Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
@@ -276,14 +280,14 @@ struct FoodItemComposerView: View {
         self._navigationPath = navigationPath
         if let composedFoodItem = composedFoodItem {
             // Editing an existing recipe
+            self.tempContext = nil
             self.composedFoodItem = composedFoodItem
-            self.isNewRecipe = false
         } else {
             // Creating a new recipe
-            let tempRecipeContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-            tempRecipeContext.parent = CoreDataStack.viewContext
-            self.composedFoodItem = ComposedFoodItem.new(name: RecipeListView.recipeDefaultName, context: tempRecipeContext)
-            self.isNewRecipe = true
+            self.tempContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+            self.tempContext!.name = "Temporary Recipe Context"
+            self.tempContext!.parent = CoreDataStack.viewContext
+            self.composedFoodItem = ComposedFoodItem.new(name: RecipeListView.recipeDefaultName, context: self.tempContext!)
         }
     }
     
@@ -297,45 +301,46 @@ struct FoodItemComposerView: View {
     }
     
     private func saveComposedFoodItem() {
-        // Update the related food item
-        composedFoodItem.updateRelatedFoodItem()
+        if isNewRecipe { // tempContext != nil
+            // If this is a new recipe, we need to save the temporary context
+            do {
+                // First save the temporary context, which will push the ComposedFoodItem to the main context
+                try tempContext!.save()
+                
+                // Get the ID of the ComposedFoodItem
+                let composedFoodItemID = self.composedFoodItem.objectID
+                
+                // Retrieve the ComposedFoodItem in the main context
+                let mainContextComposedFoodItem = CoreDataStack.viewContext.object(with: composedFoodItemID) as! ComposedFoodItem
+                
+                // For each ingredient, retrieve the related FoodItem in the main context (if existing) and link it to the ingredient
+                for ingredient in mainContextComposedFoodItem.ingredients.allObjects as! [Ingredient] {
+                    if let relatedFoodItemObjectID = ingredient.relatedFoodItemObjectID {
+                        if let moID = CoreDataStack.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: relatedFoodItemObjectID) {
+                            let relatedFoodItem = CoreDataStack.viewContext.object(with: moID) as! FoodItem
+                            ingredient.foodItem = relatedFoodItem
+                        }
+                    }
+                }
+                
+                // Now create the related FoodItem for the ComposedFoodItem
+                mainContextComposedFoodItem.createOrUpdateRelatedFoodItem()
+            } catch {
+                let nsError = error as NSError
+                activeAlert = .simpleAlert(type: .fatalError(message: "Unresolved error \(nsError), \(nsError.userInfo)"))
+                showingAlert = true
+                return
+            }
+        } else {
+            // Existing recipe, so we only need to update the related FoodItem
+            composedFoodItem.createOrUpdateRelatedFoodItem()
+        }
         
         // Save and exit
         saveAndExit()
     }
     
     private func saveAndExit() {
-        if isNewRecipe {
-            // If this is a new recipe, we need to save the temporary context
-            if let tempRecipeContext = self.composedFoodItem.managedObjectContext {
-                do {
-                    // First save the temporary context, which will push the ComposedFoodItem to the main context
-                    try tempRecipeContext.save()
-                    
-                    // Get the ID of the ComposedFoodItem
-                    let composedFoodItemID = self.composedFoodItem.objectID
-                    
-                    // Retrieve the ComposedFoodItem in the main context
-                    let mainContextComposedFoodItem = CoreDataStack.viewContext.object(with: composedFoodItemID) as! ComposedFoodItem
-                    
-                    // For each ingredient, retrieve the related FoodItem in the main context (if existing) and link it to the ingredient
-                    for ingredient in mainContextComposedFoodItem.ingredients.allObjects as! [Ingredient] {
-                        if let relatedFoodItemObjectID = ingredient.relatedFoodItemObjectID {
-                            if let moID = CoreDataStack.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: relatedFoodItemObjectID) {
-                                let relatedFoodItem = CoreDataStack.viewContext.object(with: moID) as! FoodItem
-                                ingredient.foodItem = relatedFoodItem
-                            }
-                        }
-                    }
-                } catch {
-                    let nsError = error as NSError
-                    activeAlert = .simpleAlert(type: .fatalError(message: "Unresolved error \(nsError), \(nsError.userInfo)"))
-                    showingAlert = true
-                    return
-                }
-            }
-        }
-        
         // Save the main context
         CoreDataStack.shared.save()
         
@@ -345,10 +350,7 @@ struct FoodItemComposerView: View {
     
     /// Cancels the edit, rolls back all changes and exits the edit mode
     private func cancelAndExit() {
-        // Rollback changes
-        CoreDataStack.viewContext.rollback()
-        
-        // Leave edit mode
+        // Exit the view
         navigationPath.removeLast()
     }
     

@@ -7,11 +7,12 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct RecipeListView: View {
     enum RecipeNavigationDestination: Hashable {
         case CreateRecipe
-        case AddIngredients(recipe: ComposedFoodItem)
+        case AddIngredients(recipe: ComposedFoodItem, tempContext: NSManagedObjectContext?)
         case EditRecipe(recipe: ComposedFoodItem)
     }
     
@@ -67,7 +68,7 @@ struct RecipeListView: View {
                     .accessibilityIdentifierLeaf("StartCookingButton")
                 } else {
                     List {
-                        ForEach(self.filteredComposedFoodItems) { composedFoodItem in
+                        ForEach(self.filteredComposedFoodItems, id: \.self) { composedFoodItem in
                             RecipeView(
                                 navigationPath: $navigationPath,
                                 composedFoodItem: composedFoodItem
@@ -158,10 +159,10 @@ struct RecipeListView: View {
                     .environment(\.managedObjectContext, managedObjectContext)
                     .navigationBarBackButtonHidden()
                     .accessibilityIdentifierBranch("CreateRecipe")
-                case let .AddIngredients(recipe: recipe):
+                case let .AddIngredients(recipe: recipe, tempContext: tempContext):
                     FoodItemListView(
                         category: .ingredient,
-                        listType: .selection(composedFoodItem: recipe),
+                        listType: .selection(composedFoodItem: recipe, tempContext: tempContext),
                         foodItemListTitle: NSLocalizedString("Ingredients", comment: ""),
                         helpSheet: .ingredientSelectionListHelp,
                         navigationPath: $navigationPath

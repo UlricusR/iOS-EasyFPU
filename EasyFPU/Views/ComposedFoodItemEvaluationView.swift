@@ -212,7 +212,7 @@ struct ComposedFoodItemEvaluationView: View {
                 case .SelectProduct:
                     FoodItemListView(
                         category: .product,
-                        listType: .selection(composedFoodItem: composedFoodItem),
+                        listType: .selection(composedFoodItem: composedFoodItem, tempContext: tempMealContext),
                         foodItemListTitle: NSLocalizedString("My Products", comment: ""),
                         helpSheet: .productSelectionListHelp,
                         navigationPath: $navigationPath
@@ -252,6 +252,7 @@ struct ComposedFoodItemEvaluationView: View {
         
         // Create the temporary context for the meal
         self.tempMealContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        self.tempMealContext.name = "Temporary meal context"
         self.tempMealContext.parent = managedObjectContext
         
         // Create the temporary composed food item for the meal

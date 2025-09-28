@@ -21,6 +21,8 @@ struct FoodItemView: View {
         @Binding var navigationPath: NavigationPath
         var foodItem: FoodItem
         @ObservedObject var composedFoodItem: ComposedFoodItem
+        var tempContext: NSManagedObjectContext?
+        var isNew: Bool { tempContext != nil }
         var category: FoodItemCategory
         
         var body: some View {
@@ -59,7 +61,7 @@ struct FoodItemView: View {
                         composedFoodItem.remove(foodItem: foodItem)
                     } else {
                         // We need to create the Ingredient
-                        let ingredient = Ingredient.create(from: foodItem, context: composedFoodItem.managedObjectContext!)
+                        let ingredient = Ingredient.create(from: foodItem, context: isNew ? tempContext! : foodItem.managedObjectContext!)
                         navigationPath.append(FoodItemListView.FoodListNavigationDestination.SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItem))
                     }
                 }
@@ -86,6 +88,7 @@ struct FoodItemView: View {
                         navigationPath: $navigationPath,
                         foodItem: foodItem,
                         composedFoodItem: composedFoodItem,
+                        tempContext: tempContext,
                         category: category
                     )
                 } else {

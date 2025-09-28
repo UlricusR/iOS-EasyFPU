@@ -18,6 +18,7 @@ struct FilteredFoodItemList: View {
         @Binding var navigationPath: NavigationPath
         var foodItems: [FoodItem]
         @ObservedObject var composedFoodItem: ComposedFoodItem
+        var tempContext: NSManagedObjectContext?
         var category: FoodItemCategory
         @State private var userSettings = UserSettings.shared
         
@@ -40,6 +41,7 @@ struct FilteredFoodItemList: View {
                     navigationPath: $navigationPath,
                     groupedFoodItems: FilteredFoodItemList.groupFoodItems(foodItems: sortedFoodItems),
                     composedFoodItem: composedFoodItem,
+                    tempContext: tempContext,
                     category: category
                 )
             } else {
@@ -48,6 +50,7 @@ struct FilteredFoodItemList: View {
                     navigationPath: $navigationPath,
                     foodItems: sortedFoodItems,
                     composedFoodItem: composedFoodItem,
+                    tempContext: tempContext,
                     category: category
                 )
             }
@@ -59,6 +62,7 @@ struct FilteredFoodItemList: View {
         @Binding var navigationPath: NavigationPath
         var groupedFoodItems: [String: [FoodItem]]
         var composedFoodItem: ComposedFoodItem?
+        var tempContext: NSManagedObjectContext?
         var category: FoodItemCategory
         
         var body: some View {
@@ -69,6 +73,7 @@ struct FilteredFoodItemList: View {
                             FoodItemView(
                                 navigationPath: $navigationPath,
                                 composedFoodItem: composedFoodItem,
+                                tempContext: tempContext,
                                 foodItem: foodItem,
                                 category: self.category,
                                 showFoodCategory: false
@@ -88,6 +93,7 @@ struct FilteredFoodItemList: View {
         @Binding var navigationPath: NavigationPath
         var foodItems: [FoodItem]
         var composedFoodItem: ComposedFoodItem?
+        var tempContext: NSManagedObjectContext?
         var category: FoodItemCategory
         
         var body: some View {
@@ -95,6 +101,7 @@ struct FilteredFoodItemList: View {
                 FoodItemView(
                     navigationPath: $navigationPath,
                     composedFoodItem: composedFoodItem,
+                    tempContext: tempContext,
                     foodItem: foodItem,
                     category: self.category,
                     showFoodCategory: true
@@ -108,6 +115,7 @@ struct FilteredFoodItemList: View {
     
     @Binding var navigationPath: NavigationPath
     var composedFoodItem: ComposedFoodItem?
+    var tempContext: NSManagedObjectContext?
     @State private var userSettings = UserSettings.shared
     
     private var category: FoodItemCategory
@@ -175,6 +183,7 @@ struct FilteredFoodItemList: View {
                         navigationPath: $navigationPath,
                         foodItems: fetchRequest.compactMap { $0 } as! [FoodItem],
                         composedFoodItem: composedFoodItem,
+                        tempContext: tempContext,
                         category: category
                     )
                 } else {
@@ -185,6 +194,7 @@ struct FilteredFoodItemList: View {
                             navigationPath: $navigationPath,
                             groupedFoodItems: FilteredFoodItemList.groupFoodItems(foodItems: sortedFoodItems),
                             composedFoodItem: composedFoodItem,
+                            tempContext: tempContext,
                             category: category
                         )
                     } else {
@@ -193,6 +203,7 @@ struct FilteredFoodItemList: View {
                             navigationPath: $navigationPath,
                             foodItems: sortedFoodItems,
                             composedFoodItem: composedFoodItem,
+                            tempContext: tempContext,
                             category: category
                         )
                     }
@@ -231,11 +242,13 @@ struct FilteredFoodItemList: View {
         navigationPath: Binding<NavigationPath>,
         searchString: String,
         showFavoritesOnly: Bool,
-        composedFoodItem: ComposedFoodItem?
+        composedFoodItem: ComposedFoodItem?,
+        tempContext: NSManagedObjectContext?
     ) {
         self.category = category
         self._navigationPath = navigationPath
         self.composedFoodItem = composedFoodItem
+        self.tempContext = tempContext
         self.searchString = searchString
         
         // Configure the fetch request based on the parameters
