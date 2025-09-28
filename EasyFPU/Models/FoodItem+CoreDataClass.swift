@@ -86,6 +86,21 @@ public class FoodItem: NSManagedObject {
         try? viewContext.save()
     }
     
+    /// Creates a new Core Data FoodItem with default values. Does not save the context.
+    /// - Parameter category: The category of the new FoodItem.
+    /// - Returns: The new Core Data FoodItem.
+    static func new(category: FoodItemCategory, context: NSManagedObjectContext) -> FoodItem {
+        let newFoodItem = FoodItem(context: context)
+        newFoodItem.id = UUID()
+        newFoodItem.name = ""
+        newFoodItem.caloriesPer100g = 0
+        newFoodItem.carbsPer100g = 0
+        newFoodItem.sugarsPer100g = 0
+        newFoodItem.favorite = false
+        newFoodItem.category = category.rawValue
+        return newFoodItem
+    }
+    
     /// Creates a new Core Data FoodItem from a FoodItemPersistence. Validates the data.
     /// - Parameters:
     ///   - foodItedPersistence: The source FoodItemPersistence.
@@ -127,13 +142,13 @@ public class FoodItem: NSManagedObject {
         return cdFoodItem
     }
     
-    /// Creates a new Core Data FoodItem from a TempFoodItem.
+    /// Creates a new Core Data FoodItem from a FoodItem in a temporary context.
     /// Does not validate the data, as it is assumed that the data has already been validated.
     /// - Parameters:
-    ///   - tempFoodItem: The source TempFoodItem.
-    ///   - saveContext: If true, the context will be saved after creation.
+    ///   - tempFoodItem: The source FoodItem in a temporary context.
+    ///   - saveContext: If true, the main context will be saved after creation.
     /// - Returns: The new Core Data FoodItem, or nil if there was a validation error.
-    static func create(from tempFoodItem: TempFoodItem, saveContext: Bool) -> FoodItem {
+    static func create(from tempFoodItem: FoodItem, saveContext: Bool) -> FoodItem {
         // Create the FoodItem
         let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         
@@ -229,6 +244,7 @@ public class FoodItem: NSManagedObject {
     /// - Parameter composedFoodItem: The source ComposedFoodItem.
     /// - Returns: The existing Core Data FoodItem if found, otherwise a new one.
     static func createOrUpdate(from composedFoodItem: ComposedFoodItem) -> FoodItem {
+        let context = composedFoodItem.managedObjectContext ?? CoreDataStack.viewContext
         var cdFoodItem: FoodItem
         
         // Check for related FoodItem
@@ -270,7 +286,7 @@ public class FoodItem: NSManagedObject {
             for multiplier in 1...Int(composedFoodItem.numberOfPortions) {
                 let portionAmount = portionWeight * multiplier
                 let comment = "\(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(composedFoodItem.numberOfPortions))"
-                let typicalAmount = TypicalAmount.create(amount: Int64(portionAmount), comment: comment)
+                let typicalAmount = TypicalAmount.create(amount: Int64(portionAmount), comment: comment, context: context)
                 cdFoodItem.addToTypicalAmounts(typicalAmount)
             }
         }

@@ -350,6 +350,9 @@ struct FoodItemComposerView: View {
     
     /// Cancels the edit, rolls back all changes and exits the edit mode
     private func cancelAndExit() {
+        // Rollback changes
+        CoreDataStack.viewContext.rollback()
+        
         // Exit the view
         navigationPath.removeLast()
     }

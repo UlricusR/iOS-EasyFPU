@@ -69,7 +69,6 @@ struct FoodMaintenanceListView: View {
         FoodItemEditor(
             navigationPath: $navigationPath,
             navigationTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
-            editedCDFoodItem: TempFoodItem.new(category: category),
             category: category
         )
         .environment(\.managedObjectContext, managedObjectContext)
@@ -88,7 +87,7 @@ struct FoodMaintenanceListView: View {
         FoodItemEditor(
             navigationPath: $navigationPath,
             navigationTitle: NSLocalizedString("Edit food item", comment: ""),
-            editedCDFoodItem: foodItem,
+            foodItem: foodItem,
             category: category
         )
         .environment(\.managedObjectContext, managedObjectContext)

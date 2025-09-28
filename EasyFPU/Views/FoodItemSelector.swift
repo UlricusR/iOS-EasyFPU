@@ -148,10 +148,9 @@ struct FoodItemSelector: View {
     }
     
     private func addTypicalAmount() {
-        let newTypicalAmount = TypicalAmount.create(amount: self.ingredient.amount, comment: self.newTypicalAmountComment)
-        
         // Relate typical amount to food item
-        if let foodItem = self.ingredient.foodItem {
+        if let foodItem = self.ingredient.foodItem, let moc = foodItem.managedObjectContext {
+            let newTypicalAmount = TypicalAmount.create(amount: self.ingredient.amount, comment: self.newTypicalAmountComment, context: moc)
             newTypicalAmount.foodItem = foodItem
             
             // Reset text fields

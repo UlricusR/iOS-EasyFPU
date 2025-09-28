@@ -9,6 +9,7 @@
 import SwiftUI
 import Combine
 import CodeScanner
+import CoreData
 
 struct FoodItemEditor: View {
     enum FoodItemEditorNavigationDestination: Hashable {
@@ -41,7 +42,7 @@ struct FoodItemEditor: View {
     
     /// The food item representing the data of this view
     @ObservedObject var editedCDFoodItem: FoodItem
-    
+    var tempContext: NSManagedObjectContext? // If set, this is a new food item
     var category: FoodItemCategory
     @State private var searchResults = [FoodDatabaseEntry]()
     @State private var notificationState = NotificationState.void
@@ -50,6 +51,10 @@ struct FoodItemEditor: View {
     // General alert
     @State private var showingAlert = false
     @State private var activeAlert: AlertChoice?
+    
+    private var isNew: Bool {
+        return tempContext != nil
+    }
     
     private var sourceDB: FoodDatabase {
         if editedCDFoodItem.sourceDB != nil {
@@ -259,7 +264,7 @@ struct FoodItemEditor: View {
                 }
                 
                 // Delete food item (only when editing an existing food item)
-                if !(editedCDFoodItem is TempFoodItem) { // We are editing an existing food item
+                if !isNew { // We are editing an existing food item
                     Section {
                         Button("Delete food item", role: .destructive) {
                             // Save the context and exit
@@ -297,7 +302,7 @@ struct FoodItemEditor: View {
                             editedCDFoodItem.name = editedCDFoodItem.name.trimmingCharacters(in: .whitespacesAndNewlines)
                             
                             // Check if we have duplicate names (if this is a new food item)
-                            if editedCDFoodItem.nameExists(isNew: editedCDFoodItem is TempFoodItem) {
+                            if editedCDFoodItem.nameExists(isNew: isNew) {
                                 activeAlert = .simpleAlert(type: .warning(message: "A food item with this name already exists"))
                                 showingAlert = true
                             } else {
@@ -373,6 +378,29 @@ struct FoodItemEditor: View {
         }
     }
     
+    init(
+        navigationPath: Binding<NavigationPath>,
+        navigationTitle: String,
+        foodItem: FoodItem? = nil,
+        tempContext: NSManagedObjectContext? = nil,
+        category: FoodItemCategory
+    ) {
+        self._navigationPath = navigationPath
+        self.navigationTitle = navigationTitle
+        self.category = category
+        
+        if let foodItem = foodItem { // We are editing an existing food item
+            self.editedCDFoodItem = foodItem
+            self.tempContext = nil
+        } else { // We are creating a new food item
+            self.tempContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+            self.tempContext!.name = "Temporary food item context"
+            self.tempContext!.parent = CoreDataStack.viewContext
+            self.editedCDFoodItem = FoodItem.new(category: category, context: self.tempContext!)
+        }
+    }
+
+    
     private func saveFoodItem() {
         // Check if there's an unsaved typical amount
         if self.newTypicalAmount != "" { // We have an unsaved typical amount
@@ -382,7 +410,21 @@ struct FoodItemEditor: View {
         // Validate input
         let error = editedCDFoodItem.validateInput()
         if error == .none {
-            if !(editedCDFoodItem is TempFoodItem) { // We need to update an existing food item
+            if isNew { // This is a new food item (tempContext != nil), so we need to create a new permanent food item
+                // Save the temporary context, so the temporary food item is promoted to the main context
+                if tempContext!.hasChanges {
+                    do {
+                        try tempContext!.save()
+                    } catch {
+                        activeAlert = .simpleAlert(type: .fatalError(message: "Could not save new food item: \(error.localizedDescription)"))
+                        showingAlert = true
+                        return
+                    }
+                }
+                
+                // Save main context and exit
+                saveContextAndExit()
+            } else { // We need to update an existing food item
                 // We need to check for related Ingredients and update all Recipes, where these Ingredients are used
                 if editedCDFoodItem.ingredients?.count ?? 0 > 0 { // There are related ingredients
                     // Get the names of the ingredients
@@ -397,12 +439,6 @@ struct FoodItemEditor: View {
                     // Save and exit
                     saveContextAndExit()
                 }
-            } else { // This is a new food item, so we need to create a new permanent food item
-                // Create the new permanent food item
-                _ = FoodItem.create(from: editedCDFoodItem as! TempFoodItem, saveContext: false)
-                
-                // Save and exit
-                saveContextAndExit()
             }
         } else { // Invalid data, display alert
             let errMessage = error.localizedDescription()
@@ -480,8 +516,10 @@ struct FoodItemEditor: View {
         }
         
         if newTypicalAmountId == nil { // This is a new typical amount
-            let newTA = TypicalAmount.create(amount: Int64(newTAAmount), comment: self.newTypicalAmountComment)
-            editedCDFoodItem.addToTypicalAmounts(newTA)
+            if let moc = editedCDFoodItem.managedObjectContext {
+                let newTA = TypicalAmount.create(amount: Int64(newTAAmount), comment: self.newTypicalAmountComment, context: moc)
+                editedCDFoodItem.addToTypicalAmounts(newTA)
+            }
             deselectTypicalAmount()
         } else { // This is an existing typical amount
             guard let cdTypicalAmount = TypicalAmount.getTypicalAmountByID(id: newTypicalAmountId!) else {
@@ -658,17 +696,5 @@ struct FoodItemEditor: View {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpEditFoodItem")
         }
-    }
-}
-
-struct FoodItemEditor_Previews: PreviewProvider {
-    @State private static var navigationPath = NavigationPath()
-    static var previews: some View {
-        FoodItemEditor(
-            navigationPath: $navigationPath,
-            navigationTitle: "Sample Food Item",
-            editedCDFoodItem: TempFoodItem.new(category: .product),
-            category: .product
-        )
     }
 }

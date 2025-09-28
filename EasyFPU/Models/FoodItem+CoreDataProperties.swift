@@ -117,11 +117,13 @@ extension FoodItem {
         
         // Add the quantity as typical amount if available
         if foodDatabaseEntry.quantity > 0 && foodDatabaseEntry.quantityUnit == FoodItemUnit.gram {
-            // Create TypicalAmount
-            let cdTypicalAmount = TypicalAmount.create(amount: Int64(foodDatabaseEntry.quantity), comment: NSLocalizedString("As sold", comment: ""))
-            
-            // Add to cdFoodItem
-            self.addToTypicalAmounts(cdTypicalAmount)
+            if let moc = self.managedObjectContext {
+                // Create TypicalAmount
+                let cdTypicalAmount = TypicalAmount.create(amount: Int64(foodDatabaseEntry.quantity), comment: NSLocalizedString("As sold", comment: ""), context: moc)
+                
+                // Add to cdFoodItem
+                self.addToTypicalAmounts(cdTypicalAmount)
+            }
         }
     }
     

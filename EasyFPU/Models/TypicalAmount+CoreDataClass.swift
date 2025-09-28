@@ -62,9 +62,9 @@ public class TypicalAmount: NSManagedObject {
     ///   - amount: The amount in grams.
     ///   - comment: The related comment.
     /// - Returns: The created Core Data TypicalAmount.
-    static func create(amount: Int64, comment: String) -> TypicalAmount {
+    static func create(amount: Int64, comment: String, context: NSManagedObjectContext) -> TypicalAmount {
         // Create TypicalAmount
-        let cdTypicalAmount = TypicalAmount(context: CoreDataStack.viewContext)
+        let cdTypicalAmount = TypicalAmount(context: context)
         
         // Fill data
         cdTypicalAmount.id = UUID()
