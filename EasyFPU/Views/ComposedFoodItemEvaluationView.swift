@@ -267,7 +267,7 @@ struct ComposedFoodItemEvaluationView: View {
             }
             
             for ingredient in ingredientsToRemove {
-                composedFoodItem.remove(ingredient: ingredient)
+                composedFoodItem.remove(ingredient)
             }
         }
     }

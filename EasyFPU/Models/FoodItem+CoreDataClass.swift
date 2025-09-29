@@ -142,45 +142,6 @@ public class FoodItem: NSManagedObject {
         return cdFoodItem
     }
     
-    /// Creates a new Core Data FoodItem from a FoodItem in a temporary context.
-    /// Does not validate the data, as it is assumed that the data has already been validated.
-    /// - Parameters:
-    ///   - tempFoodItem: The source FoodItem in a temporary context.
-    ///   - saveContext: If true, the main context will be saved after creation.
-    /// - Returns: The new Core Data FoodItem, or nil if there was a validation error.
-    static func create(from tempFoodItem: FoodItem, saveContext: Bool) -> FoodItem {
-        // Create the FoodItem
-        let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
-        
-        // Fill data
-        cdFoodItem.id = UUID()
-        cdFoodItem.name = tempFoodItem.name
-        cdFoodItem.foodCategory = tempFoodItem.foodCategory
-        cdFoodItem.category = tempFoodItem.category
-        cdFoodItem.caloriesPer100g = tempFoodItem.caloriesPer100g
-        cdFoodItem.carbsPer100g = tempFoodItem.carbsPer100g
-        cdFoodItem.sugarsPer100g = tempFoodItem.sugarsPer100g
-        cdFoodItem.favorite = tempFoodItem.favorite
-        cdFoodItem.sourceID = tempFoodItem.sourceID
-        cdFoodItem.sourceDB = tempFoodItem.sourceDB
-        
-        // Add typical amounts
-        if let typicalAmounts = tempFoodItem.typicalAmounts {
-            for typicalAmount in typicalAmounts {
-                if let cdTypicalAmount = typicalAmount as? TypicalAmount {
-                    cdTypicalAmount.foodItem = cdFoodItem
-                    cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
-                }
-            }
-        }
-        
-        // Save
-        if saveContext {
-            CoreDataStack.shared.save()
-        }
-        return cdFoodItem
-    }
-    
     /**
      Creates a new Core Data FoodItem from a ComposedFoodItemViewModel.
      First checks if a Core Data FoodItem with the same ID exists, otherwise creates a new one with the ID of the ComposedFoodItemViewModel.

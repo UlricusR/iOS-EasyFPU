@@ -373,7 +373,7 @@ struct FoodItemComposerView: View {
             }
             
             for ingredient in ingredientsToRemove {
-                composedFoodItem.removeFromIngredients(ingredient)
+                composedFoodItem.remove(ingredient)
             }
         }
     }

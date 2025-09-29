@@ -179,7 +179,7 @@ extension ComposedFoodItem: VariableAmountItem {
     /// Adds an Ingredient  to the ComposedFoodItem, if it doesn't exist yet.
     /// - Parameter ingredient: The ingredient to be added.
     func add(ingredient: Ingredient) {
-        if !ingredients.contains(ingredient) {
+        if !ingredients.contains(ingredient) { // TODO this goes wrong, we need to define hash
             self.addToIngredients(ingredient)
             let newAmount = self.amount + ingredient.amount
             self.amount = newAmount
@@ -191,8 +191,8 @@ extension ComposedFoodItem: VariableAmountItem {
     ///   - foodItem: The FoodItem to be checked for.
     /// - Returns: True if the ComposedFoodItem contains the FoodItem, otherwise false.
     func contains(foodItem: FoodItem) -> Bool {
-        let foodItems = self.ingredients.compactMap { ($0 as? Ingredient)?.foodItem }
-        return foodItems.contains(foodItem)
+        let relatedFoodItemIDs = self.ingredients.compactMap { ($0 as? Ingredient)?.relatedFoodItemID }
+        return relatedFoodItemIDs.contains(foodItem.id)
     }
     
     /// Returns the Ingredient of the given ComposedFoodItem which relates to the given FoodItem.
@@ -201,7 +201,7 @@ extension ComposedFoodItem: VariableAmountItem {
     /// - Returns: The Ingredient if found, otherwise nil.
     func getIngredient(foodItem: FoodItem) -> Ingredient? {
         for case let ingredient as Ingredient in self.ingredients {
-            if ingredient.foodItem == foodItem {
+            if ingredient.relatedFoodItemID == foodItem.id {
                 return ingredient
             }
         }
@@ -213,20 +213,22 @@ extension ComposedFoodItem: VariableAmountItem {
     ///   - foodItem: The FoodItem to be removed.
     func remove(foodItem: FoodItem) {
         if let ingredientToBeRemoved = getIngredient(foodItem: foodItem) {
-            remove(ingredient: ingredientToBeRemoved)
+            remove(ingredientToBeRemoved)
         }
     }
     
     /// Removes the Ingredient of the given ComposedFoodItem which relates to the given FoodItem. Does not save the context.
     /// - Parameters:
     ///   - foodItem: The FoodItem to be removed.
-    func remove(ingredient: Ingredient) {
-        // Substract the amount of the ingredient from the total amount
-        let newAmount = self.amount - ingredient.amount
-        self.amount = newAmount
-        
-        // Remove the ingredient from the composed food item and delete it
-        self.removeFromIngredients(ingredient)
+    func remove(_ ingredient: Ingredient) {
+        if ingredients.contains(ingredient) {
+            // Substract the amount of the ingredient from the total amount
+            let newAmount = self.amount - ingredient.amount
+            self.amount = newAmount
+            
+            // Remove the ingredient from the composed food item and delete it
+            self.removeFromIngredients(ingredient)
+        }
     }
     
     
