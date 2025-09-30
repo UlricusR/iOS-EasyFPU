@@ -34,9 +34,8 @@ public class ComposedFoodItem: NSManagedObject {
         try? viewContext.save()
     }
     
-    static func fetchRequestWithoutChildren() -> NSFetchRequest<ComposedFoodItem> {
+    static func createFetchRequest() -> NSFetchRequest<ComposedFoodItem> {
         let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
-        request.includesSubentities = false
         request.sortDescriptors = [NSSortDescriptor(keyPath: \ComposedFoodItem.name, ascending: true)]
         return request
     }
@@ -148,12 +147,10 @@ public class ComposedFoodItem: NSManagedObject {
     /// Returns all Core Data ComposedFoodItems with the given name.
     /// - Parameters:
     ///   - name: The Core Data entry name.
-    ///   - includeSubEntities: If true, also includes sub-entities of ComposedFoodItem. Default is false.
     /// - Returns: An array of related Core Data ComposedFoodItems, nil if not found.
-    static func getComposedFoodItemsByName(name: String, includeSubEntities: Bool = false) -> [ComposedFoodItem]? {
+    static func getComposedFoodItemsByName(name: String) -> [ComposedFoodItem]? {
         let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
-        request.includesSubentities = includeSubEntities
         request.predicate = predicate
         do {
             let result = try CoreDataStack.viewContext.fetch(request)

@@ -179,7 +179,7 @@ extension ComposedFoodItem: VariableAmountItem {
     /// Adds an Ingredient  to the ComposedFoodItem, if it doesn't exist yet.
     /// - Parameter ingredient: The ingredient to be added.
     func add(ingredient: Ingredient) {
-        if !ingredients.contains(ingredient) { // TODO this goes wrong, we need to define hash
+        if !ingredients.contains(ingredient) {
             self.addToIngredients(ingredient)
             let newAmount = self.amount + ingredient.amount
             self.amount = newAmount

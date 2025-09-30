@@ -330,12 +330,10 @@ public class FoodItem: NSManagedObject {
     /// Returns the Core Data FoodItems with the given name.
     /// - Parameters:
     ///   - name: The Core Data entry name.
-    ///   - includeSubEntities: If true, TempFoodItems will be included in the fetch request. Default is false.
     /// - Returns: The related Core Data FoodItems, nil if not found.
-    static func getFoodItemsByName(name: String, includeSubEntities: Bool = false) -> [FoodItem]? {
+    static func getFoodItemsByName(name: String) -> [FoodItem]? {
         let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
-        request.includesSubentities = includeSubEntities
         request.predicate = predicate
         do {
             let result = try CoreDataStack.viewContext.fetch(request)

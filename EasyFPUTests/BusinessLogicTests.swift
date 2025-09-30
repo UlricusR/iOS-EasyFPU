@@ -54,7 +54,7 @@ struct BusinessLogicTests {
             let foodItem = FoodItem.create(from: foodItemPersistence, saveContext: false, dataError: &dataError)
             #expect(foodItem != nil)
             #expect(dataError == .none)
-            let ingredient = Ingredient.create(from: foodItem!)
+            let ingredient = Ingredient.create(from: foodItem!, context: CoreDataStack.viewContext)
             ingredient.amount = Int64(BusinessLogicTests.amount)
             BusinessLogicTests.checkFoodItemValues(ingredient: ingredient)
         }
@@ -236,11 +236,13 @@ struct BusinessLogicTests {
             let allFoodItemVMs = composedFoodItemVM.ingredients
             
             // Calculate nutritional values
+            var amount = 0
             var calories = 0.0
             var carbs = 0.0
             var sugars = 0.0
             var fpus = 0.0
             for foodItemVM in allFoodItemVMs {
+                amount += foodItemVM.amount
                 calories += foodItemVM.caloriesPer100g / 100 * Double(foodItemVM.amount)
                 carbs += foodItemVM.carbsPer100g / 100 * Double(foodItemVM.amount)
                 sugars += foodItemVM.sugarsPer100g / 100 * Double(foodItemVM.amount)
@@ -251,6 +253,60 @@ struct BusinessLogicTests {
             let cdComposedFoodItem = ComposedFoodItem.create(from: composedFoodItemVM, saveContext: false)
             #expect(cdComposedFoodItem != nil)
             
+            // Verify nutritional values
+            #expect(cdComposedFoodItem!.amount == amount)
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.calories) == BusinessLogicTests.roundToFiveDecimals(calories))
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.carbsInclSugars) == BusinessLogicTests.roundToFiveDecimals(carbs))
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.sugarsOnly) == BusinessLogicTests.roundToFiveDecimals(sugars))
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.regularCarbs(treatSugarsSeparately: false)) == BusinessLogicTests.roundToFiveDecimals(carbs))
+            #expect(cdComposedFoodItem!.sugars(treatSugarsSeparately: false) == 0)
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.regularCarbs(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals(carbs - sugars))
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.sugars(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals(sugars))
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.fpus.fpu) == BusinessLogicTests.roundToFiveDecimals(fpus))
+            
+            // Create a new ingredient
+            let newFoodItemVM = try DataFactory.shared.createFoodItemPersistence()
+            
+            // Update the nutritional values
+            amount += newFoodItemVM.amount
+            calories += newFoodItemVM.caloriesPer100g / 100 * Double(newFoodItemVM.amount)
+            carbs += newFoodItemVM.carbsPer100g / 100 * Double(newFoodItemVM.amount)
+            sugars += newFoodItemVM.sugarsPer100g / 100 * Double(newFoodItemVM.amount)
+            fpus += newFoodItemVM.getFPU().fpu
+            
+            // Create the core data ingredient
+            var dataError: FoodItemDataError = .none
+            let cdFoodItem = FoodItem.create(from: newFoodItemVM, saveContext: false, dataError: &dataError)
+            try #require(cdFoodItem != nil)
+            let cdIngredient = Ingredient.create(from: cdFoodItem!, context: CoreDataStack.viewContext)
+            cdIngredient.amount = Int64(newFoodItemVM.amount)
+            
+            // Add the ingredient to the composed food item
+            cdComposedFoodItem!.add(ingredient: cdIngredient)
+            
+            // Verify nutritional values
+            #expect(cdComposedFoodItem!.amount == amount)
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.calories) == BusinessLogicTests.roundToFiveDecimals(calories))
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.carbsInclSugars) == BusinessLogicTests.roundToFiveDecimals(carbs))
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.sugarsOnly) == BusinessLogicTests.roundToFiveDecimals(sugars))
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.regularCarbs(treatSugarsSeparately: false)) == BusinessLogicTests.roundToFiveDecimals(carbs))
+            #expect(cdComposedFoodItem!.sugars(treatSugarsSeparately: false) == 0)
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.regularCarbs(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals(carbs - sugars))
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.sugars(treatSugarsSeparately: true)) == BusinessLogicTests.roundToFiveDecimals(sugars))
+            #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.fpus.fpu) == BusinessLogicTests.roundToFiveDecimals(fpus))
+            
+            // Remove the ingredient again
+            cdComposedFoodItem!.remove(cdIngredient)
+            
+            // Update the nutritional values
+            amount -= newFoodItemVM.amount
+            calories -= newFoodItemVM.caloriesPer100g / 100 * Double(newFoodItemVM.amount)
+            carbs -= newFoodItemVM.carbsPer100g / 100 * Double(newFoodItemVM.amount)
+            sugars -= newFoodItemVM.sugarsPer100g / 100 * Double(newFoodItemVM.amount)
+            fpus -= newFoodItemVM.getFPU().fpu
+            
+            // Verify nutritional values
+            #expect(cdComposedFoodItem!.amount == amount)
             #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.calories) == BusinessLogicTests.roundToFiveDecimals(calories))
             #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.carbsInclSugars) == BusinessLogicTests.roundToFiveDecimals(carbs))
             #expect(BusinessLogicTests.roundToFiveDecimals(cdComposedFoodItem!.sugarsOnly) == BusinessLogicTests.roundToFiveDecimals(sugars))

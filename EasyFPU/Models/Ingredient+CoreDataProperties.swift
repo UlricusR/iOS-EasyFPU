@@ -100,7 +100,7 @@ extension Ingredient: VariableAmountItem {
         cdIngredient.foodItem = self.foodItem
         
         // Add to ComposedFoodItem
-        newCDComposedFoodItem.addToIngredients(cdIngredient)
+        newCDComposedFoodItem.add(ingredient: cdIngredient)
         
         return cdIngredient
     }

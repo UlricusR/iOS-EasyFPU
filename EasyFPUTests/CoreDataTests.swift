@@ -385,13 +385,13 @@ struct CoreDataTests {
                 var dataError: FoodItemDataError = .none
                 let foodItem = FoodItem.create(from: newIngredient, saveContext: false, dataError: &dataError)
                 #expect(foodItem != nil, "The new FoodItem should have been created in the DB.")
-                let ingredient = Ingredient.create(from: foodItem!)
+                let ingredient = Ingredient.create(from: foodItem!, context: CoreDataStack.viewContext)
                 foodItemIDs.append(newIngredient.id)
                 cdComposedFoodItem.addToIngredients(ingredient)
             }
             
             // Run the Core Data update
-            cdComposedFoodItem.updateRelatedFoodItem()
+            cdComposedFoodItem.createOrUpdateRelatedFoodItem()
             
             // Check and get ComposedFoodItem from DB
             let cdComposedFoodItemAfterUpdate = ComposedFoodItem.getComposedFoodItemByID(id: composedFoodItemVM.id)

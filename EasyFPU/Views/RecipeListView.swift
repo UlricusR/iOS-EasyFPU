@@ -31,7 +31,7 @@ struct RecipeListView: View {
     @State private var showFavoritesOnly = false
     @State private var activeSheet: SheetState?
     
-    @FetchRequest(fetchRequest: ComposedFoodItem.fetchRequestWithoutChildren())
+    @FetchRequest(fetchRequest: ComposedFoodItem.createFetchRequest())
     var composedFoodItems: FetchedResults<ComposedFoodItem>
     
     private var filteredComposedFoodItems: [ComposedFoodItem] {
