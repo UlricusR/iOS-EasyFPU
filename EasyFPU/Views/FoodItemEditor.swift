@@ -486,8 +486,8 @@ struct FoodItemEditor: View {
         navigationPath.removeLast()
         
         if deletingFoodItem {
-            // Delete food item
-            FoodItem.delete(editedCDFoodItem, saveContext: false)
+            // Send Message that the Item  should be deleted
+            NotificationCenter.default.post(name: .deleteFoodItem, object: editedCDFoodItem.objectID.uriRepresentation())
         }
         
         // Save
@@ -719,5 +719,11 @@ struct FoodItemEditor: View {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpEditFoodItem")
         }
+    }
+}
+
+extension Notification.Name {
+    static var deleteFoodItem: Notification.Name {
+        return Notification.Name("Delete FoodItem")
     }
 }

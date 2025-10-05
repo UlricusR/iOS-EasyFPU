@@ -245,6 +245,16 @@ struct FoodItemView: View {
         } message: {
             Text("There's an associated recipe, do you want to delete it as well?")
         }
+        .onReceive(NotificationCenter.default.publisher(for: .deleteFoodItem)) { notification in
+            if let foodItemObjectID = notification.object as? URL {
+                DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(0.1)) {
+                    if let moID = CoreDataStack.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: foodItemObjectID) {
+                        let foodItem = CoreDataStack.viewContext.object(with: moID) as! FoodItem
+                        FoodItem.delete(foodItem, saveContext: true)
+                    }
+                }
+            }
+        }
     }
     
     @ViewBuilder
