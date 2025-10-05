@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 enum SimpleAlertType {
     case success(message: String)
@@ -68,6 +69,7 @@ struct MainView: View {
         ]
     ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     @State var absorptionScheme = AbsorptionScheme()
+    @State private var didDBCleanup = false
     @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert = false
     @State private var isConfirming = false
@@ -151,6 +153,12 @@ struct MainView: View {
                     .accessibilityIdentifierBranch("Settings")
                 }
                 .onAppear {
+                    // Clean up database
+                    if !didDBCleanup {
+                        cleanUpDB()
+                    }
+                    
+                    // Initialize absorption scheme if not done yet
                     if self.absorptionScheme.absorptionBlocks.isEmpty {
                         // Absorption scheme hasn't been loaded yet
                         var errorMessage = ""
@@ -188,6 +196,31 @@ struct MainView: View {
                 .accessibilityIdentifierBranch("MainView")
             )
         }
+    }
+    
+    private func cleanUpDB() {
+        // Start cleanup in the background
+        CoreDataStack.persistentContainer.performBackgroundTask { managedObjectContext in
+            // Delete orphaned Ingredients
+            let request: NSFetchRequest<Ingredient> = Ingredient.fetchRequest()
+            request.predicate = NSPredicate(format: "composedFoodItem == nil")
+            do {
+                let orphanedIngredients = try managedObjectContext.fetch(request)
+                for ingredient in orphanedIngredients {
+                    managedObjectContext.delete(ingredient)
+                }
+            } catch {
+                // Error fetching Ingredients - we ignore this
+            }
+            
+            // Save context
+            if managedObjectContext.hasChanges {
+                try? managedObjectContext.save()
+            }
+        }
+        
+        // Mark cleanup as done
+        didDBCleanup = true
     }
     
     private func importFoodData(from url: URL) {

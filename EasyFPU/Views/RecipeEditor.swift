@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-struct FoodItemComposerView: View {
+struct RecipeEditor: View {
     enum SheetState: Identifiable {
         case help
         
@@ -75,10 +75,10 @@ struct FoodItemComposerView: View {
                                 }
                                 
                                 // Food Category
-                                Picker("Category", selection: self.$composedFoodItem.foodCategory) {
-                                    Text("Uncategorized").tag(nil as FoodCategory?)
+                                Picker("Category", selection: self.$composedFoodItem.foodCategoryObjectID) {
+                                    Text("Uncategorized").tag(nil as URL?)
                                     ForEach(FoodCategory.fetchAll(category: .product), id: \.id) { foodCategory in
-                                        Text(foodCategory.name).tag(foodCategory)
+                                        Text(foodCategory.name).tag(foodCategory.objectID.uriRepresentation())
                                     }
                                 }
                                 .accessibilityIdentifierLeaf("CategoryPicker")
@@ -278,12 +278,15 @@ struct FoodItemComposerView: View {
     
     init(navigationPath: Binding<NavigationPath>, composedFoodItem: ComposedFoodItem? = nil) {
         self._navigationPath = navigationPath
-        if let composedFoodItem = composedFoodItem {
-            // Editing an existing recipe
+        if let composedFoodItem = composedFoodItem { // Editing an existing recipe
+            // Set the transient property for the food category object ID before editing, if not set yet
+            if composedFoodItem.foodCategoryObjectID == nil {
+                composedFoodItem.foodCategoryObjectID = composedFoodItem.foodCategory?.objectID.uriRepresentation()
+            }
+            
             self.tempContext = nil
             self.composedFoodItem = composedFoodItem
-        } else {
-            // Creating a new recipe
+        } else { // Creating a new recipe
             self.tempContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
             self.tempContext!.name = "Temporary Recipe Context"
             self.tempContext!.parent = CoreDataStack.viewContext
@@ -313,14 +316,20 @@ struct FoodItemComposerView: View {
                 // Retrieve the ComposedFoodItem in the main context
                 let mainContextComposedFoodItem = CoreDataStack.viewContext.object(with: composedFoodItemID) as! ComposedFoodItem
                 
-                // For each ingredient, retrieve the related FoodItem in the main context (if existing) and link it to the ingredient
+                // Update food category
+                updateFoodCategory(composedFoodItem: mainContextComposedFoodItem, foodCategoryObjectID: composedFoodItem.foodCategoryObjectID)
+                
                 for ingredient in mainContextComposedFoodItem.ingredients.allObjects as! [Ingredient] {
+                    // For each ingredient, retrieve the related FoodItem in the main context (if existing) and link it to the ingredient
                     if let relatedFoodItemObjectID = ingredient.relatedFoodItemObjectID {
                         if let moID = CoreDataStack.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: relatedFoodItemObjectID) {
                             let relatedFoodItem = CoreDataStack.viewContext.object(with: moID) as! FoodItem
                             ingredient.foodItem = relatedFoodItem
                         }
                     }
+                    
+                    // Also link the ComposedFoodItem to the Ingredient
+                    ingredient.composedFoodItem = mainContextComposedFoodItem
                 }
                 
                 // Now create the related FoodItem for the ComposedFoodItem
@@ -332,12 +341,24 @@ struct FoodItemComposerView: View {
                 return
             }
         } else {
+            // Update food category
+            updateFoodCategory(composedFoodItem: composedFoodItem, foodCategoryObjectID: composedFoodItem.foodCategoryObjectID)
+            
             // Existing recipe, so we only need to update the related FoodItem
             composedFoodItem.createOrUpdateRelatedFoodItem()
         }
         
         // Save and exit
         saveAndExit()
+    }
+    
+    private func updateFoodCategory(composedFoodItem: ComposedFoodItem, foodCategoryObjectID: URL?) {
+        if let foodCategoryObjectID, let moID = CoreDataStack.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: foodCategoryObjectID) { // A food category has been selected
+            let relatedFoodCategory = CoreDataStack.viewContext.object(with: moID) as! FoodCategory
+            composedFoodItem.foodCategory = relatedFoodCategory
+        } else { // No food category has been selected
+            composedFoodItem.foodCategory = nil
+        }
     }
     
     private func saveAndExit() {

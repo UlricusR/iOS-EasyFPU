@@ -15,6 +15,7 @@ struct CategoryEditor: View {
     @State private var showingAlert = false
     @State private var activeAlert: SimpleAlertType?
     @State private var name = ""
+    @State private var isNew: Bool = true
     @State private var editedCategory: FoodCategory?
     
     var body: some View {
@@ -36,7 +37,7 @@ struct CategoryEditor: View {
                             .onSubmit {
                                 let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
                                 if !trimmedName.isEmpty {
-                                    if FoodCategory.exists(name: trimmedName, category: selectedFoodItemCategory) {
+                                    if FoodCategory.exists(name: trimmedName, category: selectedFoodItemCategory, isNew: isNew) {
                                         activeAlert = .warning(message: NSLocalizedString("Category already exists!", comment: ""))
                                         showingAlert = true
                                         return
@@ -51,6 +52,7 @@ struct CategoryEditor: View {
                                             editedCategory = nil // Clear the edited category
                                         }
                                         name = "" // Clear the text field after saving
+                                        isNew = true // Reset to new mode
                                     }
                                 }
                             }
@@ -68,6 +70,19 @@ struct CategoryEditor: View {
                             Text(category.name)
                                 .foregroundStyle(editedCategory == category ? .secondary : .primary)
                                 .swipeActions(edge: .trailing) {
+                                    // The edit button
+                                    Button("Edit", systemImage: "pencil") {
+                                        withAnimation {
+                                            editedCategory = category
+                                            name = category.name // Pre-fill the text field with the category name
+                                            isNew = false
+                                            proxy.scrollTo(0, anchor: .top) // Scroll to the text field
+                                        }
+                                    }
+                                    .tint(.blue)
+                                    .accessibilityIdentifierLeaf("EditButton")
+                                    
+                                    // The delete button
                                     Button("Delete", systemImage: "trash") {
                                         if category.hasRelatedItems() {
                                             activeAlert = .warning(message: NSLocalizedString("Cannot delete category which is in use!", comment: ""))
@@ -80,17 +95,6 @@ struct CategoryEditor: View {
                                     }
                                     .tint(.red)
                                     .accessibilityIdentifierLeaf("DeleteButton")
-                                }
-                                .swipeActions(edge: .leading) {
-                                    Button("Edit", systemImage: "pencil") {
-                                        withAnimation {
-                                            editedCategory = category
-                                            name = category.name // Pre-fill the text field with the category name
-                                            proxy.scrollTo(0, anchor: .top) // Scroll to the text field
-                                        }
-                                    }
-                                    .tint(.blue)
-                                    .accessibilityIdentifierLeaf("EditButton")
                                 }
                         }
                     }

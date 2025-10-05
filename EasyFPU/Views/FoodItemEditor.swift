@@ -57,8 +57,8 @@ struct FoodItemEditor: View {
     }
     
     private var sourceDB: FoodDatabase {
-        if editedCDFoodItem.sourceDB != nil {
-            return FoodDatabaseType(rawValue: editedCDFoodItem.sourceDB!) as! FoodDatabase
+        if let sourceDB = editedCDFoodItem.sourceDB, let foodDatabaseType = FoodDatabaseType(rawValue: sourceDB) {
+            return FoodDatabaseType.getFoodDatabase(type: foodDatabaseType)
         } else {
             return UserSettings.shared.foodDatabase
         }
@@ -119,10 +119,10 @@ struct FoodItemEditor: View {
                     }
                     
                     // Food Category
-                    Picker("Category", selection: $editedCDFoodItem.foodCategory) {
-                        Text("Uncategorized").tag(nil as FoodCategory?)
+                    Picker("Category", selection: $editedCDFoodItem.foodCategoryObjectID) {
+                        Text("Uncategorized").tag(nil as URL?)
                         ForEach(FoodCategory.fetchAll(category: category), id: \.id) { foodCategory in
-                            Text(foodCategory.name).tag(foodCategory as FoodCategory?)
+                            Text(foodCategory.name).tag(foodCategory.objectID.uriRepresentation())
                         }
                     }
                     .accessibilityIdentifierLeaf("CategoryPicker")
@@ -390,6 +390,11 @@ struct FoodItemEditor: View {
         self.category = category
         
         if let foodItem = foodItem { // We are editing an existing food item
+            // Set the transient property for the food category object ID before editing, if not set yet
+            if foodItem.foodCategoryObjectID == nil {
+                foodItem.foodCategoryObjectID = foodItem.foodCategory?.objectID.uriRepresentation()
+            }
+            
             self.editedCDFoodItem = foodItem
             self.tempContext = nil
         } else { // We are creating a new food item
@@ -415,6 +420,15 @@ struct FoodItemEditor: View {
                 if tempContext!.hasChanges {
                     do {
                         try tempContext!.save()
+                        
+                        // Get the ID of the ComposedFoodItem
+                        let foodItemID = self.editedCDFoodItem.objectID
+                        
+                        // Retrieve the FoodItem in the main context
+                        let mainContextFoodItem = CoreDataStack.viewContext.object(with: foodItemID) as! FoodItem
+                        
+                        // Update food category
+                        updateFoodCategory(foodItem: mainContextFoodItem, foodCategoryObjectID: editedCDFoodItem.foodCategoryObjectID)
                     } catch {
                         activeAlert = .simpleAlert(type: .fatalError(message: "Could not save new food item: \(error.localizedDescription)"))
                         showingAlert = true
@@ -425,12 +439,12 @@ struct FoodItemEditor: View {
                 // Save main context and exit
                 saveContextAndExit()
             } else { // We need to update an existing food item
+                // Update food category
+                updateFoodCategory(foodItem: editedCDFoodItem, foodCategoryObjectID: editedCDFoodItem.foodCategoryObjectID)
+                
                 // We need to check for related Ingredients and update all Recipes, where these Ingredients are used
-                if editedCDFoodItem.ingredients?.count ?? 0 > 0 { // There are related ingredients
-                    // Get the names of the ingredients
-                    for case let ingredient as Ingredient in editedCDFoodItem.ingredients! {
-                        associatedRecipes.append(ingredient.composedFoodItem.name)
-                    }
+                if let associatedRecipes = editedCDFoodItem.getAssociatedRecipeNames() {
+                    self.associatedRecipes = associatedRecipes
                     
                     // Show alert
                     activeAlert = .updatedIngredients
@@ -446,6 +460,15 @@ struct FoodItemEditor: View {
             // Display alert and stay in edit mode
             activeAlert = .simpleAlert(type: .error(message: errMessage))
             showingAlert = true
+        }
+    }
+    
+    private func updateFoodCategory(foodItem: FoodItem, foodCategoryObjectID: URL?) {
+        if let foodCategoryObjectID, let moID = CoreDataStack.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: foodCategoryObjectID) { // A food category has been selected
+            let relatedFoodCategory = CoreDataStack.viewContext.object(with: moID) as! FoodCategory
+            foodItem.foodCategory = relatedFoodCategory
+        } else { // No food category has been selected
+            foodItem.foodCategory = nil
         }
     }
     

@@ -26,6 +26,7 @@ extension FoodItem {
     @NSManaged public var sugarsPer100g: Double
     @NSManaged public var sourceID: String?
     @NSManaged public var sourceDB: String?
+    @NSManaged public var foodCategoryObjectID: URL?
     @NSManaged public var foodCategory: FoodCategory?
     @NSManaged public var composedFoodItem: ComposedFoodItem?
     @NSManaged public var typicalAmounts: NSSet?
@@ -179,8 +180,21 @@ extension FoodItem {
         } else {
             var associatedRecipeNames = [String]()
             for case let ingredient as Ingredient in self.ingredients! {
-                associatedRecipeNames.append(ingredient.composedFoodItem.name)
+                if let composedFoodItem = ingredient.composedFoodItem {
+                    associatedRecipeNames.append(composedFoodItem.name)
+                } else {
+                    // The ingredient has no associated ComposedFoodItem, which makes it an orphan and we delete it.
+                    // Although this should not happen, it could be a relic of a data operation gone wrong
+                    CoreDataStack.viewContext.delete(ingredient)
+                    CoreDataStack.shared.save()
+                }
             }
+            
+            if associatedRecipeNames.count == 0 {
+                // All seem to have been orphans, so we return nil
+                return nil
+            }
+            
             return associatedRecipeNames
         }
     }

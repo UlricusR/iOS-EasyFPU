@@ -26,7 +26,7 @@ extension Ingredient: VariableAmountItem {
     @NSManaged public var caloriesPer100g: Double
     @NSManaged public var carbsPer100g: Double
     @NSManaged public var sugarsPer100g: Double
-    @NSManaged public var composedFoodItem: ComposedFoodItem
+    @NSManaged public var composedFoodItem: ComposedFoodItem?
     @NSManaged public var foodItem: FoodItem?
     
     //
@@ -117,7 +117,9 @@ extension Ingredient: VariableAmountItem {
         self.sugarsPer100g = foodItem.sugarsPer100g
         
         // Update the FoodItem of the related ComposedFoodItem
-        composedFoodItem.createOrUpdateRelatedFoodItem()
+        if let composedFoodItem = self.composedFoodItem {
+            composedFoodItem.createOrUpdateRelatedFoodItem()
+        }
     }
     
     

@@ -78,10 +78,13 @@ public class FoodCategory: NSManagedObject {
     }
     
     /// Checks if a FoodCategory with the given id exists.
-    /// - Parameter name: The name of the FoodCategory to check for.
+    /// - Parameters:
+    ///    - name: The name of the FoodCategory to check for.
+    ///    - category: The category type of the FoodCategory, as a FoodItemCategory.
+    ///    - isNew: Whether this is a new FoodCategory (true) or an existing one being edited (false).
     /// - Returns: True if a FoodCategory with the given name exists, false otherwise.
-    static func exists(name: String, category: FoodItemCategory) -> Bool {
-        return getFoodCategoriesByName(name: name, category: category)?.count ?? 0 > 0
+    static func exists(name: String, category: FoodItemCategory, isNew: Bool) -> Bool {
+        return getFoodCategoriesByName(name: name, category: category)?.count ?? 0 > (isNew ? 0 : 1)
     }
     
     /**

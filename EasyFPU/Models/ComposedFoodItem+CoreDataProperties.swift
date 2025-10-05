@@ -22,6 +22,7 @@ extension ComposedFoodItem: VariableAmountItem {
     @NSManaged public var amount: Int64
     @NSManaged public var numberOfPortions: Int16
     @NSManaged public var id: UUID
+    @NSManaged public var foodCategoryObjectID: URL?
     @NSManaged public var foodCategory: FoodCategory?
     @NSManaged public var foodItem: FoodItem?
     @NSManaged public var ingredients: NSSet

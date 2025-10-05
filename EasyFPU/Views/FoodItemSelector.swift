@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct FoodItemSelector: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -21,8 +22,26 @@ struct FoodItemSelector: View {
     @State private var activeAlert: SimpleAlertType?
     private let helpScreen = HelpScreen.foodItemSelector
     
+    var relatedFoodItem: FoodItem? {
+        if let relatedFoodItemObjectID = ingredient.relatedFoodItemObjectID, let moID = CoreDataStack.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: relatedFoodItemObjectID) {
+            return CoreDataStack.viewContext.object(with: moID) as? FoodItem
+        } else {
+            activeAlert = .fatalError(message: NSLocalizedString("No food item associated to typical amount!", comment: ""))
+            showingAlert = true
+        }
+        
+        return nil
+    }
+    
+    var typicalAmounts: [TypicalAmount]? {
+        if let relatedFoodItem {
+            return relatedFoodItem.typicalAmounts?.allObjects as? [TypicalAmount] ?? nil
+        }
+        
+        return nil
+    }
+    
     var body: some View {
-        let typicalAmounts = self.ingredient.foodItem?.typicalAmounts?.allObjects as? [TypicalAmount]
         ZStack {
             // The form with the food item details
             GeometryReader { geometry in
@@ -149,16 +168,13 @@ struct FoodItemSelector: View {
     
     private func addTypicalAmount() {
         // Relate typical amount to food item
-        if let foodItem = self.ingredient.foodItem, let moc = foodItem.managedObjectContext {
+        if let relatedFoodItem, let moc = relatedFoodItem.managedObjectContext {
             let newTypicalAmount = TypicalAmount.create(amount: self.ingredient.amount, comment: self.newTypicalAmountComment, context: moc)
-            newTypicalAmount.foodItem = foodItem
+            newTypicalAmount.foodItem = relatedFoodItem
             
             // Reset text fields
             self.newTypicalAmountComment = ""
             self.addToTypicalAmounts = false
-        } else {
-            activeAlert = .fatalError(message: NSLocalizedString("No food item associated to typical amount!", comment: ""))
-            showingAlert = true
         }
     }
 }

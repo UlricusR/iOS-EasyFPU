@@ -293,15 +293,16 @@ public class FoodItem: NSManagedObject {
     }
     
     /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this FoodItem exists.
-    /// - Parameter foodItem: The Core Data FoodItem to check the name for.
+    /// - Parameters:
+    ///    - name: The name to be checked.
+    ///    - isNew: If true, the food item is not supposed to exist at all, otherwise we update an existing food item.
     /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
     static func nameExists(name: String, isNew: Bool) -> Bool {
         let foodItems = FoodItem.getFoodItemsByName(name: name)
         let composedFoodItems = ComposedFoodItem.getComposedFoodItemsByName(name: name)
         
-        // We expect the food item not to exist
-        // If isNew is true, we expect 0 items, as we are creating a new one
-        // If isNew is false, we expect 1 item, as we are editing an existing one
+        // If isNew is true, we expect 0 items, as we are creating a new one, i.e., we check for >0.
+        // If isNew is false, we expect at least 1 item, as we are editing an existing one, i.e., we check for >1.
         return foodItems != nil && foodItems!.count > (isNew ? 0 : 1) || composedFoodItems != nil && composedFoodItems!.count > (isNew ? 0 : 1)
     }
     

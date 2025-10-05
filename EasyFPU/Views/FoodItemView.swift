@@ -113,7 +113,7 @@ struct FoodItemView: View {
             if showFoodCategory && foodItem.foodCategory != nil {
                 HStack {
                     Text(foodItem.foodCategory!.name)
-                        .font(.caption)
+                        .font(.subheadline).foregroundStyle(.secondary)
                         .accessibilityIdentifierLeaf("FoodCategoryLabel")
                     Spacer()
                 }
@@ -182,7 +182,7 @@ struct FoodItemView: View {
             // Duplicating the food item
             Button("Duplicate", systemImage: "document.on.document") {
                 if foodItem.duplicate(saveContext: true) == nil {
-                    activeAlert = .simpleAlert(type: .fatalError(message: "Couldn't duplicate food item. This should not happen, please contact the app developer."))
+                    activeAlert = .simpleAlert(type: .fatalError(message: "Couldn't duplicate food item!"))
                     showingAlert = true
                 }
             }

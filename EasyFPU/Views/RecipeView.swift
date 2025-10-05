@@ -23,11 +23,23 @@ struct RecipeView: View {
     @State private var isConfirming = false
     
     var body: some View {
-        // Name, favorite
-        HStack {
-            Text(composedFoodItem.name).font(.headline)
-            if composedFoodItem.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
-            Spacer()
+        VStack {
+            // Name, favorite
+            HStack {
+                Text(composedFoodItem.name).font(.headline)
+                if composedFoodItem.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
+                Spacer()
+            }
+            
+            // Food category
+            if let foodCategory = composedFoodItem.foodCategory {
+                HStack {
+                    Text(foodCategory.name)
+                        .font(.subheadline).foregroundStyle(.secondary)
+                        .accessibilityIdentifierLeaf("FoodCategoryLabel")
+                    Spacer()
+                }
+            }
         }
         .accessibilityIdentifierLeaf("RecipeName")
         .swipeActions(edge: .trailing) {

@@ -153,7 +153,7 @@ struct RecipeListView: View {
             .navigationDestination(for: RecipeNavigationDestination.self) { screen in
                 switch screen {
                 case .CreateRecipe:
-                    FoodItemComposerView(
+                    RecipeEditor(
                         navigationPath: $navigationPath
                     )
                     .environment(\.managedObjectContext, managedObjectContext)
@@ -170,7 +170,7 @@ struct RecipeListView: View {
                     .accessibilityIdentifierBranch("SelectIngredients")
                     .navigationBarBackButtonHidden()
                 case let .EditRecipe(recipe: recipe):
-                    FoodItemComposerView(
+                    RecipeEditor(
                         navigationPath: $navigationPath,
                         composedFoodItem: recipe
                     )

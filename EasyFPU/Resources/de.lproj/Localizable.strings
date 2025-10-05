@@ -63,7 +63,7 @@
 "Add products" = "Speisen hinzufügen";
 "Edit products" = "Speisen bearbeiten";
 "Add more" = "Mehr hinzufügen";
-"No food item associated to typical amount!" = "Kein Essen mit typischer Menge verknüpft! Dies sollte nicht passieren - bitte das Entwicklungsteam informieren.";
+"No food item associated to typical amount!" = "Kein Essen mit typischer Menge verknüpft!";
 
 // Products List
 "Products" = "Speisen";
@@ -192,7 +192,7 @@
 "Search term must not be empty" = "Suchbegriff darf nicht leer sein";
 " - new" = " - neu";
 "A food item with this name already exists" = "Ein Eintrag mit diesem Namen existiert bereits";
-"Couldn't duplicate food item. This should not happen, please contact the app developer." = "Konnte Essen nicht duplizieren. Das sollte nicht passieren - bitte das Entwicklungsteam informieren.";
+"Couldn't duplicate food item!" = "Konnte Essen nicht duplizieren!";
 
 // Recipe editor
 "Recipe List" = "Rezeptliste";
@@ -205,7 +205,7 @@
 "Have you added ingredients to 'My Ingredients'?" = "Hast Du Zutaten zu 'Meine Zutaten' hinzugefügt?";
 "Add ingredients" = "Zutaten hinzufügen";
 "Edit ingredients" = "Zutaten bearbeiten";
-"No associated cdComposedFoodItem" = "Kein assoziiertes cdComposedFoodItem - das sollte nicht passieren - bitte das Entwicklungsteam informieren";
+"No associated cdComposedFoodItem" = "Kein assoziiertes cdComposedFoodItem!";
 "At least one ingredient required" = "Mindestens eine Zutat benötigt";
 "There's an associated product, do you want to delete it as well?" = "Dieses Rezept ist mit einer Speise verknüpft. Willst Du diese auch löschen?";
 "Delete both" = "Rezept und Speise löschen";
