@@ -9,15 +9,99 @@
 import SwiftUI
 
 struct FoodPreview: View {
+    enum FoodPreviewNavigationDestination: Hashable {
+        case Preview(url: URL)
+    }
+    
     var product: FoodDatabaseEntry
     @ObservedObject var editedCDFoodItem: FoodItem
     @Binding var navigationPath: NavigationPath
     var backNavigationIfSelected: Int = 1
+    @State var scale: CGFloat = 1.0
+    @State var isTapped: Bool = false
+    @State var pointTapped: CGPoint = CGPoint.zero
+    @State var draggedSize: CGSize = CGSize.zero
+    @State var previousDragged: CGSize = CGSize.zero
     
     var body: some View {
         ZStack {
-            FoodPreviewContent(selectedEntry: product)
-                .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the select button
+            List {
+                Section(header: Text("Food Details")) {
+                    HStack {
+                        Text("Name")
+                            .accessibilityIdentifierLeaf("NameLabel")
+                        Spacer()
+                        Text(product.name)
+                            .accessibilityIdentifierLeaf("NameValue")
+                            .fontWeight(.bold)
+                    }
+                    
+                    if product.quantity > 0 {
+                        HStack {
+                            Text("Quantity")
+                                .accessibilityIdentifierLeaf("QuantityLabel")
+                            Spacer()
+                            Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: product.quantity))!)
+                                .accessibilityIdentifierLeaf("QuantityValue")
+                            Text(product.quantityUnit.rawValue)
+                                .accessibilityIdentifierLeaf("QuantityUnit")
+                        }
+                    }
+                    
+                    HStack {
+                        Text("Calories per 100g")
+                            .accessibilityIdentifierLeaf("CaloriesLabel")
+                        Spacer()
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: product.caloriesPer100g.getEnergyInKcal()))!)
+                            .accessibilityIdentifierLeaf("CaloriesValue")
+                        Text("kcal")
+                            .accessibilityIdentifierLeaf("CaloriesUnit")
+                    }
+                    
+                    HStack {
+                        Text("Carbs per 100g")
+                            .accessibilityIdentifierLeaf("CarbsLabel")
+                        Spacer()
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: product.carbsPer100g))!)
+                            .accessibilityIdentifierLeaf("CarbsValue")
+                        Text("g")
+                            .accessibilityIdentifierLeaf("CarbsUnit")
+                    }
+                    
+                    HStack {
+                        Text("Thereof Sugars per 100g")
+                            .accessibilityIdentifierLeaf("SugarsLabel")
+                        Spacer()
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: product.sugarsPer100g))!)
+                            .accessibilityIdentifierLeaf("SugarsValue")
+                        Text("g")
+                            .accessibilityIdentifierLeaf("SugarsUnit")
+                    }
+                }
+                
+                if product.imageFront != nil || product.imageNutriments != nil || product.imageIngredients != nil {
+                    Section(header: Text("Images")) {
+                        ScrollView(.horizontal) {
+                            HStack {
+                                getThumbView(image: product.imageFront)
+                                getThumbView(image: product.imageNutriments)
+                                getThumbView(image: product.imageIngredients)
+                            }
+                            .accessibilityIdentifierLeaf("FoodImages")
+                        }
+                    }
+                }
+                
+                HStack {
+                    Text(NSLocalizedString("Link to entry in ", comment: "") + UserSettings.shared.foodDatabase.databaseType.rawValue)
+                        .foregroundStyle(.blue)
+                        .onTapGesture {
+                            try? UIApplication.shared.open(UserSettings.shared.foodDatabase.getLink(for: product.sourceId))
+                        }
+                        .accessibilityIdentifierLeaf("LinkToFoodDatabaseEntry")
+                }
+            }
+            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the select button
                 
             // The overlaying select button
             VStack {
@@ -44,5 +128,26 @@ struct FoodPreview: View {
             }
         }
         .navigationTitle("Scanned Food")
+        .navigationDestination(for: FoodPreviewNavigationDestination.self) { screen in
+            switch screen {
+            case .Preview(let url):
+                FoodImage(url: url, name: product.name)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func getThumbView(image: FoodDatabaseImage?) -> some View {
+        if image != nil {
+            AsyncImage(url: image!.thumb) { image in
+                image
+            } placeholder: {
+                Color.gray
+            }
+            .padding()
+            .onTapGesture {
+                navigationPath.append(FoodPreviewNavigationDestination.Preview(url: image!.image))
+            }
+        }
     }
 }

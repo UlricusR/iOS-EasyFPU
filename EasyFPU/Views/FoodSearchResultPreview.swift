@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import URLImage
 
 struct FoodSearchResultPreview: View {
     var product: FoodDatabaseEntry
@@ -17,11 +16,13 @@ struct FoodSearchResultPreview: View {
     var body: some View {
         HStack {
             if let imageObject = product.imageFront {
-                URLImage(imageObject.thumb) { image in
+                AsyncImage(url: imageObject.thumb) { image in
                     image
                         .resizable()
                         .scaledToFit()
                         .frame(height: 100)
+                } placeholder: {
+                    Color.gray
                 }
                 .accessibilityIdentifierLeaf("ProductImage")
             }
