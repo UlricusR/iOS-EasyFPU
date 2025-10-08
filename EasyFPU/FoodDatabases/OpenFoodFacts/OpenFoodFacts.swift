@@ -6,6 +6,13 @@
 //  Copyright © 2020 Ulrich Rüth. All rights reserved.
 //
 
+// Documentation of the OpenFoodFacts API:
+// - For search, we use API v1: https://wiki.openfoodfacts.org/API/Read/Search
+//   Example: https://world.openfoodfacts.org/cgi/search.pl
+// - For details, we use API v2 with limited fields: https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#get-/api/v2/product/-barcode-
+//   Example: https://world.openfoodfacts.org/api/v2/product/4014400929584?fields=product_name,product_quantity,product_quantity_unit,nutriments,selected_images
+
+
 import Foundation
 
 struct OpenFoodFacts: FoodDatabase {

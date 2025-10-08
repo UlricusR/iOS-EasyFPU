@@ -13,7 +13,7 @@ struct FoodPreview: View {
         case Preview(url: URL)
     }
     
-    var product: FoodDatabaseEntry
+    @State var product: FoodDatabaseEntry
     @ObservedObject var editedCDFoodItem: FoodItem
     @Binding var navigationPath: NavigationPath
     var backNavigationIfSelected: Int = 1
@@ -132,6 +132,39 @@ struct FoodPreview: View {
             switch screen {
             case .Preview(let url):
                 FoodImage(url: url, name: product.name)
+            }
+        }
+    }
+    
+    init(
+        product: FoodDatabaseEntry,
+        editedCDFoodItem: FoodItem,
+        navigationPath: Binding<NavigationPath>,
+        backNavigationIfSelected: Int = 1
+    ) {
+        self.product = product
+        self.editedCDFoodItem = editedCDFoodItem
+        self._navigationPath = navigationPath
+        self.backNavigationIfSelected = backNavigationIfSelected
+        
+        // Check for missing images
+        if product.imageFront == nil || product.imageNutriments == nil || product.imageIngredients == nil {
+            UserSettings.shared.foodDatabase.prepare(product.sourceId, category: product.category) { result in
+                switch result {
+                case .success(let networkFoodDatabaseEntry):
+                    guard let foodDatabaseEntry = networkFoodDatabaseEntry else {
+                        // This should not happen as we already have the entry
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        product.imageFront = foodDatabaseEntry.imageFront
+                        product.imageNutriments = foodDatabaseEntry.imageNutriments
+                        product.imageIngredients = foodDatabaseEntry.imageIngredients
+                    }
+                    
+                case .failure(let error):
+                    debugPrint(error.evaluate())
+                }
             }
         }
     }

@@ -8,9 +8,10 @@
 
 import Foundation
 
-struct FoodDatabaseEntry: Identifiable, Equatable, Hashable {
+@Observable class FoodDatabaseEntry: Identifiable, Equatable, Hashable {
     var id = UUID()
-    var name: String
+    var productName: String
+    var brandName: String?
     var category: FoodItemCategory
     var quantity: Double
     var quantityUnit: FoodItemUnit
@@ -24,6 +25,14 @@ struct FoodDatabaseEntry: Identifiable, Equatable, Hashable {
     var imageNutriments: FoodDatabaseImage?
     var imageIngredients: FoodDatabaseImage?
     
+    var name: String {
+        if brandName != nil {
+            return "\(productName) (\(brandName!))"
+        } else {
+            return productName
+        }
+    }
+    
     init?(from openFoodFactsProduct: OpenFoodFactsProduct, category: FoodItemCategory) {
         self.category = category
         
@@ -35,11 +44,8 @@ struct FoodDatabaseEntry: Identifiable, Equatable, Hashable {
         }
         sourceId = code
         
-        name = openFoodFactsProduct.productName
-        if openFoodFactsProduct.brands != nil {
-            name += " (\(openFoodFactsProduct.brands!))"
-        }
-        
+        productName = openFoodFactsProduct.productName
+        brandName = openFoodFactsProduct.brands
         quantity = (try? openFoodFactsProduct.getQuantity()) ?? 0.0
         
         quantityUnit = openFoodFactsProduct.quantityUnit
@@ -144,6 +150,10 @@ struct FoodDatabaseEntry: Identifiable, Equatable, Hashable {
                 }
             }
         }
+    }
+    
+    static func == (lhs: FoodDatabaseEntry, rhs: FoodDatabaseEntry) -> Bool {
+        lhs.id == rhs.id
     }
     
     func hash(into hasher: inout Hasher) {
