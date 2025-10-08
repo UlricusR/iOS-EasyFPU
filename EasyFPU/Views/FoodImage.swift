@@ -21,6 +21,7 @@ struct FoodImage: View {
     
     @State private var offset = CGSize.zero
     @State private var lastOffset = CGSize.zero
+    private let maxDrag = 0.5
     
     var body: some View {
         AsyncImage(url: url) { image in
@@ -36,7 +37,6 @@ struct FoodImage: View {
         } placeholder: {
             Color.gray
         }
-        .navigationTitle(name)
     }
 }
 
@@ -85,6 +85,9 @@ private extension FoodImage {
                 }
             }
             .onEnded { _ in
+                withAnimation {
+                    validateOffsetLimits()
+                }
                 lastOffset = offset
             }
     }
@@ -96,5 +99,28 @@ private extension FoodImage {
         newOffset.height = offset.height + lastOffset.height
         
         return newOffset
+    }
+    
+    private func getMinimumOffsetWidthAllowed() -> CGFloat {
+        return max(offset.width, -maxDrag * scale / 2 * UIScreen.main.bounds.width)
+    }
+    
+    private func getMaximumOffsetWidthAllowed() -> CGFloat {
+        return min(offset.width, maxDrag * scale / 2 * UIScreen.main.bounds.width)
+    }
+    
+    private func getMinimumOffsetHeightAllowed() -> CGFloat {
+        return max(offset.height, -maxDrag * scale / 2 * UIScreen.main.bounds.height)
+    }
+    
+    private func getMaximumOffsetHeightAllowed() -> CGFloat {
+        return min(offset.height, maxDrag * scale / 2 * UIScreen.main.bounds.height)
+    }
+    
+    private func validateOffsetLimits() {
+        offset.width = getMinimumOffsetWidthAllowed()
+        offset.width = getMaximumOffsetWidthAllowed()
+        offset.height = getMinimumOffsetHeightAllowed()
+        offset.height = getMaximumOffsetHeightAllowed()
     }
 }
