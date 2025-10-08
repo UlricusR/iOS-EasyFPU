@@ -250,7 +250,10 @@ struct FoodItemView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(0.1)) {
                     if let moID = CoreDataStack.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: foodItemObjectID) {
                         let foodItem = CoreDataStack.viewContext.object(with: moID) as! FoodItem
-                        FoodItem.delete(foodItem, saveContext: true)
+                        withAnimation {
+                            // Apply animation, as the FoodItemList might already be visible
+                            FoodItem.delete(foodItem, saveContext: true)
+                        }
                     }
                 }
             }
