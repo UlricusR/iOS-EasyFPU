@@ -21,6 +21,7 @@ import Foundation
     var source: FoodDatabaseType
     var sourceId: String
     
+    var imageThumbURL: URL?
     var imageFront: FoodDatabaseImage?
     var imageNutriments: FoodDatabaseImage?
     var imageIngredients: FoodDatabaseImage?
@@ -66,6 +67,9 @@ import Foundation
             debugPrint(error.localizedDescription)
             return nil
         }
+        
+        // Set the thumbnail URL directly
+        imageThumbURL = openFoodFactsProduct.imageThumbURL
         
         // Identify the right images
         if let frontImages = openFoodFactsProduct.selectedImages?.front {

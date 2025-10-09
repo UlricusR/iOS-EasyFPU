@@ -15,8 +15,8 @@ struct FoodSearchResultPreview: View {
     
     var body: some View {
         HStack {
-            if let imageObject = product.imageFront {
-                AsyncImage(url: imageObject.thumb) { image in
+            if let imageUrl = (product.imageThumbURL ?? (product.imageFront?.thumb ?? nil)) {
+                AsyncImage(url: imageUrl) { image in
                     image
                         .resizable()
                         .scaledToFit()
