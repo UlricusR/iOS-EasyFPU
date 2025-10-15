@@ -181,6 +181,8 @@ struct FoodItemEditor: View {
                                 }
                             } label: {
                                 Image(systemName: "checkmark.circle.fill")
+                                    .imageScale(.large)
+                                    .foregroundStyle(.green)
                             }
                             .accessibilityIdentifierLeaf("EditTypicalAmountButton")
                         }
