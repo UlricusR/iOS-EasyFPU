@@ -43,6 +43,10 @@ struct TypicalAmountList: View {
                 Text("g")
                     .accessibilityIdentifierLeaf("AmountUnit")
                 TextField("Comment", text: $newTypicalAmountComment)
+                    .onSubmit {
+                        self.addTypicalAmount()
+                    }
+                    .submitLabel(.done)
                     .accessibilityIdentifierLeaf("EditTypicalAmountComment")
                 Button {
                     self.addTypicalAmount()
@@ -84,6 +88,8 @@ struct TypicalAmountList: View {
                 if editedTypicalAmountID != nil && editedTypicalAmountID! == typicalAmount.id {
                     HStack {
                         TextField(LocalizedStringKey("Edit typical amount"), text: $newTypicalAmount, prompt: Text("Edit typical amount"))
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
                             .focused($focusedField, equals: .editedTypicalAmount)
                             .onSubmit {
                                 self.addTypicalAmount()
@@ -207,6 +213,10 @@ struct TypicalAmountList: View {
             }
         }
         
+        // Remove blank spaces from comment
+        self.newTypicalAmountComment = self.newTypicalAmountComment.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Save or update
         if isNewTypicalAmount { // This is a new typical amount
             if let moc = editedCDFoodItem.managedObjectContext {
                 let newTA = TypicalAmount.create(amount: Int64(newTAAmount), comment: self.newTypicalAmountComment, context: moc)
@@ -222,6 +232,7 @@ struct TypicalAmountList: View {
             cdTypicalAmount.comment = self.newTypicalAmountComment
         }
         
+        // Clear UI
         deselectTypicalAmount()
     }
 }
