@@ -52,6 +52,10 @@ struct FoodItemEditor: View {
     @State private var showingAlert = false
     @State private var activeAlert: AlertChoice?
     
+    // Typical amounts
+    @State private var addNewTypicalAmount = false
+    @State private var editedTypicalAmountID: UUID?
+    
     private var isNew: Bool {
         return tempContext != nil
     }
@@ -64,10 +68,6 @@ struct FoodItemEditor: View {
         }
     }
     
-    @State private var newTypicalAmount = ""
-    @State private var newTypicalAmountComment = ""
-    @State private var newTypicalAmountId: UUID?
-    @State private var typicalAmountEdited = false
     @State private var notificationStatus = FoodItemEditor.NotificationState.void
     @State private var associatedRecipes: [String] = []
     
@@ -165,91 +165,13 @@ struct FoodItemEditor: View {
                 }
                 
                 Section(header: Text("Typical amounts:")) {
-                    if typicalAmountEdited {
-                        HStack {
-                            TextField("Amount", text: $newTypicalAmount)
-                                .keyboardType(.numberPad)
-                                .multilineTextAlignment(.trailing)
-                                .accessibilityIdentifierLeaf("EditTypicalAmountValue")
-                            Text("g")
-                                .accessibilityIdentifierLeaf("AmountUnit")
-                            TextField("Comment", text: $newTypicalAmountComment)
-                                .accessibilityIdentifierLeaf("EditTypicalAmountComment")
-                            Button {
-                                withAnimation {
-                                    self.addTypicalAmount()
-                                }
-                            } label: {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .imageScale(.large)
-                                    .foregroundStyle(.green)
-                            }
-                            .accessibilityIdentifierLeaf("EditTypicalAmountButton")
-                        }
-                    } else {
-                        HStack {
-                            Button("Add", systemImage: "plus.circle") {
-                                withAnimation {
-                                    self.typicalAmountEdited = true
-                                }
-                            }
-                            .accessibilityIdentifierLeaf("AddTypicalAmountButton")
-                        }
-                    }
-                    
-                    // The existing typical amounts list
-                    try? DynamicList(
-                        filterKey: "foodItem",
-                        filterValue: editedCDFoodItem,
-                        sortKey: "amount",
-                        sortAscending: true,
-                        emptyStateMessage: NSLocalizedString("You have not added any typical amounts yet.", comment: ""),
-                    ) { (typicalAmount: TypicalAmount) in
-                        HStack {
-                            HStack {
-                                Text(typicalAmount.amount, format: .number)
-                                    .accessibilityIdentifierLeaf("TypicalAmountValue")
-                                Text("g")
-                                    .accessibilityIdentifierLeaf("TypicalAmountUnit")
-                                Text(typicalAmount.comment ?? "")
-                                    .accessibilityIdentifierLeaf("TypicalAmountComment")
-                            }
-                        }
-                        .foregroundStyle(newTypicalAmountId != nil && newTypicalAmountId! == typicalAmount.id ? .secondary : .primary)
-                        .swipeActions(edge: .trailing) {
-                            // The edit button
-                            Button("Edit", systemImage: "pencil") {
-                                withAnimation {
-                                    // Select if not selected, unselect if selected
-                                    if newTypicalAmountId != nil && newTypicalAmountId! == typicalAmount.id { // Is selected
-                                        deselectTypicalAmount()
-                                    } else { // Is not selected
-                                        selectTypicalAmount(typicalAmount)
-                                    }
-                                }
-                            }
-                            .tint(.blue)
-                            .accessibilityIdentifierLeaf("EditButton")
-                            
-                            // The delete button
-                            Button("Delete", systemImage: "trash", role: .destructive) {
-                                withAnimation {
-                                    // First clear edit fields if filled
-                                    if self.typicalAmountEdited {
-                                        deselectTypicalAmount()
-                                    }
-                                    
-                                    // Then delete typical amount
-                                    TypicalAmount.delete(typicalAmount)
-                                }
-                            }
-                            .tint(.red)
-                            .accessibilityIdentifierLeaf("DeleteButton")
-                            
-                            
-                        }
-                        .accessibilityIdentifierBranch("TAmount\(typicalAmount.amount)")
-                    }
+                    TypicalAmountList(
+                        editedCDFoodItem: editedCDFoodItem,
+                        addNewTypicalAmount: $addNewTypicalAmount,
+                        editedTypicalAmountID: $editedTypicalAmountID,
+                        showingAlert: $showingAlert,
+                        activeAlert: $activeAlert
+                    )
                 } // End Section Typical Amounts
                 
                 // Link to Food Database Entry (if sourceID is available)
@@ -280,7 +202,7 @@ struct FoodItemEditor: View {
             .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the cancel and save buttons
             
             // The overlaying cancel and save button
-            if !typicalAmountEdited { // We hide the buttons when typical amounts are edited to avoid confusion
+            if !addNewTypicalAmount && editedTypicalAmountID == nil { // We hide the buttons when typical amounts are edited to avoid confusion
                 VStack {
                     Spacer()
                     HStack {
@@ -409,11 +331,6 @@ struct FoodItemEditor: View {
 
     
     private func saveFoodItem() {
-        // Check if there's an unsaved typical amount
-        if self.newTypicalAmount != "" { // We have an unsaved typical amount
-            self.addTypicalAmount()
-        }
-        
         // Validate input
         let error = editedCDFoodItem.validateInput()
         if error == .none {
@@ -503,61 +420,6 @@ struct FoodItemEditor: View {
         
         // Leave edit mode
         navigationPath.removeLast()
-    }
-    
-    private func selectTypicalAmount(_ typicalAmount: TypicalAmount) {
-        self.newTypicalAmount = String(typicalAmount.amount)
-        self.newTypicalAmountComment = typicalAmount.comment ?? ""
-        self.newTypicalAmountId = typicalAmount.id
-        self.typicalAmountEdited = true
-    }
-    
-    private func deselectTypicalAmount() {
-        self.newTypicalAmount = ""
-        self.newTypicalAmountComment = ""
-        self.newTypicalAmountId = nil
-        self.typicalAmountEdited = false
-    }
-    
-    private func addTypicalAmount() {
-        // If no amount is entered at all, we just leave the edit mode
-        if self.newTypicalAmount.isEmpty {
-            deselectTypicalAmount()
-            return
-        }
-        
-        // Check for valid amount
-        var errorMessage = ""
-        var newTAAmount: Int = 0
-        let result = DataHelper.checkForPositiveInt(valueAsString: self.newTypicalAmount, allowZero: false)
-        switch result {
-        case .success(let amount):
-            newTAAmount = amount
-        case .failure(let err):
-            errorMessage = err.evaluate()
-            activeAlert = .simpleAlert(type: .error(message: errorMessage))
-            showingAlert = true
-            return
-        }
-        
-        if newTypicalAmountId == nil { // This is a new typical amount
-            if let moc = editedCDFoodItem.managedObjectContext {
-                let newTA = TypicalAmount.create(amount: Int64(newTAAmount), comment: self.newTypicalAmountComment, context: moc)
-                editedCDFoodItem.addToTypicalAmounts(newTA)
-            }
-            deselectTypicalAmount()
-        } else { // This is an existing typical amount
-            guard let cdTypicalAmount = TypicalAmount.getTypicalAmountByID(id: newTypicalAmountId!) else {
-                activeAlert = .simpleAlert(type: .fatalError(message: "Could not identify typical amount."))
-                showingAlert = true
-                return
-            }
-            cdTypicalAmount.amount = Int64(newTAAmount)
-            cdTypicalAmount.comment = self.newTypicalAmountComment
-            
-            // Reset text fields and typical amount id
-            deselectTypicalAmount()
-        }
     }
     
     private func handleScan(result: Result<String, CodeScannerView.ScanError>) {

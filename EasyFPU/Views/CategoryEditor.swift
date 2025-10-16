@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct CategoryEditor: View {
     private enum Field: Int, Hashable {
@@ -19,10 +18,13 @@ struct CategoryEditor: View {
     @State private var showingAlert = false
     @State private var activeAlert: SimpleAlertType?
     @State private var name = ""
-    @State private var isNew: Bool = true
     @State private var editedCategory: FoodCategory?
     @State private var addNewCategory: Bool = false
     @FocusState private var focusedField: Field?
+    
+    private var isNew: Bool {
+        editedCategory == nil
+    }
     
     var body: some View {
         VStack {
@@ -35,7 +37,7 @@ struct CategoryEditor: View {
             .padding()
                 
             Form {
-                // Add category
+                // Add new category
                 if addNewCategory {
                     HStack {
                         TextField(LocalizedStringKey("New category"), text: $name, prompt: Text("New category"))
@@ -43,6 +45,7 @@ struct CategoryEditor: View {
                             .onSubmit {
                                 self.addCategory()
                             }
+                            .submitLabel(.done)
                             .accessibilityIdentifierLeaf("NewCategoryTextField")
                         Button {
                             self.addCategory()
@@ -56,14 +59,14 @@ struct CategoryEditor: View {
                 } else {
                     HStack {
                         Button("Add", systemImage: "plus.circle") {
+                            // Check if currently editing an existing category
+                            if editedCategory != nil {
+                                // Save the edited category first
+                                addCategory()
+                            }
+                            
                             withAnimation {
-                                // Reset editedCategory (could still be active)
-                                name = ""
-                                editedCategory = nil
-                                focusedField = nil // Dismiss the keyboard if active
-                                
                                 // Show the text field
-                                isNew = true
                                 addNewCategory = true
                                 focusedField = .newName
                             }
@@ -80,14 +83,14 @@ struct CategoryEditor: View {
                     sortAscending: true,
                     emptyStateMessage: NSLocalizedString("Oops! You have not added any categories yet.", comment: ""),
                 ) { (category: FoodCategory) in
-                    let textField = TextField(LocalizedStringKey("Edit category"), text: $name, prompt: Text("Edit category"))
                     if editedCategory != nil && category == editedCategory {
                         HStack {
-                            textField
+                            TextField(LocalizedStringKey("Edit category"), text: $name, prompt: Text("Edit category"))
                                 .focused($focusedField, equals: .editedName)
                                 .onSubmit {
                                     addCategory()
                                 }
+                                .submitLabel(.done)
                                 .accessibilityIdentifierLeaf("EditCategoryTextField")
                             Button {
                                 addCategory()
@@ -100,17 +103,18 @@ struct CategoryEditor: View {
                         }
                     } else {
                         Text(category.name)
-                            .foregroundStyle(editedCategory == category ? .secondary : .primary)
                             .swipeActions(edge: .trailing) {
                                 // The edit button
                                 Button("Edit", systemImage: "pencil") {
+                                    // Check if currently adding new category
+                                    if addNewCategory {
+                                        // Add the new category first
+                                        self.addCategory()
+                                    }
+                                    
                                     withAnimation {
-                                        // Reset addNewCategory (could still be active)
-                                        addNewCategory = false
-                                        
                                         // Prepare for editing
                                         name = category.name
-                                        isNew = false
                                         editedCategory = category
                                         focusedField = .editedName
                                     }
@@ -159,17 +163,24 @@ struct CategoryEditor: View {
             
             // Save the new or edited category
             withAnimation {
-                if editedCategory == nil { // New item
+                if isNew {
                     _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory, saveContext: true)
-                } else { // Editing existing item
-                    editedCategory!.update(newName: trimmedName, newCategory: selectedFoodItemCategory, saveContext: true)
-                    editedCategory = nil // Clear the edited category
+                } else if let editedCategory = editedCategory { // Editing existing item
+                    editedCategory.update(newName: trimmedName, newCategory: selectedFoodItemCategory, saveContext: true)
                 }
-                name = "" // Clear the text field after saving
-                addNewCategory = false // Hide the text field
-                isNew = true // Reset to new mode
-                focusedField = nil // Dismiss the keyboard
             }
+        }
+        
+        resetUI()
+    }
+    
+    private func resetUI() {
+        name = "" // Clear the text field after saving
+        addNewCategory = false // Hide the text field
+        editedCategory = nil // Clear the edited category
+        
+        withAnimation {
+            focusedField = nil // Dismiss the keyboard
         }
     }
 }

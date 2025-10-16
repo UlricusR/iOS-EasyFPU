@@ -193,6 +193,8 @@
 " - new" = " - new";
 "A food item with this name already exists" = "An entry with this name already exists";
 "Couldn't duplicate food item!" = "Couldn't duplicate food item!";
+"Edit typical amount" = "Edit typical amount";
+"A typical amount with this value already exists." = "A typical amount with this value already exists.";
 
 // Recipe list and editor
 "Recipe List" = "Recipe List";
@@ -225,6 +227,7 @@
 "Uncategorized" = "- No category -";
 "Category already exists!" = "Category already exists!";
 "Cannot delete category which is in use!" = "Cannot delete category which is in use!";
+"Edit category" = "Edit category";
 
 // Settings editor
 "Absorption scheme" = "Absorption scheme";

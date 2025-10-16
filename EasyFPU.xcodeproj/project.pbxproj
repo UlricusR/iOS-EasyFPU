@@ -65,6 +65,7 @@
 		1B6B93752554008C00F0CC7D /* Ingredient+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93712554008C00F0CC7D /* Ingredient+CoreDataProperties.swift */; };
 		1B6B93762554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */; };
 		1B6B93772554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B93732554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift */; };
+		1B7FA1622EA12B57005EBB05 /* TypicalAmountList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7FA1612EA12B57005EBB05 /* TypicalAmountList.swift */; };
 		1B816B4F2CAB2FCF008670B5 /* RecipeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B4E2CAB2FCF008670B5 /* RecipeListView.swift */; };
 		1B816B532CAB345C008670B5 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B522CAB345C008670B5 /* RecipeView.swift */; };
 		1B816B572CAB4675008670B5 /* HelpViewRecipeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B816B562CAB4675008670B5 /* HelpViewRecipeList.swift */; };
@@ -190,6 +191,7 @@
 		1B6B93722554008C00F0CC7D /* ComposedFoodItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ComposedFoodItem+CoreDataClass.swift"; path = "EasyFPU/Models/ComposedFoodItem+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		1B6B93732554008C00F0CC7D /* ComposedFoodItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ComposedFoodItem+CoreDataProperties.swift"; path = "EasyFPU/Models/ComposedFoodItem+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		1B71EBED2A80E21100343C89 /* EasyFPU 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "EasyFPU 2.xcdatamodel"; sourceTree = "<group>"; };
+		1B7FA1612EA12B57005EBB05 /* TypicalAmountList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypicalAmountList.swift; sourceTree = "<group>"; };
 		1B816B4E2CAB2FCF008670B5 /* RecipeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListView.swift; sourceTree = "<group>"; };
 		1B816B522CAB345C008670B5 /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
 		1B816B562CAB4675008670B5 /* HelpViewRecipeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewRecipeList.swift; sourceTree = "<group>"; };
@@ -456,6 +458,7 @@
 				1B68548924BC9E12005ABB8B /* FoodItemView.swift */,
 				1B24AD6B24BE38E800F3A100 /* FoodItemSelector.swift */,
 				1B68548724BC70ED005ABB8B /* FoodItemEditor.swift */,
+				1B7FA1612EA12B57005EBB05 /* TypicalAmountList.swift */,
 				1B25D482253DB0A900848C2A /* FoodSearch.swift */,
 				1B25D486253DC8DB00848C2A /* FoodSearchResultPreview.swift */,
 				1B51B3322540BCB800064EB1 /* FoodPreview.swift */,
@@ -739,6 +742,7 @@
 				1B25D483253DB0A900848C2A /* FoodSearch.swift in Sources */,
 				1B3CEB9B24D32D38001D64DA /* TherapySettingsEditor.swift in Sources */,
 				1B3CEB9D24D33CC8001D64DA /* AbsorptionScheme.swift in Sources */,
+				1B7FA1622EA12B57005EBB05 /* TypicalAmountList.swift in Sources */,
 				1B5CA4F52D062A1F002AD0A8 /* FoodMaintenanceListView.swift in Sources */,
 				1BD809A62D2AB9E5003A2A58 /* FoodDataDocument.swift in Sources */,
 				1BA1035B2CDBFF2D00776D15 /* AccessibilityIdentifierBranchModifier.swift in Sources */,
