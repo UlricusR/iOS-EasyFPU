@@ -160,6 +160,14 @@ struct FoodPreview: View {
                         product.imageFront = foodDatabaseEntry.imageFront
                         product.imageNutriments = foodDatabaseEntry.imageNutriments
                         product.imageIngredients = foodDatabaseEntry.imageIngredients
+                        
+                        // If front image still is nil and we have a thumb image, we use it
+                        if product.imageFront == nil, let thumbImageURL = foodDatabaseEntry.imageThumbURL {
+                            product.imageFront = FoodDatabaseImage(
+                                thumb: thumbImageURL,
+                                image: thumbImageURL
+                            )
+                        }
                     }
                     
                 case .failure(let error):
