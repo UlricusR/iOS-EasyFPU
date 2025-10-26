@@ -60,7 +60,7 @@ struct TypicalAmountList: View {
         } else {
             HStack {
                 Button("Add", systemImage: "plus.circle") {
-                    // Check if currentlzy editing another typical amount
+                    // Check if currently editing another typical amount
                     if editedTypicalAmountID != nil {
                         // Save the editing typical amount first
                         self.addTypicalAmount()
@@ -86,6 +86,7 @@ struct TypicalAmountList: View {
         ) { (typicalAmount: TypicalAmount) in
             HStack {
                 if editedTypicalAmountID != nil && editedTypicalAmountID! == typicalAmount.id {
+                    // Editing an existing typical amount
                     HStack {
                         TextField(LocalizedStringKey("Edit typical amount"), text: $newTypicalAmount, prompt: Text("Edit typical amount"))
                             .keyboardType(.numberPad)
@@ -114,6 +115,7 @@ struct TypicalAmountList: View {
                         .accessibilityIdentifierLeaf("EditTypicalAmountButton")
                     }
                 } else {
+                    // Displaying an existing typical amount
                     HStack {
                         Text(typicalAmount.amount, format: .number)
                             .accessibilityIdentifierLeaf("TypicalAmountValue")
@@ -151,8 +153,6 @@ struct TypicalAmountList: View {
                         }
                         .tint(.red)
                         .accessibilityIdentifierLeaf("DeleteButton")
-                        
-                        
                     }
                 }
             }

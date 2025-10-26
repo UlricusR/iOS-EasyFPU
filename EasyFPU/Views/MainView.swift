@@ -9,7 +9,7 @@
 import SwiftUI
 import CoreData
 
-enum SimpleAlertType {
+enum SimpleAlertType: Error {
     case success(message: String)
     case notice(message: String)
     case warning(message: String)

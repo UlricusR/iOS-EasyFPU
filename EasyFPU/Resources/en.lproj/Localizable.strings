@@ -241,6 +241,7 @@
 "FPU -" = "FPU -";
 "h" = "h";
 "Cannot find absorption block: " = "Cannot find absorption block: ";
+"Maximum FPU must be larger than zero" = "Maximum FPU must be larger than zero";
 "Maximum FPU value already exists" = "Maximum FPU value already exists";
 "Absorption time is equals or larger than the one of the following absorption block" = "Absorption time is equals or larger than the one of the following absorption block";
 "Absorption time is equals or less than the one of the block before" = "Absorption time is equals or less than the one of the block before";
