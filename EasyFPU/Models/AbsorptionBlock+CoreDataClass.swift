@@ -27,12 +27,14 @@ public class AbsorptionBlock: NSManagedObject {
         return absorptionBlocks
     }
     
-    static func deleteAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) {
+    static func deleteAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext, saveContext: Bool = true) {
         AbsorptionBlock.fetchAll(viewContext: viewContext).forEach({
             viewContext.delete($0)
         })
         
-        try? viewContext.save()
+        if saveContext {
+            try? viewContext.save()
+        }
     }
     
     /// Creates a new Core Data AbsorptionBlock with the given values. Does not check for duplicates.

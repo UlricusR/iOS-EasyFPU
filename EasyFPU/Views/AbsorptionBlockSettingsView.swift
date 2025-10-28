@@ -27,6 +27,13 @@ struct AbsorptionBlockSettingsView: View {
         editedAbsorptionBlockId == nil
     }
     
+    @FetchRequest(
+        entity: AbsorptionBlock.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \AbsorptionBlock.maxFpu, ascending: true)
+        ]
+    ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
+    
     var body: some View {
         Section(header: Text("Absorption Blocks")) {
             if addNewBlock {
@@ -84,7 +91,7 @@ struct AbsorptionBlockSettingsView: View {
             
             // The list of absorption blocks
             List {
-                ForEach(absorptionScheme.absorptionBlocks, id: \.self) { absorptionBlock in
+                ForEach(absorptionBlocks, id: \.self) { absorptionBlock in
                     if editedAbsorptionBlockId != nil && editedAbsorptionBlockId! == absorptionBlock.id {
                         HStack {
                             // Editing an existing absorption block
@@ -199,21 +206,18 @@ struct AbsorptionBlockSettingsView: View {
     
     private func addAbsorptionBlock() {
         if isNewBlock { // This is a new absorption block
-            let result = absorptionScheme.create(maxFPU: self.newMaxFpu, absorptionTime: self.newAbsorptionTime, saveContext: true)
-            switch result {
-            case .success(let newAbsorptionBlock):
-                // Try to add the new absorption block to the scheme
-                if let schemeAlert = absorptionScheme.add(newAbsorptionBlock: newAbsorptionBlock, saveContext: true) {
-                    // Addition failed, show alert
-                    activeAlert = schemeAlert
-                    self.showingAlert = true
-                } else {
-                    // Reset text fields
-                    deselectAbsorptionBlock()
-                }
-            case .failure(let errorAlert):
-                activeAlert = errorAlert
+            // Try to add the new absorption block to the scheme
+            if let schemeAlert = absorptionScheme.add(
+                maxFpu: self.newMaxFpu,
+                absorptionTime: self.newAbsorptionTime,
+                saveContext: true
+            ) {
+                // Addition failed, show alert
+                activeAlert = schemeAlert
                 self.showingAlert = true
+            } else {
+                // Reset text fields
+                deselectAbsorptionBlock()
             }
         } else { // This is an existing absorption block
             if let schemeAlert = absorptionScheme.replace(
@@ -232,7 +236,7 @@ struct AbsorptionBlockSettingsView: View {
     }
     
     private func deleteAbsorptionBlock(_ absorptionBlock: AbsorptionBlock) {
-        if absorptionScheme.absorptionBlocks.count > 1 {
+        if absorptionBlocks.count > 1 {
             AbsorptionBlock.remove(absorptionBlock, saveContext: true)
         } else {
             // We need to have at least one block left

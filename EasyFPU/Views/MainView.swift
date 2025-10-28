@@ -62,13 +62,6 @@ struct MainView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @State var userSettings = UserSettings.shared
-    @FetchRequest(
-        entity: AbsorptionBlock.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \AbsorptionBlock.absorptionTime, ascending: true)
-        ]
-    ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
-    @State var absorptionScheme = AbsorptionScheme()
     @State private var didDBCleanup = false
     @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert = false
@@ -87,7 +80,6 @@ struct MainView: View {
                 TabView {
                     // The meal composer
                     ComposedFoodItemEvaluationView(
-                        absorptionScheme: absorptionScheme,
                         managedObjectContext: managedObjectContext
                     )
                     .tag(Tab.eat.rawValue)
@@ -141,9 +133,7 @@ struct MainView: View {
                     .accessibilityIdentifierBranch("MaintainIngredients")
                     
                     // The settings
-                    MenuView(
-                        absorptionScheme: absorptionScheme
-                    )
+                    MenuView()
                     .tag(Tab.settings.rawValue)
                     .tabItem{
                         Image(systemName: "gear")
@@ -156,16 +146,6 @@ struct MainView: View {
                     // Clean up database
                     if !didDBCleanup {
                         cleanUpDB()
-                    }
-                    
-                    // Initialize absorption scheme if not done yet
-                    if self.absorptionScheme.absorptionBlocks.isEmpty {
-                        // Absorption scheme hasn't been loaded yet
-                        var errorMessage = ""
-                        if !self.absorptionScheme.initAbsorptionBlocks(with: absorptionBlocks, saveContext: true, errorMessage: &errorMessage) {
-                            activeAlert = .fatalError(message: errorMessage)
-                            showingAlert = true
-                        }
                     }
                 }
                 .onOpenURL { url in

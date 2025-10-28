@@ -25,7 +25,7 @@ struct ComposedFoodItemEvaluationView: View {
     static let mealDefaultName = NSLocalizedString("Total meal", comment: "")
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @State var absorptionScheme: AbsorptionScheme
+    @State var absorptionScheme = AbsorptionScheme.shared
     @ObservedObject var composedFoodItem: ComposedFoodItem
     private var tempMealContext: NSManagedObjectContext
     @State var userSettings = UserSettings.shared
@@ -247,9 +247,7 @@ struct ComposedFoodItemEvaluationView: View {
         }
     }
     
-    init(absorptionScheme: AbsorptionScheme, managedObjectContext: NSManagedObjectContext) {
-        self.absorptionScheme = absorptionScheme
-        
+    init(managedObjectContext: NSManagedObjectContext) {
         // Create the temporary context for the meal
         self.tempMealContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         self.tempMealContext.name = "Temporary meal context"

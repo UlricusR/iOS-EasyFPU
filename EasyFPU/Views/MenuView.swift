@@ -18,7 +18,7 @@ struct MenuView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    var absorptionScheme: AbsorptionScheme
+    private var absorptionScheme = AbsorptionScheme.shared
     @State private var navigationPath = NavigationPath()
     @State private var importing = false
     @State private var exporting = false
