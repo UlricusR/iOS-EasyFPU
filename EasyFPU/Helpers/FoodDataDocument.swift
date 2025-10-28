@@ -27,7 +27,7 @@ struct FoodDataDocument: FileDocument {
     
     /// Creates a JSON Data object from the passed FoodItemViewModels and ComposedFoodItemViewModels..
     /// - Parameter errorMessage: The error message if initialization fails
-    init?(foodItems: [FoodItemViewModel], composedFoodItems: [ComposedFoodItemViewModel], errorMessage: inout String) {
+    init?(foodItems: [FoodItemPersistence], composedFoodItems: [ComposedFoodItemPersistence], errorMessage: inout String) {
         // Prepare the DataWrapper
         let dataWrapper = DataWrapper(dataModelVersion: .version2, foodItemVMs: foodItems, composedFoodItemVMs: composedFoodItems)
         

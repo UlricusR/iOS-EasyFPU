@@ -12,6 +12,11 @@ import CoreData
 
 
 public class TypicalAmount: NSManagedObject {
+    
+    //
+    // MARK: - Static methods for entity creation/deletion/fetching
+    //
+    
     static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [TypicalAmount] {
         let request: NSFetchRequest<TypicalAmount> = TypicalAmount.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "amount", ascending: true)]
@@ -31,10 +36,11 @@ public class TypicalAmount: NSManagedObject {
     }
     
     /// Creates a Core Data TypicalAmount from the passed TypicalAmountViewModel and creates a relation between the two.
-    /// Does not relate it to a Core Data FoodItem.
+    /// Does not relate it to a Core Data FoodItem. Saves the context.
     /// - Parameter typicalAmountVM: The source TypicalAmountViewModel.
+    /// - Parameter saveContext: A Boolean indicating whether to save the Core Data context after creating.
     /// - Returns: The created Core Data TypicalAmount.
-    static func create(from typicalAmountVM: TypicalAmountViewModel) -> TypicalAmount {
+    static func create(from typicalAmountVM: TypicalAmountPersistence, saveContext: Bool) -> TypicalAmount {
         // Create TypicalAmount
         let cdTypicalAmount = TypicalAmount(context: CoreDataStack.viewContext)
         
@@ -42,32 +48,37 @@ public class TypicalAmount: NSManagedObject {
         cdTypicalAmount.amount = Int64(typicalAmountVM.amount)
         cdTypicalAmount.comment = typicalAmountVM.comment
         cdTypicalAmount.id = typicalAmountVM.id
-        typicalAmountVM.cdTypicalAmount = cdTypicalAmount
         
         // Save new TypicalAmount
-        CoreDataStack.shared.save()
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
         
         return cdTypicalAmount
     }
     
-    static func update(with typicalAmountVM: TypicalAmountViewModel) -> TypicalAmount {
-        var typicalAmount: TypicalAmount
+    /// Creates a Core Data TypicalAmount from the passed parameters. Does not save the context.
+    /// - Parameters:
+    ///   - amount: The amount in grams.
+    ///   - comment: The related comment.
+    /// - Returns: The created Core Data TypicalAmount.
+    static func create(amount: Int64, comment: String, context: NSManagedObjectContext) -> TypicalAmount {
+        // Create TypicalAmount
+        let cdTypicalAmount = TypicalAmount(context: context)
         
-        if typicalAmountVM.cdTypicalAmount != nil {
-            typicalAmount = typicalAmountVM.cdTypicalAmount!
-        } else {
-            typicalAmount = TypicalAmount(context: CoreDataStack.viewContext)
-            typicalAmount.id = UUID()
-        }
+        // Fill data
+        cdTypicalAmount.id = UUID()
+        cdTypicalAmount.amount = amount
+        cdTypicalAmount.comment = comment
         
-        typicalAmount.amount = Int64(typicalAmountVM.amount)
-        typicalAmount.comment = typicalAmountVM.comment
-        typicalAmountVM.cdTypicalAmount = typicalAmount
-        
-        // Save
-        CoreDataStack.shared.save()
-        
-        return typicalAmount
+        return cdTypicalAmount
+    }
+    
+    /// Deletes the given TypicalAmount from Core Data. Does not save the context.
+    /// - Parameter typicalAmount: The TypicalAmount to be deleted.
+    static func delete(_ typicalAmount: TypicalAmount) {
+        // Delete the typical amount
+        CoreDataStack.viewContext.delete(typicalAmount)
     }
     
     /**

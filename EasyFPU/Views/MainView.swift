@@ -7,8 +7,9 @@
 //
 
 import SwiftUI
+import CoreData
 
-enum SimpleAlertType {
+enum SimpleAlertType: Error {
     case success(message: String)
     case notice(message: String)
     case warning(message: String)
@@ -60,14 +61,8 @@ struct MainView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @ObservedObject var userSettings = UserSettings.shared
-    @FetchRequest(
-        entity: AbsorptionBlock.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \AbsorptionBlock.absorptionTime, ascending: true)
-        ]
-    ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
-    @ObservedObject var absorptionScheme = AbsorptionSchemeViewModel()
+    @State var userSettings = UserSettings.shared
+    @State private var didDBCleanup = false
     @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert = false
     @State private var isConfirming = false
@@ -85,8 +80,7 @@ struct MainView: View {
                 TabView {
                     // The meal composer
                     ComposedFoodItemEvaluationView(
-                        absorptionScheme: absorptionScheme,
-                        composedFoodItemVM: UserSettings.shared.composedMeal
+                        managedObjectContext: managedObjectContext
                     )
                     .tag(Tab.eat.rawValue)
                     .tabItem{
@@ -98,7 +92,6 @@ struct MainView: View {
                     
                     // The recipe list
                     RecipeListView(
-                        composedFoodItem: UserSettings.shared.composedMeal,
                         helpSheet: RecipeListView.SheetState.recipeListHelp
                     )
                     .tag(Tab.cook.rawValue)
@@ -114,8 +107,7 @@ struct MainView: View {
                         category: .product,
                         listType: .maintenance,
                         listTitle: NSLocalizedString("My Products", comment: ""),
-                        helpSheet: .productMaintenanceListHelp,
-                        composedFoodItem: UserSettings.shared.composedMeal
+                        helpSheet: .productMaintenanceListHelp
                     )
                     .tag(Tab.products.rawValue)
                     .tabItem{
@@ -130,8 +122,7 @@ struct MainView: View {
                         category: .ingredient,
                         listType: .maintenance,
                         listTitle: NSLocalizedString("My Ingredients", comment: ""),
-                        helpSheet: .ingredientMaintenanceListHelp,
-                        composedFoodItem: UserSettings.shared.composedProduct
+                        helpSheet: .ingredientMaintenanceListHelp
                     )
                     .tag(Tab.ingredients.rawValue)
                     .tabItem{
@@ -142,9 +133,7 @@ struct MainView: View {
                     .accessibilityIdentifierBranch("MaintainIngredients")
                     
                     // The settings
-                    MenuView(
-                        absorptionScheme: absorptionScheme
-                    )
+                    MenuView()
                     .tag(Tab.settings.rawValue)
                     .tabItem{
                         Image(systemName: "gear")
@@ -154,13 +143,9 @@ struct MainView: View {
                     .accessibilityIdentifierBranch("Settings")
                 }
                 .onAppear {
-                    if self.absorptionScheme.absorptionBlocks.isEmpty {
-                        // Absorption scheme hasn't been loaded yet
-                        var errorMessage = ""
-                        if !self.absorptionScheme.initAbsorptionBlocks(with: absorptionBlocks, errorMessage: &errorMessage) {
-                            activeAlert = .fatalError(message: errorMessage)
-                            showingAlert = true
-                        }
+                    // Clean up database
+                    if !didDBCleanup {
+                        cleanUpDB()
                     }
                 }
                 .onOpenURL { url in
@@ -191,6 +176,31 @@ struct MainView: View {
                 .accessibilityIdentifierBranch("MainView")
             )
         }
+    }
+    
+    private func cleanUpDB() {
+        // Start cleanup in the background
+        CoreDataStack.persistentContainer.performBackgroundTask { managedObjectContext in
+            // Delete orphaned Ingredients
+            let request: NSFetchRequest<Ingredient> = Ingredient.fetchRequest()
+            request.predicate = NSPredicate(format: "composedFoodItem == nil")
+            do {
+                let orphanedIngredients = try managedObjectContext.fetch(request)
+                for ingredient in orphanedIngredients {
+                    managedObjectContext.delete(ingredient)
+                }
+            } catch {
+                // Error fetching Ingredients - we ignore this
+            }
+            
+            // Save context
+            if managedObjectContext.hasChanges {
+                try? managedObjectContext.save()
+            }
+        }
+        
+        // Mark cleanup as done
+        didDBCleanup = true
     }
     
     private func importFoodData(from url: URL) {

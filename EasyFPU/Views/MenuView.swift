@@ -18,7 +18,6 @@ struct MenuView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    var absorptionScheme: AbsorptionSchemeViewModel
     @State private var navigationPath = NavigationPath()
     @State private var importing = false
     @State private var exporting = false
@@ -91,8 +90,8 @@ struct MenuView: View {
                     Button("Export to JSON") {
                         var errorMessage = ""
                         let allFoodData = DataHelper.getAllFoodData()
-                        let allFoodItems = allFoodData[0] as! [FoodItemViewModel]
-                        let allComposedFoodItems = allFoodData[1] as! [ComposedFoodItemViewModel]
+                        let allFoodItems = allFoodData[0] as! [FoodItemPersistence]
+                        let allComposedFoodItems = allFoodData[1] as! [ComposedFoodItemPersistence]
                         if let jsonDocument = FoodDataDocument(
                             foodItems: allFoodItems,
                             composedFoodItems: allComposedFoodItems,
@@ -154,21 +153,14 @@ struct MenuView: View {
             .navigationDestination(for: SettingsNavigationPath.self) { screen in
                 switch screen {
                 case .EditCategories:
-                    CategoryEditor(
-                        navigationPath: $navigationPath
-                    )
+                    CategoryEditor()
                     .environment(\.managedObjectContext, managedObjectContext)
                     .accessibilityIdentifierBranch("CategoryEditor")
                 case .EditTherapySettings:
-                    TherapySettingsEditor(
-                        navigationPath: $navigationPath,
-                        absorptionScheme: self.absorptionScheme
-                    )
+                    TherapySettingsEditor()
                     .accessibilityIdentifierBranch("TherapySettingsEditor")
                 case .EditAppSettings:
-                    AppSettingsEditor(
-                        navigationPath: $navigationPath
-                    )
+                    AppSettingsEditor()
                     .accessibilityIdentifierBranch("AppSettingsEditor")
                 case .About:
                     AboutView()

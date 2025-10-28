@@ -25,7 +25,7 @@ class ImportExportTests {
         let fileUrl = Bundle(for: ImportExportTests.self).url(forResource: dataModelFileName, withExtension: "json")
         try #require(fileUrl != nil)
         
-        // Prepare arrays to store imported FoodItemViewModels and ComposedFoodItemViewModels
+        // Prepare arrays to store imported FoodItemPersistences and ComposedFoodItemPersistences
         var errorMessage = ""
         
         // Import
@@ -45,16 +45,16 @@ class ImportExportTests {
     @Test("ID: 2 - Export data")
     func exportData() throws {
         // Get ComposedFoodItem and save
-        let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemViewModel()
+        let composedFoodItemVM = try DataFactory.shared.createComposedFoodItemPersistence()
         let composedFoodItemVMs = [composedFoodItemVM]
         
         // Get FoodItems and save
-        let foodItemVM = try DataFactory.shared.createFoodItemVM()
+        let foodItemVM = try DataFactory.shared.createFoodItemPersistence()
         try DataFactory.shared.addTypicalAmounts(to: foodItemVM)
         
         // Collect all FoodItems
-        var foodItemVMs: [FoodItemViewModel] = [foodItemVM]
-        foodItemVMs.append(contentsOf: composedFoodItemVM.foodItemVMs)
+        var foodItemVMs: [FoodItemPersistence] = [foodItemVM]
+        foodItemVMs.append(contentsOf: composedFoodItemVM.ingredients)
         
         // Prepare the DataWrapper
         let dataWrapper = DataWrapper(dataModelVersion: .version2, foodItemVMs: foodItemVMs, composedFoodItemVMs: composedFoodItemVMs)
@@ -100,7 +100,7 @@ class ImportExportTests {
             let ingredientIDs = composedFoodItemIngredients.map { $0["foodItem"]["id"].stringValue }
             
             // Iterate through ingredients and check them in the JSON
-            for ingredient in composedFoodItemVM.foodItemVMs {
+            for ingredient in composedFoodItemVM.ingredients {
                 try ImportExportTests.checkFoodItem(foodItemVM: ingredient, foodItemIDs: ingredientIDs, allFoodItems: composedFoodItemIngredients)
                 
                 // The ingredient ID needs to match a FoodItem ID
@@ -109,7 +109,7 @@ class ImportExportTests {
         }
     }
     
-    private static func checkFoodItem(foodItemVM: FoodItemViewModel, foodItemIDs: [String], allFoodItems: [JSON]) throws {
+    private static func checkFoodItem(foodItemVM: FoodItemPersistence, foodItemIDs: [String], allFoodItems: [JSON]) throws {
         // Try to find the elements in JSON
         let index = foodItemIDs.firstIndex(of: foodItemVM.id.uuidString)
         try #require(index != nil, "The FoodItem ID could not be found.")

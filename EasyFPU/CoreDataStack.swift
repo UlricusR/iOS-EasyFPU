@@ -10,6 +10,7 @@ import CoreData
 
 final class CoreDataStack {
     static let dataStoreName = "EasyFPU"
+    static let mainContextName = "Main Context"
     static let shared = CoreDataStack()
     
     let storeType: String
@@ -17,7 +18,7 @@ final class CoreDataStack {
     // Create a persistent container as a lazy variable to defer instantiation until its first use.
     lazy var persistentContainer: NSPersistentContainer = {
         var container: NSPersistentContainer
-        
+                
         if storeType == NSInMemoryStoreType {
             let description = NSPersistentStoreDescription()
             description.type = storeType
@@ -29,6 +30,9 @@ final class CoreDataStack {
             // Create an SQLite store
             container = NSPersistentCloudKitContainer(name: CoreDataStack.dataStoreName)
         }
+        
+        // Give a name to the context
+        container.viewContext.name = CoreDataStack.mainContextName
         
         // Load any persistent stores, which creates a store if none exists.
         container.loadPersistentStores { _, error in

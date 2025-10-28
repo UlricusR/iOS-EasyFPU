@@ -10,7 +10,6 @@ import SwiftUI
 import CountryPicker
 
 struct AppSettingsEditor: View {
-    @Binding var navigationPath: NavigationPath
     @State private var alertPeriodAfterExportInMinutes: Int = UserSettings.shared.alertPeriodAfterExportInMinutes
     @State private var selectedFoodDatabaseType: FoodDatabaseType = UserSettings.getFoodDatabaseType()
     @State private var searchWorldwide: Bool = UserSettings.shared.searchWorldwide

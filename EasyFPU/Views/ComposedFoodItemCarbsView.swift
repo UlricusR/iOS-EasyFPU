@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct ComposedFoodItemCarbsView: View {
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
-    @ObservedObject var userSettings = UserSettings.shared
+    @ObservedObject var composedFoodItem: ComposedFoodItem
+    @State var userSettings = UserSettings.shared
     var regularCarbsTimeAsString: String {
         let time = Date().addingTimeInterval(TimeInterval((userSettings.absorptionTimeCarbsDelayInMinutes + userSettings.mealDelayInMinutes) * 60))
         return HealthExportCarbsPreviewChart.timeStyle.string(from: time)
@@ -37,7 +37,7 @@ struct ComposedFoodItemCarbsView: View {
                 
                 VStack(alignment: .leading) { // Answers
                     HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.getRegularCarbs(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: composedFoodItem.regularCarbs(treatSugarsSeparately: userSettings.treatSugarsSeparately)))!)
                             .accessibilityIdentifierLeaf("AmountValue")
                         Text("g Carbs")
                             .accessibilityIdentifierLeaf("AmountUnit")

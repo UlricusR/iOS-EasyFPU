@@ -123,15 +123,15 @@ struct DataFactory {
         DataFactory()
     }
     
-    /// Creates a FoodItemViewModel (also applicable for ingredients). Don't pass an id if you want to create a new FoodItemViewModel,
+    /// Creates a FoodItemPersistence (also applicable for ingredients). Don't pass an id if you want to create a new FoodItemViewModel,
     /// pass an id if you want a duplicate.
     /// - Parameter id: If an UUID is passed, it will be used for the FoodItemViewModel, otherwise a new UUID will be created.
-    /// - Returns: The created FoodItemViewModel.
-    func createFoodItemVM(id: UUID = UUID()) throws -> FoodItemViewModel {
-        return try createFoodItemVM(foodItem: self.foodItem, id: id)
+    /// - Returns: The created FoodItemPersistence.
+    func createFoodItemPersistence(id: UUID = UUID()) throws -> FoodItemPersistence {
+        return try createFoodItemPersistence(foodItem: self.foodItem, id: id)
     }
     
-    private func createFoodItemVM(foodItem: Dictionary<String, String>, id: UUID) throws -> FoodItemViewModel {
+    private func createFoodItemPersistence(foodItem: Dictionary<String, String>, id: UUID) throws -> FoodItemPersistence {
         try #require(foodItem["name"] != nil)
         try #require(foodItem["category"] != nil)
         try #require(foodItem["favorite"] != nil)
@@ -159,7 +159,7 @@ struct DataFactory {
         let amount = Int(foodItem["amount"]!)
         try #require(amount != nil)
         
-        let foodItemVM = FoodItemViewModel(
+        let foodItemPersistence = FoodItemPersistence(
             id: id,
             name: name,
             foodCategory: nil,
@@ -172,14 +172,14 @@ struct DataFactory {
             sourceID: nil,
             sourceDB: nil
         )
-        return foodItemVM
+        return foodItemPersistence
     }
     
-    /// Creates a ComposedFoodItemViewModel with 5 attached ingredients (as FoodItemViewModels).
-    /// Don't pass an id if you want to create a new ComposedFoodItemViewModel, pass an id if you want a duplicate.
-    /// - Parameter id: The id to be used for the ComposedFoodItemViewModel.
-    /// - Returns: A ComposedFoodItemViewModel with 5 attached ingredients.
-    func createComposedFoodItemViewModel(id: UUID = UUID()) throws -> ComposedFoodItemViewModel {
+    /// Creates a ComposedFoodItemPersistence with 5 attached ingredients (as FoodItemPersistence).
+    /// Don't pass an id if you want to create a new ComposedFoodItemPersistence, pass an id if you want a duplicate.
+    /// - Parameter id: The id to be used for the ComposedFoodItemPersistence.
+    /// - Returns: A ComposedFoodItemPersistence with 5 attached ingredients.
+    func createComposedFoodItemPersistence(id: UUID = UUID()) throws -> ComposedFoodItemPersistence {
         try #require(composedFoodItem["name"] != nil)
         try #require(composedFoodItem["category"] != nil)
         try #require(composedFoodItem["favorite"] != nil)
@@ -196,9 +196,10 @@ struct DataFactory {
         let numberOfPortions = Int(composedFoodItem["numberOfPortions"]!)
         try #require(numberOfPortions != nil)
         
-        let amount = composedFoodItem["amount"]!
+        let amount = Int(composedFoodItem["amount"]!)
+        try #require(amount != nil)
         
-        let composedFoodItemViewModel = ComposedFoodItemViewModel(
+        let composedFoodItemPersistence = ComposedFoodItemPersistence(
             id: id,
             name: name,
             foodCategory: nil,
@@ -206,34 +207,34 @@ struct DataFactory {
             favorite: favorite
         )
         
-        composedFoodItemViewModel.numberOfPortions = numberOfPortions!
-        composedFoodItemViewModel.amountAsString = amount
+        composedFoodItemPersistence.numberOfPortions = numberOfPortions!
+        composedFoodItemPersistence.amount = amount!
         
         // Attach ingredients
-        composedFoodItemViewModel.foodItemVMs.append(try createFoodItemVM(foodItem: self.ingredient1, id: UUID()))
-        composedFoodItemViewModel.foodItemVMs.append(try createFoodItemVM(foodItem: self.ingredient2, id: UUID()))
-        composedFoodItemViewModel.foodItemVMs.append(try createFoodItemVM(foodItem: self.ingredient3, id: UUID()))
-        composedFoodItemViewModel.foodItemVMs.append(try createFoodItemVM(foodItem: self.ingredient4, id: UUID()))
-        composedFoodItemViewModel.foodItemVMs.append(try createFoodItemVM(foodItem: self.ingredient5, id: UUID()))
+        composedFoodItemPersistence.ingredients.append(try createFoodItemPersistence(foodItem: self.ingredient1, id: UUID()))
+        composedFoodItemPersistence.ingredients.append(try createFoodItemPersistence(foodItem: self.ingredient2, id: UUID()))
+        composedFoodItemPersistence.ingredients.append(try createFoodItemPersistence(foodItem: self.ingredient3, id: UUID()))
+        composedFoodItemPersistence.ingredients.append(try createFoodItemPersistence(foodItem: self.ingredient4, id: UUID()))
+        composedFoodItemPersistence.ingredients.append(try createFoodItemPersistence(foodItem: self.ingredient5, id: UUID()))
         
         // Return the complete VM
-        return composedFoodItemViewModel
+        return composedFoodItemPersistence
     }
     
-    func getTwoIngredients() throws -> [FoodItemViewModel] {
-        var ingredients = [FoodItemViewModel]()
-        ingredients.append(try createFoodItemVM(foodItem: self.ingredient6, id: UUID()))
-        ingredients.append(try createFoodItemVM(foodItem: self.ingredient7, id: UUID()))
+    func getTwoIngredients() throws -> [FoodItemPersistence] {
+        var ingredients = [FoodItemPersistence]()
+        ingredients.append(try createFoodItemPersistence(foodItem: self.ingredient6, id: UUID()))
+        ingredients.append(try createFoodItemPersistence(foodItem: self.ingredient7, id: UUID()))
         return ingredients
     }
     
-    func createFoodItemViewModel(for composedFoodItemViewModel: ComposedFoodItemViewModel) throws -> FoodItemViewModel {
+    func createFoodItemPersistence(for composedFoodItemPersistence: ComposedFoodItemPersistence) throws -> FoodItemPersistence {
         var caloriesPer100g: Double = 0
         var carbsPer100g: Double = 0
         var sugarsPer100g: Double = 0
         var amount: Int = 0
         
-        for ingredient in composedFoodItemViewModel.foodItemVMs {
+        for ingredient in composedFoodItemPersistence.ingredients {
             caloriesPer100g += Double(ingredient.amount) * ingredient.caloriesPer100g
             carbsPer100g += Double(ingredient.amount) * ingredient.carbsPer100g
             sugarsPer100g += Double(ingredient.amount) * ingredient.sugarsPer100g
@@ -246,12 +247,12 @@ struct DataFactory {
         carbsPer100g = carbsPer100g / Double(amount)
         sugarsPer100g = sugarsPer100g / Double(amount)
         
-        let foodItemVM = FoodItemViewModel(
-            id: composedFoodItemViewModel.id,
-            name: composedFoodItemViewModel.name,
+        let foodItemPersistence = FoodItemPersistence(
+            id: composedFoodItemPersistence.id,
+            name: composedFoodItemPersistence.name,
             foodCategory: nil,
-            category: composedFoodItemViewModel.category,
-            favorite: composedFoodItemViewModel.favorite,
+            category: composedFoodItemPersistence.category,
+            favorite: composedFoodItemPersistence.favorite,
             caloriesPer100g: caloriesPer100g,
             carbsPer100g: carbsPer100g,
             sugarsPer100g: sugarsPer100g,
@@ -259,30 +260,30 @@ struct DataFactory {
             sourceID: nil,
             sourceDB: nil
         )
-        return foodItemVM
+        return foodItemPersistence
     }
     
     /// Adds four TypicalAmountViewModels to the passed FoodItemViewModel.
     /// - Parameter foodItem: The FoodItemViewModel to add the TypicalAmountViewModels to.
-    func addTypicalAmounts(to foodItem: FoodItemViewModel) throws {
-        let typicalAmountVMs = try getTypicalAmounts()
-        for typicalAmountVM in typicalAmountVMs {
-            foodItem.typicalAmounts.append(typicalAmountVM)
+    func addTypicalAmounts(to foodItem: FoodItemPersistence) throws {
+        let typicalAmounts = try getTypicalAmounts()
+        for typicalAmount in typicalAmounts {
+            foodItem.typicalAmounts.append(typicalAmount)
         }
     }
     
     /// Creates 4 TypicalAmountViewModels.
     /// - Returns: An array of four TypicalAmountViewModels.
-    func getTypicalAmounts() throws -> [TypicalAmountViewModel] {
-        var typicalAmountVMs = [TypicalAmountViewModel]()
-        typicalAmountVMs.append(try createTypicalAmountViewModel(typicalAmount: typicalAmount1))
-        typicalAmountVMs.append(try createTypicalAmountViewModel(typicalAmount: typicalAmount2))
-        typicalAmountVMs.append(try createTypicalAmountViewModel(typicalAmount: typicalAmount3))
-        typicalAmountVMs.append(try createTypicalAmountViewModel(typicalAmount: typicalAmount4))
-        return typicalAmountVMs
+    func getTypicalAmounts() throws -> [TypicalAmountPersistence] {
+        var typicalAmounts = [TypicalAmountPersistence]()
+        typicalAmounts.append(try createTypicalAmountPersistence(typicalAmount: typicalAmount1))
+        typicalAmounts.append(try createTypicalAmountPersistence(typicalAmount: typicalAmount2))
+        typicalAmounts.append(try createTypicalAmountPersistence(typicalAmount: typicalAmount3))
+        typicalAmounts.append(try createTypicalAmountPersistence(typicalAmount: typicalAmount4))
+        return typicalAmounts
     }
     
-    private func createTypicalAmountViewModel(typicalAmount: Dictionary<String, String>) throws -> TypicalAmountViewModel {
+    private func createTypicalAmountPersistence(typicalAmount: Dictionary<String, String>) throws -> TypicalAmountPersistence {
         try #require(typicalAmount["amount"] != nil)
         try #require(typicalAmount["comment"] != nil)
         
@@ -291,8 +292,8 @@ struct DataFactory {
         
         let comment = typicalAmount["comment"]!
         
-        let typicalAmountViewModel = TypicalAmountViewModel(amount: amount!, comment: comment)
+        let typicalAmountPersistence = TypicalAmountPersistence(amount: amount!, comment: comment)
         
-        return typicalAmountViewModel
+        return typicalAmountPersistence
     }
 }

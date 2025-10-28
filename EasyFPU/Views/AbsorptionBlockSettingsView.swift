@@ -9,109 +9,235 @@
 import SwiftUI
 
 struct AbsorptionBlockSettingsView: View {
-    @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
+    private enum Field: Int, Hashable {
+        case newBlock, editedBlock
+    }
+    
+    var absorptionScheme: AbsorptionScheme
     @Binding var activeAlert: SimpleAlertType?
     @Binding var showingAlert: Bool
-    @State private var newMaxFpu: String = ""
-    @State private var newAbsorptionTime: String = ""
-    @State private var newAbsorptionBlockId: UUID?
-    @State private var updateButton: Bool = false
+    
+    @State private var addNewBlock: Bool = false
+    @State private var editedAbsorptionBlockId: UUID?
+    @State private var newMaxFpu: Int = 0
+    @State private var newAbsorptionTime: Int = 0
+    @FocusState private var focusedField: Field?
+    
+    private var isNewBlock: Bool {
+        editedAbsorptionBlockId == nil
+    }
+    
+    @FetchRequest(
+        entity: AbsorptionBlock.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \AbsorptionBlock.maxFpu, ascending: true)
+        ]
+    ) var absorptionBlocks: FetchedResults<AbsorptionBlock>
     
     var body: some View {
         Section(header: Text("Absorption Blocks")) {
+            if addNewBlock {
+                HStack {
+                    HStack {
+                        TextField("Max. FPUs", value: $newMaxFpu, formatter: DataHelper.intFormatter(hideZero: true))
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .focused($focusedField, equals: .newBlock)
+                            .onSubmit {
+                                self.addAbsorptionBlock()
+                            }
+                            .submitLabel(.done)
+                            .accessibilityIdentifierLeaf("AddFPUValue")
+                        Text("FPU -")
+                            .accessibilityIdentifierLeaf("AddFPUUnit")
+                        TextField("Absorption time", value: $newAbsorptionTime, formatter: DataHelper.intFormatter(hideZero: true))
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .onSubmit {
+                                self.addAbsorptionBlock()
+                            }
+                            .submitLabel(.done)
+                            .accessibilityIdentifierLeaf("AddAbsorptionTimeValue")
+                        Text("h")
+                            .accessibilityIdentifierLeaf("AddAbsorptionTimeUnit")
+                        Button {
+                            self.addAbsorptionBlock()
+                        } label: {
+                            Image(systemName: "checkmark.circle.fill")
+                                .imageScale(.large)
+                                .foregroundStyle(.green)
+                        }
+                        .accessibilityIdentifierLeaf("AddAbsorptionBlockButton")
+                    }
+                }
+            } else {
+                HStack {
+                    Button("Add", systemImage: "plus.circle") {
+                        // Check if currently editing another absorption block
+                        if editedAbsorptionBlockId != nil {
+                            // Save the editing typical amount first
+                            self.addAbsorptionBlock()
+                        }
+                        
+                        withAnimation {
+                            // Show the new typical amount fields
+                            self.addNewBlock = true
+                            self.focusedField = .newBlock
+                        }
+                    }
+                    .accessibilityIdentifierLeaf("AddAbsorptionBlockButton")
+                }
+            }
+            
             // The list of absorption blocks
             List {
-                Text("Tap to edit, swipe left to delete")
-                    .font(.caption)
-                ForEach(absorptionScheme.absorptionBlocks, id: \.self) { absorptionBlock in
-                    HStack {
-                        Text(absorptionBlock.maxFpuAsString)
-                            .accessibilityIdentifierLeaf("MaxFpuValue")
-                        Text("FPU -")
-                            .accessibilityIdentifierLeaf("MaxFpuUnit")
-                        Text(absorptionBlock.absorptionTimeAsString)
-                            .accessibilityIdentifierLeaf("AbsorptionTimeValue")
-                        Text("h")
-                            .accessibilityIdentifierLeaf("AbsorptionTimeUnit")
+                ForEach(absorptionBlocks, id: \.self) { absorptionBlock in
+                    if editedAbsorptionBlockId != nil && editedAbsorptionBlockId! == absorptionBlock.id {
+                        HStack {
+                            // Editing an existing absorption block
+                            TextField("Max. FPUs", value: $newMaxFpu, formatter: DataHelper.intFormatter(hideZero: true))
+                                .keyboardType(.numberPad)
+                                .multilineTextAlignment(.trailing)
+                                .focused($focusedField, equals: .editedBlock)
+                                .onSubmit {
+                                    self.addAbsorptionBlock()
+                                }
+                                .submitLabel(.done)
+                                .accessibilityIdentifierLeaf("AddFPUValue")
+                            Text("FPU -")
+                                .accessibilityIdentifierLeaf("AddFPUUnit")
+                            TextField("Absorption time", value: $newAbsorptionTime, formatter: DataHelper.intFormatter(hideZero: true))
+                                .keyboardType(.numberPad)
+                                .multilineTextAlignment(.trailing)
+                                .onSubmit {
+                                    self.addAbsorptionBlock()
+                                }
+                                .submitLabel(.done)
+                                .accessibilityIdentifierLeaf("AddAbsorptionTimeValue")
+                            Text("h")
+                                .accessibilityIdentifierLeaf("AddAbsorptionTimeUnit")
+                            Button {
+                                self.addAbsorptionBlock()
+                            } label: {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .imageScale(.large)
+                                    .foregroundStyle(.green)
+                            }
+                            .accessibilityIdentifierLeaf("AddAbsorptionBlockButton")
+                        }
+                    } else {
+                        // Displaying an existing absorption block
+                        HStack {
+                            Text("\(absorptionBlock.maxFpu)")
+                                .accessibilityIdentifierLeaf("MaxFpuValue")
+                            Text("FPU -")
+                                .accessibilityIdentifierLeaf("MaxFpuUnit")
+                            Text("\(absorptionBlock.absorptionTime)")
+                                .accessibilityIdentifierLeaf("AbsorptionTimeValue")
+                            Text("h")
+                                .accessibilityIdentifierLeaf("AbsorptionTimeUnit")
+                        }
+                        .swipeActions(edge: .trailing) {
+                            // The edit button
+                            Button("Edit", systemImage: "pencil") {
+                                // Check if currently adding a new absorption block
+                                if addNewBlock {
+                                    // Save the new absorption block first
+                                    self.addAbsorptionBlock()
+                                }
+                                
+                                // Prepare for editing
+                                selectAbsorptionBlock(absorptionBlock)
+                            }
+                            .tint(.blue)
+                            .accessibilityIdentifierLeaf("EditButton")
+                            
+                            // The delete button
+                            Button("Delete", systemImage: "trash", role: .destructive) {
+                                withAnimation {
+                                    // First clear edit fields if filled
+                                    if self.addNewBlock {
+                                        deselectAbsorptionBlock()
+                                    }
+                                    
+                                    // Then delete typical amount
+                                    deleteAbsorptionBlock(absorptionBlock)
+                                }
+                            }
+                            .tint(.red)
+                            .accessibilityIdentifierLeaf("DeleteButton")
+                        }
+                        .accessibilityIdentifierBranch("AbsorptionBlock\(absorptionBlock.absorptionTime)")
                     }
-                    .onTapGesture {
-                        self.newMaxFpu = absorptionBlock.maxFpuAsString
-                        self.newAbsorptionTime = absorptionBlock.absorptionTimeAsString
-                        self.newAbsorptionBlockId = absorptionBlock.id
-                        self.updateButton = true
-                    }
-                    .accessibilityIdentifierBranch("AbsorptionBlock" + absorptionBlock.absorptionTimeAsString)
                 }
-                .onDelete(perform: deleteAbsorptionBlock)
             }
             
             // The reset button
             Button("Reset to default") {
+                deselectAbsorptionBlock()
                 var errorMessage = ""
-                if !absorptionScheme.resetToDefaultAbsorptionBlocks(errorMessage: &errorMessage) {
+                if !absorptionScheme.resetToDefaultAbsorptionBlocks(saveContext: true, errorMessage: &errorMessage) {
                     activeAlert = .fatalError(message: errorMessage)
                     showingAlert = true
                 }
             }
             .accessibilityIdentifierLeaf("AbsorptionSchemeResetButton")
         }
-        
-        // The absorption block add/edit form
-        Section(header: self.updateButton ? Text("Edit absorption block:") : Text("New absorption block:")) {
-            HStack {
-                CustomTextField(titleKey: "Max. FPUs", text: $newMaxFpu, keyboardType: .numberPad)
-                    .accessibilityIdentifierLeaf("AddFPUValue")
-                Text("FPU -")
-                    .accessibilityIdentifierLeaf("AddFPUUnit")
-                CustomTextField(titleKey: "Absorption time", text: $newAbsorptionTime, keyboardType: .numberPad)
-                    .accessibilityIdentifierLeaf("AddAbsorptionTimeValue")
-                Text("h")
-                    .accessibilityIdentifierLeaf("AddAbsorptionTimeUnit")
-                Button(action: {
-                    if self.newAbsorptionBlockId == nil { // This is a new absorption block
-                        var blockAlert: SimpleAlertType? = nil
-                        if let newAbsorptionBlock = AbsorptionBlockViewModel(maxFpuAsString: self.newMaxFpu, absorptionTimeAsString: self.newAbsorptionTime, activeAlert: &blockAlert) {
-                            // Check validity of new absorption block
-                            if let schemeAlert = self.absorptionScheme.add(newAbsorptionBlock: newAbsorptionBlock) {
-                                activeAlert = schemeAlert
-                                self.showingAlert = true
-                            } else {
-                                // Reset text fields
-                                self.newMaxFpu = ""
-                                self.newAbsorptionTime = ""
-                                self.updateButton = false
-                            }
-                        } else {
-                            activeAlert = blockAlert
-                            self.showingAlert = true
-                        }
-                    } else { // This is an existing typical amount
-                        if let schemeAlert = absorptionScheme.replace(existingAbsorptionBlockID: self.newAbsorptionBlockId!, newMaxFpuAsString: self.newMaxFpu, newAbsorptionTimeAsString: self.newAbsorptionTime) {
-                            activeAlert = schemeAlert
-                            self.showingAlert = true
-                        } else {
-                            // Reset text fields
-                            self.newMaxFpu = ""
-                            self.newAbsorptionTime = ""
-                            self.updateButton = false
-                        }
-                    }
-                }) {
-                    Image(systemName: self.updateButton ? "checkmark.circle" : "plus.circle").foregroundStyle(self.updateButton ? .yellow : .green)
-                }
-                .accessibilityIdentifierLeaf("AddAbsorptionBlockButton")
+    }
+    
+    private func selectAbsorptionBlock(_ absorptionBlock: AbsorptionBlock) {
+        self.newMaxFpu = Int(absorptionBlock.maxFpu)
+        self.newAbsorptionTime = Int(absorptionBlock.absorptionTime)
+        withAnimation {
+            self.editedAbsorptionBlockId = absorptionBlock.id
+            self.focusedField = .editedBlock
+        }
+    }
+    
+    private func deselectAbsorptionBlock() {
+        self.newMaxFpu = 0
+        self.newAbsorptionTime = 0
+        withAnimation {
+            self.editedAbsorptionBlockId = nil
+            self.addNewBlock = false
+            self.focusedField = nil
+        }
+    }
+    
+    private func addAbsorptionBlock() {
+        if isNewBlock { // This is a new absorption block
+            // Try to add the new absorption block to the scheme
+            if let schemeAlert = absorptionScheme.add(
+                maxFpu: self.newMaxFpu,
+                absorptionTime: self.newAbsorptionTime,
+                saveContext: true
+            ) {
+                // Addition failed, show alert
+                activeAlert = schemeAlert
+                self.showingAlert = true
+            } else {
+                // Reset text fields
+                deselectAbsorptionBlock()
+            }
+        } else { // This is an existing absorption block
+            if let schemeAlert = absorptionScheme.replace(
+                existingAbsorptionBlockID: self.editedAbsorptionBlockId!,
+                newMaxFpu: self.newMaxFpu,
+                newAbsorptionTime: self.newAbsorptionTime,
+                saveContext: true
+            ) {
+                activeAlert = schemeAlert
+                self.showingAlert = true
+            } else {
+                // Reset text fields
+                deselectAbsorptionBlock()
             }
         }
     }
     
-    private func deleteAbsorptionBlock(at offsets: IndexSet) {
-        if absorptionScheme.absorptionBlocks.count > 1 {
-            offsets.forEach { index in
-                if !absorptionScheme.removeAbsorptionBlock(at: index) {
-                    activeAlert = .fatalError(message: "Absorption block index out of range.")
-                    showingAlert = true
-                }
-            }
+    private func deleteAbsorptionBlock(_ absorptionBlock: AbsorptionBlock) {
+        if absorptionBlocks.count > 1 {
+            AbsorptionBlock.remove(absorptionBlock, saveContext: true)
         } else {
             // We need to have at least one block left
             activeAlert = .notice(message: "At least one absorption block required")

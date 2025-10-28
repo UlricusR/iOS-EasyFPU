@@ -41,14 +41,13 @@ struct CancelButton: ButtonStyle {
 //
 
 struct NumberButton<T: VariableAmountItem>: View {
-    var number: Int
+    var number: Int64
     var variableAmountItem: T
     var width: CGFloat
     
     var body: some View {
         Button("+\(self.number)") {
-            let newValue = self.variableAmountItem.amount + self.number
-            self.variableAmountItem.amountAsString = DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: newValue))!
+            self.variableAmountItem.amount += self.number
         }
         .frame(width: width, height: 40, alignment: .center)
         .background(Color.green)

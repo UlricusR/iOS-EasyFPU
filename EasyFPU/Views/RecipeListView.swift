@@ -7,12 +7,13 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct RecipeListView: View {
     enum RecipeNavigationDestination: Hashable {
         case CreateRecipe
-        case AddIngredients(recipe: ComposedFoodItemViewModel)
-        case EditRecipe(recipe: ComposedFoodItemViewModel)
+        case AddIngredients(recipe: ComposedFoodItem, tempContext: NSManagedObjectContext?)
+        case EditRecipe(recipe: ComposedFoodItem)
     }
     
     enum SheetState: Identifiable {
@@ -21,26 +22,24 @@ struct RecipeListView: View {
         var id: SheetState { self }
     }
     
+    static let recipeDefaultName = NSLocalizedString("Composed product", comment: "")
+    
     @Environment(\.managedObjectContext) var managedObjectContext
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
     var helpSheet: SheetState
     @State private var navigationPath = NavigationPath()
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
     @State private var activeSheet: SheetState?
     
-    @FetchRequest(
-        entity: ComposedFoodItem.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \ComposedFoodItem.name, ascending: true)
-        ]
-    ) var composedFoodItems: FetchedResults<ComposedFoodItem>
+    @FetchRequest(fetchRequest: ComposedFoodItem.createFetchRequest())
+    var composedFoodItems: FetchedResults<ComposedFoodItem>
     
-    private var filteredComposedFoodItems: [ComposedFoodItemViewModel] {
+    private var filteredComposedFoodItems: [ComposedFoodItem] {
         if searchString == "" {
-            return showFavoritesOnly ? composedFoodItems.map { ComposedFoodItemViewModel(from: $0) } .filter { $0.favorite } : composedFoodItems.map { ComposedFoodItemViewModel(from: $0) }
+            return showFavoritesOnly ? composedFoodItems.map { $0 } .filter { $0.favorite } : composedFoodItems.map { $0 }
         } else {
-            return showFavoritesOnly ? composedFoodItems.map { ComposedFoodItemViewModel(from: $0) } .filter { $0.favorite && $0.name.lowercased().contains(searchString.lowercased()) } : composedFoodItems.map { ComposedFoodItemViewModel(from: $0) } .filter { $0.name.lowercased().contains(searchString.lowercased()) }
+            return showFavoritesOnly ? composedFoodItems.map { $0 } .filter { $0.favorite && $0.name.lowercased().contains(searchString.lowercased()) } : composedFoodItems.map {
+                $0 } .filter { $0.name.lowercased().contains(searchString.lowercased()) }
         }
     }
     
@@ -52,9 +51,6 @@ struct RecipeListView: View {
                     Image("cooking-book-color").padding()
                     Text("Oops! No recipe yet! Then let's go!").padding()
                     Button {
-                        // Reset the shared ComposedViewVM
-                        UserSettings.shared.composedProduct.clear()
-                        
                         // Start new recipe
                         navigationPath.append(RecipeNavigationDestination.CreateRecipe)
                     } label: {
@@ -72,10 +68,10 @@ struct RecipeListView: View {
                     .accessibilityIdentifierLeaf("StartCookingButton")
                 } else {
                     List {
-                        ForEach(self.filteredComposedFoodItems) { composedFoodItem in
+                        ForEach(self.filteredComposedFoodItems, id: \.self) { composedFoodItem in
                             RecipeView(
                                 navigationPath: $navigationPath,
-                                composedFoodItemVM: composedFoodItem
+                                composedFoodItem: composedFoodItem
                             )
                             .environment(\.managedObjectContext, self.managedObjectContext)
                             .accessibilityIdentifierBranch(String(composedFoodItem.name.prefix(10)))
@@ -97,9 +93,6 @@ struct RecipeListView: View {
                     .accessibilityIdentifierLeaf("HelpButton")
                     
                     Button(action: {
-                        // Reset the shared ComposedViewVM
-                        UserSettings.shared.composedProduct.clear()
-                        
                         navigationPath.append(RecipeNavigationDestination.CreateRecipe)
                     }) {
                         Image(systemName: "plus.circle")
@@ -138,20 +131,20 @@ struct RecipeListView: View {
                         navigationBarBackButtonHidden: true
                     )
                     .accessibilityIdentifierBranch("AddFoodItem")
-                case let .EditFoodItem(category: category, foodItemVM: foodItemVM):
+                case let .EditFoodItem(category: category, foodItem: foodItem):
                     FoodMaintenanceListView.editFoodItem(
                         $navigationPath: $navigationPath,
                         category: category,
                         managedObjectContext: managedObjectContext,
                         navigationBarBackButtonHidden: true,
-                        foodItemVM: foodItemVM
+                        foodItem: foodItem
                     )
                     .accessibilityIdentifierBranch("EditFoodItem")
-                case let .SelectFoodItem(category: category, draftFoodItem: foodItemVM, composedFoodItem: composedFoodItemVM):
+                case let .SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItem):
                     FoodItemSelector(
                         navigationPath: $navigationPath,
-                        draftFoodItem: foodItemVM,
-                        composedFoodItem: composedFoodItemVM,
+                        ingredient: ingredient,
+                        composedFoodItem: composedFoodItem,
                         category: category
                     )
                     .accessibilityIdentifierBranch("SelectFoodItem")
@@ -160,34 +153,30 @@ struct RecipeListView: View {
             .navigationDestination(for: RecipeNavigationDestination.self) { screen in
                 switch screen {
                 case .CreateRecipe:
-                    FoodItemComposerView(
-                        composedFoodItemVM: UserSettings.shared.composedProduct,
+                    RecipeEditor(
                         navigationPath: $navigationPath
                     )
                     .environment(\.managedObjectContext, managedObjectContext)
+                    .navigationBarBackButtonHidden()
                     .accessibilityIdentifierBranch("CreateRecipe")
-                case let .AddIngredients(recipe: recipe):
+                case let .AddIngredients(recipe: recipe, tempContext: tempContext):
                     FoodItemListView(
                         category: .ingredient,
-                        listType: .selection,
+                        listType: .selection(composedFoodItem: recipe, tempContext: tempContext),
                         foodItemListTitle: NSLocalizedString("Ingredients", comment: ""),
                         helpSheet: .ingredientSelectionListHelp,
-                        navigationPath: $navigationPath,
-                        composedFoodItem: recipe
+                        navigationPath: $navigationPath
                     )
                     .accessibilityIdentifierBranch("SelectIngredients")
                     .navigationBarBackButtonHidden()
                 case let .EditRecipe(recipe: recipe):
-                    if recipe.cdComposedFoodItem != nil {
-                        FoodItemComposerView(
-                            composedFoodItemVM: recipe,
-                            navigationPath: $navigationPath
-                        )
-                        .environment(\.managedObjectContext, managedObjectContext)
-                        .accessibilityIdentifierBranch("EditRecipe")
-                    } else {
-                        Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
-                    }
+                    RecipeEditor(
+                        navigationPath: $navigationPath,
+                        composedFoodItem: recipe
+                    )
+                    .environment(\.managedObjectContext, managedObjectContext)
+                    .navigationBarBackButtonHidden()
+                    .accessibilityIdentifierBranch("EditRecipe")
                 }
             }
             .searchable(text: self.$searchString)
@@ -211,7 +200,6 @@ struct RecipeListView_Previews: PreviewProvider {
     @State private static var navigationPath = NavigationPath()
     static var previews: some View {
         RecipeListView(
-            composedFoodItem: ComposedFoodItemViewModel.sampleData(),
             helpSheet: .recipeListHelp
         )
     }

@@ -9,16 +9,16 @@
 import SwiftUI
 
 struct ComposedFoodItemECarbsView: View {
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
-    var absorptionScheme: AbsorptionSchemeViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
+    var absorptionScheme: AbsorptionScheme
     var absorptionTimeAsString: String {
         if composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme) != nil {
-            return DataHelper.intFormatter.string(from: NSNumber(value: composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
+            return DataHelper.intFormatter().string(from: NSNumber(value: composedFoodItem.fpus.getAbsorptionTime(absorptionScheme: absorptionScheme)!))!
         } else {
             return "..."
         }
     }
-    @ObservedObject var userSettings = UserSettings.shared
+    @State var userSettings = UserSettings.shared
     var extendedCarbsTimeAsString: String {
         let time = Date().addingTimeInterval(TimeInterval((userSettings.absorptionTimeECarbsDelayInMinutes + userSettings.mealDelayInMinutes) * 60))
         return HealthExportCarbsPreviewChart.timeStyle.string(from: time)
@@ -45,7 +45,7 @@ struct ComposedFoodItemECarbsView: View {
                 
                 VStack(alignment: .leading) { // Answers
                     HStack {
-                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: self.composedFoodItem.fpus.getExtendedCarbs()))!)
+                        Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: composedFoodItem.fpus.getExtendedCarbs()))!)
                             .accessibilityIdentifierLeaf("AmountValue")
                         Text("g Carbs")
                             .accessibilityIdentifierLeaf("AmountUnit")

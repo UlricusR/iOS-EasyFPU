@@ -1,5 +1,5 @@
 {
-  "originHash" : "5ee1853cbfcb2ef95b43d39a23d3db353d0e05ba468b365ae1d7e9e2ae186325",
+  "originHash" : "81a8f0f2bb4b203034e1a485e005abc668ef94e63f76d52238c9d8536d4324e1",
   "pins" : [
     {
       "identity" : "charts",
@@ -35,15 +35,6 @@
       "state" : {
         "revision" : "af76cf3ef710b6ca5f8c05f3a31307d44a3c5828",
         "version" : "5.0.2"
-      }
-    },
-    {
-      "identity" : "url-image",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dmytro-anokhin/url-image",
-      "state" : {
-        "revision" : "4042f955f1fdff00ced85545e1eecdbf969b5cd0",
-        "version" : "3.1.1"
       }
     }
   ],

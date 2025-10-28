@@ -7,15 +7,23 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct CategoryEditor: View {
-    @Binding var navigationPath: NavigationPath
+    private enum Field: Int, Hashable {
+        case newName, editedName
+    }
+    
     @State private var selectedFoodItemCategory: FoodItemCategory = .product
     @State private var showingAlert = false
     @State private var activeAlert: SimpleAlertType?
     @State private var name = ""
     @State private var editedCategory: FoodCategory?
+    @State private var addNewCategory: Bool = false
+    @FocusState private var focusedField: Field?
+    
+    private var isNew: Bool {
+        editedCategory == nil
+    }
     
     var body: some View {
         VStack {
@@ -27,72 +35,106 @@ struct CategoryEditor: View {
             .pickerStyle(.segmented)
             .padding()
                 
-            ScrollViewReader { proxy in
-                Form {
-                    Section(header: Text("Add/Edit Category"), footer: Text("Hit return to save")) {
-                        // Add new category text field
+            Form {
+                // Add new category
+                if addNewCategory {
+                    HStack {
                         TextField(LocalizedStringKey("New category"), text: $name, prompt: Text("New category"))
-                            .id(0)
+                            .focused($focusedField, equals: .newName)
                             .onSubmit {
-                                let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-                                if !trimmedName.isEmpty {
-                                    if FoodCategory.exists(name: trimmedName, category: selectedFoodItemCategory) {
-                                        activeAlert = .warning(message: NSLocalizedString("Category already exists!", comment: ""))
+                                self.addCategory()
+                            }
+                            .submitLabel(.done)
+                            .accessibilityIdentifierLeaf("NewCategoryTextField")
+                        Button {
+                            self.addCategory()
+                        } label: {
+                            Image(systemName: "checkmark.circle.fill")
+                                .imageScale(.large)
+                                .foregroundStyle(.green)
+                        }
+                        .accessibilityIdentifierLeaf("EditCategoryButton")
+                    }
+                } else {
+                    HStack {
+                        Button("Add", systemImage: "plus.circle") {
+                            // Check if currently editing an existing category
+                            if editedCategory != nil {
+                                // Save the edited category first
+                                addCategory()
+                            }
+                            
+                            withAnimation {
+                                // Show the text field
+                                addNewCategory = true
+                                focusedField = .newName
+                            }
+                        }
+                        .accessibilityIdentifierLeaf("AddCategoryButton")
+                    }
+                }
+                
+                // List of existing categories
+                try? DynamicList(
+                    filterKey: "category",
+                    filterValue: selectedFoodItemCategory.rawValue,
+                    sortKey: "name",
+                    sortAscending: true,
+                    emptyStateMessage: NSLocalizedString("Oops! You have not added any categories yet.", comment: ""),
+                ) { (category: FoodCategory) in
+                    if editedCategory != nil && category == editedCategory {
+                        HStack {
+                            TextField(LocalizedStringKey("Edit category"), text: $name, prompt: Text("Edit category"))
+                                .focused($focusedField, equals: .editedName)
+                                .onSubmit {
+                                    addCategory()
+                                }
+                                .submitLabel(.done)
+                                .accessibilityIdentifierLeaf("EditCategoryTextField")
+                            Button {
+                                addCategory()
+                            } label: {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .imageScale(.large)
+                                    .foregroundStyle(.green)
+                            }
+                            .accessibilityIdentifierLeaf("EditCategoryButton")
+                        }
+                    } else {
+                        Text(category.name)
+                            .swipeActions(edge: .trailing) {
+                                // The edit button
+                                Button("Edit", systemImage: "pencil") {
+                                    // Check if currently adding new category
+                                    if addNewCategory {
+                                        // Add the new category first
+                                        self.addCategory()
+                                    }
+                                    
+                                    withAnimation {
+                                        // Prepare for editing
+                                        name = category.name
+                                        editedCategory = category
+                                        focusedField = .editedName
+                                    }
+                                }
+                                .tint(.blue)
+                                .accessibilityIdentifierLeaf("EditButton")
+                                
+                                // The delete button
+                                Button("Delete", systemImage: "trash") {
+                                    if category.hasRelatedItems() {
+                                        activeAlert = .warning(message: NSLocalizedString("Cannot delete category which is in use!", comment: ""))
                                         showingAlert = true
                                         return
                                     }
-                                    
-                                    // Save the new or edited category
                                     withAnimation {
-                                        if editedCategory == nil { // New item
-                                            _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory)
-                                        } else { // Editing existing item
-                                            FoodCategory.update(editedCategory!, newName: trimmedName, newCategory: selectedFoodItemCategory)
-                                            editedCategory = nil // Clear the edited category
-                                        }
-                                        name = "" // Clear the text field after saving
+                                        FoodCategory.delete(category, saveContext: true)
                                     }
                                 }
+                                .tint(.red)
+                                .accessibilityIdentifierLeaf("DeleteButton")
                             }
-                    }
-                    
-                    Section(header: Text("Existing Categories")) {
-                        // List of existing categories
-                        try? DynamicList(
-                            filterKey: "category",
-                            filterValue: selectedFoodItemCategory.rawValue,
-                            sortKey: "name",
-                            sortAscending: true,
-                            emptyStateMessage: NSLocalizedString("Oops! You have not added any categories yet.", comment: ""),
-                        ) { (category: FoodCategory) in
-                            Text(category.name)
-                                .foregroundStyle(editedCategory == category ? .gray : .black)
-                                .swipeActions(edge: .trailing) {
-                                    Button("Delete", systemImage: "trash") {
-                                        if FoodCategory.hasRelatedItems(foodCategory: category) {
-                                            activeAlert = .warning(message: NSLocalizedString("Cannot delete category which is in use!", comment: ""))
-                                            showingAlert = true
-                                            return
-                                        }
-                                        withAnimation {
-                                            FoodCategory.delete(category)
-                                        }
-                                    }
-                                    .tint(.red)
-                                    .accessibilityIdentifierLeaf("DeleteButton")
-                                }
-                                .swipeActions(edge: .leading) {
-                                    Button("Edit", systemImage: "pencil") {
-                                        withAnimation {
-                                            editedCategory = category
-                                            name = category.name // Pre-fill the text field with the category name
-                                            proxy.scrollTo(0, anchor: .top) // Scroll to the text field
-                                        }
-                                    }
-                                    .tint(.blue)
-                                    .accessibilityIdentifierLeaf("EditButton")
-                                }
-                        }
                     }
                 }
             }
@@ -106,6 +148,38 @@ struct CategoryEditor: View {
             activeAlert.button()
         } message: { activeAlert in
             activeAlert.message()
+        }
+    }
+    
+    private func addCategory() {
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedName.isEmpty {
+            if FoodCategory.exists(name: trimmedName, category: selectedFoodItemCategory, isNew: isNew) {
+                activeAlert = .warning(message: NSLocalizedString("Category already exists!", comment: ""))
+                showingAlert = true
+                return
+            }
+            
+            // Save the new or edited category
+            withAnimation {
+                if isNew {
+                    _ = FoodCategory.create(id: UUID(), name: trimmedName, category: selectedFoodItemCategory, saveContext: true)
+                } else if let editedCategory = editedCategory { // Editing existing item
+                    editedCategory.update(newName: trimmedName, newCategory: selectedFoodItemCategory, saveContext: true)
+                }
+            }
+        }
+        
+        resetUI()
+    }
+    
+    private func resetUI() {
+        name = "" // Clear the text field after saving
+        addNewCategory = false // Hide the text field
+        editedCategory = nil // Clear the edited category
+        
+        withAnimation {
+            focusedField = nil // Dismiss the keyboard
         }
     }
 }

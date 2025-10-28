@@ -63,6 +63,7 @@
 "Add products" = "Add dishes";
 "Edit products" = "Edit dishes";
 "Add more" = "Add more";
+"No food item associated to typical amount!" = "No food item associated to typical amount!";
 
 // Dishes List
 "Products" = "Dishes";
@@ -98,6 +99,7 @@
 "Typical amount" = "Typical amount";
 "Typical amounts:" = "Typical amounts:";
 "Add to typical amounts" = "Add to typical amounts";
+"You have not added any typical amounts yet." = "You have not added any typical amounts yet.";
 "Could not identify typical amount." = "Could not identify typical amount.";
 "Comment" = "Comment";
 "As sold" = "As sold";
@@ -132,6 +134,7 @@
 "Composed product" = "My recipe";
 "Weight" = "Weight";
 "Final product" = "My recipe";
+"The weight of the final product must be greater than zero" = "The weight of the finished dish must be greater than zero";
 "The weight of the composed product is less than the sum of its ingredients" = "The weight of the finished dish is less than the sum of its ingredients";
 "The weight of the composed product is more than the sum of its ingredients" = "The weight of the finished dish is more than the sum of its ingredients";
 "Save" = "Save";
@@ -190,6 +193,9 @@
 "Search term must not be empty" = "Search term must not be empty";
 " - new" = " - new";
 "A food item with this name already exists" = "An entry with this name already exists";
+"Couldn't duplicate food item!" = "Couldn't duplicate food item!";
+"Edit typical amount" = "Edit typical amount";
+"A typical amount with this value already exists." = "A typical amount with this value already exists.";
 
 // Recipe list and editor
 "Recipe List" = "Recipe List";
@@ -209,6 +215,7 @@
 "Keep product" = "Delete recipe only";
 "Delete recipe" = "Delete recipe";
 "Do you really want to delete this recipe? This cannot be undone!" = "Do you really want to delete this recipe? This cannot be undone!";
+"Tap to select" = "Tap to select";
 
 // Category editor
 "Category" = "Category";
@@ -221,6 +228,7 @@
 "Uncategorized" = "- No category -";
 "Category already exists!" = "Category already exists!";
 "Cannot delete category which is in use!" = "Cannot delete category which is in use!";
+"Edit category" = "Edit category";
 
 // Settings editor
 "Absorption scheme" = "Absorption scheme";
@@ -234,6 +242,7 @@
 "FPU -" = "FPU -";
 "h" = "h";
 "Cannot find absorption block: " = "Cannot find absorption block: ";
+"Maximum FPU must be larger than zero" = "Maximum FPU must be larger than zero";
 "Maximum FPU value already exists" = "Maximum FPU value already exists";
 "Absorption time is equals or larger than the one of the following absorption block" = "Absorption time is equals or larger than the one of the following absorption block";
 "Absorption time is equals or less than the one of the block before" = "Absorption time is equals or less than the one of the block before";

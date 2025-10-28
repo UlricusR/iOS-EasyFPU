@@ -11,10 +11,10 @@ import HealthKit
 import LocalAuthentication
 
 struct ComposedFoodItemExportView: View {
-    var composedFoodItem: ComposedFoodItemViewModel
-    var absorptionScheme: AbsorptionSchemeViewModel
-    @ObservedObject var userSettings = UserSettings.shared
-    @ObservedObject var carbsRegimeCalculator = CarbsRegimeCalculator.default
+    var composedFoodItem: ComposedFoodItem
+    var absorptionScheme: AbsorptionScheme
+    @ObservedObject var carbsRegimeCalculator: CarbsRegimeCalculator
+    @State var userSettings = UserSettings.shared
     @State var showingSheet = false
     @State var showingAlert = false
     @State var activeAlert: SimpleAlertType?

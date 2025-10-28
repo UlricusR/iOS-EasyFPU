@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AbsorptionParameterSettingsView: View {
-    @ObservedObject var draftAbsorptionScheme: AbsorptionSchemeViewModel
+    @State var draftAbsorptionScheme: AbsorptionScheme
     @Binding var activeAlert: SimpleAlertType?
     @Binding var showingAlert: Bool
     
@@ -32,8 +32,9 @@ struct AbsorptionParameterSettingsView: View {
                 HStack {
                     Text("Delay")
                         .accessibilityIdentifierLeaf("SugarsDelayLabel")
-                    CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delaySugarsAsString, keyboardType: .numberPad)
-                        .onChange(of: draftAbsorptionScheme.delaySugarsAsString) {
+                    TextField("Delay", value: $draftAbsorptionScheme.delaySugars, formatter: DataHelper.intFormatter())
+                        .keyboardType(.numberPad)
+                        .onChange(of: draftAbsorptionScheme.delaySugars) {
                             var errorMessage = ""
                             if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delaySugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsDelay), errorMessage: &errorMessage) {
                                 activeAlert = .fatalError(message: errorMessage)
@@ -51,8 +52,9 @@ struct AbsorptionParameterSettingsView: View {
                 HStack {
                     Text("Duration")
                         .accessibilityIdentifierLeaf("SugarsDurationLabel")
-                    CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationSugarsAsString, keyboardType: .decimalPad)
-                        .onChange(of: draftAbsorptionScheme.durationSugarsAsString) {
+                    TextField("Duration", value: $draftAbsorptionScheme.durationSugars, formatter: DataHelper.doubleFormatter(numberOfDigits: 2))
+                        .keyboardType(.decimalPad)
+                        .onChange(of: draftAbsorptionScheme.durationSugars) {
                             var errorMessage = ""
                             if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationSugars, UserSettings.UserDefaultsDoubleKey.absorptionTimeSugarsDuration), errorMessage: &errorMessage) {
                                 activeAlert = .fatalError(message: errorMessage)
@@ -70,8 +72,9 @@ struct AbsorptionParameterSettingsView: View {
                 HStack {
                     Text("Interval")
                         .accessibilityIdentifierLeaf("SugarsIntervalLabel")
-                    CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalSugarsAsString, keyboardType: .numberPad)
-                        .onChange(of: draftAbsorptionScheme.intervalSugarsAsString) {
+                    TextField("Interval", value: $draftAbsorptionScheme.intervalSugars, formatter: DataHelper.intFormatter())
+                        .keyboardType(.numberPad)
+                        .onChange(of: draftAbsorptionScheme.intervalSugars) {
                             var errorMessage = ""
                             if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalSugars, UserSettings.UserDefaultsIntKey.absorptionTimeSugarsInterval), errorMessage: &errorMessage) {
                                 activeAlert = .fatalError(message: errorMessage)
@@ -99,8 +102,9 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Delay")
                     .accessibilityIdentifierLeaf("CarbsDelayLabel")
-                CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayCarbsAsString, keyboardType: .numberPad)
-                    .onChange(of: draftAbsorptionScheme.delayCarbsAsString) {
+                TextField("Delay", value: $draftAbsorptionScheme.delayCarbs, formatter: DataHelper.intFormatter())
+                    .keyboardType(.numberPad)
+                    .onChange(of: draftAbsorptionScheme.delayCarbs) {
                         var errorMessage = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsDelay), errorMessage: &errorMessage) {
                             activeAlert = .fatalError(message: errorMessage)
@@ -118,8 +122,9 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Duration")
                     .accessibilityIdentifierLeaf("CarbsDurationLabel")
-                CustomTextField(titleKey: "Duration", text: $draftAbsorptionScheme.durationCarbsAsString, keyboardType: .decimalPad)
-                    .onChange(of: draftAbsorptionScheme.durationCarbsAsString) {
+                TextField("Duration", value: $draftAbsorptionScheme.durationCarbs, formatter: DataHelper.doubleFormatter(numberOfDigits: 2))
+                    .keyboardType(.decimalPad)
+                    .onChange(of: draftAbsorptionScheme.durationCarbs) {
                         var errorMessage = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.durationCarbs, UserSettings.UserDefaultsDoubleKey.absorptionTimeCarbsDuration), errorMessage: &errorMessage) {
                             activeAlert = .fatalError(message: errorMessage)
@@ -137,8 +142,9 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Interval")
                     .accessibilityIdentifierLeaf("CarbsIntervalLabel")
-                CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalCarbsAsString, keyboardType: .numberPad)
-                    .onChange(of: draftAbsorptionScheme.intervalCarbsAsString) {
+                TextField("Interval", value: $draftAbsorptionScheme.intervalCarbs, formatter: DataHelper.intFormatter())
+                    .keyboardType(.numberPad)
+                    .onChange(of: draftAbsorptionScheme.intervalCarbs) {
                         var errorMessage = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalCarbs, UserSettings.UserDefaultsIntKey.absorptionTimeCarbsInterval), errorMessage: &errorMessage) {
                             activeAlert = .fatalError(message: errorMessage)
@@ -165,8 +171,9 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Delay")
                     .accessibilityIdentifierLeaf("ECarbsDelayLabel")
-                CustomTextField(titleKey: "Delay", text: $draftAbsorptionScheme.delayECarbsAsString, keyboardType: .numberPad)
-                    .onChange(of: draftAbsorptionScheme.delayECarbsAsString) {
+                TextField("Delay", value: $draftAbsorptionScheme.delayECarbs, formatter: DataHelper.intFormatter())
+                    .keyboardType(.numberPad)
+                    .onChange(of: draftAbsorptionScheme.delayECarbs) {
                         var errorMessage = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.delayECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsDelay), errorMessage: &errorMessage) {
                             activeAlert = .fatalError(message: errorMessage)
@@ -184,8 +191,9 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("e-Carbs Factor")
                     .accessibilityIdentifierLeaf("ECarbsFactorLabel")
-                CustomTextField(titleKey: "e-Carbs Factor", text: $draftAbsorptionScheme.eCarbsFactorAsString, keyboardType: .decimalPad)
-                    .onChange(of: draftAbsorptionScheme.eCarbsFactorAsString) {
+                TextField("e-Carbs Factor", value: $draftAbsorptionScheme.eCarbsFactor, formatter: DataHelper.doubleFormatter(numberOfDigits: 2))
+                    .keyboardType(.decimalPad)
+                    .onChange(of: draftAbsorptionScheme.eCarbsFactor) {
                         var errorMessage = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.double(self.draftAbsorptionScheme.eCarbsFactor, UserSettings.UserDefaultsDoubleKey.eCarbsFactor), errorMessage: &errorMessage) {
                             activeAlert = .fatalError(message: errorMessage)
@@ -203,8 +211,9 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Interval")
                     .accessibilityIdentifierLeaf("ECarbsIntervalLabel")
-                CustomTextField(titleKey: "Interval", text: $draftAbsorptionScheme.intervalECarbsAsString, keyboardType: .numberPad)
-                    .onChange(of: draftAbsorptionScheme.intervalECarbsAsString) {
+                TextField("Interval", value: $draftAbsorptionScheme.intervalECarbs, formatter: DataHelper.intFormatter())
+                    .keyboardType(.numberPad)
+                    .onChange(of: draftAbsorptionScheme.intervalECarbs) {
                         var errorMessage = ""
                         if !UserSettings.set(UserSettings.UserDefaultsType.int(self.draftAbsorptionScheme.intervalECarbs, UserSettings.UserDefaultsIntKey.absorptionTimeECarbsInterval), errorMessage: &errorMessage) {
                             activeAlert = .fatalError(message: errorMessage)
@@ -229,24 +238,24 @@ struct AbsorptionParameterSettingsView: View {
     
     func resetSugarsToDefaults() {
         // Reset absorption time (for sugars) delay, interval and duration
-        draftAbsorptionScheme.delaySugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeSugarsDelayDefault))!
-        draftAbsorptionScheme.intervalSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeSugarsIntervalDefault))!
-        draftAbsorptionScheme.durationSugarsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeSugarsDurationDefault))!
+        draftAbsorptionScheme.delaySugars = AbsorptionScheme.absorptionTimeSugarsDelayDefault
+        draftAbsorptionScheme.intervalSugars = AbsorptionScheme.absorptionTimeSugarsIntervalDefault
+        draftAbsorptionScheme.durationSugars = AbsorptionScheme.absoprtionTimeSugarsDurationDefault
     }
      
     func resetCarbsToDefaults() {
         // Reset absorption time (for carbs) delay, interval and duration
-        draftAbsorptionScheme.delayCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsDelayDefault))!
-        draftAbsorptionScheme.intervalCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeCarbsIntervalDefault))!
-        draftAbsorptionScheme.durationCarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absoprtionTimeCarbsDurationDefault))!
+        draftAbsorptionScheme.delayCarbs = AbsorptionScheme.absorptionTimeCarbsDelayDefault
+        draftAbsorptionScheme.intervalCarbs = AbsorptionScheme.absorptionTimeCarbsIntervalDefault
+        draftAbsorptionScheme.durationCarbs = AbsorptionScheme.absoprtionTimeCarbsDurationDefault
     }
      
     func resetECarbsToDefaults() {
         // Reset absorption time (for e-carbs) delay and interval
-        draftAbsorptionScheme.delayECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeECarbsDelayDefault))!
-        draftAbsorptionScheme.intervalECarbsAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.absorptionTimeECarbsIntervalDefault))!
+        draftAbsorptionScheme.delayECarbs = AbsorptionScheme.absorptionTimeECarbsDelayDefault
+        draftAbsorptionScheme.intervalECarbs = AbsorptionScheme.absorptionTimeECarbsIntervalDefault
         
         // Reset eCarbs factor
-        draftAbsorptionScheme.eCarbsFactorAsString = DataHelper.doubleFormatter(numberOfDigits: 5).string(from: NSNumber(value: AbsorptionSchemeViewModel.eCarbsFactorDefault))!
+        draftAbsorptionScheme.eCarbsFactor = AbsorptionScheme.eCarbsFactorDefault
     }
 }

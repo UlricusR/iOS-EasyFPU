@@ -15,7 +15,6 @@ struct FoodMaintenanceListView: View {
     var listType: FoodItemListView.FoodItemListType
     var listTitle: String
     var helpSheet: FoodItemListView.SheetState
-    var composedFoodItem: ComposedFoodItemViewModel
     
     @State private var navigationPath = NavigationPath()
     
@@ -26,8 +25,7 @@ struct FoodMaintenanceListView: View {
                 listType: listType,
                 foodItemListTitle: listTitle,
                 helpSheet: helpSheet,
-                navigationPath: $navigationPath,
-                composedFoodItem: composedFoodItem
+                navigationPath: $navigationPath
             )
             .navigationDestination(for: FoodItemListView.FoodListNavigationDestination.self) { screen in
                 switch screen {
@@ -39,20 +37,20 @@ struct FoodMaintenanceListView: View {
                         navigationBarBackButtonHidden: true
                     )
                     .accessibilityIdentifierBranch("AddFoodItem")
-                case let .EditFoodItem(category: category, foodItemVM: foodItemVM):
+                case let .EditFoodItem(category: category, foodItem: foodItem):
                     FoodMaintenanceListView.editFoodItem(
                         $navigationPath: $navigationPath,
                         category: category,
                         managedObjectContext: managedObjectContext,
                         navigationBarBackButtonHidden: true,
-                        foodItemVM: foodItemVM
+                        foodItem: foodItem
                     )
                     .accessibilityIdentifierBranch("EditFoodItem")
-                case let .SelectFoodItem(category: category, draftFoodItem: foodItemVM, composedFoodItem: composedFoodItemVM):
+                case let .SelectFoodItem(category: category, ingredient: ingredient, composedFoodItem: composedFoodItem):
                     FoodItemSelector(
                         navigationPath: $navigationPath,
-                        draftFoodItem: foodItemVM,
-                        composedFoodItem: composedFoodItemVM,
+                        ingredient: ingredient,
+                        composedFoodItem: composedFoodItem,
                         category: category
                     )
                     .accessibilityIdentifierBranch("SelectFoodItem")
@@ -71,7 +69,6 @@ struct FoodMaintenanceListView: View {
         FoodItemEditor(
             navigationPath: $navigationPath,
             navigationTitle: NSLocalizedString("New \(category.rawValue)", comment: ""),
-            draftFoodItemVM: FoodItemViewModel.emptyFoodItem(category: category),
             category: category
         )
         .environment(\.managedObjectContext, managedObjectContext)
@@ -85,21 +82,16 @@ struct FoodMaintenanceListView: View {
         category: FoodItemCategory,
         managedObjectContext: NSManagedObjectContext,
         navigationBarBackButtonHidden: Bool,
-        foodItemVM: FoodItemViewModel
+        foodItem: FoodItem
     ) -> some View {
-        if foodItemVM.cdFoodItem != nil {
-            FoodItemEditor(
-                navigationPath: $navigationPath,
-                navigationTitle: NSLocalizedString("Edit food item", comment: ""),
-                sourceFoodItem: foodItemVM,
-                draftFoodItemVM: FoodItemViewModel(clone: foodItemVM),
-                category: category
-            )
-            .environment(\.managedObjectContext, managedObjectContext)
-            .navigationBarBackButtonHidden(navigationBarBackButtonHidden)
-            .accessibilityIdentifierBranch("EditFoodItem")
-        } else {
-            Text(NSLocalizedString("Fatal error: Couldn't find CoreData FoodItem, please inform the app developer", comment: ""))
-        }
+        FoodItemEditor(
+            navigationPath: $navigationPath,
+            navigationTitle: NSLocalizedString("Edit food item", comment: ""),
+            foodItem: foodItem,
+            category: category
+        )
+        .environment(\.managedObjectContext, managedObjectContext)
+        .navigationBarBackButtonHidden(navigationBarBackButtonHidden)
+        .accessibilityIdentifierBranch("EditFoodItem")
     }
 }

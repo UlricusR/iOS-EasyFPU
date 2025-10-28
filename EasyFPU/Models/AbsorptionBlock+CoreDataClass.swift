@@ -12,6 +12,11 @@ import CoreData
 
 @objc(AbsorptionBlock)
 public class AbsorptionBlock: NSManagedObject {
+    
+    //
+    // MARK: - Static methods for entity creation/deletion/fetching
+    //
+    
     static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [AbsorptionBlock] {
         let request: NSFetchRequest<AbsorptionBlock> = AbsorptionBlock.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "maxFpu", ascending: true)]
@@ -22,57 +27,61 @@ public class AbsorptionBlock: NSManagedObject {
         return absorptionBlocks
     }
     
-    static func deleteAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) {
+    static func deleteAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext, saveContext: Bool = true) {
         AbsorptionBlock.fetchAll(viewContext: viewContext).forEach({
             viewContext.delete($0)
         })
         
-        try? viewContext.save()
+        if saveContext {
+            try? viewContext.save()
+        }
     }
     
-    static func create(absorptionTime: Int, maxFpu: Int) -> AbsorptionBlock {
+    /// Creates a new Core Data AbsorptionBlock with the given values. Does not check for duplicates.
+    /// - Parameters:
+    ///   - absorptionTime: The absorption time in minutes.
+    ///   - maxFpu: The maximum FPU value for this block.
+    ///   - saveContext: A Boolean indicating whether to save the Core Data context after creating.
+    /// - Returns: The created AbsorptionBlock object.
+    static func create(absorptionTime: Int, maxFpu: Int, saveContext: Bool) -> AbsorptionBlock {
         let cdAbsorptionBlock = AbsorptionBlock(context: CoreDataStack.viewContext)
         cdAbsorptionBlock.id = UUID()
         cdAbsorptionBlock.absorptionTime = Int64(absorptionTime)
         cdAbsorptionBlock.maxFpu = Int64(maxFpu)
         
-        CoreDataStack.shared.save()
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
         return cdAbsorptionBlock
     }
     
-    static func create(from absorptionBlockFromJson: AbsorptionBlockFromJson, id: UUID) -> AbsorptionBlock {
+    /// Creates a new Core Data AbsorptionBlock from the given AbsorptionBlockFromJson and id. Saves the context.
+    /// - Parameters:
+    ///   - absorptionBlockFromJson: The AbsorptionBlockFromJson to create the AbsorptionBlock from.
+    ///   - id: The unique identifier for the AbsorptionBlock.
+    ///   - saveContext: A Boolean indicating whether to save the Core Data context after creating.
+    /// - Returns: The created AbsorptionBlock object.
+    static func create(from absorptionBlockFromJson: AbsorptionBlockFromJson, id: UUID, saveContext: Bool) -> AbsorptionBlock {
         let cdAbsorptionBlock = AbsorptionBlock(context: CoreDataStack.viewContext)
         cdAbsorptionBlock.id = id
         cdAbsorptionBlock.absorptionTime = Int64(absorptionBlockFromJson.absorptionTime)
         cdAbsorptionBlock.maxFpu = Int64(absorptionBlockFromJson.maxFpu)
         
-        CoreDataStack.shared.save()
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
         return cdAbsorptionBlock
     }
     
-    static func create(from absorptionBlockVM: AbsorptionBlockViewModel) -> AbsorptionBlock {
-        let cdAbsorptionBlock = AbsorptionBlock(context: CoreDataStack.viewContext)
-        cdAbsorptionBlock.id = UUID()
-        cdAbsorptionBlock.absorptionTime = Int64(absorptionBlockVM.absorptionTime)
-        cdAbsorptionBlock.maxFpu = Int64(absorptionBlockVM.maxFpu)
-        
-        CoreDataStack.shared.save()
-        return cdAbsorptionBlock
-    }
-    
-    static func updateAbsorptionTime(cdAbsorptionBlock: AbsorptionBlock, with absorptionTime: Int) {
-        cdAbsorptionBlock.absorptionTime = Int64(absorptionTime)
-        CoreDataStack.shared.save()
-    }
-    
-    static func updateMaxFpu(cdAbsorptionBlock: AbsorptionBlock, with maxFpu: Int) {
-        cdAbsorptionBlock.maxFpu = Int64(maxFpu)
-        CoreDataStack.shared.save()
-    }
-    
-    static func remove(_ cdAbsorptionBlock: AbsorptionBlock) {
+    /// Removes the given Core Data AbsorptionBlock from the context and optionally saves the context.
+    /// - Parameters:
+    ///   - cdAbsorptionBlock: The AbsorptionBlock to remove.
+    ///   - saveContext: A Boolean indicating whether to save the Core Data context after removal.
+    static func remove(_ cdAbsorptionBlock: AbsorptionBlock, saveContext: Bool) {
         CoreDataStack.viewContext.delete(cdAbsorptionBlock)
-        CoreDataStack.shared.save()
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
     }
     
     static func getAbsorptionBlockByID(id: UUID) -> AbsorptionBlock? {

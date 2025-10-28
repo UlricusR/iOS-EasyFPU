@@ -11,7 +11,63 @@ import Foundation
 import CoreData
 
 
+enum FoodItemDataError: Equatable {
+    case name(String), calories(String), carbs(String), sugars(String), amount(String), tooMuchCarbs(String), tooMuchSugars(String)
+    case none
+    
+    func localizedDescription() -> String {
+        switch self {
+        case .name(let errorMessage):
+            errorMessage
+        case .calories(let errorMessage):
+            NSLocalizedString("Calories: ", comment:"") + errorMessage
+        case .carbs(let errorMessage):
+            NSLocalizedString("Carbs: ", comment:"") + errorMessage
+        case .sugars(let errorMessage):
+            NSLocalizedString("Sugars: ", comment: "") + errorMessage
+        case .tooMuchCarbs(let errorMessage):
+            errorMessage
+        case .tooMuchSugars(let errorMessage):
+            errorMessage
+        case .amount(let errorMessage):
+            NSLocalizedString("Amount: ", comment:"") + errorMessage
+        case .none:
+            ""
+        }
+    }
+}
+
+enum FoodItemCategory: String, CaseIterable, Identifiable {
+    case product = "Product"
+    case ingredient = "Ingredient"
+    
+    var id: String {
+        self.rawValue
+    }
+}
+
+enum FoodItemUnit: String {
+    case gram = "g"
+    case milliliter = "ml"
+    
+    init?(rawValue: String) {
+        switch rawValue {
+        case FoodItemUnit.gram.rawValue:
+            self = .gram
+        case FoodItemUnit.milliliter.rawValue:
+            self = .milliliter
+        default:
+            return nil
+        }
+    }
+}
+
 public class FoodItem: NSManagedObject {
+    
+    //
+    // MARK: - Static methods for entity creation/deletion/fetching
+    //
+    
     static func fetchAll(viewContext: NSManagedObjectContext = CoreDataStack.viewContext) -> [FoodItem] {
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -30,41 +86,59 @@ public class FoodItem: NSManagedObject {
         try? viewContext.save()
     }
     
-    /**
-     Creates a new Core Data FoodItem. Does not relate it to the passed FoodItemViewModel.
-     
-     - Parameters:
-        - foodItedVM: the source FoodItemViewModel.
-        
-     - Returns: the new Core Data FoodItem.
-     */
-    static func create(from foodItemVM: FoodItemViewModel) -> FoodItem {
+    /// Creates a new Core Data FoodItem with default values. Does not save the context.
+    /// - Parameter category: The category of the new FoodItem.
+    /// - Returns: The new Core Data FoodItem.
+    static func new(category: FoodItemCategory, context: NSManagedObjectContext) -> FoodItem {
+        let newFoodItem = FoodItem(context: context)
+        newFoodItem.id = UUID()
+        newFoodItem.name = ""
+        newFoodItem.caloriesPer100g = 0
+        newFoodItem.carbsPer100g = 0
+        newFoodItem.sugarsPer100g = 0
+        newFoodItem.favorite = false
+        newFoodItem.category = category.rawValue
+        return newFoodItem
+    }
+    
+    /// Creates a new Core Data FoodItem from a FoodItemPersistence. Validates the data.
+    /// - Parameters:
+    ///   - foodItedPersistence: The source FoodItemPersistence.
+    ///   - saveContext: If true, the context will be saved after creation.
+    ///   - dataError: An inout parameter that will contain any validation error encountered during creation.
+    /// - Returns: The new Core Data FoodItem, or nil if there was a validation error.
+    static func create(from foodItemPersistence: FoodItemPersistence, saveContext: Bool, dataError: inout FoodItemDataError) -> FoodItem? {
         // Create the FoodItem
         let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
         
         // Fill data
-        cdFoodItem.id = foodItemVM.id
-        cdFoodItem.name = foodItemVM.name
-        cdFoodItem.foodCategory = foodItemVM.foodCategory
-        cdFoodItem.category = foodItemVM.category.rawValue
-        cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
-        cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
-        cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
-        cdFoodItem.favorite = foodItemVM.favorite
-        cdFoodItem.sourceID = foodItemVM.sourceID
-        cdFoodItem.sourceDB = foodItemVM.sourceDB?.rawValue
+        cdFoodItem.id = foodItemPersistence.id
+        cdFoodItem.name = foodItemPersistence.name
+        cdFoodItem.foodCategory = foodItemPersistence.foodCategory
+        cdFoodItem.category = foodItemPersistence.category.rawValue
+        cdFoodItem.caloriesPer100g = foodItemPersistence.caloriesPer100g
+        cdFoodItem.carbsPer100g = foodItemPersistence.carbsPer100g
+        cdFoodItem.sugarsPer100g = foodItemPersistence.sugarsPer100g
+        cdFoodItem.favorite = foodItemPersistence.favorite
+        cdFoodItem.sourceID = foodItemPersistence.sourceID
+        cdFoodItem.sourceDB = foodItemPersistence.sourceDB?.rawValue
         
-        // Save
-        CoreDataStack.shared.save()
+        // Validate the data
+        dataError = cdFoodItem.validateInput()
+        guard dataError == .none else {
+            return nil
+        }
         
         // Add typical amounts
-        for typicalAmount in foodItemVM.typicalAmounts {
-            let newCDTypicalAmount = TypicalAmount.create(from: typicalAmount)
+        for typicalAmount in foodItemPersistence.typicalAmounts {
+            let newCDTypicalAmount = TypicalAmount.create(from: typicalAmount, saveContext: saveContext)
             cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
         }
         
         // Save
-        CoreDataStack.shared.save()
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
         return cdFoodItem
     }
     
@@ -73,14 +147,16 @@ public class FoodItem: NSManagedObject {
      First checks if a Core Data FoodItem with the same ID exists, otherwise creates a new one with the ID of the ComposedFoodItemViewModel.
      Creates TypicalAmounts for the FoodItem, if required.
      It does not create a relationship to a ComposedFoodItem. This needs to be created manually.
+     Saves the context.
      
      - Parameters:
         - composedFoodItem: The source ComposedFoodItemViewModel.
         - generateTypicalAmounts: If true, TypicalAmounts will be added to the FoodItem.
+        - saveContext: If true, the context will be saved after creation.
      
      - Returns: The existing Core Data FoodItem if found, otherwise a new one.
      */
-    static func create(from composedFoodItemVM: ComposedFoodItemViewModel) -> FoodItem {
+    static func create(from composedFoodItemVM: ComposedFoodItemPersistence, saveContext: Bool) -> FoodItem {
         var cdFoodItem: FoodItem
         
         // Return the existing Core Data FoodItem, if found
@@ -111,119 +187,94 @@ public class FoodItem: NSManagedObject {
         // Add typical amounts
         if composedFoodItemVM.numberOfPortions > 0 {
             for typicalAmountVM in composedFoodItemVM.typicalAmounts {
-                let newCDTypicalAmount = TypicalAmount.create(from: typicalAmountVM)
+                let newCDTypicalAmount = TypicalAmount.create(from: typicalAmountVM, saveContext: saveContext)
                 cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
             }
         }
         
         // Save new food item and refresh
-        CoreDataStack.shared.save()
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
         
         return cdFoodItem
     }
     
-    /**
-     Updates a Core Data FoodItem with the values from a FoodItemViewModel.
-     If related to one or more Ingredients, their values will also be updated.
-     
-     - Parameters:
-        - cdFoodItem: The Core Data FoodItem to be updated.
-        - foodItemVM: The source FoodItemViewModel.
-        - typicalAmountsToBeDeleted: The TypicalAmounts to be deleted from the FoodItem.
-     */
-    static func update(
-        _ cdFoodItem: FoodItem,
-        with foodItemVM: FoodItemViewModel,
-        typicalAmountsToBeDeleted: [TypicalAmountViewModel]
-    ) {
-        cdFoodItem.name = foodItemVM.name
-        cdFoodItem.foodCategory = foodItemVM.foodCategory
-        cdFoodItem.category = foodItemVM.category.rawValue
-        cdFoodItem.favorite = foodItemVM.favorite
-        cdFoodItem.carbsPer100g = foodItemVM.carbsPer100g
-        cdFoodItem.caloriesPer100g = foodItemVM.caloriesPer100g
-        cdFoodItem.sugarsPer100g = foodItemVM.sugarsPer100g
-        cdFoodItem.sourceID = foodItemVM.sourceID
-        cdFoodItem.sourceDB = foodItemVM.sourceDB?.rawValue
+    /// Either creates a new Core Data FoodItem from a ComposedFoodItem or updates an existing one.
+    /// Does not save the context.
+    /// - Parameter composedFoodItem: The source ComposedFoodItem.
+    /// - Returns: The existing Core Data FoodItem if found, otherwise a new one.
+    static func createOrUpdate(from composedFoodItem: ComposedFoodItem) -> FoodItem {
+        let context = composedFoodItem.managedObjectContext ?? CoreDataStack.viewContext
+        var cdFoodItem: FoodItem
         
-        // Get the related ingredients and update their values
-        let relatedIngredients = cdFoodItem.ingredients?.allObjects as? [Ingredient] ?? []
-        for ingredient in relatedIngredients {
-            _ = Ingredient.update(ingredient, with: cdFoodItem)
-        }
-        
-        // Remove deleted typical amounts from view model and Core Data
-        for typicalAmountToBeDeleted in typicalAmountsToBeDeleted {
-            // First remove from FoodItemVM
-            foodItemVM.typicalAmounts.removeAll(where: { $0.id == typicalAmountToBeDeleted.id })
+        // Check for related FoodItem
+        if let relatedFoodItem = composedFoodItem.foodItem {
+            cdFoodItem = relatedFoodItem
             
-            // Then remove from Core Data FoodItem
-            if typicalAmountToBeDeleted.cdTypicalAmount != nil {
-                cdFoodItem.removeFromTypicalAmounts(typicalAmountToBeDeleted.cdTypicalAmount!)
-                CoreDataStack.viewContext.delete(typicalAmountToBeDeleted.cdTypicalAmount!)
-                CoreDataStack.shared.save()
+            // Remove existing TypicalAmounts
+            if let existingTypicalAmounts = cdFoodItem.typicalAmounts {
+                cdFoodItem.removeFromTypicalAmounts(existingTypicalAmounts)
             }
+        } else if let existingFoodItem = FoodItem.getFoodItemByID(id: composedFoodItem.id) {
+            // There is an existing FoodItem with the same ID, use it
+            cdFoodItem = existingFoodItem
+            
+            // Remove existing TypicalAmounts
+            if let existingTypicalAmounts = cdFoodItem.typicalAmounts {
+                cdFoodItem.removeFromTypicalAmounts(existingTypicalAmounts)
+            }
+        } else {
+            // Create new FoodItem
+            cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
+            cdFoodItem.id = composedFoodItem.id
         }
         
-        // Update typical amounts in Core Data
-        for typicalAmountVM in foodItemVM.typicalAmounts {
-            let cdTypicalAmount = TypicalAmount.update(with: typicalAmountVM)
-            cdFoodItem.addToTypicalAmounts(cdTypicalAmount)
-        }
+        // Update data
+        cdFoodItem.name = composedFoodItem.name
+        cdFoodItem.foodCategory = composedFoodItem.foodCategory
+        cdFoodItem.caloriesPer100g = composedFoodItem.caloriesPer100g
+        cdFoodItem.carbsPer100g = composedFoodItem.carbsPer100g
+        cdFoodItem.sugarsPer100g = composedFoodItem.sugarsPer100g
+        cdFoodItem.favorite = composedFoodItem.favorite
         
-        CoreDataStack.shared.save()
-    }
-    
-    /**
-     Duplicates the FoodItem represented by the existingFoodItemVM
-     
-     - Parameters:
-        - existingFoodItemVM: the FoodItemViewModel to be duplicated
-     
-     - Returns: the new Core Data FoodItem
-     */
-    static func duplicate(_ existingFoodItem: FoodItem) -> FoodItem {
-        // Create new FoodItem with own ID
-        let cdFoodItem = FoodItem(context: CoreDataStack.viewContext)
-        cdFoodItem.id = UUID()
-        
-        // Fill data
-        cdFoodItem.name = (existingFoodItem.name) + NSLocalizedString(" - Copy", comment: "")
-        cdFoodItem.foodCategory = existingFoodItem.foodCategory
-        cdFoodItem.caloriesPer100g = existingFoodItem.caloriesPer100g
-        cdFoodItem.carbsPer100g = existingFoodItem.carbsPer100g
-        cdFoodItem.sugarsPer100g = existingFoodItem.sugarsPer100g
-        cdFoodItem.favorite = existingFoodItem.favorite
-        cdFoodItem.category = existingFoodItem.category
-        cdFoodItem.sourceID = existingFoodItem.sourceID
-        cdFoodItem.sourceDB = existingFoodItem.sourceDB
+        // Set category to product
+        cdFoodItem.category = FoodItemCategory.product.rawValue
         
         // Add typical amounts
-        if let typicalAmounts = existingFoodItem.typicalAmounts {
-            for case let typicalAmount as TypicalAmount in typicalAmounts {
-                let newCDTypicalAmount = TypicalAmount(context: CoreDataStack.viewContext)
-                newCDTypicalAmount.id = UUID()
-                newCDTypicalAmount.amount = typicalAmount.amount
-                newCDTypicalAmount.comment = typicalAmount.comment
-                cdFoodItem.addToTypicalAmounts(newCDTypicalAmount)
+        if composedFoodItem.numberOfPortions > 0 {
+            let portionWeight = Int(composedFoodItem.amount) / Int(composedFoodItem.numberOfPortions)
+            for multiplier in 1...Int(composedFoodItem.numberOfPortions) {
+                let portionAmount = portionWeight * multiplier
+                let comment = "\(multiplier) \(NSLocalizedString("portion(s)", comment: "")) (\(multiplier)/\(composedFoodItem.numberOfPortions))"
+                let typicalAmount = TypicalAmount.create(amount: Int64(portionAmount), comment: comment, context: context)
+                cdFoodItem.addToTypicalAmounts(typicalAmount)
             }
         }
-        
-        // Save new food item and refresh
-        CoreDataStack.shared.save()
         
         return cdFoodItem
     }
     
-    static func delete(_ foodItem: FoodItem) {
+    /// Deletes the given FoodItem from Core Data. Does not save the context.
+    /// - Parameters:
+    ///   - foodItem: The FoodItem to be deleted.
+    ///   - deleteAssociatedRecipe: If true, the associated ComposedFoodItem (recipe) will also be deleted.
+    static func delete(_ foodItem: FoodItem, deleteAssociatedRecipe: Bool = false, saveContext: Bool) {
         // Deletion of all related typical amounts will happen automatically
         // as we have set Delete Rule to Cascade in data model
+        
+        if deleteAssociatedRecipe {
+            if let associatedRecipe = foodItem.composedFoodItem {
+                ComposedFoodItem.delete(associatedRecipe, includeAssociatedFoodItem: false, saveContext: false)
+            }
+        }
         
         // Delete the food item itself
         CoreDataStack.viewContext.delete(foodItem)
         
-        // And save the context
-        CoreDataStack.shared.save()
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
     }
     
     /**
@@ -232,23 +283,27 @@ public class FoodItem: NSManagedObject {
      - Parameters:
         - typicalAmount: The Core Data TypicalAmount to add.
         - foodItem: The Core Data FoodItem the TypicalAmount should be added to.
+        - saveContext: If true, the context will be saved after adding the TypicalAmount.
      */
-    static func add(_ typicalAmount: TypicalAmount, to foodItem: FoodItem) {
+    static func add(_ typicalAmount: TypicalAmount, to foodItem: FoodItem, saveContext: Bool) {
         foodItem.addToTypicalAmounts(typicalAmount)
-        CoreDataStack.shared.save()
-    }
-    
-    /// Sets the category of the Core Data FoodItem to the given String. Does not check if the string is a valid FoodItemCategory.
-    /// - Parameters:
-    ///   - foodItem: The Core Data FoodItem.
-    ///   - category: The string representation of the FoodItemCategory.
-    static func setCategory(_ foodItem: FoodItem?, to category: String) {
-        if let foodItem = foodItem {
-            foodItem.category = category
-            foodItem.foodCategory = nil // Remove the food category, as it belonged to the previous category
-            CoreDataStack.viewContext.refresh(foodItem, mergeChanges: true)
+        if saveContext {
             CoreDataStack.shared.save()
         }
+    }
+    
+    /// Checks if a Core Data FoodItem or ComposedFoodItem with the name of this FoodItem exists.
+    /// - Parameters:
+    ///    - name: The name to be checked.
+    ///    - isNew: If true, the food item is not supposed to exist at all, otherwise we update an existing food item.
+    /// - Returns: True if a Core Data FoodItem or ComposedFoodItem with the same name exists, false otherwise.
+    static func nameExists(name: String, isNew: Bool) -> Bool {
+        let foodItems = FoodItem.getFoodItemsByName(name: name)
+        let composedFoodItems = ComposedFoodItem.getComposedFoodItemsByName(name: name)
+        
+        // If isNew is true, we expect 0 items, as we are creating a new one, i.e., we check for >0.
+        // If isNew is false, we expect at least 1 item, as we are editing an existing one, i.e., we check for >1.
+        return foodItems != nil && foodItems!.count > (isNew ? 0 : 1) || composedFoodItems != nil && composedFoodItems!.count > (isNew ? 0 : 1)
     }
     
     /**
@@ -273,13 +328,10 @@ public class FoodItem: NSManagedObject {
         return nil
     }
     
-    /**
-     Returns the Core Data FoodItem with the given name.
-     
-     - Parameter name: The Core Data entry name.
-     
-     - Returns: The related Core Data FoodItem, nil if not found.
-     */
+    /// Returns the Core Data FoodItems with the given name.
+    /// - Parameters:
+    ///   - name: The Core Data entry name.
+    /// - Returns: The related Core Data FoodItems, nil if not found.
     static func getFoodItemsByName(name: String) -> [FoodItem]? {
         let predicate = NSPredicate(format: "name == %@", name)
         let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()

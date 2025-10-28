@@ -7,17 +7,18 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct FoodItemListView: View {
     enum FoodListNavigationDestination: Hashable {
         case AddFoodItem(category: FoodItemCategory)
-        case EditFoodItem(category: FoodItemCategory, foodItemVM: FoodItemViewModel)
-        case SelectFoodItem(category: FoodItemCategory, draftFoodItem: FoodItemViewModel, composedFoodItem: ComposedFoodItemViewModel)
+        case EditFoodItem(category: FoodItemCategory, foodItem: FoodItem)
+        case SelectFoodItem(category: FoodItemCategory, ingredient: Ingredient, composedFoodItem: ComposedFoodItem)
     }
     
-    enum FoodItemListType {
+    enum FoodItemListType: Equatable {
         case maintenance
-        case selection
+        case selection(composedFoodItem: ComposedFoodItem, tempContext: NSManagedObjectContext?)
     }
     
     enum SheetState: Identifiable {
@@ -34,8 +35,9 @@ struct FoodItemListView: View {
     var foodItemListTitle: String
     var helpSheet: SheetState
     @Binding var navigationPath: NavigationPath
-    @ObservedObject var userSettings = UserSettings.shared
-    @ObservedObject var composedFoodItem: ComposedFoodItemViewModel
+    @State var userSettings = UserSettings.shared
+    private var composedFoodItem: ComposedFoodItem?
+    private var tempContext: NSManagedObjectContext?
     
     @State private var searchString = ""
     @State private var showFavoritesOnly = false
@@ -46,11 +48,11 @@ struct FoodItemListView: View {
             // The food list
             FilteredFoodItemList(
                 category: category,
-                listType: listType,
                 navigationPath: $navigationPath,
-                composedFoodItem: composedFoodItem,
                 searchString: searchString,
-                showFavoritesOnly: showFavoritesOnly
+                showFavoritesOnly: showFavoritesOnly,
+                composedFoodItem: composedFoodItem,
+                tempContext: tempContext
             )
         }
         .navigationTitle(foodItemListTitle)
@@ -128,6 +130,29 @@ struct FoodItemListView: View {
         }
     }
     
+    init(
+        category: FoodItemCategory,
+        listType: FoodItemListType,
+        foodItemListTitle: String,
+        helpSheet: SheetState,
+        navigationPath: Binding<NavigationPath>
+    ) {
+        self.category = category
+        self.listType = listType
+        self.foodItemListTitle = foodItemListTitle
+        self.helpSheet = helpSheet
+        self._navigationPath = navigationPath
+        
+        switch listType {
+        case .maintenance:
+            self.composedFoodItem = nil
+            self.tempContext = nil
+        case .selection(let composedFoodItem, let tempContext):
+            self.composedFoodItem = composedFoodItem
+            self.tempContext = tempContext
+        }
+    }
+    
     @ViewBuilder
     private func sheetContent(_ state: SheetState) -> some View {
         switch state {
@@ -144,19 +169,5 @@ struct FoodItemListView: View {
             HelpView(helpScreen: .ingredientSelectionList)
                 .accessibilityIdentifierBranch("HelpIngredientSelectionList")
         }
-    }
-}
-
-struct FoodItemListView_Previews: PreviewProvider {
-    @State private static var navigationPath = NavigationPath()
-    static var previews: some View {
-        FoodItemListView(
-            category: .product,
-            listType: .selection,
-            foodItemListTitle: "My Products",
-            helpSheet: .productSelectionListHelp,
-            navigationPath: $navigationPath,
-            composedFoodItem: ComposedFoodItemViewModel.sampleData()
-        )
     }
 }

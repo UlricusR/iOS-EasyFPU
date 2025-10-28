@@ -10,9 +10,8 @@ import SwiftUI
 import CountryPicker
 
 struct TherapySettingsEditor: View {
-    @Binding var navigationPath: NavigationPath
-    @ObservedObject var absorptionScheme: AbsorptionSchemeViewModel
-    @ObservedObject var userSettings = UserSettings.shared
+    @State var absorptionScheme = AbsorptionScheme.shared
+    @State var userSettings = UserSettings.shared
     @State private var activeAlert: SimpleAlertType?
     @State private var showingAlert: Bool = false
     @State private var showingScreen = false

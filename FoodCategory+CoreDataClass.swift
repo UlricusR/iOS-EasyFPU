@@ -12,6 +12,11 @@ import CoreData
 
 
 public class FoodCategory: NSManagedObject {
+    
+    //
+    // MARK: - Static methods for entity creation/deletion/fetching
+    //
+    
     static func fetchAll(
         category: FoodItemCategory? = nil,
         viewContext: NSManagedObjectContext = CoreDataStack.viewContext
@@ -41,8 +46,9 @@ public class FoodCategory: NSManagedObject {
     ///   - id: The unique identifier for the FoodCategory.
     ///   - name: The name of the FoodCategory.
     ///   - category: The category type of the FoodCategory, as a FoodItemCategory..
+    ///   - saveContext: Whether to save the Core Data context after creation.
     /// - Returns: The created FoodCategory object.
-    static func create(id: UUID, name: String, category: FoodItemCategory) -> FoodCategory {
+    static func create(id: UUID, name: String, category: FoodItemCategory, saveContext: Bool) -> FoodCategory {
         // Create the FoodCategory
         let cdFoodCategory = FoodCategory(context: CoreDataStack.viewContext)
         
@@ -52,71 +58,33 @@ public class FoodCategory: NSManagedObject {
         cdFoodCategory.category = category.rawValue
         
         // Save
-        CoreDataStack.shared.save()
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
         return cdFoodCategory
     }
     
-    /// Updates an existing Core Data FoodCategory with new values.
-    /// - Parameters:
-    ///   - cdFoodCategory: The existing FoodCategory object to update.
-    ///   - newName: The new name for the FoodCategory.
-    ///   - newCategory: The new category type for the FoodCategory, as a FoodItemCategory.
-    static func update(
-        _ cdFoodCategory: FoodCategory,
-        newName: String,
-        newCategory: FoodItemCategory
-    ) {
-        cdFoodCategory.name = newName
-        cdFoodCategory.category = newCategory.rawValue
-        
-        CoreDataStack.shared.save()
-    }
-    
-    static func delete(_ foodCategory: FoodCategory) {
+    /// Deletes the given FoodCategory from Core Data.
+    /// - Parameter foodCategory: The FoodCategory to delete.
+    /// - Parameter saveContext: Whether to save the Core Data context after deletion.
+    static func delete(_ foodCategory: FoodCategory, saveContext: Bool) {
         // Delete the food category
         CoreDataStack.viewContext.delete(foodCategory)
         
         // And save the context
-        CoreDataStack.shared.save()
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
     }
     
     /// Checks if a FoodCategory with the given id exists.
-    /// - Parameter name: The name of the FoodCategory to check for.
+    /// - Parameters:
+    ///    - name: The name of the FoodCategory to check for.
+    ///    - category: The category type of the FoodCategory, as a FoodItemCategory.
+    ///    - isNew: Whether this is a new FoodCategory (true) or an existing one being edited (false).
     /// - Returns: True if a FoodCategory with the given name exists, false otherwise.
-    static func exists(name: String, category: FoodItemCategory) -> Bool {
-        return getFoodCategoriesByName(name: name, category: category)?.count ?? 0 > 0
-    }
-    
-    /// Checks if the given FoodCategory has related items, either FoodItems or ComposedFoodItems.
-    /// - Parameter foodCategory: The FoodCategory to check for related items.
-    /// - Returns: True if there are related items, false otherwise.
-    static func hasRelatedItems(foodCategory: FoodCategory) -> Bool {
-        var hasRelatedItems = false
-        
-        // Check if there are any related FoodItems
-        let request: NSFetchRequest<FoodItem> = FoodItem.fetchRequest()
-        request.predicate = NSPredicate(format: "foodCategory == %@", foodCategory)
-        
-        do {
-            let result = try CoreDataStack.viewContext.fetch(request)
-            hasRelatedItems = !result.isEmpty
-        } catch {
-            debugPrint("Error fetching food items for category: \(error)")
-        }
-        
-        // Check if there are any related ComposedFoodItems
-        if !hasRelatedItems {
-            let request: NSFetchRequest<ComposedFoodItem> = ComposedFoodItem.fetchRequest()
-            request.predicate = NSPredicate(format: "foodCategory == %@", foodCategory)
-            do {
-                let result = try CoreDataStack.viewContext.fetch(request)
-                hasRelatedItems = !result.isEmpty
-            } catch {
-                debugPrint("Error fetching composed food items for category: \(error)")
-            }
-        }
-        
-        return hasRelatedItems
+    static func exists(name: String, category: FoodItemCategory, isNew: Bool) -> Bool {
+        return getFoodCategoriesByName(name: name, category: category)?.count ?? 0 > (isNew ? 0 : 1)
     }
     
     /**

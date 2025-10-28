@@ -23,7 +23,38 @@ extension AbsorptionBlock: Comparable {
     @NSManaged public var maxFpu: Int64
     @NSManaged public var absorptionTime: Int64
     @NSManaged public var id: UUID?
-
+    
+    //
+    // MARK: - Computed properties
+    //
+    
+    
+    
+    //
+    // MARK: - Custom functions
+    //
+    
+    /// Updates the absorption time of the AbsorptionBlock and saves the context.
+    /// - Parameter absorptionTime: The new absorption time in minutes.
+    /// - Parameter saveContext: A Boolean indicating whether to save the Core Data context after updating.
+    func updateAbsorptionTime(with absorptionTime: Int, saveContext: Bool) {
+        self.absorptionTime = Int64(absorptionTime)
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
+    }
+    
+    /// Updates the maximum FPU of the AbsorptionBlock and saves the context.
+    /// - Parameter maxFpu: The new maximum FPU.
+    /// - Parameter saveContext: A Boolean indicating whether to save the Core Data context after updating.
+    func updateMaxFpu(with maxFpu: Int, saveContext: Bool) {
+        self.maxFpu = Int64(maxFpu)
+        if saveContext {
+            CoreDataStack.shared.save()
+        }
+    }
+    
+    
 }
 
 extension AbsorptionBlock: Identifiable {

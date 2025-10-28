@@ -32,7 +32,7 @@ class CarbsRegimeCalculator: ObservableObject {
             recalculate()
         }
     }
-    var composedFoodItem: ComposedFoodItemViewModel
+    var composedFoodItem: ComposedFoodItem
     var eCarbsAbsorptionTimeInMinutes: Int
     
     // Parameters that change every time the carbs regime is changed by the user (e.g. include sugars, exclude carbs, etc.)
@@ -46,19 +46,9 @@ class CarbsRegimeCalculator: ObservableObject {
     var eCarbsStart = Date()
     @Published var carbsRegime: CarbsRegime = CarbsRegime.default
     
-    // MARK: - Static variables / constants
-    
-    static let `default` = CarbsRegimeCalculator(
-        composedFoodItem: UserSettings.shared.composedMeal,
-        eCarbsAbsorptionTimeInHours: 5,
-        includeSugars: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealSugars) ?? false,
-        includeTotalMealCarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportTotalMealCarbs) ?? false,
-        includeECarbs: UserSettings.getValue(for: UserSettings.UserDefaultsBoolKey.exportECarbs) ?? true
-    )
-    
     // MARK: - Initializers
     
-    init(composedFoodItem: ComposedFoodItemViewModel, eCarbsAbsorptionTimeInHours: Int, includeSugars: Bool, includeTotalMealCarbs: Bool, includeECarbs: Bool) {
+    init(composedFoodItem: ComposedFoodItem, eCarbsAbsorptionTimeInHours: Int, includeSugars: Bool, includeTotalMealCarbs: Bool, includeECarbs: Bool) {
         self.hkObjects = [HKObject]()
         self.sugarsEntries = [Date: CarbsEntry]()
         self.carbsEntries = [Date: CarbsEntry]()
@@ -117,7 +107,7 @@ class CarbsRegimeCalculator: ObservableObject {
         if includeTotalMealSugars {
             // Make sure to not go below 1 for number sugars entries, otherwise we'd increase sugars amount in the next step
             let numberOfSugarsEntries = max(Int(UserSettings.shared.absorptionTimeSugarsDurationInHours * 60) / UserSettings.shared.absorptionTimeSugarsIntervalInMinutes, 1)
-            let totalSugars = composedFoodItem.getSugars(treatSugarsSeparately: UserSettings.shared.treatSugarsSeparately)
+            let totalSugars = composedFoodItem.sugars(treatSugarsSeparately: UserSettings.shared.treatSugarsSeparately)
             calculateXCarbs(
                 xCarbsEntries: &self.sugarsEntries,
                 numberOfXCarbsEntries: numberOfSugarsEntries,
@@ -134,7 +124,7 @@ class CarbsRegimeCalculator: ObservableObject {
         if includeTotalMealCarbs {
             // Make sure to not go below 1 for number carb entries, otherwise we'd increase carbs amount in the next step
             let numberOfCarbEntries = max(Int(UserSettings.shared.absorptionTimeCarbsDurationInHours * 60) / UserSettings.shared.absorptionTimeCarbsIntervalInMinutes, 1)
-            let totalCarbs = composedFoodItem.getRegularCarbs(treatSugarsSeparately: UserSettings.shared.treatSugarsSeparately)
+            let totalCarbs = composedFoodItem.regularCarbs(treatSugarsSeparately: UserSettings.shared.treatSugarsSeparately)
             calculateXCarbs(
                 xCarbsEntries: &self.carbsEntries,
                 numberOfXCarbsEntries: numberOfCarbEntries,

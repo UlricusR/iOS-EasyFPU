@@ -8,8 +8,9 @@
 
 import SwiftUI
 import Combine
+import CoreData
 
-struct FoodItemComposerView: View {
+struct RecipeEditor: View {
     enum SheetState: Identifiable {
         case help
         
@@ -22,7 +23,8 @@ struct FoodItemComposerView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
+    private var tempContext: NSManagedObjectContext?
     @Binding var navigationPath: NavigationPath
     private let helpScreen = HelpScreen.foodItemComposer
     @State private var activeSheet: SheetState?
@@ -33,15 +35,19 @@ struct FoodItemComposerView: View {
     @State private var existingFoodItem: FoodItem?
     @State private var isConfirming = false
     
+    private var isNewRecipe: Bool {
+        tempContext != nil
+    }
+    
     var body: some View {
         VStack {
-            if composedFoodItemVM.foodItemVMs.isEmpty {
+            if composedFoodItem.ingredients.allObjects.isEmpty {
                 // No ingredients selected for the recipe, so display info and a call for action button
                 Image("eggs-color").padding()
                 Text("Your yummy recipe will appear here once you add some ingredients.").padding()
                 Button {
                     // Add new product to composed food item
-                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItemVM))
+                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItem, tempContext: tempContext))
                 } label: {
                     HStack {
                         Image(systemName: "plus.circle")
@@ -64,14 +70,15 @@ struct FoodItemComposerView: View {
                                 HStack {
                                     Text("Name")
                                         .accessibilityIdentifierLeaf("NameLabel")
-                                    TextField("Name", text: self.$composedFoodItemVM.name)
+                                    TextField("Name", text: self.$composedFoodItem.name)
                                         .accessibilityIdentifierLeaf("NameValue")
                                 }
                                 
                                 // Food Category
-                                Picker("Category", selection: self.$composedFoodItemVM.foodCategory) {
+                                Picker("Category", selection: self.$composedFoodItem.foodCategoryObjectID) {
+                                    Text("Uncategorized").tag(nil as URL?)
                                     ForEach(FoodCategory.fetchAll(category: .product), id: \.id) { foodCategory in
-                                        Text(foodCategory.name).tag(foodCategory)
+                                        Text(foodCategory.name).tag(foodCategory.objectID.uriRepresentation())
                                     }
                                 }
                                 .accessibilityIdentifierLeaf("CategoryPicker")
@@ -79,25 +86,29 @@ struct FoodItemComposerView: View {
                                 HStack {
                                     Text("Weight")
                                         .accessibilityIdentifierLeaf("WeightLabel")
-                                    TextField("Weight", text: self.$composedFoodItemVM.amountAsString)
+                                    TextField("Amount", value: self.$composedFoodItem.amount, formatter: DataHelper.intFormatter(hideZero: true))
                                         .keyboardType(.numberPad)
-                                        .onReceive(Just(composedFoodItemVM.amountAsString)) { newValue in
-                                            let filtered = newValue.filter { "0123456789".contains($0) }
-                                            if filtered != newValue {
-                                                self.composedFoodItemVM.amountAsString = filtered
-                                            }
-                                        }
                                         .multilineTextAlignment(.trailing)
                                         .accessibilityIdentifierLeaf("WeightValue")
                                     Text("g")
                                         .accessibilityIdentifierLeaf("WeightUnit")
+                                    Button {
+                                        // Set weight to sum of ingredients
+                                        var totalWeight = 0
+                                        for ingredient in composedFoodItem.ingredients.allObjects as! [Ingredient] {
+                                            totalWeight += Int(ingredient.amount)
+                                        }
+                                        composedFoodItem.amount = Int64(totalWeight)
+                                    } label: {
+                                        Image(systemName: "sum")
+                                    }
                                 }
                                 
                                 // Buttons to ease input
-                                AmountEntryButtons(variableAmountItem: composedFoodItemVM, geometry: geometry)
+                                AmountEntryButtons(variableAmountItem: composedFoodItem, geometry: geometry)
                                 
                                 // Favorite
-                                Toggle("Favorite", isOn: $composedFoodItemVM.favorite)
+                                Toggle("Favorite", isOn: $composedFoodItem.favorite)
                                     .accessibilityIdentifierLeaf("FavoriteToggle")
                             }
                             
@@ -105,43 +116,43 @@ struct FoodItemComposerView: View {
                             Section(header: Text("Generate Typical Amounts")) {
                                 // Number of portions
                                 HStack {
-                                    Stepper("Number of portions", value: $composedFoodItemVM.numberOfPortions, in: 0...100)
+                                    Stepper("Number of portions", value: $composedFoodItem.numberOfPortions, in: 0...100)
                                         .accessibilityIdentifierLeaf("NumberOfPortionsStepper")
-                                    Text("\(composedFoodItemVM.numberOfPortions)")
+                                    Text("\(composedFoodItem.numberOfPortions)")
                                         .accessibilityIdentifierLeaf("NumberOfPortionsValue")
                                 }
                                 
                                 Text("If the number of portions is set to 0, no typical amounts will be created.").font(.caption)
                                 
-                                if composedFoodItemVM.numberOfPortions > 0 {
-                                    Text("\(composedFoodItemVM.amount / composedFoodItemVM.numberOfPortions)g " + NSLocalizedString("per portion", comment: ""))
+                                if composedFoodItem.numberOfPortions > 0 {
+                                    Text("\(Int(composedFoodItem.amount) / Int(composedFoodItem.numberOfPortions))g " + NSLocalizedString("per portion", comment: ""))
                                         .accessibilityIdentifierLeaf("AmountPerPortionLabel")
                                 }
                             }
                             
                             Section(header: Text("Ingredients"), footer: Text("Swipe to remove")) {
                                 List {
-                                    ForEach(composedFoodItemVM.foodItemVMs) { foodItem in
+                                    ForEach(composedFoodItem.ingredients.allObjects as! [Ingredient]) { ingredient in
                                         HStack {
-                                            Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: foodItem.amount))!)
+                                            Text(DataHelper.doubleFormatter(numberOfDigits: 1).string(from: NSNumber(value: ingredient.amount))!)
                                                 .accessibilityIdentifierLeaf("IngredientAmountValue")
                                             Text("g")
                                                 .accessibilityIdentifierLeaf("IngredientAmountUnit")
-                                            Text(foodItem.name)
+                                            Text(ingredient.name)
                                                 .accessibilityIdentifierLeaf("IngredientName")
                                         }
-                                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                                        .accessibilityIdentifierBranch(String(ingredient.name.prefix(10)))
                                     }
-                                    .onDelete(perform: removeFoodItems)
+                                    .onDelete(perform: removeIngredients)
                                 }
                             }
                             
                             // Delete recipe (only when editing an existing one)
-                            if composedFoodItemVM.hasAssociatedComposedFoodItem() {
+                            if !isNewRecipe {
                                 Section {
                                     Button("Delete recipe", role: .destructive) {
                                         // Check for associated product
-                                        if composedFoodItemVM.hasAssociatedFoodItem() {
+                                        if composedFoodItem.foodItem != nil {
                                             isConfirming.toggle()
                                         } else {
                                             activeAlert = .confirmDelete
@@ -156,14 +167,15 @@ struct FoodItemComposerView: View {
                     }
                     .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: ActionButton.safeButtonSpace, trailing: 0)) // Required to avoid the content to be hidden by the Edit and Save buttons
                     
-                    // The overlaying Save button
-                    if composedFoodItemVM.foodItemVMs.count > 0 {
+                    // The overlaying buttons
+                    if composedFoodItem.ingredients.allObjects.count > 0 {
                         VStack {
                             Spacer()
+                            
                             HStack {
-                                // The Edit button
+                                // The Add More button
                                 Button {
-                                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItemVM))
+                                    navigationPath.append(RecipeListView.RecipeNavigationDestination.AddIngredients(recipe: composedFoodItem, tempContext: tempContext))
                                 } label: {
                                     HStack {
                                         Image(systemName: "plus.circle").imageScale(.large).foregroundStyle(.green)
@@ -177,23 +189,35 @@ struct FoodItemComposerView: View {
                                 // The Save button
                                 Button {
                                     // Trim white spaces from name
-                                    composedFoodItemVM.name = composedFoodItemVM.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                                    composedFoodItem.name = composedFoodItem.name.trimmingCharacters(in: .whitespacesAndNewlines)
                                     
-                                    // Check if this is a new ComposedFoodItem (no Core Data object attached yet) and, if yes, the name already exists
-                                    if !composedFoodItemVM.hasAssociatedComposedFoodItem() && composedFoodItemVM.nameExists() {
+                                    // Weight must not be zero
+                                    if composedFoodItem.amount == 0 {
+                                        activeAlert = .simpleAlert(type: .notice(message: "The weight of the final product must be greater than zero"))
+                                        showingAlert = true
+                                        return
+                                    }
+                                    
+                                    // Check if this is a new recipe and, if yes, the name already exists
+                                    if composedFoodItem.nameExists(isNew: isNewRecipe) {
                                         activeAlert = .simpleAlert(type: .notice(message: "A food item with this name already exists"))
                                         showingAlert = true
-                                    } else {
-                                        if weightCheck(isLess: true) {
-                                            actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
-                                            showingActionSheet = true
-                                        } else if weightCheck(isLess: false) {
-                                            actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
-                                            showingActionSheet = true
-                                        } else {
-                                            saveComposedFoodItem()
-                                        }
+                                        return
                                     }
+                                    
+                                    if weightCheck(isLess: true) {
+                                        actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                                        showingActionSheet = true
+                                        return
+                                    }
+                                    
+                                    if weightCheck(isLess: false) {
+                                        actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
+                                        showingActionSheet = true
+                                        return
+                                    }
+                                    
+                                    saveComposedFoodItem()
                                 } label: {
                                     HStack {
                                         Image(systemName: "checkmark.circle.fill").imageScale(.large).foregroundStyle(.green)
@@ -211,7 +235,6 @@ struct FoodItemComposerView: View {
                                     Button("Save anyway") {
                                         saveComposedFoodItem()
                                         actionSheetMessage = nil
-                                        navigationPath.removeLast()
                                     }
                                     Button("Cancel", role: .cancel) {
                                         actionSheetMessage = nil
@@ -229,7 +252,17 @@ struct FoodItemComposerView: View {
         }
         .navigationTitle(Text("Final product"))
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
+            ToolbarItemGroup(placement: .navigationBarLeading) {
+                // The back button, which at the same time is a cancel button
+                Button(action: {
+                    // Cancel and exit
+                    cancelAndExit()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .imageScale(.large)
+                }
+                
+                // The help button
                 Button(action: {
                     activeSheet = .help
                 }) {
@@ -237,11 +270,6 @@ struct FoodItemComposerView: View {
                         .imageScale(.large)
                 }
                 .accessibilityIdentifierLeaf("HelpButton")
-            }
-            
-            // The share button
-            ToolbarItem(placement: .navigationBarTrailing) {
-                ShareLink(item: DataWrapper(dataModelVersion: .version2, foodItemVMs: [], composedFoodItemVMs: [composedFoodItemVM]), preview: .init("Share"))
             }
         }
         .sheet(item: $activeSheet) {
@@ -270,40 +298,111 @@ struct FoodItemComposerView: View {
         }
     }
     
+    init(navigationPath: Binding<NavigationPath>, composedFoodItem: ComposedFoodItem? = nil) {
+        self._navigationPath = navigationPath
+        if let composedFoodItem = composedFoodItem { // Editing an existing recipe
+            // Set the transient property for the food category object ID before editing, if not set yet
+            if composedFoodItem.foodCategoryObjectID == nil {
+                composedFoodItem.foodCategoryObjectID = composedFoodItem.foodCategory?.objectID.uriRepresentation()
+            }
+            
+            self.tempContext = nil
+            self.composedFoodItem = composedFoodItem
+        } else { // Creating a new recipe
+            self.tempContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+            self.tempContext!.name = "Temporary Recipe Context"
+            self.tempContext!.parent = CoreDataStack.viewContext
+            self.composedFoodItem = ComposedFoodItem.new(name: RecipeListView.recipeDefaultName, context: self.tempContext!)
+        }
+    }
+    
     private func weightCheck(isLess: Bool) -> Bool {
         var ingredientsWeight = 0
-        for ingredient in composedFoodItemVM.foodItemVMs {
-            ingredientsWeight += ingredient.amount
+        for ingredient in composedFoodItem.ingredients.allObjects as! [Ingredient] {
+            ingredientsWeight += Int(ingredient.amount)
         }
         
-        return isLess ? (composedFoodItemVM.amount < ingredientsWeight ? true : false) : (composedFoodItemVM.amount > ingredientsWeight ? true : false)
+        return isLess ? (composedFoodItem.amount < ingredientsWeight ? true : false) : (composedFoodItem.amount > ingredientsWeight ? true : false)
     }
     
     private func saveComposedFoodItem() {
-        // Check if this was an existing ComposedFoodItem
-        if !composedFoodItemVM.hasAssociatedComposedFoodItem() { // This is a new ComposedFoodItem
-            // Store new ComposedFoodItem in CoreData
-            if !composedFoodItemVM.save() {
-                // We're missing ingredients, the composedFoodItem could not be saved - this should not happen!
-                activeAlert = .simpleAlert(type: .fatalError(message: "Could not create the composed food item"))
+        if isNewRecipe { // tempContext != nil
+            // If this is a new recipe, we need to save the temporary context
+            do {
+                // First save the temporary context, which will push the ComposedFoodItem to the main context
+                try tempContext!.save()
+                
+                // Get the ID of the ComposedFoodItem
+                let composedFoodItemID = self.composedFoodItem.objectID
+                
+                // Retrieve the ComposedFoodItem in the main context
+                let mainContextComposedFoodItem = CoreDataStack.viewContext.object(with: composedFoodItemID) as! ComposedFoodItem
+                
+                // Update food category
+                updateFoodCategory(composedFoodItem: mainContextComposedFoodItem, foodCategoryObjectID: composedFoodItem.foodCategoryObjectID)
+                
+                for ingredient in mainContextComposedFoodItem.ingredients.allObjects as! [Ingredient] {
+                    // For each ingredient, retrieve the related FoodItem in the main context (if existing) and link it to the ingredient
+                    if let relatedFoodItemObjectID = ingredient.relatedFoodItemObjectID {
+                        if let moID = CoreDataStack.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: relatedFoodItemObjectID) {
+                            let relatedFoodItem = CoreDataStack.viewContext.object(with: moID) as! FoodItem
+                            ingredient.foodItem = relatedFoodItem
+                        }
+                    }
+                    
+                    // Also link the ComposedFoodItem to the Ingredient
+                    ingredient.composedFoodItem = mainContextComposedFoodItem
+                }
+                
+                // Now create the related FoodItem for the ComposedFoodItem
+                mainContextComposedFoodItem.createOrUpdateRelatedFoodItem()
+            } catch {
+                let nsError = error as NSError
+                activeAlert = .simpleAlert(type: .fatalError(message: "Unresolved error \(nsError), \(nsError.userInfo)"))
                 showingAlert = true
+                return
             }
-        } else { // We edit an existing ComposedFoodItem
-            // Update Core Data ComposedFoodItem
-            if !composedFoodItemVM.update() {
-                // No Core Data ComposedFoodItem found - this should never happen!
-                activeAlert = .simpleAlert(type: .fatalError(message: "Could not update the composed food item"))
-                showingAlert = true
-            }
+        } else {
+            // Update food category
+            updateFoodCategory(composedFoodItem: composedFoodItem, foodCategoryObjectID: composedFoodItem.foodCategoryObjectID)
+            
+            // Existing recipe, so we only need to update the related FoodItem
+            composedFoodItem.createOrUpdateRelatedFoodItem()
         }
         
-        // Clear the ComposedFoodItemViewModel
-        composedFoodItemVM.clear()
+        // Save and exit
+        saveAndExit()
+    }
+    
+    private func updateFoodCategory(composedFoodItem: ComposedFoodItem, foodCategoryObjectID: URL?) {
+        if let foodCategoryObjectID, let moID = CoreDataStack.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: foodCategoryObjectID) { // A food category has been selected
+            let relatedFoodCategory = CoreDataStack.viewContext.object(with: moID) as! FoodCategory
+            composedFoodItem.foodCategory = relatedFoodCategory
+        } else { // No food category has been selected
+            composedFoodItem.foodCategory = nil
+        }
+    }
+    
+    private func saveAndExit() {
+        // Save the main context
+        CoreDataStack.shared.save()
+        
+        // Exit the view
         navigationPath.removeLast()
     }
     
-    func removeFoodItems(at offsets: IndexSet) {
-        if composedFoodItemVM.foodItemVMs.count == 1 {
+    /// Cancels the edit, rolls back all changes and exits the edit mode
+    private func cancelAndExit() {
+        // Rollback changes
+        CoreDataStack.viewContext.rollback()
+        
+        // Exit the view
+        navigationPath.removeLast()
+    }
+    
+    func removeIngredients(at offsets: IndexSet) {
+        let ingredients = composedFoodItem.ingredients.allObjects as! [Ingredient]
+        if ingredients.count == 1 {
             // We need to have at least one ingredient left
             activeAlert = .simpleAlert(type: .notice(message: "At least one ingredient required"))
             showingAlert = true
@@ -311,28 +410,32 @@ struct FoodItemComposerView: View {
         }
         
         withAnimation {
-            var foodItemsToRemove = [FoodItemViewModel]()
+            var ingredientsToRemove = [Ingredient]()
             for offset in offsets {
-                foodItemsToRemove.append(composedFoodItemVM.foodItemVMs[offset])
+                ingredientsToRemove.append(ingredients[offset])
             }
             
-            for foodItem in foodItemsToRemove {
-                composedFoodItemVM.remove(foodItem: foodItem)
+            for ingredient in ingredientsToRemove {
+                composedFoodItem.remove(ingredient)
             }
         }
     }
     
     private func deleteRecipeOnly() {
         withAnimation(.default) {
-            composedFoodItemVM.delete(includeAssociatedFoodItem: false)
-            navigationPath.removeLast()
+            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: false, saveContext: false)
+            
+            // Save and exit
+            saveAndExit()
         }
     }
     
     private func deleteRecipeAndFoodItem() {
         withAnimation(.default) {
-            composedFoodItemVM.delete(includeAssociatedFoodItem: true)
-            navigationPath.removeLast()
+            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: true, saveContext: false)
+            
+            // Save and exit
+            saveAndExit()
         }
     }
     
@@ -377,15 +480,5 @@ struct FoodItemComposerView: View {
             HelpView(helpScreen: self.helpScreen)
                 .accessibilityIdentifierBranch("HelpComposeMeal")
         }
-    }
-}
-
-struct FoodItemComposerView_Previews: PreviewProvider {
-    @State private static var navigationPath = NavigationPath()
-    static var previews: some View {
-        FoodItemComposerView(
-            composedFoodItemVM: ComposedFoodItemViewModel.sampleData(),
-            navigationPath: $navigationPath
-        )
     }
 }

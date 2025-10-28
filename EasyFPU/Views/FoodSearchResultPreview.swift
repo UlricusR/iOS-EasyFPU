@@ -7,21 +7,22 @@
 //
 
 import SwiftUI
-import URLImage
 
 struct FoodSearchResultPreview: View {
     var product: FoodDatabaseEntry
-    @ObservedObject var draftFoodItem: FoodItemViewModel
+    @ObservedObject var editedCDFoodItem: FoodItem
     @Binding var navigationPath: NavigationPath
     
     var body: some View {
         HStack {
-            if let imageObject = product.imageFront {
-                URLImage(imageObject.thumb) { image in
+            if let imageUrl = (product.imageThumbURL ?? (product.imageFront?.thumb ?? nil)) {
+                AsyncImage(url: imageUrl) { image in
                     image
                         .resizable()
                         .scaledToFit()
                         .frame(height: 100)
+                } placeholder: {
+                    Color.gray
                 }
                 .accessibilityIdentifierLeaf("ProductImage")
             }
@@ -33,7 +34,7 @@ struct FoodSearchResultPreview: View {
         .swipeActions(allowsFullSwipe: true) {
             // Selecting the product
             Button("Select", systemImage: "checkmark.circle") {
-                draftFoodItem.fill(with: product)
+                editedCDFoodItem.fill(with: product)
                 navigationPath.removeLast()
             }
             .tint(.green)

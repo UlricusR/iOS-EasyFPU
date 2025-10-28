@@ -1,7 +1,7 @@
 //
 //  FilteredFoodItemList.swift
 //  EasyFPU
-//  Related tutorial: https://www.hackingwithswift.com/quick-start/swiftui/how-to-filter-a-list-using-a-fetchrequest
+//  Related tutorial: https://youtu.be/O4043RVjCGU?si=xnmf9FtA9YUzb4IR
 //
 //  Created by Ulrich Rüth on 16/08/2025.
 //  Copyright © 2025 Ulrich Rüth. All rights reserved.
@@ -11,47 +11,125 @@ import SwiftUI
 import CoreData
 
 struct FilteredFoodItemList: View {
-    @Binding var navigationPath: NavigationPath
-    @ObservedObject private var composedFoodItem: ComposedFoodItemViewModel
-    @ObservedObject private var userSettings = UserSettings.shared
     
-    private var category: FoodItemCategory
-    private var listType: FoodItemListView.FoodItemListType
-    private var searchString: String
-    
-    @FetchRequest var fetchRequest: FetchedResults<FoodItem>
-    
-    private var sortedFoodItemVMs: [FoodItemViewModel] {
-        let foodItemVMs = fetchRequest.map { FoodItemViewModel(from: $0) }
-        return foodItemVMs.sorted {
-            if listType == .selection {
-                if composedFoodItem.foodItemVMs.contains($0) && !composedFoodItem.foodItemVMs.contains($1) {
+    /// A nested view that displays the content of the food item list in case we are in selection mode
+    /// (i.e., composedFoodItem != nil)
+    private struct Content: View {
+        @Binding var navigationPath: NavigationPath
+        var foodItems: [FoodItem]
+        @ObservedObject var composedFoodItem: ComposedFoodItem
+        var tempContext: NSManagedObjectContext?
+        var category: FoodItemCategory
+        @State private var userSettings = UserSettings.shared
+        
+        private var sortedFoodItems: [FoodItem] {
+            return foodItems.sorted {
+                if composedFoodItem.contains(foodItem: $0) && !composedFoodItem.contains(foodItem: $1) {
                     return true
-                } else if !composedFoodItem.foodItemVMs.contains($0) && composedFoodItem.foodItemVMs.contains($1) {
+                } else if !composedFoodItem.contains(foodItem: $0) && composedFoodItem.contains(foodItem: $1) {
                     return false
                 } else {
                     return $0.name < $1.name
                 }
+            }
+        }
+        
+        var body: some View {
+            if userSettings.groupProductsByCategory && category == .product || userSettings.groupIngredientsByCategory && category == .ingredient {
+                // Grouped list
+                GroupedFoodList(
+                    navigationPath: $navigationPath,
+                    groupedFoodItems: FilteredFoodItemList.groupFoodItems(foodItems: sortedFoodItems),
+                    composedFoodItem: composedFoodItem,
+                    tempContext: tempContext,
+                    category: category
+                )
             } else {
-                return $0.name < $1.name
+                // Un-grouped list
+                UngroupedFoodList(
+                    navigationPath: $navigationPath,
+                    foodItems: sortedFoodItems,
+                    composedFoodItem: composedFoodItem,
+                    tempContext: tempContext,
+                    category: category
+                )
             }
         }
     }
     
-    private var groupedFoodItemVMs: [String: [FoodItemViewModel]] {
-        let foodItemVMs = sortedFoodItemVMs
+    /// A nested view that displays a grouped list of food items
+    private struct GroupedFoodList: View {
+        @Binding var navigationPath: NavigationPath
+        var groupedFoodItems: [String: [FoodItem]]
+        var composedFoodItem: ComposedFoodItem?
+        var tempContext: NSManagedObjectContext?
+        var category: FoodItemCategory
         
-        // Get the foodItemVMs with an associated FoodCategory
-        let categorizedFoodItemVMs = foodItemVMs.filter { $0.foodCategory != nil }
-        var groupedCategorized = Dictionary(grouping: categorizedFoodItemVMs) { $0.foodCategory!.name }
-        
-        // Append the uncategorized items to the grouped dictionary
-        let uncategorizedFoodItemVMs = foodItemVMs.filter { $0.foodCategory == nil }
-        if !uncategorizedFoodItemVMs.isEmpty {
-            groupedCategorized[NSLocalizedString("Uncategorized", comment: "")] = uncategorizedFoodItemVMs
+        var body: some View {
+            List {
+                ForEach(groupedFoodItems.keys.sorted(), id: \.self) { key in
+                    Section(header: Text(key)) {
+                        ForEach(groupedFoodItems[key]!, id: \.id) { foodItem in
+                            FoodItemView(
+                                navigationPath: $navigationPath,
+                                composedFoodItem: composedFoodItem,
+                                tempContext: tempContext,
+                                foodItem: foodItem,
+                                category: self.category,
+                                showFoodCategory: false
+                            )
+                            .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                        }
+                    }
+                    .headerProminence(.increased) // Makes the section header more prominent
+                }
+            }
+            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: composedFoodItem != nil ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
         }
+    }
+    
+    /// A nested view that displays an un-grouped list of food items
+    private struct UngroupedFoodList: View {
+        @Binding var navigationPath: NavigationPath
+        var foodItems: [FoodItem]
+        var composedFoodItem: ComposedFoodItem?
+        var tempContext: NSManagedObjectContext?
+        var category: FoodItemCategory
         
-        return groupedCategorized
+        var body: some View {
+            List(foodItems) { foodItem in
+                FoodItemView(
+                    navigationPath: $navigationPath,
+                    composedFoodItem: composedFoodItem,
+                    tempContext: tempContext,
+                    foodItem: foodItem,
+                    category: self.category,
+                    showFoodCategory: true
+                )
+                .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+            }
+            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: composedFoodItem != nil ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
+        }
+    }
+
+    
+    @Binding var navigationPath: NavigationPath
+    var composedFoodItem: ComposedFoodItem?
+    var tempContext: NSManagedObjectContext?
+    @State private var userSettings = UserSettings.shared
+    
+    private var category: FoodItemCategory
+    private var searchString: String
+    
+    @FetchRequest var fetchRequest: FetchedResults<FoodItem>
+    
+    private var ingredients: [Ingredient] {
+        composedFoodItem == nil ? [] : composedFoodItem!.ingredients.allObjects as! [Ingredient]
+    }
+    
+    private var sortedFoodItems: [FoodItem] {
+        let foodItems = fetchRequest.compactMap { $0 } as! [FoodItem]
+        return foodItems.sorted { $0.name < $1.name }
     }
     
     private var emptyStateImage: Image {
@@ -99,31 +177,41 @@ struct FilteredFoodItemList: View {
             .accessibilityIdentifierLeaf("AddFoodItemButton")
         } else {
             ZStack {
-                if userSettings.groupProductsByCategory && category == .product || userSettings.groupIngredientsByCategory && category == .ingredient {
-                    // Grouped list
-                    List {
-                        ForEach(groupedFoodItemVMs.keys.sorted(), id: \.self) { key in
-                            Section(header: Text(key)) {
-                                ForEach(groupedFoodItemVMs[key]!, id: \.id) { foodItem in
-                                    FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType, showFoodCategory: false)
-                                        .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
-                                }
-                            }
-                            .headerProminence(.increased) // Makes the section header more prominent
-                        }
-                    }
-                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
+                if let composedFoodItem = composedFoodItem {
+                    // We are in selection mode
+                    Content(
+                        navigationPath: $navigationPath,
+                        foodItems: fetchRequest.compactMap { $0 } as! [FoodItem],
+                        composedFoodItem: composedFoodItem,
+                        tempContext: tempContext,
+                        category: category
+                    )
                 } else {
-                    // Un-grouped list
-                    List(sortedFoodItemVMs) { foodItem in
-                        FoodItemView(navigationPath: $navigationPath, composedFoodItemVM: composedFoodItem, foodItemVM: foodItem, category: self.category, listType: listType, showFoodCategory: true)
-                            .accessibilityIdentifierBranch(String(foodItem.name.prefix(10)))
+                    // We are in maintenance mode
+                    if userSettings.groupProductsByCategory && category == .product || userSettings.groupIngredientsByCategory && category == .ingredient {
+                        // Grouped list
+                        GroupedFoodList(
+                            navigationPath: $navigationPath,
+                            groupedFoodItems: FilteredFoodItemList.groupFoodItems(foodItems: sortedFoodItems),
+                            composedFoodItem: composedFoodItem,
+                            tempContext: tempContext,
+                            category: category
+                        )
+                    } else {
+                        // Un-grouped list
+                        UngroupedFoodList(
+                            navigationPath: $navigationPath,
+                            foodItems: sortedFoodItems,
+                            composedFoodItem: composedFoodItem,
+                            tempContext: tempContext,
+                            category: category
+                        )
                     }
-                    .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: listType == .selection ? ActionButton.safeButtonSpace : 0, trailing: 0)) // Required to avoid the content to be hidden by the Finished button
                 }
                 
                 // The overlaying finished button in case we have a selection type list
-                if listType == .selection {
+                // (i.e., composedFoodItem != nil)
+                if composedFoodItem != nil { // We are in selection mode
                     VStack {
                         Spacer()
                         HStack {
@@ -151,20 +239,21 @@ struct FilteredFoodItemList: View {
     
     init(
         category: FoodItemCategory,
-        listType: FoodItemListView.FoodItemListType,
         navigationPath: Binding<NavigationPath>,
-        composedFoodItem: ComposedFoodItemViewModel,
         searchString: String,
-        showFavoritesOnly: Bool
+        showFavoritesOnly: Bool,
+        composedFoodItem: ComposedFoodItem?,
+        tempContext: NSManagedObjectContext?
     ) {
         self.category = category
-        self.listType = listType
         self._navigationPath = navigationPath
         self.composedFoodItem = composedFoodItem
+        self.tempContext = tempContext
         self.searchString = searchString
         
         // Configure the fetch request based on the parameters
         let request = NSFetchRequest<FoodItem>(entityName: "FoodItem")
+        request.includesSubentities = false // We do not want to fetch TempFoodItems here
         if showFavoritesOnly {
             if searchString.isEmpty {
                 request.predicate = NSPredicate(format: "category == %@ AND favorite == true", category.rawValue)
@@ -181,5 +270,19 @@ struct FilteredFoodItemList: View {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodItem.name, ascending: true)]
         
         _fetchRequest = FetchRequest<FoodItem>(fetchRequest: request)
+    }
+    
+    static func groupFoodItems(foodItems: [FoodItem]) -> [String: [FoodItem]] {
+        // Get the foodItems with an associated FoodCategory
+        let categorizedFoodItems = foodItems.filter { $0.foodCategory != nil }
+        var groupedCategorized = Dictionary(grouping: categorizedFoodItems) { $0.foodCategory!.name }
+        
+        // Append the uncategorized items to the grouped dictionary
+        let uncategorizedFoodItems = foodItems.filter { $0.foodCategory == nil }
+        if !uncategorizedFoodItems.isEmpty {
+            groupedCategorized[NSLocalizedString("Uncategorized", comment: "")] = uncategorizedFoodItems
+        }
+        
+        return groupedCategorized
     }
 }

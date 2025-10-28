@@ -17,54 +17,55 @@ struct RecipeView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @Binding var navigationPath: NavigationPath
-    @ObservedObject var composedFoodItemVM: ComposedFoodItemViewModel
+    @ObservedObject var composedFoodItem: ComposedFoodItem
     @State private var showingAlert = false
     @State private var activeAlert: AlertChoice?
     @State private var isConfirming = false
     
     var body: some View {
-        // Name, favorite
-        HStack {
-            Text(composedFoodItemVM.name).font(.headline)
-            if composedFoodItemVM.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
-            Spacer()
+        VStack {
+            // Name, favorite
+            HStack {
+                Text(composedFoodItem.name).font(.headline)
+                if composedFoodItem.favorite { Image(systemName: "star.fill").foregroundStyle(.yellow).imageScale(.small) }
+                Spacer()
+            }
+            
+            // Food category
+            if let foodCategory = composedFoodItem.foodCategory {
+                HStack {
+                    Text(foodCategory.name)
+                        .font(.subheadline).foregroundStyle(.secondary)
+                        .accessibilityIdentifierLeaf("FoodCategoryLabel")
+                    Spacer()
+                }
+            }
         }
         .accessibilityIdentifierLeaf("RecipeName")
         .swipeActions(edge: .trailing) {
             // Editing the recipe
             Button("Edit", systemImage: "pencil") {
-                if composedFoodItemVM.cdComposedFoodItem != nil {
-                    // Prepare the composed product by filling it with the selected ComposedFoodItem
-                    UserSettings.shared.composedProduct = ComposedFoodItemViewModel(from: composedFoodItemVM.cdComposedFoodItem!)
-                    
-                    // Switch to Ingredients tab
-                    navigationPath.append(RecipeListView.RecipeNavigationDestination.EditRecipe(recipe: composedFoodItemVM))
-                } else {
-                    // No associated cdComposedFoodItem - this should not happen!
-                    activeAlert = .simpleAlert(type: .fatalError(message: "No associated cdComposedFoodItem"))
-                    showingAlert = true
-                }
+                // Switch to Ingredients tab
+                navigationPath.append(RecipeListView.RecipeNavigationDestination.EditRecipe(recipe: composedFoodItem))
             }
             .tint(.blue)
             .accessibilityIdentifierLeaf("EditButton")
             
             // Duplicating the recipe
             Button("Duplicate", systemImage: "document.on.document") {
-                composedFoodItemVM.duplicate()
+                _ = composedFoodItem.duplicate(saveContext: true)
             }
             .tint(.indigo)
             .accessibilityIdentifierLeaf("DuplicateButton")
             
             // Delete the recipe
             Button("Delete", systemImage: "trash") {
-                if composedFoodItemVM.hasAssociatedComposedFoodItem() {
-                    // Check for associated product
-                    if composedFoodItemVM.hasAssociatedFoodItem() {
-                        isConfirming.toggle()
-                    } else {
-                        activeAlert = .confirmDelete
-                        showingAlert = true
-                    }
+                // Check for associated product
+                if composedFoodItem.foodItem != nil {
+                    isConfirming.toggle()
+                } else {
+                    activeAlert = .confirmDelete
+                    showingAlert = true
                 }
             }
             .tint(.red)
@@ -72,16 +73,18 @@ struct RecipeView: View {
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             // Sharing the recipe
-            ShareLink(
-                item: DataWrapper(
-                    dataModelVersion: .version2,
-                    foodItemVMs: [],
-                    composedFoodItemVMs: [composedFoodItemVM]
-                ),
-                preview: .init("Share")
-            )
-            .tint(.green)
-            .accessibilityIdentifierLeaf("ShareButton")
+            if !(composedFoodItem.isFault || composedFoodItem.isDeleted) {
+                ShareLink(
+                    item: DataWrapper(
+                        dataModelVersion: .version2,
+                        foodItems: [],
+                        composedFoodItems: [composedFoodItem]
+                    ),
+                    preview: .init("Share")
+                )
+                .tint(.green)
+                .accessibilityIdentifierLeaf("ShareButton")
+            }
         }
         .alert(alertTitle, isPresented: $showingAlert, presenting: activeAlert) {
             alertAction(for: $0)
@@ -142,13 +145,13 @@ struct RecipeView: View {
     
     private func deleteRecipeOnly() {
         withAnimation(.default) {
-            composedFoodItemVM.delete(includeAssociatedFoodItem: false)
+            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: false, saveContext: true)
         }
     }
     
     private func deleteRecipeAndFoodItem() {
         withAnimation(.default) {
-            composedFoodItemVM.delete(includeAssociatedFoodItem: true)
+            ComposedFoodItem.delete(composedFoodItem, includeAssociatedFoodItem: true, saveContext: true)
         }
     }
 }
