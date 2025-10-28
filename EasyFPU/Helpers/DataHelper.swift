@@ -206,42 +206,34 @@ struct DataHelper {
     
     // MARK: - Data checker and formatter
     
-    static func doubleFormatter(numberOfDigits: Int) -> NumberFormatter {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        numberFormatter.maximumFractionDigits = numberOfDigits
-        return numberFormatter
+    /// Formatter for doubles with a given number of digits.
+    /// - Parameters:
+    ///   - numberOfDigits: The number of digits after the decimal separator.
+    ///   - hideZero: If true, zero values are displayed as empty strings. Default is false.
+    /// - Returns: The configured NumberFormatter.
+    static func doubleFormatter(numberOfDigits: Int, hideZero: Bool = false) -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = Locale.current
+        formatter.maximumFractionDigits = numberOfDigits
+        if hideZero {
+            formatter.zeroSymbol = ""
+        }
+        return formatter
     }
     
-    static var intFormatter: NumberFormatter {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.locale = Locale.current
-        return numberFormatter
-    }
-    
-    static func checkForPositiveDouble(valueAsString: String, allowZero: Bool) -> Result<Double, InvalidNumberError> {
-        guard let valueAsNumber = DataHelper.doubleFormatter(numberOfDigits: 5).number(from: valueAsString.isEmpty ? "0" : valueAsString) else {
-            return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
+    /// Formatter for integers.
+    /// - Parameter hideZero: If true, zero values are displayed as empty strings. Default is false.
+    /// - Returns: The configured NumberFormatter.
+    static func intFormatter(hideZero: Bool = false) -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        if hideZero {
+            formatter.zeroSymbol = ""
         }
-        guard allowZero ? valueAsNumber.doubleValue >= 0.0 : valueAsNumber.doubleValue > 0.0 else {
-            return .failure(.inputError(NSLocalizedString(allowZero ? "Value must not be negative" : "Value must not be zero or negative", comment: "")))
-        }
-        return .success(valueAsNumber.doubleValue)
-    }
-    
-    static func checkForPositiveInt(valueAsString: String, allowZero: Bool) -> Result<Int, InvalidNumberError> {
-        // First remove group separator
-        let groupingSeparator = intFormatter.groupingSeparator!
-        var valueWithoutGroupingSeparator = valueAsString
-        valueWithoutGroupingSeparator.removeAll(where: { $0 == Character(groupingSeparator) })
-        
-        guard let valueAsNumber = intFormatter.number(from: valueWithoutGroupingSeparator.isEmpty ? "0" : valueWithoutGroupingSeparator) else {
-            return .failure(.inputError(NSLocalizedString("Value not a number", comment: "")))
-        }
-        guard allowZero ? valueAsNumber.intValue >= 0 : valueAsNumber.intValue > 0 else {
-            return .failure(.inputError(NSLocalizedString(allowZero ? "Value must not be negative" : "Value must not be zero or negative", comment: "")))
-        }
-        return .success(valueAsNumber.intValue)
+        return formatter
     }
     
     static func gcd(_ numbers: [Int]) -> Int {

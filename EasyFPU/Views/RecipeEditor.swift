@@ -86,7 +86,7 @@ struct RecipeEditor: View {
                                 HStack {
                                     Text("Weight")
                                         .accessibilityIdentifierLeaf("WeightLabel")
-                                    TextField("Test", value: self.$composedFoodItem.amount, format: .number)
+                                    TextField("Amount", value: self.$composedFoodItem.amount, formatter: DataHelper.intFormatter(hideZero: true))
                                         .keyboardType(.numberPad)
                                         .multilineTextAlignment(.trailing)
                                         .accessibilityIdentifierLeaf("WeightValue")

@@ -32,7 +32,7 @@ struct AbsorptionParameterSettingsView: View {
                 HStack {
                     Text("Delay")
                         .accessibilityIdentifierLeaf("SugarsDelayLabel")
-                    TextField("Delay", value: $draftAbsorptionScheme.delaySugars, format: .number)
+                    TextField("Delay", value: $draftAbsorptionScheme.delaySugars, formatter: DataHelper.intFormatter())
                         .keyboardType(.numberPad)
                         .onChange(of: draftAbsorptionScheme.delaySugars) {
                             var errorMessage = ""
@@ -52,7 +52,7 @@ struct AbsorptionParameterSettingsView: View {
                 HStack {
                     Text("Duration")
                         .accessibilityIdentifierLeaf("SugarsDurationLabel")
-                    TextField("Duration", value: $draftAbsorptionScheme.durationSugars, format: .number)
+                    TextField("Duration", value: $draftAbsorptionScheme.durationSugars, formatter: DataHelper.doubleFormatter(numberOfDigits: 2))
                         .keyboardType(.decimalPad)
                         .onChange(of: draftAbsorptionScheme.durationSugars) {
                             var errorMessage = ""
@@ -72,7 +72,7 @@ struct AbsorptionParameterSettingsView: View {
                 HStack {
                     Text("Interval")
                         .accessibilityIdentifierLeaf("SugarsIntervalLabel")
-                    TextField("Interval", value: $draftAbsorptionScheme.intervalSugars, format: .number)
+                    TextField("Interval", value: $draftAbsorptionScheme.intervalSugars, formatter: DataHelper.intFormatter())
                         .keyboardType(.numberPad)
                         .onChange(of: draftAbsorptionScheme.intervalSugars) {
                             var errorMessage = ""
@@ -102,7 +102,7 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Delay")
                     .accessibilityIdentifierLeaf("CarbsDelayLabel")
-                TextField("Delay", value: $draftAbsorptionScheme.delayCarbs, format: .number)
+                TextField("Delay", value: $draftAbsorptionScheme.delayCarbs, formatter: DataHelper.intFormatter())
                     .keyboardType(.numberPad)
                     .onChange(of: draftAbsorptionScheme.delayCarbs) {
                         var errorMessage = ""
@@ -122,7 +122,7 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Duration")
                     .accessibilityIdentifierLeaf("CarbsDurationLabel")
-                TextField("Duration", value: $draftAbsorptionScheme.durationCarbs, format: .number)
+                TextField("Duration", value: $draftAbsorptionScheme.durationCarbs, formatter: DataHelper.doubleFormatter(numberOfDigits: 2))
                     .keyboardType(.decimalPad)
                     .onChange(of: draftAbsorptionScheme.durationCarbs) {
                         var errorMessage = ""
@@ -142,7 +142,7 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Interval")
                     .accessibilityIdentifierLeaf("CarbsIntervalLabel")
-                TextField("Interval", value: $draftAbsorptionScheme.intervalCarbs, format: .number)
+                TextField("Interval", value: $draftAbsorptionScheme.intervalCarbs, formatter: DataHelper.intFormatter())
                     .keyboardType(.numberPad)
                     .onChange(of: draftAbsorptionScheme.intervalCarbs) {
                         var errorMessage = ""
@@ -171,7 +171,7 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Delay")
                     .accessibilityIdentifierLeaf("ECarbsDelayLabel")
-                TextField("Delay", value: $draftAbsorptionScheme.delayECarbs, format: .number)
+                TextField("Delay", value: $draftAbsorptionScheme.delayECarbs, formatter: DataHelper.intFormatter())
                     .keyboardType(.numberPad)
                     .onChange(of: draftAbsorptionScheme.delayECarbs) {
                         var errorMessage = ""
@@ -191,7 +191,7 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("e-Carbs Factor")
                     .accessibilityIdentifierLeaf("ECarbsFactorLabel")
-                TextField("e-Carbs Factor", value: $draftAbsorptionScheme.eCarbsFactor, format: .number)
+                TextField("e-Carbs Factor", value: $draftAbsorptionScheme.eCarbsFactor, formatter: DataHelper.doubleFormatter(numberOfDigits: 2))
                     .keyboardType(.decimalPad)
                     .onChange(of: draftAbsorptionScheme.eCarbsFactor) {
                         var errorMessage = ""
@@ -211,7 +211,7 @@ struct AbsorptionParameterSettingsView: View {
             HStack {
                 Text("Interval")
                     .accessibilityIdentifierLeaf("ECarbsIntervalLabel")
-                TextField("Interval", value: $draftAbsorptionScheme.intervalECarbs, format: .number)
+                TextField("Interval", value: $draftAbsorptionScheme.intervalECarbs, formatter: DataHelper.intFormatter())
                     .keyboardType(.numberPad)
                     .onChange(of: draftAbsorptionScheme.intervalECarbs) {
                         var errorMessage = ""

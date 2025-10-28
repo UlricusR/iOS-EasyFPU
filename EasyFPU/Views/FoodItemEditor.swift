@@ -135,7 +135,7 @@ struct FoodItemEditor: View {
                 Section(header: Text("Nutritional values per 100g:")) {
                     // Calories
                     HStack {
-                        TextField("Calories per 100g", value: $editedCDFoodItem.caloriesPer100g, format: .number)
+                        TextField("Calories per 100g", value: $editedCDFoodItem.caloriesPer100g, formatter: DataHelper.doubleFormatter(numberOfDigits: 2, hideZero: true))
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .accessibilityIdentifierLeaf("CaloriesValue")
@@ -145,7 +145,7 @@ struct FoodItemEditor: View {
                     
                     // Carbs
                     HStack {
-                        TextField("Carbs per 100g", value: $editedCDFoodItem.carbsPer100g, format: .number)
+                        TextField("Carbs per 100g", value: $editedCDFoodItem.carbsPer100g, formatter: DataHelper.doubleFormatter(numberOfDigits: 2, hideZero: true))
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .accessibilityIdentifierLeaf("CarbsValue")
@@ -155,7 +155,7 @@ struct FoodItemEditor: View {
                     
                     // Sugars
                     HStack {
-                        TextField("Thereof Sugars per 100g", value: $editedCDFoodItem.sugarsPer100g, format: .number)
+                        TextField("Thereof Sugars per 100g", value: $editedCDFoodItem.sugarsPer100g, formatter: DataHelper.doubleFormatter(numberOfDigits: 2, hideZero: true))
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .accessibilityIdentifierLeaf("SugarsValue")

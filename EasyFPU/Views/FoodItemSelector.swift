@@ -49,7 +49,7 @@ struct FoodItemSelector: View {
                     Section(header: typicalAmounts != nil && typicalAmounts!.count > 0 ? Text(category == .product ? "Enter amount consumed" : "Enter amount used") : Text(category == .product ? "Enter amount consumed or select typical amount" : "Enter amount used or select typical amount")) {
                         HStack {
                             Text(category == .product ? "Amount consumed": "Amount used")
-                            TextField(category == .product ? "Amount consumed" : "Amount used", value: self.$ingredient.amount, format: .number)
+                            TextField(category == .product ? "Amount consumed" : "Amount used", value: self.$ingredient.amount, formatter: DataHelper.intFormatter(hideZero: true))
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
                                 .accessibilityIdentifierLeaf("AmountConsumed")

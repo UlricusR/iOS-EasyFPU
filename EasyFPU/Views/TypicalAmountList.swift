@@ -19,7 +19,7 @@ struct TypicalAmountList: View {
     @Binding var showingAlert: Bool
     @Binding var activeAlert: FoodItemEditor.AlertChoice?
     
-    @State private var newTypicalAmount = ""
+    @State private var newTypicalAmountAmount = 0
     @State private var newTypicalAmountComment = ""
     @FocusState private var focusedField: Field?
     
@@ -31,7 +31,7 @@ struct TypicalAmountList: View {
         // Add new typical amount
         if addNewTypicalAmount {
             HStack {
-                TextField("Amount", text: $newTypicalAmount)
+                TextField("Amount", value: $newTypicalAmountAmount, formatter: DataHelper.intFormatter(hideZero: true))
                     .keyboardType(.numberPad)
                     .multilineTextAlignment(.trailing)
                     .focused($focusedField, equals: .newTypicalAmount)
@@ -88,7 +88,7 @@ struct TypicalAmountList: View {
                 if editedTypicalAmountID != nil && editedTypicalAmountID! == typicalAmount.id {
                     // Editing an existing typical amount
                     HStack {
-                        TextField(LocalizedStringKey("Edit typical amount"), text: $newTypicalAmount, prompt: Text("Edit typical amount"))
+                        TextField(LocalizedStringKey("Edit typical amount"), value: $newTypicalAmountAmount, formatter: DataHelper.intFormatter(hideZero: true), prompt: Text("Edit typical amount"))
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
                             .focused($focusedField, equals: .editedTypicalAmount)
@@ -161,7 +161,7 @@ struct TypicalAmountList: View {
     }
     
     private func selectTypicalAmount(_ typicalAmount: TypicalAmount) {
-        self.newTypicalAmount = String(typicalAmount.amount)
+        self.newTypicalAmountAmount = Int(typicalAmount.amount)
         self.newTypicalAmountComment = typicalAmount.comment ?? ""
         withAnimation {
             self.editedTypicalAmountID = typicalAmount.id
@@ -170,7 +170,7 @@ struct TypicalAmountList: View {
     }
     
     private func deselectTypicalAmount() {
-        self.newTypicalAmount = ""
+        self.newTypicalAmountAmount = 0
         self.newTypicalAmountComment = ""
         withAnimation {
             self.editedTypicalAmountID = nil
@@ -181,32 +181,24 @@ struct TypicalAmountList: View {
     
     private func addTypicalAmount() {
         // If no amount is entered at all, we just leave the edit mode
-        if self.newTypicalAmount.isEmpty {
+        if newTypicalAmountAmount == 0 {
             deselectTypicalAmount()
             return
         }
         
         // Check for valid amount
-        var errorMessage = ""
-        var newTAAmount: Int = 0
-        let result = DataHelper.checkForPositiveInt(valueAsString: self.newTypicalAmount, allowZero: false)
-        switch result {
-        case .success(let amount):
-            newTAAmount = amount
-        case .failure(let err):
-            errorMessage = err.evaluate()
-            activeAlert = .simpleAlert(type: .error(message: errorMessage))
+        if newTypicalAmountAmount < 0 {
+            activeAlert = .simpleAlert(type: .error(message: NSLocalizedString("Value must not be negative", comment: "")))
             showingAlert = true
             return
         }
         
         // Check if amount already exists
         if let existingTAs = editedCDFoodItem.typicalAmounts?.allObjects as? [TypicalAmount] {
-            if let existingTA = existingTAs.first(where: { $0.amount == newTAAmount }) {
+            if let existingTA = existingTAs.first(where: { $0.amount == newTypicalAmountAmount }) {
                 // If we are editing an existing typical amount, we allow to keep the same amount
                 if isNewTypicalAmount || existingTA.id != editedTypicalAmountID {
-                    errorMessage = NSLocalizedString("A typical amount with this value already exists.", comment: "")
-                    activeAlert = .simpleAlert(type: .error(message: errorMessage))
+                    activeAlert = .simpleAlert(type: .error(message: NSLocalizedString("A typical amount with this value already exists.", comment: "")))
                     showingAlert = true
                     return
                 }
@@ -214,12 +206,12 @@ struct TypicalAmountList: View {
         }
         
         // Remove blank spaces from comment
-        self.newTypicalAmountComment = self.newTypicalAmountComment.trimmingCharacters(in: .whitespacesAndNewlines)
+        newTypicalAmountComment = newTypicalAmountComment.trimmingCharacters(in: .whitespacesAndNewlines)
         
         // Save or update
         if isNewTypicalAmount { // This is a new typical amount
             if let moc = editedCDFoodItem.managedObjectContext {
-                let newTA = TypicalAmount.create(amount: Int64(newTAAmount), comment: self.newTypicalAmountComment, context: moc)
+                let newTA = TypicalAmount.create(amount: Int64(newTypicalAmountAmount), comment: newTypicalAmountComment, context: moc)
                 editedCDFoodItem.addToTypicalAmounts(newTA)
             }
         } else { // This is an existing typical amount
@@ -228,8 +220,8 @@ struct TypicalAmountList: View {
                 showingAlert = true
                 return
             }
-            cdTypicalAmount.amount = Int64(newTAAmount)
-            cdTypicalAmount.comment = self.newTypicalAmountComment
+            cdTypicalAmount.amount = Int64(newTypicalAmountAmount)
+            cdTypicalAmount.comment = newTypicalAmountComment
         }
         
         // Clear UI

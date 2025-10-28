@@ -39,7 +39,7 @@ struct AbsorptionBlockSettingsView: View {
             if addNewBlock {
                 HStack {
                     HStack {
-                        TextField("Max. FPUs", value: $newMaxFpu, format: .number)
+                        TextField("Max. FPUs", value: $newMaxFpu, formatter: DataHelper.intFormatter(hideZero: true))
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
                             .focused($focusedField, equals: .newBlock)
@@ -50,7 +50,7 @@ struct AbsorptionBlockSettingsView: View {
                             .accessibilityIdentifierLeaf("AddFPUValue")
                         Text("FPU -")
                             .accessibilityIdentifierLeaf("AddFPUUnit")
-                        TextField("Absorption time", value: $newAbsorptionTime, format: .number)
+                        TextField("Absorption time", value: $newAbsorptionTime, formatter: DataHelper.intFormatter(hideZero: true))
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
                             .onSubmit {
@@ -95,7 +95,7 @@ struct AbsorptionBlockSettingsView: View {
                     if editedAbsorptionBlockId != nil && editedAbsorptionBlockId! == absorptionBlock.id {
                         HStack {
                             // Editing an existing absorption block
-                            TextField("Max. FPUs", value: $newMaxFpu, format: .number)
+                            TextField("Max. FPUs", value: $newMaxFpu, formatter: DataHelper.intFormatter(hideZero: true))
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
                                 .focused($focusedField, equals: .editedBlock)
@@ -106,7 +106,7 @@ struct AbsorptionBlockSettingsView: View {
                                 .accessibilityIdentifierLeaf("AddFPUValue")
                             Text("FPU -")
                                 .accessibilityIdentifierLeaf("AddFPUUnit")
-                            TextField("Absorption time", value: $newAbsorptionTime, format: .number)
+                            TextField("Absorption time", value: $newAbsorptionTime, formatter: DataHelper.intFormatter(hideZero: true))
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
                                 .onSubmit {
