@@ -13,7 +13,7 @@ struct TypicalAmountList: View {
         case newTypicalAmount, editedTypicalAmount
     }
     
-    @ObservedObject var editedCDFoodItem: FoodItem
+    var editedCDFoodItem: FoodItem
     @Binding var addNewTypicalAmount: Bool
     @Binding var editedTypicalAmountID: UUID?
     @Binding var showingAlert: Bool
