@@ -13,7 +13,7 @@ struct AbsorptionBlockSettingsView: View {
         case newBlock, editedBlock
     }
     
-    @State var absorptionScheme: AbsorptionScheme
+    var absorptionScheme: AbsorptionScheme
     @Binding var activeAlert: SimpleAlertType?
     @Binding var showingAlert: Bool
     

@@ -19,6 +19,7 @@
 		1B0868B2254F0D3E005953CC /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0868B1254F0D3E005953CC /* NotificationView.swift */; };
 		1B0AB0DF254F760D00A7BFBD /* HelpFoodItemComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0AB0DE254F760D00A7BFBD /* HelpFoodItemComposer.swift */; };
 		1B0CE2BA250663B5008B04E3 /* HealthDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0CE2B9250663B5008B04E3 /* HealthDataHelper.swift */; };
+		1B0E0AA72EB0B8A900993C97 /* EditableList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0E0AA62EB0B8A900993C97 /* EditableList.swift */; };
 		1B12690D2A8E52B40047B1F5 /* DataWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B12690C2A8E52B40047B1F5 /* DataWrapper.swift */; };
 		1B12690F2A8E699C0047B1F5 /* DataVersionFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B12690E2A8E699C0047B1F5 /* DataVersionFinder.swift */; };
 		1B16208A2CD68F360083DDF2 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 1B1620892CD68F360083DDF2 /* DGCharts */; };
@@ -147,6 +148,7 @@
 		1B0868B1254F0D3E005953CC /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		1B0AB0DE254F760D00A7BFBD /* HelpFoodItemComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpFoodItemComposer.swift; sourceTree = "<group>"; };
 		1B0CE2B9250663B5008B04E3 /* HealthDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataHelper.swift; sourceTree = "<group>"; };
+		1B0E0AA62EB0B8A900993C97 /* EditableList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableList.swift; sourceTree = "<group>"; };
 		1B12690C2A8E52B40047B1F5 /* DataWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataWrapper.swift; sourceTree = "<group>"; };
 		1B12690E2A8E699C0047B1F5 /* DataVersionFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataVersionFinder.swift; sourceTree = "<group>"; };
 		1B1620952CD693480083DDF2 /* CoreDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTests.swift; sourceTree = "<group>"; };
@@ -484,6 +486,7 @@
 				1BB9BDA12CDD56DB0043B465 /* AbsorptionBlockSettingsView.swift */,
 				1BB9BD9D2CDD4F750043B465 /* AppSettingsEditor.swift */,
 				1B5B91052CA9B6B200135569 /* CountryPickerView.swift */,
+				1B0E0AA62EB0B8A900993C97 /* EditableList.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -739,6 +742,7 @@
 				1B8ABDB32E4D1D66008873A3 /* CategoryEditor.swift in Sources */,
 				1BB9BDA22CDD56DB0043B465 /* AbsorptionBlockSettingsView.swift in Sources */,
 				1B5B91062CA9B6B200135569 /* CountryPickerView.swift in Sources */,
+				1B0E0AA72EB0B8A900993C97 /* EditableList.swift in Sources */,
 				1B25D483253DB0A900848C2A /* FoodSearch.swift in Sources */,
 				1B3CEB9B24D32D38001D64DA /* TherapySettingsEditor.swift in Sources */,
 				1B3CEB9D24D33CC8001D64DA /* AbsorptionScheme.swift in Sources */,

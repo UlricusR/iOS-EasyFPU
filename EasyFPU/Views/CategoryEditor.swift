@@ -13,7 +13,6 @@ struct CategoryEditor: View {
         case newName, editedName
     }
     
-    @Binding var navigationPath: NavigationPath
     @State private var selectedFoodItemCategory: FoodItemCategory = .product
     @State private var showingAlert = false
     @State private var activeAlert: SimpleAlertType?

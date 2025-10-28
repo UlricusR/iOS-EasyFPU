@@ -18,7 +18,6 @@ struct MenuView: View {
     }
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    private var absorptionScheme = AbsorptionScheme.shared
     @State private var navigationPath = NavigationPath()
     @State private var importing = false
     @State private var exporting = false
@@ -154,21 +153,14 @@ struct MenuView: View {
             .navigationDestination(for: SettingsNavigationPath.self) { screen in
                 switch screen {
                 case .EditCategories:
-                    CategoryEditor(
-                        navigationPath: $navigationPath
-                    )
+                    CategoryEditor()
                     .environment(\.managedObjectContext, managedObjectContext)
                     .accessibilityIdentifierBranch("CategoryEditor")
                 case .EditTherapySettings:
-                    TherapySettingsEditor(
-                        navigationPath: $navigationPath,
-                        absorptionScheme: self.absorptionScheme
-                    )
+                    TherapySettingsEditor()
                     .accessibilityIdentifierBranch("TherapySettingsEditor")
                 case .EditAppSettings:
-                    AppSettingsEditor(
-                        navigationPath: $navigationPath
-                    )
+                    AppSettingsEditor()
                     .accessibilityIdentifierBranch("AppSettingsEditor")
                 case .About:
                     AboutView()
