@@ -224,7 +224,7 @@ extension ComposedFoodItem: VariableAmountItem {
     func remove(_ ingredient: Ingredient) {
         if ingredients.contains(ingredient) {
             // Substract the amount of the ingredient from the total amount
-            let newAmount = self.amount - ingredient.amount
+            let newAmount = max(self.amount - ingredient.amount, 0) // Ensure amount does not go below 0
             self.amount = newAmount
             
             // Remove the ingredient from the composed food item and delete it

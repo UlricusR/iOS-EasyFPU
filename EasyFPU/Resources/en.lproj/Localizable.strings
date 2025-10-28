@@ -134,6 +134,7 @@
 "Composed product" = "My recipe";
 "Weight" = "Weight";
 "Final product" = "My recipe";
+"The weight of the final product must be greater than zero" = "The weight of the finished dish must be greater than zero";
 "The weight of the composed product is less than the sum of its ingredients" = "The weight of the finished dish is less than the sum of its ingredients";
 "The weight of the composed product is more than the sum of its ingredients" = "The weight of the finished dish is more than the sum of its ingredients";
 "Save" = "Save";

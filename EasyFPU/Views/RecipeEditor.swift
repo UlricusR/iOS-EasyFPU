@@ -92,6 +92,16 @@ struct RecipeEditor: View {
                                         .accessibilityIdentifierLeaf("WeightValue")
                                     Text("g")
                                         .accessibilityIdentifierLeaf("WeightUnit")
+                                    Button {
+                                        // Set weight to sum of ingredients
+                                        var totalWeight = 0
+                                        for ingredient in composedFoodItem.ingredients.allObjects as! [Ingredient] {
+                                            totalWeight += Int(ingredient.amount)
+                                        }
+                                        composedFoodItem.amount = Int64(totalWeight)
+                                    } label: {
+                                        Image(systemName: "sum")
+                                    }
                                 }
                                 
                                 // Buttons to ease input
@@ -181,21 +191,33 @@ struct RecipeEditor: View {
                                     // Trim white spaces from name
                                     composedFoodItem.name = composedFoodItem.name.trimmingCharacters(in: .whitespacesAndNewlines)
                                     
+                                    // Weight must not be zero
+                                    if composedFoodItem.amount == 0 {
+                                        activeAlert = .simpleAlert(type: .notice(message: "The weight of the final product must be greater than zero"))
+                                        showingAlert = true
+                                        return
+                                    }
+                                    
                                     // Check if this is a new recipe and, if yes, the name already exists
                                     if composedFoodItem.nameExists(isNew: isNewRecipe) {
                                         activeAlert = .simpleAlert(type: .notice(message: "A food item with this name already exists"))
                                         showingAlert = true
-                                    } else {
-                                        if weightCheck(isLess: true) {
-                                            actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
-                                            showingActionSheet = true
-                                        } else if weightCheck(isLess: false) {
-                                            actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
-                                            showingActionSheet = true
-                                        } else {
-                                            saveComposedFoodItem()
-                                        }
+                                        return
                                     }
+                                    
+                                    if weightCheck(isLess: true) {
+                                        actionSheetMessage = NSLocalizedString("The weight of the composed product is less than the sum of its ingredients", comment: "")
+                                        showingActionSheet = true
+                                        return
+                                    }
+                                    
+                                    if weightCheck(isLess: false) {
+                                        actionSheetMessage = NSLocalizedString("The weight of the composed product is more than the sum of its ingredients", comment: "")
+                                        showingActionSheet = true
+                                        return
+                                    }
+                                    
+                                    saveComposedFoodItem()
                                 } label: {
                                     HStack {
                                         Image(systemName: "checkmark.circle.fill").imageScale(.large).foregroundStyle(.green)

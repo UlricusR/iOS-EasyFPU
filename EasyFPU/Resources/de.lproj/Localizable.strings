@@ -134,6 +134,7 @@
 "Composed product" = "Mein Rezept";
 "Weight" = "Gewicht";
 "Final product" = "Mein Rezept";
+"The weight of the final product must be greater than zero" = "Das Gewicht der Speise muss größer als null sein";
 "The weight of the composed product is less than the sum of its ingredients" = "Das Gewicht der Speise is kleiner als das seiner Zutaten";
 "The weight of the composed product is more than the sum of its ingredients" = "Das Gewicht der Speise is größer als das seiner Zutaten";
 "Save" = "Speichern";
